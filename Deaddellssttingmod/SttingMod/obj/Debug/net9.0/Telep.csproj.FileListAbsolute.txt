@@ -1,0 +1,12 @@
+D:\Adeadcellsmod\core-main(5)\core-main\sample\Telep\obj\Debug\net9.0\Telep.csproj.AssemblyReference.cache
+D:\Adeadcellsmod\core-main(5)\core-main\sample\Telep\obj\Debug\net9.0\Telep.GeneratedMSBuildEditorConfig.editorconfig
+D:\Adeadcellsmod\core-main(5)\core-main\sample\Telep\obj\Debug\net9.0\Telep.AssemblyInfoInputs.cache
+D:\Adeadcellsmod\core-main(5)\core-main\sample\Telep\obj\Debug\net9.0\Telep.AssemblyInfo.cs
+D:\Adeadcellsmod\core-main(5)\core-main\sample\Telep\obj\Debug\net9.0\Telep.csproj.CoreCompileInputs.cache
+D:\Adeadcellsmod\core-main(5)\core-main\sample\Telep\bin\Debug\net9.0\Telep.deps.json
+D:\Adeadcellsmod\core-main(5)\core-main\sample\Telep\bin\Debug\net9.0\Telep.dll
+D:\Adeadcellsmod\core-main(5)\core-main\sample\Telep\bin\Debug\net9.0\Telep.pdb
+D:\Adeadcellsmod\core-main(5)\core-main\sample\Telep\obj\Debug\net9.0\Telep.dll
+D:\Adeadcellsmod\core-main(5)\core-main\sample\Telep\obj\Debug\net9.0\refint\Telep.dll
+D:\Adeadcellsmod\core-main(5)\core-main\sample\Telep\obj\Debug\net9.0\Telep.pdb
+D:\Adeadcellsmod\core-main(5)\core-main\sample\Telep\obj\Debug\net9.0\ref\Telep.dll

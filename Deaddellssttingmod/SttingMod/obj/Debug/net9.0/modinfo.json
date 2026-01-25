@@ -1,0 +1,11 @@
+{
+  "name": "ChiuYiUI-zh",
+  "version": "1.0.0",
+  "type": "mod",
+  "repositoryUrl": "https://github.com/dead-cells-core-modding/core",
+  "assemblies": [
+    "CiuYiUI-zh.dll"
+  ],
+  "main": "ChiuYiUI.CHIUYIMain",
+  "dependencies": []
+}

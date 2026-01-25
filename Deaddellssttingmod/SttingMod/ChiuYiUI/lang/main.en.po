@@ -1,0 +1,212 @@
+# English translation for ChiuYi Mod
+msgid ""
+msgstr ""
+"Project-Id-Version: ChiuYi Mod\n"
+"POT-Creation-Date: 2025-11-29 12:26+0800\n"
+"PO-Revision-Date: 2026-01-07 01:52+0800\n"
+"Last-Translator: Your Name <your@email.com>\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.8\n"
+"X-Poedit-Basepath: ../../../ModCore\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: ChiuYiUI.cs
+msgid "ChiuYi Mod 设置"
+msgstr "ChiuYi Mod Settings"
+
+#: ChiuYiUI.cs
+msgid "DCCM模组开关(B站ChiuYi.秋)"
+msgstr "DCCM Mod Settings Bilibili ChiuYi"
+
+#: ChiuYiUI.cs
+msgid "更多易用性设置"
+msgstr "More Accessibility Settings"
+
+#: ChiuYiUI.cs
+msgid "飘带布料设置"
+msgstr "Scarf Settings"
+
+#: ChiuYiUI.cs
+msgid "飘带一配置"
+msgstr "Scarf 1 Configuration"
+
+#: ChiuYiUI.cs
+msgid "飘带二配置"
+msgstr "Scarf 2 Configuration"
+
+#: ChiuYiUI.cs
+msgid "飘带三配置"
+msgstr "Scarf 3 Configuration"
+
+#: ChiuYiUI.cs
+msgid "飘带四配置"
+msgstr "Scarf 4 Configuration"
+
+#: ChiuYiUI.cs
+msgid "飘带五配置"
+msgstr "Scarf 5 Configuration"
+
+#: ChiuYiUI.cs
+msgid "一键开启所有联动装束效果"
+msgstr "Enable All Crossover Skin Effects"
+
+#: ChiuYiUI.cs
+msgid "启用/禁用所有装束效果（包括国王和其他特殊皮肤）"
+msgstr "Enable/Disable all skin effects (including King and other special skins)"
+
+#: ChiuYiUI.cs
+msgid "武士零装束效果"
+msgstr "Katana Zero Skin Effect"
+
+#: ChiuYiUI.cs
+msgid "启用/禁用武士零装束效果"
+msgstr "Enable/Disable Katana Zero skin effect"
+
+#: ChiuYiUI.cs
+msgid "雨中冒险传送功能"
+msgstr "Risk of Rain Teleport Function"
+
+#: ChiuYiUI.cs
+msgid "启用/禁用传送功能"
+msgstr "Enable/Disable teleport function"
+
+#: ChiuYiUI.cs
+msgid "杀戮尖塔暴击特效"
+msgstr "Slay the Spire Critical Hit Effect"
+
+#: ChiuYiUI.cs
+msgid "启用/禁用杀戮尖塔暴击特效"
+msgstr "Enable/Disable Slay the Spire critical hit effect"
+
+#: ChiuYiUI.cs
+msgid "迈阿密热线暴击特效"
+msgstr "Hotline Miami Critical Hit Effect"
+
+#: ChiuYiUI.cs
+msgid "启用/禁用迈阿密热线暴击特效"
+msgstr "Enable/Disable Hotline Miami critical hit effect"
+
+#: ChiuYiUI.cs
+msgid "特殊设置"
+msgstr "Special Settings"
+
+#: ChiuYiUI.cs
+msgid "删除击中停顿"
+msgstr "Remove Hit Pause"
+
+#: ChiuYiUI.cs
+msgid "启用/禁用攻击时命中的停顿感"
+msgstr "Enable/Disable the pause feeling when hitting an attack"
+
+#: ChiuYiUI.cs
+msgid "自定义飘带"
+msgstr "Custom Scarf"
+
+#: ChiuYiUI.cs
+msgid "启用/禁用自定义飘带"
+msgstr "Enable/Disable custom scarf"
+
+#: ChiuYiUI.cs
+msgid "更多视角设置"
+msgstr "More Camera Settings"
+
+#: ChiuYiUI.cs
+msgid "屏幕震动调节"
+msgstr "Screen Shake Adjustment"
+
+#: ChiuYiUI.cs
+msgid "角度震动强度"
+msgstr "Angle Shake Intensity"
+
+#: ChiuYiUI.cs
+msgid "方向震动强度"
+msgstr "Direction Shake Intensity"
+
+#: ChiuYiUI.cs
+msgid "持续震动起始强度"
+msgstr "Continuous Shake Starting Intensity"
+
+#: ChiuYiUI.cs
+msgid "水平震动目标强度"
+msgstr "Horizontal Shake Target Intensity"
+
+#: ChiuYiUI.cs
+msgid "垂直震动目标强度"
+msgstr "Vertical Shake Target Intensity"
+
+#: ChiuYiUI.cs
+msgid "震动持续时间"
+msgstr "Shake Duration"
+
+#: ChiuYiUI.cs
+msgid "持续震动衰减强度"
+msgstr "Continuous Shake Decay Intensity"
+
+#: ChiuYiUI.cs
+msgid "衰减持续时间"
+msgstr "Decay Duration"
+
+#: ChiuYiUI.cs
+msgid "U35_PLAYER_CAMERA_SPEED"
+msgstr ""
+
+#: Scraf.cs
+msgid "指定围巾使用的精灵"
+msgstr "Specify Scarf Sprite"
+
+#: Scraf.cs
+msgid "打开为scarfGray。关闭为capeGray"
+msgstr "Turn on for scarfGray. Turn off for capeGray"
+
+#: Scraf.cs
+msgid "围巾的显示颜色"
+msgstr "Scarf Display Color"
+
+#: Scraf.cs
+msgid "注：修改后将在下一句生效"
+msgstr "Note: Changes will take effect in the next sentence"
+
+#: Scraf.cs
+msgid "围巾伸展时的最大长度限制"
+msgstr "Maximum Length When Scarf Stretches"
+
+#: Scraf.cs
+msgid "围巾受到的重力影响程度"
+msgstr "Gravity Effect on Scarf"
+
+#: Scraf.cs
+msgid "围巾的粗细程度"
+msgstr "Scarf Thickness"
+
+#: Scraf.cs
+msgid "组成围巾的片段数量"
+msgstr "Number of Scarf Segments"
+
+#: Scraf.cs
+msgid "围巾移动时受到的阻力大小"
+msgstr "Resistance When Scarf Moves"
+
+#: Scraf.cs
+msgid "围巾收缩时的最小长度限制"
+msgstr "Minimum Length When Scarf Contracts"
+
+#: ChiuYiUI.cs
+msgid "UI界面修改"
+msgstr "UI Interface Modification"
+
+#: ChiuYiUI.cs
+msgid "删除主页新闻steam面板"
+msgstr "Remove Home Page News/Steam Panel"
+
+#: ChiuYiUI.cs
+msgid "启用/禁用删除主页新闻steam面板"
+msgstr "Enable/Disable removing home page news/Steam panel"
+
+#: ChiuYiUI.cs
+msgid "下一次打开游戏时生效"
+msgstr "This change will take effect the next time you open the game"
+

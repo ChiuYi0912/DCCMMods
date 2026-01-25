@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/DebugMod/">
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/DebugMod/DebugMod/DebugMod.csproj" />
+  </Folder>
+  <Folder Name="/RandomLevelMod/">
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/RandomLevelMod/RandomLevelMod/RandomLevelMod.csproj" />
+  </Folder>
+</Solution>

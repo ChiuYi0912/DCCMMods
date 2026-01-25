@@ -1,0 +1,112 @@
+# English translation file
+msgid ""
+msgstr ""
+"Project-Id-Version: ChiuYi Mod\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-15\n"
+"PO-Revision-Date: 2024-01-15\n"
+"Last-Translator: Your Name <your@email.com>\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4.2\n"
+
+#: Main menu related
+msgid "ChiuYi Mod 设置"
+msgstr "ChiuYi Mod Settings"
+
+#: Main title
+msgid "DCCM模组开关(B站ChiuYi.秋)"
+msgstr "DCCM Mod Settings (Bilibili ChiuYi.秋)"
+
+#: More accessibility settings
+msgid "更多易用性设置"
+msgstr "More Accessibility Settings"
+
+#: Scarf settings
+msgid "飘带布料设置"
+msgstr "Scarf Settings"
+msgid "飘带一配置"
+msgstr "Scarf 1 Configuration"
+msgid "飘带二配置"
+msgstr "Scarf 2 Configuration"
+msgid "飘带三配置"
+msgstr "Scarf 3 Configuration"
+msgid "飘带四配置"
+msgstr "Scarf 4 Configuration"
+msgid "飘带五配置"
+msgstr "Scarf 5 Configuration"
+
+#: Crossover skin switches
+msgid "一键开启所有联动装束效果"
+msgstr "Enable All Crossover Skin Effects"
+msgid "启用/禁用所有装束效果（包括国王和其他特殊皮肤）"
+msgstr "Enable/Disable all skin effects (including King and other special skins)"
+
+msgid "武士零装束效果"
+msgstr "Katana Zero Skin Effect"
+msgid "启用/禁用武士零装束效果"
+msgstr "Enable/Disable Katana Zero skin effect"
+
+msgid "雨中冒险传送功能"
+msgstr "Risk of Rain Teleport Function"
+msgid "启用/禁用传送功能"
+msgstr "Enable/Disable teleport function"
+
+msgid "杀戮尖塔暴击特效"
+msgstr "Slay the Spire Critical Hit Effect"
+msgid "启用/禁用杀戮尖塔暴击特效"
+msgstr "Enable/Disable Slay the Spire critical hit effect"
+
+msgid "迈阿密热线暴击特效"
+msgstr "Hotline Miami Critical Hit Effect"
+msgid "启用/禁用迈阿密热线暴击特效"
+msgstr "Enable/Disable Hotline Miami critical hit effect"
+
+#: Special settings
+msgid "特殊设置"
+msgstr "Special Settings"
+
+msgid "删除击中停顿"
+msgstr "Remove Hit Pause"
+msgid "启用/禁用攻击时命中的停顿感"
+msgstr "Enable/Disable the pause feeling when hitting an attack"
+
+msgid "自定义飘带"
+msgstr "Custom Scarf"
+msgid "启用/禁用自定义飘带"
+msgstr "Enable/Disable custom scarf"
+
+#: Camera settings
+msgid "更多视角设置"
+msgstr "More Camera Settings"
+
+msgid "屏幕震动调节"
+msgstr "Screen Shake Adjustment"
+
+msgid "角度震动强度"
+msgstr "Angle Shake Intensity"
+
+msgid "方向震动强度"
+msgstr "Direction Shake Intensity"
+
+#: Continuous shake starting intensity
+msgid "持续震动起始强度"
+msgstr "Continuous Shake Starting Intensity"
+
+msgid "水平震动目标强度"
+msgstr "Horizontal Shake Target Intensity"
+msgid "垂直震动目标强度"
+msgstr "Vertical Shake Target Intensity"
+msgid "震动持续时间"
+msgstr "Shake Duration"
+
+#: Continuous shake decay intensity
+msgid "持续震动衰减强度"
+msgstr "Continuous Shake Decay Intensity"
+
+msgid "衰减持续时间"
+msgstr "Decay Duration"

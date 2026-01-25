@@ -1,0 +1,13 @@
+d:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\Outside_Clock\obj\Debug\net10.0\Outside_Clock.csproj.AssemblyReference.cache
+d:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\Outside_Clock\obj\Debug\net10.0\Outside_Clock.GeneratedMSBuildEditorConfig.editorconfig
+d:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\Outside_Clock\obj\Debug\net10.0\Outside_Clock.AssemblyInfoInputs.cache
+d:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\Outside_Clock\obj\Debug\net10.0\Outside_Clock.AssemblyInfo.cs
+d:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\Outside_Clock\obj\Debug\net10.0\Outside_Clock.csproj.CoreCompileInputs.cache
+d:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\Outside_Clock\obj\Debug\net10.0\Outside_Clock.sourcelink.json
+d:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\Outside_Clock\bin\Debug\net10.0\Outside_Clock.deps.json
+d:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\Outside_Clock\bin\Debug\net10.0\Outside_Clock.dll
+d:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\Outside_Clock\bin\Debug\net10.0\Outside_Clock.pdb
+d:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\Outside_Clock\obj\Debug\net10.0\Outside_Clock.dll
+d:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\Outside_Clock\obj\Debug\net10.0\refint\Outside_Clock.dll
+d:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\Outside_Clock\obj\Debug\net10.0\Outside_Clock.pdb
+d:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\Outside_Clock\obj\Debug\net10.0\ref\Outside_Clock.dll

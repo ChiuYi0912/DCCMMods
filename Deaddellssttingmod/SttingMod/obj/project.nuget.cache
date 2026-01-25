@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "h9H11yBga6E=",
+  "success": true,
+  "projectFilePath": "D:\\Adeadcellsmod\\ModTool\\DCCMMods\\Deaddellssttingmod\\SttingMod\\CiuYiUI-zh.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Michael\\.nuget\\packages\\awssdk.core\\4.0.0.28\\awssdk.core.4.0.0.28.nupkg.sha512",
+    "C:\\Users\\Michael\\.nuget\\packages\\awssdk.dynamodbv2\\4.0.6.2\\awssdk.dynamodbv2.4.0.6.2.nupkg.sha512",
+    "C:\\Users\\Michael\\.nuget\\packages\\deadcellscoremodding.mdk\\1.0.1\\deadcellscoremodding.mdk.1.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

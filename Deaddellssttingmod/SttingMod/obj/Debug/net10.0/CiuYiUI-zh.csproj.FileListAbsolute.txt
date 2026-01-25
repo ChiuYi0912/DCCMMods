@@ -1,0 +1,13 @@
+D:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\UI-Mod\bin\Debug\net10.0\CiuYiUI-zh.deps.json
+D:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\UI-Mod\bin\Debug\net10.0\CiuYiUI-zh.dll
+D:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\UI-Mod\bin\Debug\net10.0\CiuYiUI-zh.pdb
+D:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\UI-Mod\obj\Debug\net10.0\CiuYiUI-zh.csproj.AssemblyReference.cache
+D:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\UI-Mod\obj\Debug\net10.0\CiuYiUI-zh.GeneratedMSBuildEditorConfig.editorconfig
+D:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\UI-Mod\obj\Debug\net10.0\CiuYiUI-zh.AssemblyInfoInputs.cache
+D:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\UI-Mod\obj\Debug\net10.0\CiuYiUI-zh.AssemblyInfo.cs
+D:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\UI-Mod\obj\Debug\net10.0\CiuYiUI-zh.csproj.CoreCompileInputs.cache
+D:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\UI-Mod\obj\Debug\net10.0\CiuYiUI-zh.sourcelink.json
+D:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\UI-Mod\obj\Debug\net10.0\CiuYiUI-zh.dll
+D:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\UI-Mod\obj\Debug\net10.0\refint\CiuYiUI-zh.dll
+D:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\UI-Mod\obj\Debug\net10.0\CiuYiUI-zh.pdb
+D:\Adeadcellsmod\core-main\DeadCells-CoreModding-Main\UI-Mod\obj\Debug\net10.0\ref\CiuYiUI-zh.dll

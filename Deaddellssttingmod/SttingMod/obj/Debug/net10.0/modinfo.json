@@ -1,0 +1,12 @@
+{
+  "name": "Dead Cells Enhanced Settings",
+  "version": "1.0.0",
+  "type": "mod",
+  "repositoryUrl": "https://github.com/dead-cells-core-modding/core",
+  "dccmversion": "35.8.1",
+  "assemblies": [
+    "CiuYiUI-zh.dll"
+  ],
+  "main": "ChiuYiUI.CHIUYIMain",
+  "dependencies": []
+}
