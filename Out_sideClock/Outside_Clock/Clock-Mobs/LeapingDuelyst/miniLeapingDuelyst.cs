@@ -53,28 +53,7 @@ IHxbitSerializable<miniLeapingDuelyst.Data>
     public override void initGfx()
     {
         base.initGfx();
-        // SpriteLib lib = Assets.Class.lib.get("atlas/miniLeapingDuelyst.atlas".AsHaxeString());
-        // Loader loader = Res.Class.get_loader();
-        // _Image @class = Image.Class;
-        // Texture nrmTex = ImageExtender.Class.toNormalMap((Image)loader.loadCache("atlas/miniLeapingDuelyst_n.png".AsHaxeString(), @class));
-        // AnimManager anim = this.spr.get_anim();
-        // HlFunc<bool> loop = new HlFunc<bool>(this.ArrowFunction_initGfx_28260);
-        // anim.registerStateAnim("jumpAtk".AsHaxeString(), 11, null, loop, new Ref<bool>(), null);
-        // AnimManager anim2 = this.spr.get_anim();
-        // loop = new HlFunc<bool>(this.ArrowFunction_initGfx_28261);
-        // anim2.registerStateAnim("fall".AsHaxeString(), 11, null, loop, new Ref<bool>(), null);
-        // AnimManager anim3 = this.spr.get_anim();
-        // loop = new HlFunc<bool>(this.ArrowFunction_initGfx_28262);
-        // anim3.registerStateAnim("stun".AsHaxeString(), 10, null, loop, new Ref<bool>(), null
-        // AnimManager anim4 = this.spr.get_anim();
-        // loop = new HlFunc<bool>(this.ArrowFunction_initGfx_28263);
-        // anim4.registerStateAnim("land".AsHaxeString(), 9, null, loop, new Ref<bool>(), null);
-        // AnimManager anim5 = this.spr.get_anim();
-        // loop = new HlFunc<bool>(this.ArrowFunction_initGfx_28264);
-        // anim5.registerStateAnim("land".AsHaxeString(), 2, null, loop, new Ref<bool>(), null);
-        // AnimManager anim6 = this.spr.get_anim();
-        // loop = new HlFunc<bool>(this.isWalking);
-        // anim6.registerStateAnim("walk".AsHaxeString(), 1, 1.5, loop, new Ref<bool>(), null);
+        
     }
 
     public static TDelegate CreateClosure<TDelegate>(object instance, MethodInfo method) where TDelegate : Delegate
