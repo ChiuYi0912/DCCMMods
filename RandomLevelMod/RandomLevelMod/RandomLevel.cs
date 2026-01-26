@@ -6,6 +6,7 @@ using ModCore.Utitities;
 using RandomLevel.Utitities;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Events.Interfaces.Game.Hero;
+using System.Runtime.InteropServices;
 
 namespace RandomLevel;
 
@@ -14,7 +15,11 @@ public class Main : ModBase,
     IOnAfterLoadingCDB
 
 {
-    private static Random random = new Random();
+
+    [DllImport("DoorProcessor.dll", CallingConvention = CallingConvention.Cdecl)]
+    public static extern int RandomRange(int min, int max);
+
+
 
     private static readonly List<string> allLevels = new List<string>
     {
@@ -25,7 +30,7 @@ public class Main : ModBase,
         "Astrolab", "Observatory", "BoatDock", "Greenhouse",
         "Swamp", "SwampHeart", "Tumulus", "Cliff", "GardenerStage",
         "Shipwreck", "Lighthouse", "QueenArena", "Bank", "PurpleGarden",
-        "DookuCastle", "DookuCastleHard", "DeathArena", "DookuArena","BoatDock"
+        "DookuCastle", "DookuCastleHard", "DeathArena", "DookuArena"
     };
 
     public Main(ModInfo info) : base(info)
@@ -43,7 +48,7 @@ public class Main : ModBase,
         string levelId = id.ToString();
         if (allLevels.Contains(levelId))
         {
-            int randomIndex = random.Next(0, allLevels.Count);
+            int randomIndex = RandomRange(0, 38);
             string randomLevelId = allLevels[randomIndex];
             Logger.Information($"随机替换关卡: {levelId} -> {randomLevelId}");
             synchronisation(levelId, randomLevelId);
@@ -120,5 +125,6 @@ public class Main : ModBase,
             var proprs = door.props;
             proprs.doorColor = CreateCL.ColorFromHex("#ffd6d6");
         }
+
     }
 }

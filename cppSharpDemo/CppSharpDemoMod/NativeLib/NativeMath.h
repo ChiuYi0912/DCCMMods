@@ -1,4 +1,3 @@
-// NativeMath.h
 #pragma once
 
 #ifdef _WIN32

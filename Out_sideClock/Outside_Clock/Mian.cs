@@ -252,18 +252,5 @@ namespace Outside_Clock
 
             Logger.Debug("已初始化过场动画");
         }
-
-        public void mobspr()
-        {
-            var res = Info.ModRoot!.GetFilePath("res.pak");
-            FsPak.Instance.FileSystem.loadPak(res.AsHaxeString());
-            SpriteLib lib = Assets.Class.lib.get("atlas/miniLeapingDuelyst.atlas".AsHaxeString());
-        }
-
-        public string Mobres()
-        {
-            return Info.ModRoot!.GetFilePath("clock.pak");
-        }
-
     }
 }

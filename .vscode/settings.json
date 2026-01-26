@@ -1,5 +1,4 @@
 {
-    // 文件关联
     "files.associations": {
         "*.h": "cpp",
         "*.hpp": "cpp",
@@ -8,16 +7,12 @@
         "*.inl": "cpp",
         "*.inc": "cpp"
     },
-    // C++ 配置
     "C_Cpp.default.compilerPath": "C:/mingw64/bin/g++.exe",
     "C_Cpp.default.intelliSenseMode": "windows-gcc-x64",
     "C_Cpp.default.cppStandard": "c++17",
-    // 格式化设置
     "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 0 }",
-    // 代码风格
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
-    // 文件排除
     "files.exclude": {
         "**/*.exe": true,
         "**/*.dll": false,
@@ -26,5 +21,25 @@
         "**/build/": true,
         "**/bin/": true,
         "**/obj/": true
-    }
+    },
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#ab307e",
+        "activityBar.background": "#ab307e",
+        "activityBar.foreground": "#e7e7e7",
+        "activityBar.inactiveForeground": "#e7e7e799",
+        "activityBarBadge.background": "#25320e",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#ab307e",
+        "statusBar.background": "#832561",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#ab307e",
+        "statusBarItem.remoteBackground": "#832561",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#832561",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#83256199",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#832561"
 }

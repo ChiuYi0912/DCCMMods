@@ -1,6 +1,4 @@
-﻿
-
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using CppSharpDemoMod.Cppsharp;
 using ModCore.Mods;
 
@@ -28,10 +26,13 @@ public class CppSharpDemo : ModBase
         string modName = Marshal.PtrToStringAnsi(modNamePtr)!;
         Logger.Debug($"模组名为：{modName}");
 
+        int[] ints = { 2, 2, 2, };
+        int[] results = new int[3];
+        NativeInterop.BatchAddInt(ints, ints, results, 3);
 
-        
+        Logger.Information($"模组基本信息：");
 
-
-
+        int RandomRange = NativeInterop.RandomRange(0, 50);
+        Logger.Debug($"测试随机数生成：{RandomRange}");
     }
 }
