@@ -18,9 +18,6 @@ public class Main : ModBase,
 
     [DllImport("DoorProcessor.dll", CallingConvention = CallingConvention.Cdecl)]
     public static extern int RandomRange(int min, int max);
-
-
-
     private static readonly List<string> allLevels = new List<string>
     {
         "PrisonCourtyard", "SewerShort", "PrisonDepths", "PrisonCorrupt", "PrisonRoof",
@@ -126,5 +123,37 @@ public class Main : ModBase,
             proprs.doorColor = CreateCL.ColorFromHex("#ffd6d6");
         }
 
+        Test();
     }
+
+
+
+
+    [DllImport("DoorProcessor.dll", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void ProcessIntArray(IntPtr arrayPtr, int length);
+
+
+    public static void ModifyInts(int[] data)
+    {
+
+        GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+        try
+        {
+            IntPtr ptr = handle.AddrOfPinnedObject();
+            ProcessIntArray(ptr, data.Length);
+        }
+        finally
+        {
+            if (handle.IsAllocated)
+                handle.Free();
+        }
+    }
+    public static void Test()
+    {
+        int[] numbers = { 1, 2, 3, 4, 5 };
+        Console.WriteLine("修改前: " + string.Join(", ", numbers));
+        ModifyInts(numbers);
+        Console.WriteLine("修改后: " + string.Join(", ", numbers));
+    }
+
 }
