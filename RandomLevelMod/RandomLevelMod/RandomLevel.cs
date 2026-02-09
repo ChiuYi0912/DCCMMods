@@ -2,7 +2,7 @@
 using dc.cine;
 using dc.pr;
 using ModCore.Mods;
-using ModCore.Utitities;
+using ModCore.Utilities;
 using RandomLevel.Utitities;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Events.Interfaces.Game.Hero;
@@ -38,6 +38,7 @@ public class Main : ModBase,
     {
         Logger.Information("随机模组初始化......");
         dc.cine.Hook__LevelTransition.@goto += dc_cine_LevelTransition;
+
     }
 
     private LevelTransition dc_cine_LevelTransition(Hook__LevelTransition.orig_goto orig, dc.String id)
@@ -74,6 +75,7 @@ public class Main : ModBase,
     public void synchronisation(string original, string levelid)
     {
         var data = dc.Data.Class.difficulty;
+
         var dyn = data.all;
 
         int dif = Game.Class.ME.user.br_getDifficulty();
@@ -122,6 +124,7 @@ public class Main : ModBase,
             var proprs = door.props;
             proprs.doorColor = CreateCL.ColorFromHex("#ffd6d6");
         }
+
 
         Test();
     }

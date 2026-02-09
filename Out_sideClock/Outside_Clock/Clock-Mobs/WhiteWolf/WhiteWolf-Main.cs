@@ -10,7 +10,7 @@ using dc.libs.heaps.slib;
 using dc.pr;
 using dc.tool;
 using HaxeProxy.Runtime;
-using ModCore.Utitities;
+using ModCore.Utilities;
 using _Math = dc._Math;
 using Log = Serilog.Log;
 
@@ -43,10 +43,10 @@ public class WhiteWolf : Mob
         anim4.registerStateAnim("walk".AsHaxeString(), 1, null, loop, HaxeProxy.Runtime.Ref<bool>.Null, null);
         base.spr.get_anim().registerStateAnim("idle".AsHaxeString(), 0, null, null, Ref<bool>.Null, null);
         dc._Math _Math = dc.Math.Class;
-        double num = _Math.random() * 0.01;
-        double num2 = 0.9 + num;
-        base.sprScaleY = num2;
-        base.sprScaleX = num2;
+        double math = _Math.random() * 0.01;
+        double sprScale = 0.9 + math;
+        base.sprScaleY = math;
+        base.sprScaleX = math;
 
         Log.Debug("sper :load");
 

@@ -1,7 +1,7 @@
 using dc.en;
 using HaxeProxy.Runtime;
 using ModCore.Storage;
-using ModCore.Utitities;
+using ModCore.Utilities;
 using Serilog;
 
 

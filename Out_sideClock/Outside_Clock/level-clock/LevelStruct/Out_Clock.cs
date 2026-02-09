@@ -5,11 +5,12 @@ using dc.level;
 using dc.libs;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
-using ModCore.Utitities;
+using ModCore.Utilities;
+using Outside_Clock.level_clock.BuildMapTool;
 using Serilog;
 using Log = Serilog.Log;
 
-namespace Outside_Clock;
+namespace Outside_Clock.level_clock.ClockStruct;
 
 public class Out_Clock : LevelStruct
 {
@@ -36,7 +37,7 @@ public class Out_Clock : LevelStruct
 
 
 
-        var forcedBiome = "ClockTower".AsHaxeString();
+        var forcedBiome = "Template".AsHaxeString();
         var virtual_add = new virtual_specificBiome_();
         virtual_add.specificBiome = forcedBiome;
         var clockTowerGenData = virtual_add.ToVirtual<virtual_altarItemGroup_brLegendaryMultiTreasure_broken_cells_doorCost_doorCurse_flaskRefill_forcedMerchantType_forcePauseTimer_isCliffPath_itemInWall_itemLevelBonus_killsMultiTreasure_locked_maxPerks_mins_noHealingShop_shouldBeFlipped_specificBiome_subTeleportTo_timedMultiTreasure_zDoorLock_zDoorType_>();

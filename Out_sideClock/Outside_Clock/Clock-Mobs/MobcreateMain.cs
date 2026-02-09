@@ -2,14 +2,28 @@ using dc.en;
 using dc.en.mob;
 using dc.pr;
 using HaxeProxy.Runtime;
+using ModCore.Events;
 using ModCore.Storage;
-using ModCore.Utitities;
+using ModCore.Utilities;
+using Outside_Clock.Interface.IOnAdvancedModuleInitializing;
 using Serilog;
 
 namespace Outside_Clock.Clock_Mobs;
 
-public class MobcreateMain
+public class MobcreateMain :
+    IEventReceiver,
+    IOnAdvancedModuleInitializing
 {
+    public MobcreateMain()
+    {
+        EventSystem.AddReceiver(this);
+    }
+
+    void IOnAdvancedModuleInitializing.OnAdvancedModuleInitializing(Outside_Main MODMAN)
+    {
+        MODMAN.Logger.Information("");
+        dc.en.Hook__Mob.create += Hook__Mob_create;
+    }
     public readonly SaveData<Data> save = new("miniLeapingDuelyst");
 
     public class Data

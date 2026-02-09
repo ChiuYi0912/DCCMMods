@@ -7,7 +7,7 @@
 
     <ModType>mod</ModType>
     <ModName>Outside_Clock</ModName>
-    <ModMain>Outside_Clock.Mian</ModMain>
+    <ModMain>Outside_Clock.Outside_Main</ModMain>
     <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>

@@ -1,34 +1,35 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿using ChiuYiUI.GameCm;
 using dc;
+using dc._Data;
 using dc.cine;
+using dc.en;
+using dc.en.inter;
+using dc.en.inter.npc;
 using dc.h2d;
-using dc.haxe;
 using dc.haxe.ds;
 using dc.hl.types;
 using dc.hxd;
-using dc.hxsl;
-using Hashlink.Marshaling;
-using Hashlink.Proxy;
+using dc.level;
+using dc.libs;
+using dc.tool;
 using Hashlink.Proxy.Clousre;
-using Hashlink.Proxy.DynamicAccess;
 using Hashlink.Proxy.Objects;
-using Hashlink.Reflection;
-using Hashlink.Reflection.Members;
 using Hashlink.Reflection.Types;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
+using IngameDebugConsole;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Events.Interfaces.Game.Hero;
 using ModCore.Mods;
 using ModCore.Modules;
-using ModCore.Utitities;
+using ModCore.Utilities;
 
 namespace DebugMod
 {
     public class DebugModMod(ModInfo info) : ModBase(info),
         IOnBeforeGameInit,
-        IOnHeroUpdate
+        IOnHeroUpdate,
+        IOnAfterLoadingCDB
     {
         private void Hook_Console_ctor(HashlinkClosure orig, HashlinkObject self)
         {
@@ -52,7 +53,12 @@ namespace DebugMod
             dc.h2d.Hook__Console.__constructor__ += Hook__Console__constructor__;
 
             hh.CreateHook("ui.$Console", "__constructor__", Hook_Console_ctor).Enable();
+
+
         }
+
+
+
 
         private void Hook__Console__constructor__(Hook__Console.orig___constructor__ orig, dc.h2d.Console arg1, Font font, dc.h2d.Object parent)
         {
@@ -77,21 +83,19 @@ namespace DebugMod
             orig(self, command);
         }
 
-        public void debug()
-        {
-            Logger.Debug("成功！！！！");
-        }
 
 
         void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
             if (Key.Class.isPressed(37))
             {
-                dc.cine.LevelTransition.Class.@goto("PrisonCourtyard".AsHaxeString());
+                LevelTransition.Class.@goto("BackGarden".AsHaxeString());
             }
             if (Key.Class.isPressed(38))
             {
-                dc.cine.LevelTransition.Class.@goto("SewerShort".AsHaxeString());
+                Hero hero = ModCore.Modules.Game.Instance.HeroInstance!;
+                hero._level.fx.customMask(12231073, 0.35, 0.04, 0.35, 2, null);
+
             }
             if (Key.Class.isPressed(39))
             {
@@ -99,8 +103,22 @@ namespace DebugMod
             }
             if (Key.Class.isPressed(40))
             {
-                dc.cine.LevelTransition.Class.@goto("IllegalLevel".AsHaxeString());
+                Debugmethod();
             }
+        }
+
+
+        public void Debugmethod()
+        {
+
+        }
+
+        void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb)
+        {
+
+            var data = cdb.level.all.array.getDyn(0);
+            data.tripleUps = 20;
+
         }
 
 

@@ -7,7 +7,6 @@ using Hashlink.Virtuals;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Mods;
 using ModCore.Modules;
-using ModCore.Utitities;
 using dc.h2d;
 using dc.level.@struct;
 using dc.pr;
@@ -16,60 +15,44 @@ using dc.en.inter;
 using ModCore.Storage;
 using Outside_Clock.Clock_Mobs;
 using dc.libs.heaps.slib;
-using dc.hl.types;
-using dc.h2d.col;
 using HaxeProxy.Runtime;
 using dc.light;
-using dc.h3d.col;
-using dc.h3d;
 using Serilog;
-using dc.parallax;
-using dc.en;
+using Outside_Clock.DataConfig;
+using Outside_Clock.level_clock.ClockStruct;
+using ModCore.Events;
+using Outside_Clock.Interface.IOnAdvancedModuleInitializing;
+using Outside_Clock.level_clock.Clock_BG;
+using ModCore.Utilities;
 
 namespace Outside_Clock
 {
-    public class Mian : ModBase,
+    public class Outside_Main(ModInfo info) : ModBase(info),
         IOnGameExit,
-        IOnGameEndInit
+        IOnGameEndInit,
+        IOnAdvancedModuleInitializing
     {
-        public Mian(ModInfo info) : base(info)
-        {
-
-        }
-
-
         public override void Initialize()
         {
             Logger.Information("你好，世界");
-            Hook__LevelStruct.get += Hook__LevelStruct_get;
-
-            Hook_LevelLogos.getLevelLogo += Hook_LevelLogos_getLevelLogo;
-
-            Hook_T_SewerShort.buildMainRooms += Hook_T_SewerShort_buildMainRooms;
-
-            Hook_Level.attachSpecialEquipments += hook_Level_attachSpecialEquipments;
-
-            Hook_LevelTransition.entranceWalk += Hook_LevelTransition_entranceWalk;
-
-            //dc.pr.Hook_Level.init += Hook_Level_init;
-
-            Hook_HiddenTrigger.trigger += CinematicOut_Clock_Main.Hook_HiddenTrigger_trigger;
-
             MobcreateMain mobcreateMain = new MobcreateMain();
-            dc.en.Hook__Mob.create += mobcreateMain.Hook__Mob_create;
-
-            //dc.level.disp.Hook_ClockTower.renderBackground += ClockTower_renderBackground;
-
-            Hook_Hero.wakeup += hook_hero_wakeup;
-
-
+            _Outside_clockBG.HookInitialize();
+            EventSystem.BroadcastEvent<IOnAdvancedModuleInitializing, Outside_Main>(this);
         }
 
-        private void hook_hero_wakeup(Hook_Hero.orig_wakeup orig, Hero self, Level lvl, int cx, int cy)
+
+        void IOnAdvancedModuleInitializing.OnAdvancedModuleInitializing(Outside_Main MODMAN)
         {
-            orig(self, lvl, cx, cy);
-            LevelTransition.Class.@goto("Out_Clock".AsHaxeString());
+            Hook__LevelStruct.get += Hook__LevelStruct_get;
+            Hook_LevelLogos.getLevelLogo += Hook_LevelLogos_getLevelLogo;
+            Hook_T_SewerShort.buildMainRooms += Hook_T_SewerShort_buildMainRooms;
+            Hook_Level.attachSpecialEquipments += hook_Level_attachSpecialEquipments;
+            Hook_HiddenTrigger.trigger += CinematicOut_Clock_Main.Hook_HiddenTrigger_trigger;
+            //dc.level.disp.Hook_ClockTower.renderBackground += ClockTower_renderBackground;
         }
+
+
+
 
         private void ClockTower_renderBackground(dc.level.disp.Hook_ClockTower.orig_renderBackground orig, dc.level.disp.ClockTower self)
         {
@@ -124,33 +107,6 @@ namespace Outside_Clock
                 Log.Debug($"bgScrolls数组内容:{Debug}");
             }
 
-
-        }
-
-        private void Hook_Level_init(Hook_Level.orig_init orig, Level self)
-        {
-
-            dc.String id = self.map.id;
-            LevelDisp Disp;
-            if (id != null)
-            {
-                if (id.ToString() == "Outside_Clock")
-                {
-                    var map = self.map;
-                    Disp = new level_clock.Outside_clockBG(self, map, id);
-                }
-            }
-            orig(self);
-
-        }
-
-        private void Hook_LevelTransition_entranceWalk(Hook_LevelTransition.orig_entranceWalk orig, LevelTransition self, int xFrom, int xTo, Exit exit)
-        {
-            virtual_exit_from_to_ virtual_exit_from_to_ = new virtual_exit_from_to_();
-            virtual_exit_from_to_.from = xFrom;
-            virtual_exit_from_to_.to = xTo;
-            virtual_exit_from_to_.exit = exit;
-            self.walk = virtual_exit_from_to_;
 
         }
 
@@ -252,5 +208,7 @@ namespace Outside_Clock
 
             Logger.Debug("已初始化过场动画");
         }
+
+
     }
 }

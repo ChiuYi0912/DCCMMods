@@ -2,7 +2,7 @@ using dc;
 using dc.ui;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
-using ModCore.Utitities;
+using ModCore.Utilities;
 using Hook_Options = dc.ui.Hook_Options;
 using Options = dc.ui.Options;
 using System;
@@ -20,6 +20,10 @@ using UILang;
 using Amazon.DynamoDBv2.Model;
 using ModCore.Modules;
 using dc.libs.heaps;
+using ChiuYiUI.Settings.HasUi;
+using dc.level;
+using dc.cine;
+using ChiuYiUI.GameCm;
 
 namespace ChiuYiUI;
 
@@ -28,12 +32,14 @@ public class ChiuYiUI
     #region 主函数
     private readonly CHIUYIMain _mod;
     private readonly Scraf _scraf;
+    private HasUiSetting _hasUi;
 
 
     public ChiuYiUI(CHIUYIMain mod)
     {
         _mod = mod;
         _scraf = new Scraf(mod);
+        _hasUi = new HasUiSetting();
         GetText.Instance.RegisterMod("SettingsLang");
     }
 
@@ -203,6 +209,8 @@ public class ChiuYiUI
         );
 
 
+        _hasUi.Markets(self);
+
 
         scrollerFlow = options.scrollerFlow;
         self.addSeparator(GetText.Instance.GetString("特殊设置").AsHaxeString(), scrollerFlow);
@@ -220,6 +228,25 @@ public class ChiuYiUI
             GetText.Instance.GetString("启用/禁用攻击时命中的停顿感").AsHaxeString(),
             Pause,
             new Ref<bool>(ref Pause1),
+            scrollerFlow
+        );
+
+
+
+        scrollerFlow = options.scrollerFlow;
+        HlFunc<bool> loreBankMimicRoom = static () =>
+        {
+            bool newValue = !CHIUYIMain.config.Value.loreBankMimicRoom;
+            CHIUYIMain.config.Value.loreBankMimicRoom = newValue;
+            CHIUYIMain.config.Save();
+            return newValue;
+        };
+        bool hasloreBankMimicRoom = CHIUYIMain.config.Value.loreBankMimicRoom;
+        options.addToggleWidget(
+            GetText.Instance.GetString("预知拟态魔剧情房间常驻").AsHaxeString(),
+            GetText.Instance.GetString("开启时：预知拟态魔剧情房间生成不会被“关闭剧情房间影响”").AsHaxeString(),
+            loreBankMimicRoom,
+            new Ref<bool>(ref hasloreBankMimicRoom),
             scrollerFlow
         );
 
@@ -280,11 +307,45 @@ public class ChiuYiUI
 
 
         Hook_Game.decreasingSlowMo += hook_game_decreasingSlowMo;
+        Hook_LevelStruct.applyDifficulty += Hook__LevelStruct_applyDifficulty;
+        Hook__TierItemFound.__constructor__ += Hook__TierItemFound__constructor__;
 
         Hook_NewsPanel.updateVisible += Hook_NewsPanel_updateVisible;
         Hook_NewsPanel.focusIn += Hook_NewsPanel_focusIn;
         Hook_NewsPanel.update += Hook_NewsPanel_update;
     }
+
+    private void Hook__TierItemFound__constructor__(Hook__TierItemFound.orig___constructor__ orig, TierItemFound arg1, Hero hero, Entity e, InventItem item, double iconX, double iconY, HlAction<bool> onComplete)
+    {
+        if (CHIUYIMain.config.Value.SpeedTier)
+        {
+            new SpeedTier(hero, e, item);
+            return;
+        }
+        orig(arg1, hero, e, item, iconX, iconY, onComplete);
+    }
+
+    private void Hook__LevelStruct_applyDifficulty(Hook_LevelStruct.orig_applyDifficulty orig, LevelStruct self)
+    {
+        if (dc.pr.Game.Class.ME.user.game.spawnMimicInNextLevel && CHIUYIMain.config.Value.loreBankMimicRoom && Main.Class.ME.options.disableLoreRooms)
+        {
+            addMimicrooom(self);
+        }
+        orig(self);
+    }
+    public void addMimicrooom(LevelStruct Struct)
+    {
+        for (int i = 0; i < Data.Class.loreRoom.all.get_length(); i++)
+        {
+            dynamic lore = Data.Class.loreRoom.all.array.getDyn(i);
+            if (lore == null) return;
+            if (dc._Data.LoreRoom_Impl_.Class.get_room(((HaxeProxyBase)lore).ToVirtual<virtual_arc_examinables_fxEmitters_Intention_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>()).id.ToString() == "MimicEscapedRoom")
+            {
+                Struct.tryAddLoreRoom(((HaxeProxyBase)lore).ToVirtual<virtual_arc_examinables_fxEmitters_Intention_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>());
+            }
+        }
+    }
+
 
     private void Hook_NewsPanel_update(Hook_NewsPanel.orig_update orig, NewsPanel self)
     {

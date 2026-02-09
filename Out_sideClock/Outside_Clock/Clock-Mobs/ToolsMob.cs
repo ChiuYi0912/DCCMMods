@@ -1,7 +1,7 @@
 using dc;
 using dc.hl;
 using dc.hxd.res;
-using ModCore.Utitities;
+using ModCore.Utilities;
 using Serilog;
 
 namespace Outside_Clock;

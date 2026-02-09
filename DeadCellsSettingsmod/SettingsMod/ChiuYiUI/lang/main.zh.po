@@ -210,3 +210,41 @@ msgstr "启用/禁用删除主页新闻steam面板"
 msgid "下一次打开游戏时生效"
 msgstr "下一次打开游戏时生效"
 
+msgid "更多UI设置"
+msgstr "更多UI设置"
+
+msgid "移除电影黑边"
+msgstr "移除电影黑边"
+
+msgid "移除过场动画电影黑边"
+msgstr "移除过场动画电影黑边"
+
+msgid "禁用暗角效果"
+msgstr "禁用暗角效果"
+
+msgid "例如：受伤时的暗角效果"
+msgstr "例如：受伤时的暗角效果"
+
+msgid "轻量显示"
+msgstr "轻量显示"
+
+msgid "禁用交互图标等等"
+msgstr "禁用交互图标等等"
+
+msgid "无弹出文字"
+msgstr "无弹出文字"
+
+msgid "禁用伤害弹出文字"
+msgstr "禁用伤害弹出文字"
+
+msgid "预知拟态魔剧情房间常驻"
+msgstr "预知拟态魔剧情房间常驻"
+
+msgid "开启时：预知拟态魔剧情房间生成不会被“关闭剧情房间”影响"
+msgstr "开启时：预知拟态魔剧情房间生成不会被“关闭剧情房间”影响"
+
+msgid "开启竞速卷轴拾取"
+msgstr "开启竞速卷轴拾取"
+
+msgid "竞速模式快速拾取卷轴常驻"
+msgstr "竞速模式快速拾取卷轴常驻"

@@ -4,6 +4,7 @@ using dc.en;
 using dc.en.inter;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Storage;
+using Outside_Clock.DataConfig;
 using Serilog;
 
 namespace Outside_Clock;

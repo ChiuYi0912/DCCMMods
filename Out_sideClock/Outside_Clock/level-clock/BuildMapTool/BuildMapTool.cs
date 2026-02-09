@@ -1,6 +1,6 @@
 using dc.level;
 
-namespace Outside_Clock;
+namespace Outside_Clock.level_clock.BuildMapTool;
 
 public static class BuildMapTool
 {

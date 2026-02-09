@@ -210,3 +210,50 @@ msgstr "Enable/Disable removing home page news/Steam panel"
 msgid "下一次打开游戏时生效"
 msgstr "This change will take effect the next time you open the game"
 
+#: HasUi.cs
+msgid "更多UI设置"
+msgstr "More UI Settings"
+
+#: HasUi.cs
+msgid "移除电影黑边"
+msgstr "Remove Movie Black Bars"
+
+#: HasUi.cs
+msgid "移除过场动画电影黑边"
+msgstr "Remove black borders from cinematic cutscenes"
+
+#: HasUi.cs
+msgid "禁用暗角效果"
+msgstr "Disable vignette effect"
+
+#: HasUi.cs
+msgid "例如：受伤时的暗角效果"
+msgstr "For example: vignetting effect when injured"
+
+#: HasUi.cs
+msgid "轻量显示"
+msgstr "Lightweight Display"
+
+#: HasUi.cs
+msgid "禁用交互图标等等"
+msgstr "Disable interactive icons, etc."
+
+#: HasUi.cs
+msgid "无弹出文字"
+msgstr "No pop-up text"
+
+#: HasUi.cs
+msgid "禁用伤害弹出文字"
+msgstr "Disable damage tooltips"
+
+msgid "预知拟态魔剧情房间常驻"
+msgstr "Predictive Mimicry Magic Plot Room Permanent"
+
+msgid "开启时：预知拟态魔剧情房间生成不会被“关闭剧情房间影响”"
+msgstr "When activated: The generation of the Predestined Mimicry Demon storyline room will not be affected by the closure of storyline rooms."
+
+msgid "开启竞速卷轴拾取"
+msgstr "Activate Speed Scroll Pickup"
+
+msgid "竞速模式快速拾取卷轴常驻"
+msgstr "Racing Mode: Quick Pickup Scrolls Permanently Available"

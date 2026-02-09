@@ -1,35 +1,20 @@
 using dc;
 using dc.cine;
 using dc.en;
-using dc.h2d;
-using dc.h3d.shader;
-using dc.hxd;
 using dc.pr;
-using dc.ui;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
-using ModCore.Events.Interfaces.Game.Hero;
 using ModCore.Mods;
-using ModCore.Utitities;
+using ModCore.Utilities;
 using Serilog;
-using Options = dc.ui.Options;
-using System;
 using ModCore.Modules;
-using System.Diagnostics;
-using static dc.ui.OptionsSection;
 using dc.en.inter;
 using dc.ui.popd;
 using dc.tool.atk;
 using ModCore.Events.Interfaces.Game;
 using dc.tool;
-using dc.tool.mod;
-using dc.libs.tilemap;
-using dc.hxd.snd;
 using ModCore.Storage;
 using CiuYiUI;
-using UILang;
-using dc.libs.heaps;
-using dc.libs.heaps.slib;
 
 namespace ChiuYiUI;
 
@@ -242,15 +227,15 @@ IOnAfterLoadingCDB
     private static bool _pop = true;
     private void popmiami(Hook_Entity.orig_popDamage orig, Entity self, AttackData a)
     {
-        if (_pop == true)
+        if (dc.ui.Console.Class.ME.flags.exists("NoPopText".AsHaxeString())) return;
+        if (_pop)
         {
             a.hasTag(2);
-            int num = self.dmgIdx;
             virtual_chars_font_ virtual_chars_font_ = new virtual_chars_font_();
             virtual_chars_font_.chars = "numbers".AsHaxeString();
             virtual_chars_font_.font = "sts".AsHaxeString();
             _PopDamageSts DamageSts = PopDamageSts.Class;
-            PopDamageSts popDamageHotline = DamageSts.create(self, a, num, new Ref<bool>(), virtual_chars_font_);
+            PopDamageSts popDamageHotline = DamageSts.create(self, a, self.dmgIdx, new Ref<bool>(), virtual_chars_font_);
         }
         else
         {
@@ -261,15 +246,15 @@ IOnAfterLoadingCDB
     private static bool _sty = true;
     private void sty(Hook_Entity.orig_popDamage orig, Entity self, AttackData a)
     {
-        if (_sty == true)
+        if (dc.ui.Console.Class.ME.flags.exists("NoPopText".AsHaxeString())) return;
+        if (_sty)
         {
             a.hasTag(2);
-            int num = self.dmgIdx;
             virtual_chars_font_ virtual_chars_font_ = new virtual_chars_font_();
             virtual_chars_font_.chars = "numbers".AsHaxeString();
             virtual_chars_font_.font = "hotline".AsHaxeString();
             _PopDamageHotline hotlineInstance = PopDamageHotline.Class;
-            PopDamageHotline popDamageHotline = hotlineInstance.create(self, a, num, new Ref<bool>(), virtual_chars_font_);
+            PopDamageHotline popDamageHotline = hotlineInstance.create(self, a, self.dmgIdx, new Ref<bool>(), virtual_chars_font_);
         }
         else
         {

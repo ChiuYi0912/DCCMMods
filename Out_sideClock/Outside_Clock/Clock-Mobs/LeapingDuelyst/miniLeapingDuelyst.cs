@@ -15,7 +15,7 @@ using dc.tool.skill;
 using HaxeProxy.Runtime;
 using ModCore.Serialization;
 using ModCore.Storage;
-using ModCore.Utitities;
+using ModCore.Utilities;
 using Log = Serilog.Log;
 using Math = System.Math;
 
@@ -23,7 +23,7 @@ namespace Outside_Clock.Clock_Mobs;
 
 public class miniLeapingDuelyst : LeapingDuelyst,
     IHxbitSerializeCallback,
-IHxbitSerializable<miniLeapingDuelyst.Data>
+    IHxbitSerializable<miniLeapingDuelyst.Data>
 {
     private class Data
     {

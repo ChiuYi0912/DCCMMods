@@ -7,7 +7,7 @@ using dc.tool;
 using HaxeProxy.Runtime;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Modules;
-using ModCore.Utitities;
+using ModCore.Utilities;
 using Serilog;
 
 namespace ChiuYiUI;

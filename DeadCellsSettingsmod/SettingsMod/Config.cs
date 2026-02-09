@@ -42,8 +42,18 @@ namespace ChiuYiUI
         public double ViewportshakesD { get; set; }
 
         public bool Hitpause { get; set; } = false;
+        public bool loreBankMimicRoom { get; set; } = false;
+        public bool SpeedTier { get; set; } = false;
 
         public bool NewsPanel { get; set; } = false;
+
+
+
+        public bool HasBottomBar { get; set; } = false;
+        public bool noVignette { get; set; } = false;
+        public bool haslightTip { get; set; } = false;
+        public bool hasNoPopText { get; set; } = false;
+        public bool hasNoStatusIcon { get; set; } = false;
     }
 
     #region 围巾配置类

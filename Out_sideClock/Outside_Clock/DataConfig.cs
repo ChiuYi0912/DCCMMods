@@ -1,4 +1,4 @@
-namespace Outside_Clock;
+namespace Outside_Clock.DataConfig;
 
 public class Out_Clock_Config
 {
