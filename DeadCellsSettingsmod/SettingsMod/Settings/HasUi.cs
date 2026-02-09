@@ -27,11 +27,11 @@ namespace ChiuYiUI.Settings.HasUi
         {
             orig(self);
             bool Vignette = CHIUYIMain.config.Value.HasBottomBar;
-            HasnoVignette(Vignette);
-            bool haslightTip = CHIUYIMain.config.Value.haslightTip;
-            HaslightTip(haslightTip);
-            bool hasNoPopText = CHIUYIMain.config.Value.hasNoPopText;
-            HasNoPopText(hasNoPopText);
+            HasFlags(Vignette, "noVignette");
+            bool haslightTip = CHIUYIMain.config.Value.HaslightTip;
+            HasFlags(haslightTip, "lightTip");
+            bool hasNoPopText = CHIUYIMain.config.Value.HasNoPopText;
+            HasFlags(hasNoPopText, "NoPopText");
         }
 
         private void Hook__GameCinematic___constructor__(Hook__GameCinematic.orig___constructor__ orig, GameCinematic arg1)
@@ -71,13 +71,13 @@ namespace ChiuYiUI.Settings.HasUi
             scrollerFlow = options.scrollerFlow;
             HlFunc<bool> noVignette = () =>
                     {
-                        bool newValue = !CHIUYIMain.config.Value.noVignette;
-                        CHIUYIMain.config.Value.noVignette = newValue;
+                        bool newValue = !CHIUYIMain.config.Value.NoVignette;
+                        CHIUYIMain.config.Value.NoVignette = newValue;
                         CHIUYIMain.config.Save();
-                        this.HasnoVignette(newValue);
+                        this.HasFlags(newValue, "noVignette");
                         return newValue;
                     };
-            bool hasnoVignette = CHIUYIMain.config.Value.noVignette;
+            bool hasnoVignette = CHIUYIMain.config.Value.NoVignette;
             options.addToggleWidget(
                 GetText.Instance.GetString("禁用暗角效果").AsHaxeString(),
                 GetText.Instance.GetString("例如：受伤时的暗角效果").AsHaxeString(),
@@ -89,13 +89,13 @@ namespace ChiuYiUI.Settings.HasUi
             scrollerFlow = options.scrollerFlow;
             HlFunc<bool> lightTip = () =>
                     {
-                        bool newValue = !CHIUYIMain.config.Value.haslightTip;
-                        CHIUYIMain.config.Value.haslightTip = newValue;
+                        bool newValue = !CHIUYIMain.config.Value.HaslightTip;
+                        CHIUYIMain.config.Value.HaslightTip = newValue;
                         CHIUYIMain.config.Save();
-                        this.HaslightTip(newValue);
+                        this.HasFlags(newValue, "lightTip");
                         return newValue;
                     };
-            bool haslightTip = CHIUYIMain.config.Value.haslightTip;
+            bool haslightTip = CHIUYIMain.config.Value.HaslightTip;
             options.addToggleWidget(
                 GetText.Instance.GetString("轻量显示").AsHaxeString(),
                 GetText.Instance.GetString("禁用交互图标等等").AsHaxeString(),
@@ -108,13 +108,13 @@ namespace ChiuYiUI.Settings.HasUi
             scrollerFlow = options.scrollerFlow;
             HlFunc<bool> NoPopText = () =>
                     {
-                        bool newValue = !CHIUYIMain.config.Value.hasNoPopText;
-                        CHIUYIMain.config.Value.hasNoPopText = newValue;
+                        bool newValue = !CHIUYIMain.config.Value.HasNoPopText;
+                        CHIUYIMain.config.Value.HasNoPopText = newValue;
                         CHIUYIMain.config.Save();
-                        this.HasNoPopText(newValue);
+                        this.HasFlags(newValue, "NoPopText");
                         return newValue;
                     };
-            bool hasNoPopText = CHIUYIMain.config.Value.hasNoPopText;
+            bool hasNoPopText = CHIUYIMain.config.Value.HasNoPopText;
             options.addToggleWidget(
                 GetText.Instance.GetString("无弹出文字").AsHaxeString(),
                 GetText.Instance.GetString("禁用伤害弹出文字").AsHaxeString(),
@@ -141,38 +141,16 @@ namespace ChiuYiUI.Settings.HasUi
                 scrollerFlow
             );
         }
-        public void HasnoVignette(bool Vignette)
-        {
-            if (Vignette)
-            {
-                dc.ui.Console.Class.ME.flags.set("noVignette".AsHaxeString(), null);
-            }
-            else
-            {
-                dc.ui.Console.Class.ME.flags.remove("noVignette".AsHaxeString());
-            }
-        }
 
-        public void HaslightTip(bool haslightTip)
+        public void HasFlags(bool isset, string name)
         {
-            if (haslightTip)
+            if (isset)
             {
-                dc.ui.Console.Class.ME.flags.set("lightTip".AsHaxeString(), null);
+                dc.ui.Console.Class.ME.flags.set(name.AsHaxeString(), null);
             }
             else
             {
-                dc.ui.Console.Class.ME.flags.remove("lightTip".AsHaxeString());
-            }
-        }
-        public void HasNoPopText(bool NopopText)
-        {
-            if (NopopText)
-            {
-                dc.ui.Console.Class.ME.flags.set("NoPopText".AsHaxeString(), null);
-            }
-            else
-            {
-                dc.ui.Console.Class.ME.flags.remove("NoPopText".AsHaxeString());
+                dc.ui.Console.Class.ME.flags.remove(name.AsHaxeString());
             }
         }
 

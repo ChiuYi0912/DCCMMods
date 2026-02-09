@@ -25,12 +25,11 @@ IOnAfterLoadingCDB
 
     private ChiuYiUI _ui;
     private Scraf _toscarf;
-#pragma warning disable CS8618 
+    #pragma warning disable CS8618 
     public CHIUYIMain(ModInfo info) : base(info)
     {
         _instance = this;
     }
-#pragma warning restore CS8618 
     private static CHIUYIMain? _instance;
     private Config _config;
     private LevelMusic _levelMusic;
@@ -40,16 +39,8 @@ IOnAfterLoadingCDB
         Log.Information("整合包运行成功！by ChiuYi.秋");
         base.Initialize();
         _config = ConfigManager.LoadConfig();
-        _skinEnabled = _config.SkinEnabled;
-        _skinkatana = _config.skinkatana;
-        _teleport = _config.teleport;
-        _pop = _config.pop;
-        _sty = _config.rsty;
-        _useScarfGray = _config.UseScarfGray;
-
         _levelMusic = new LevelMusic(this);
         _levelMusic.HookInitialize();
-
         _ui = new ChiuYiUI(this);
         _ui.Viewporthook();
         _toscarf = new Scraf(this);
@@ -84,7 +75,6 @@ IOnAfterLoadingCDB
             var config = _scarfConfigs[index];
             SetScarfConfig(index, config);
         });
-        UseScarfGray = _config.UseScarfGray;
         ApplyAllScarfConfigs();
         CreateDefaultConfig();
         #endregion
@@ -103,97 +93,29 @@ IOnAfterLoadingCDB
     #region 储存配置
     public void SaveConfiguration()
     {
-        _config.SkinEnabled = _skinEnabled;
-        _config.skinkatana = _skinkatana;
-        _config.teleport = _teleport;
-        _config.pop = _pop;
-        _config.rsty = _sty;
-
-        _config.UseScarfGray = UseScarfGray;
-
         _config.ScarfConfigs = _scarfConfigs;
         ConfigManager.SaveConfig(_config);
     }
     #endregion
 
     #region 装束效果
-    private static bool _skinEnabled = true;
+
     private bool allaskin(Hook_Hero.orig_hasSkin orig, Hero self, dc.String model, dc.String itemId)
     {
-        return SkinEnabled;
+        return CHIUYIMain.config.Value.SkinEnabled;
     }
 
-    public static bool SkinEnabled
-    {
-        get { return _skinEnabled; }
-        set
-        {
-            if (_skinEnabled != value)
-            {
-                _skinEnabled = value;
-                Instance.SaveConfiguration();
-            }
-        }
-    }
-    public static bool skinkatana
-    {
-        get { return _skinkatana; }
-        set
-        {
-            if (_skinkatana != value)
-            {
-                _skinkatana = value;
-                Instance.SaveConfiguration();
-            }
-        }
-    }
-    public static bool teleport
-    {
-        get { return _teleport; }
-        set
-        {
-            if (_teleport != value)
-            {
-                _teleport = value;
-                Instance.SaveConfiguration();
-            }
-        }
-    }
-    public static bool pop
-    {
-        get { return _pop; }
-        set
-        {
-            if (_pop != value)
-            {
-                _pop = value;
-                Instance.SaveConfiguration();
-            }
-        }
-    }
-    public static bool rsty
-    {
-        get { return _sty; }
-        set
-        {
-            if (_sty != value)
-            {
-                _sty = value;
-                Instance.SaveConfiguration();
-            }
-        }
-    }
 
 
 #pragma warning disable CS8603
     public static CHIUYIMain Instance => _instance;
 #pragma warning restore CS8603 
-    private static bool _skinkatana = true;
+
     private static bool katanaskin(Hook_Hero.orig_hasSkin orig, Hero self, dc.String model, dc.String itemId)
     {
         if (itemId != null && itemId.ToString() == "KatanaZero")
         {
-            return skinkatana;
+            return CHIUYIMain.config.Value.skinkatana;
         }
 
         bool a = orig(self, model, itemId);
@@ -210,13 +132,12 @@ IOnAfterLoadingCDB
 
 
     }
-    private static bool _teleport = true;
 
     private void yuteleport(Hook_Teleport.orig_startTeleport orig, Teleport self, Hero hero, Entity to)
     {
         if (to == null) return;
 
-        if (_teleport == true)
+        if (CHIUYIMain.config.Value.teleport)
         {
             TeleportationRoR teleportationRoR = new TeleportationRoR(hero, self, to);
             return;
@@ -224,11 +145,11 @@ IOnAfterLoadingCDB
         Teleportation teleportation = new Teleportation(hero, self, to);
     }
 
-    private static bool _pop = true;
+
     private void popmiami(Hook_Entity.orig_popDamage orig, Entity self, AttackData a)
     {
         if (dc.ui.Console.Class.ME.flags.exists("NoPopText".AsHaxeString())) return;
-        if (_pop)
+        if (CHIUYIMain.config.Value.pop)
         {
             a.hasTag(2);
             virtual_chars_font_ virtual_chars_font_ = new virtual_chars_font_();
@@ -243,11 +164,11 @@ IOnAfterLoadingCDB
         }
     }
 
-    private static bool _sty = true;
+ 
     private void sty(Hook_Entity.orig_popDamage orig, Entity self, AttackData a)
     {
         if (dc.ui.Console.Class.ME.flags.exists("NoPopText".AsHaxeString())) return;
-        if (_sty)
+        if (CHIUYIMain.config.Value.rsty)
         {
             a.hasTag(2);
             virtual_chars_font_ virtual_chars_font_ = new virtual_chars_font_();
@@ -745,7 +666,7 @@ IOnAfterLoadingCDB
             dynamic scarf = cdb_.scarfs.getDyn(scarfIndex);
 
 
-            if (CHIUYIMain.UseScarfGray)
+            if (CHIUYIMain.config.Value.UseScarfGray)
             {
                 scarf.sprId = "scarfGray";
             }

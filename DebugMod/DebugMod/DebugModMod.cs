@@ -54,10 +54,17 @@ namespace DebugMod
 
             hh.CreateHook("ui.$Console", "__constructor__", Hook_Console_ctor).Enable();
 
-
+            Hook__LootGen.__constructor__ += Hook__LootGen__constructor__;
         }
 
-
+        public static double isseed;
+        private void Hook__LootGen__constructor__(Hook__LootGen.orig___constructor__ orig, LootGen arg1, User user, ArrayObj maps, int seed, TierDistribution tierDistrib, Hero hero, Ref<bool> _hasExplorationBonusIncentive, Ref<bool> forceNoGenerate)
+        {
+            orig(arg1, user, maps, seed, tierDistrib, hero, _hasExplorationBonusIncentive, forceNoGenerate);
+            Logger.Debug($"原始随机数：{arg1.rseed.seed}");
+            Logger.Debug($"种子：{seed}");
+            isseed = arg1.rseed.seed;
+        }
 
 
         private void Hook__Console__constructor__(Hook__Console.orig___constructor__ orig, dc.h2d.Console arg1, Font font, dc.h2d.Object parent)
@@ -115,10 +122,11 @@ namespace DebugMod
 
         void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb)
         {
-
-            var data = cdb.level.all.array.getDyn(0);
-            data.tripleUps = 20;
-
+            for (int i = 0; i < cdb.level.all.get_length(); i++)
+            {
+                var data = cdb.level.all.array.getDyn(i);
+                data.doubleUps = 5;
+            }
         }
 
 

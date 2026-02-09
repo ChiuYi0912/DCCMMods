@@ -1,11 +1,6 @@
-using System;
-using System.ComponentModel.DataAnnotations;
 using dc;
-using dc.en;
-using dc.h2d;
 using dc.tool;
 using HaxeProxy.Runtime;
-using ModCore.Events.Interfaces.Game;
 using ModCore.Modules;
 using ModCore.Utilities;
 using Serilog;

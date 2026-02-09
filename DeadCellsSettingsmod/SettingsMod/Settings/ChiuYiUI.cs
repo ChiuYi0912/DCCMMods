@@ -6,7 +6,6 @@ using ModCore.Utilities;
 using Hook_Options = dc.ui.Hook_Options;
 using Options = dc.ui.Options;
 using System;
-using static dc.ui.OptionsSection;
 using dc.h2d;
 using Serilog;
 using S_ChiuYi;
@@ -15,8 +14,6 @@ using dc.tool;
 using dc.pr;
 using dc.libs.heaps.slib;
 using dc.en;
-using GT = UILang.SettingsLang;
-using UILang;
 using Amazon.DynamoDBv2.Model;
 using ModCore.Modules;
 using dc.libs.heaps;
@@ -122,11 +119,12 @@ public class ChiuYiUI
 
         HlFunc<bool> toggleFunction = static () =>
         {
-            bool newValue = !CHIUYIMain.SkinEnabled;
-            CHIUYIMain.SkinEnabled = newValue;
+            bool newValue = !CHIUYIMain.config.Value.SkinEnabled;
+            CHIUYIMain.config.Value.SkinEnabled = newValue;
+            CHIUYIMain.config.Save();
             return newValue;
         };
-        bool proxyValue = CHIUYIMain.SkinEnabled;
+        bool proxyValue = CHIUYIMain.config.Value.SkinEnabled;
         ref bool proxyRef = ref proxyValue;
         OptionWidget allskin = options.addToggleWidget(
             GetText.Instance.GetString("一键开启所有联动装束效果").AsHaxeString(),
@@ -140,11 +138,12 @@ public class ChiuYiUI
         scrollerFlow = options.scrollerFlow;
         HlFunc<bool> katanazero = static () =>
         {
-            bool katanabool = !CHIUYIMain.skinkatana;
-            CHIUYIMain.skinkatana = katanabool;
+            bool katanabool = !CHIUYIMain.config.Value.skinkatana;
+            CHIUYIMain.config.Value.skinkatana = katanabool;
+            CHIUYIMain.config.Save();
             return katanabool;
         };
-        bool Katan1 = CHIUYIMain.skinkatana;
+        bool Katan1 = CHIUYIMain.config.Value.skinkatana;
         ref bool proxyRef1 = ref Katan1;
         OptionWidget katanaskin = options.addToggleWidget(
             GetText.Instance.GetString("武士零装束效果").AsHaxeString(),
@@ -158,11 +157,12 @@ public class ChiuYiUI
         scrollerFlow = options.scrollerFlow;
         HlFunc<bool> teleportToggle = static () =>
         {
-            bool newValue = !CHIUYIMain.teleport;
-            CHIUYIMain.teleport = newValue;
+            bool newValue = !CHIUYIMain.config.Value.teleport;
+            CHIUYIMain.config.Value.teleport = newValue;
+            CHIUYIMain.config.Save();
             return newValue;
         };
-        bool teleportProxyValue = CHIUYIMain.teleport;
+        bool teleportProxyValue = CHIUYIMain.config.Value.teleport;
         ref bool teleportProxyRef = ref teleportProxyValue;
         options.addToggleWidget(
             GetText.Instance.GetString("雨中冒险传送功能").AsHaxeString(),
@@ -176,11 +176,12 @@ public class ChiuYiUI
         scrollerFlow = options.scrollerFlow;
         HlFunc<bool> popd = static () =>
         {
-            bool newValue = !CHIUYIMain.pop;
-            CHIUYIMain.pop = newValue;
+            bool newValue = !CHIUYIMain.config.Value.pop;
+            CHIUYIMain.config.Value.pop = newValue;
+            CHIUYIMain.config.Save();
             return newValue;
         };
-        bool opod1 = CHIUYIMain.pop;
+        bool opod1 = CHIUYIMain.config.Value.pop;
         ref bool popDamage = ref opod1;
         options.addToggleWidget(
             GetText.Instance.GetString("杀戮尖塔暴击特效").AsHaxeString(),
@@ -194,11 +195,12 @@ public class ChiuYiUI
         scrollerFlow = options.scrollerFlow;
         HlFunc<bool> sty = static () =>
         {
-            bool newValue = !CHIUYIMain.rsty;
-            CHIUYIMain.rsty = newValue;
+            bool newValue = !CHIUYIMain.config.Value.rsty;
+            CHIUYIMain.config.Value.rsty = newValue;
+            CHIUYIMain.config.Save();
             return newValue;
         };
-        bool styy = CHIUYIMain.rsty;
+        bool styy = CHIUYIMain.config.Value.rsty;
         ref bool styy1 = ref styy;
         options.addToggleWidget(
             GetText.Instance.GetString("迈阿密热线暴击特效").AsHaxeString(),
@@ -236,12 +238,12 @@ public class ChiuYiUI
         scrollerFlow = options.scrollerFlow;
         HlFunc<bool> loreBankMimicRoom = static () =>
         {
-            bool newValue = !CHIUYIMain.config.Value.loreBankMimicRoom;
-            CHIUYIMain.config.Value.loreBankMimicRoom = newValue;
+            bool newValue = !CHIUYIMain.config.Value.LoreBankMimicRoom;
+            CHIUYIMain.config.Value.LoreBankMimicRoom = newValue;
             CHIUYIMain.config.Save();
             return newValue;
         };
-        bool hasloreBankMimicRoom = CHIUYIMain.config.Value.loreBankMimicRoom;
+        bool hasloreBankMimicRoom = CHIUYIMain.config.Value.LoreBankMimicRoom;
         options.addToggleWidget(
             GetText.Instance.GetString("预知拟态魔剧情房间常驻").AsHaxeString(),
             GetText.Instance.GetString("开启时：预知拟态魔剧情房间生成不会被“关闭剧情房间影响”").AsHaxeString(),
@@ -327,7 +329,7 @@ public class ChiuYiUI
 
     private void Hook__LevelStruct_applyDifficulty(Hook_LevelStruct.orig_applyDifficulty orig, LevelStruct self)
     {
-        if (dc.pr.Game.Class.ME.user.game.spawnMimicInNextLevel && CHIUYIMain.config.Value.loreBankMimicRoom && Main.Class.ME.options.disableLoreRooms)
+        if (dc.pr.Game.Class.ME.user.game.spawnMimicInNextLevel && CHIUYIMain.config.Value.LoreBankMimicRoom && Main.Class.ME.options.disableLoreRooms)
         {
             addMimicrooom(self);
         }

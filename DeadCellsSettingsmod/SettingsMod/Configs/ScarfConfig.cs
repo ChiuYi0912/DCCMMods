@@ -9,52 +9,15 @@ namespace ChiuYiUI
 {
     public class Config
     {
-        #region 联动皮肤配置
-        public bool SkinEnabled { get; set; } = false;
-        public bool skinkatana { get; set; } = false;
-        public bool teleport { get; set; } = false;
-        public bool pop { get; set; } = false;
-        public bool rsty { get; set; } = false;
-        public bool UseScarfGray { get; set; } = true;
-        #endregion
 
-        public Dictionary<int, ScarfConfig> ScarfConfigs { get; set; } = new Dictionary<int, ScarfConfig>
+        public Dictionary<int, ScarfConfig> ScarfConfigs { get; set; } = new ()
         {
 
         };
 
     }
 
-    public class PothionsConfig
-    {
-        public bool Allscarf { get; set; } = false;
 
-        public double ViewportbumAng { get; set; }
-        public double Viewportbumdir { get; set; }
-
-        public double ViewportshakeReversedSX { get; set; }
-        public double ViewportshakeReversedSY { get; set; }
-        public double ViewportshakeReversedSD { get; set; }
-
-
-        public double ViewportshakesX { get; set; }
-        public double ViewportshakesY { get; set; }
-        public double ViewportshakesD { get; set; }
-
-        public bool Hitpause { get; set; } = false;
-        public bool loreBankMimicRoom { get; set; } = false;
-        public bool SpeedTier { get; set; } = false;
-
-        public bool NewsPanel { get; set; } = false;
-
-
-
-        public bool HasBottomBar { get; set; } = false;
-        public bool noVignette { get; set; } = false;
-        public bool haslightTip { get; set; } = false;
-        public bool hasNoPopText { get; set; } = false;
-        public bool hasNoStatusIcon { get; set; } = false;
-    }
 
     #region 围巾配置类
     public class ScarfConfig
