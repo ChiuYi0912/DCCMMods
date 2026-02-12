@@ -31,7 +31,6 @@ namespace ChiuYiUI.GameCm
             this.hero = owen;
             owen.cancelVelocities();
             var kind = item.kind;
-            dc.String itemKind = null!;
             dc.String string2 = null!;
 
 

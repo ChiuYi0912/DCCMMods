@@ -5,8 +5,8 @@
     <Nullable>enable</Nullable>
 
     <ModType>mod</ModType>
-    <ModName>Dead Cells Enhanced Settings</ModName>
-    <ModMain>ChiuYiUI.CHIUYIMain</ModMain>
+    <ModName>MoreHeadsandskins</ModName>
+    <ModMain>MoreHeadsandskins.Entry</ModMain>
 	  <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -16,22 +16,9 @@
     <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
   </ItemGroup>
 
- <PropertyGroup>
-    <GenerateSinglePakFile>false</GenerateSinglePakFile>
-  </PropertyGroup>
-
   <PropertyGroup>
-    <GenerateDiffCDB>false</GenerateDiffCDB>
+    <GenerateDiffCDB>true</GenerateDiffCDB>
     <GameVersion>35</GameVersion>
   </PropertyGroup>
-
- <ItemGroup>
-    <PackAssets Include="ChiuYiUI\**\*" RootInPak="SettingsLang" />
-  </ItemGroup>
-
-  <Target Name="CopyResPak" AfterTargets="MergeAllPaks">
-    <Copy SourceFiles="$(MergedPakPath)"
-          DestinationFiles="../../bin/core/host/res.pak" UseHardlinksIfPossible="true" />
-  </Target>
 
 </Project>

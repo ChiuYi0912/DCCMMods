@@ -1,0 +1,4990 @@
+
+ui.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ui/logoCNC
+  rotate: false
+  xy: 1, 1
+  size: 613, 118
+  orig: 630, 120
+  offset: 8, 1
+  index: 0
+ui/gradientCorner
+  rotate: false
+  xy: 617, 1
+  size: 319, 179
+  orig: 319, 179
+  offset: 0, 0
+  index: 0
+ui/redCross
+  rotate: false
+  xy: 1, 122
+  size: 212, 146
+  orig: 212, 146
+  offset: 0, 0
+  index: 0
+ui/gradientTop
+  rotate: false
+  xy: 216, 122
+  size: 211, 2
+  orig: 212, 2
+  offset: 0, 0
+  index: 0
+ui/gradientBot
+  rotate: false
+  xy: 216, 127
+  size: 197, 55
+  orig: 212, 56
+  offset: 15, 0
+  index: 0
+ui/logoDeadCells
+  rotate: false
+  xy: 430, 122
+  size: 178, 296
+  orig: 181, 299
+  offset: 2, 0
+  index: 0
+ui/selectLeftRight
+  rotate: false
+  xy: 216, 185
+  size: 172, 15
+  orig: 172, 16
+  offset: 0, 0
+  index: 0
+ui/logoDeadCellsSmall
+  rotate: false
+  xy: 216, 203
+  size: 127, 158
+  orig: 127, 158
+  offset: 0, 0
+  index: 0
+ui/alphaRamp
+  rotate: false
+  xy: 1, 271
+  size: 125, 2
+  orig: 128, 2
+  offset: 3, 0
+  index: 0
+ui/worldMapFrameDLC_purple
+  rotate: false
+  xy: 1, 276
+  size: 124, 59
+  orig: 125, 67
+  offset: 0, 8
+  index: 0
+ui/worldMapFrameDLC_3
+  rotate: false
+  xy: 1, 338
+  size: 119, 59
+  orig: 125, 67
+  offset: 1, 8
+  index: 0
+ui/worldMapFrameDLC_0
+  rotate: false
+  xy: 123, 364
+  size: 114, 58
+  orig: 123, 65
+  offset: 5, 7
+  index: 0
+ui/boxLegendary
+  rotate: false
+  xy: 1, 400
+  size: 113, 113
+  orig: 113, 113
+  offset: 0, 0
+  index: 0
+ui/worldMapFrameBank
+  rotate: false
+  xy: 240, 364
+  size: 110, 59
+  orig: 125, 67
+  offset: 7, 8
+  index: 0
+ui/boxBlueAccessibility
+  rotate: false
+  xy: 117, 425
+  size: 110, 28
+  orig: 110, 28
+  offset: 0, 0
+  index: 0
+ui/selectMid
+  rotate: false
+  xy: 611, 183
+  size: 110, 15
+  orig: 116, 15
+  offset: 3, 0
+  index: 0
+ui/worldMapFrameDLC_2
+  rotate: false
+  xy: 724, 183
+  size: 109, 59
+  orig: 125, 67
+  offset: 8, 8
+  index: 0
+ui/worldMapFrameDLC_1
+  rotate: false
+  xy: 611, 201
+  size: 103, 59
+  orig: 125, 67
+  offset: 9, 8
+  index: 0
+ui/boxEventBig
+  rotate: false
+  xy: 836, 183
+  size: 102, 40
+  orig: 102, 40
+  offset: 0, 0
+  index: 0
+ui/boxEvent
+  rotate: false
+  xy: 836, 226
+  size: 102, 20
+  orig: 102, 20
+  offset: 0, 0
+  index: 0
+ui/boxValidation
+  rotate: false
+  xy: 717, 245
+  size: 102, 20
+  orig: 102, 20
+  offset: 0, 0
+  index: 0
+ui/frameBg
+  rotate: false
+  xy: 611, 263
+  size: 102, 20
+  orig: 102, 28
+  offset: 0, 4
+  index: 0
+ui/BoxUpgradeBi
+  rotate: false
+  xy: 822, 249
+  size: 100, 19
+  orig: 100, 19
+  offset: 0, 0
+  index: 0
+ui/simpleBoxBi
+  rotate: false
+  xy: 716, 268
+  size: 100, 19
+  orig: 100, 19
+  offset: 0, 0
+  index: 0
+ui/notifBox
+  rotate: false
+  xy: 611, 286
+  size: 100, 19
+  orig: 102, 28
+  offset: 1, 4
+  index: 0
+ui/BoxUpgrade
+  rotate: false
+  xy: 819, 271
+  size: 100, 19
+  orig: 100, 19
+  offset: 0, 0
+  index: 0
+ui/simpleBox
+  rotate: false
+  xy: 922, 271
+  size: 100, 19
+  orig: 100, 19
+  offset: 0, 0
+  index: 0
+ui/gaugeDeco
+  rotate: false
+  xy: 925, 249
+  size: 97, 6
+  orig: 97, 6
+  offset: 0, 0
+  index: 0
+ui/TranchesPopUpWindow/rightCorner
+  rotate: false
+  xy: 714, 290
+  size: 94, 76
+  orig: 94, 76
+  offset: 0, 0
+  index: 0
+ui/worldMapFrameSelect_0
+  rotate: false
+  xy: 611, 308
+  size: 94, 59
+  orig: 123, 65
+  offset: 14, 3
+  index: 0
+ui/worldMapFrameSelect_1
+  rotate: false
+  xy: 811, 293
+  size: 94, 57
+  orig: 123, 65
+  offset: 14, 4
+  index: 0
+ui/worldMapFrameHighlight
+  rotate: false
+  xy: 908, 293
+  size: 94, 51
+  orig: 123, 65
+  offset: 14, 7
+  index: 0
+ui/iconBrutalityBig
+  rotate: false
+  xy: 908, 347
+  size: 87, 87
+  orig: 87, 87
+  offset: 0, 0
+  index: 0
+ui/worldMapFrameDefault
+  rotate: false
+  xy: 811, 353
+  size: 86, 51
+  orig: 123, 65
+  offset: 18, 7
+  index: 0
+ui/worldMapFrameHide
+  rotate: false
+  xy: 708, 369
+  size: 86, 51
+  orig: 123, 65
+  offset: 18, 7
+  index: 0
+ui/skillSlotAlucard
+  rotate: false
+  xy: 129, 271
+  size: 84, 46
+  orig: 84, 46
+  offset: 0, 0
+  index: 0
+ui/iconTacticBig
+  rotate: false
+  xy: 939, 1
+  size: 83, 87
+  orig: 87, 87
+  offset: 4, 0
+  index: 0
+ui/iconSurviveBig
+  rotate: false
+  xy: 939, 91
+  size: 83, 87
+  orig: 87, 87
+  offset: 4, 0
+  index: 0
+ui/levelLocked
+  rotate: false
+  xy: 346, 203
+  size: 80, 45
+  orig: 80, 45
+  offset: 0, 0
+  index: 0
+ui/worldMapFrameRamp
+  rotate: false
+  xy: 123, 338
+  size: 80, 22
+  orig: 123, 65
+  offset: 21, 9
+  index: 0
+ui/lifeDeco
+  rotate: false
+  xy: 941, 181
+  size: 79, 6
+  orig: 79, 6
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomGiant_shiny
+  rotate: false
+  xy: 353, 251
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomMamaTick_shiny
+  rotate: false
+  xy: 353, 324
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomFrameSelectedMod
+  rotate: false
+  xy: 353, 397
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomFrameSelected
+  rotate: false
+  xy: 611, 370
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomMamaTick
+  rotate: false
+  xy: 797, 407
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomFrame
+  rotate: false
+  xy: 684, 423
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomDookuBeast_shiny
+  rotate: false
+  xy: 230, 426
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomGiant
+  rotate: false
+  xy: 117, 456
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomDookuBeast
+  rotate: false
+  xy: 1, 516
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomBackHighlight
+  rotate: false
+  xy: 870, 437
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomDeath_shiny
+  rotate: false
+  xy: 943, 437
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomKingsHand
+  rotate: false
+  xy: 757, 480
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomBack
+  rotate: false
+  xy: 426, 421
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomBeholder
+  rotate: false
+  xy: 499, 421
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomKingsHand_shiny
+  rotate: false
+  xy: 572, 443
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomBeholder_shiny
+  rotate: false
+  xy: 645, 496
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomDeath
+  rotate: false
+  xy: 303, 470
+  size: 70, 70
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomTimeKeeper
+  rotate: false
+  xy: 190, 499
+  size: 70, 68
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomTimeKeeper_shiny
+  rotate: false
+  xy: 74, 529
+  size: 70, 68
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomAmazonSurvival_shiny
+  rotate: false
+  xy: 1, 589
+  size: 70, 63
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomAmazonSurvival
+  rotate: false
+  xy: 830, 510
+  size: 70, 63
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/score
+  rotate: false
+  xy: 941, 190
+  size: 69, 46
+  orig: 69, 46
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomDooku
+  rotate: false
+  xy: 718, 553
+  size: 68, 65
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomDooku_shiny
+  rotate: false
+  xy: 903, 510
+  size: 68, 65
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomQueen_shiny
+  rotate: false
+  xy: 789, 576
+  size: 68, 65
+  orig: 70, 70
+  offset: 1, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomQueen
+  rotate: false
+  xy: 860, 578
+  size: 68, 65
+  orig: 70, 70
+  offset: 1, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomGardenerBoss
+  rotate: false
+  xy: 931, 578
+  size: 67, 70
+  orig: 70, 70
+  offset: 3, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomGardenerBoss_shiny
+  rotate: false
+  xy: 376, 494
+  size: 67, 70
+  orig: 70, 70
+  offset: 3, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomBehemoth_shiny
+  rotate: false
+  xy: 263, 543
+  size: 65, 65
+  orig: 70, 70
+  offset: 0, 0
+  index: 0
+ui/bossRushCustom/iconBRCustomBehemoth
+  rotate: false
+  xy: 147, 570
+  size: 60, 64
+  orig: 70, 70
+  offset: 5, 0
+  index: 0
+ui/collectorTabOff
+  rotate: false
+  xy: 74, 600
+  size: 56, 48
+  orig: 56, 48
+  offset: 0, 0
+  index: 0
+ui/collectorTabOn
+  rotate: false
+  xy: 446, 494
+  size: 56, 48
+  orig: 56, 48
+  offset: 0, 0
+  index: 0
+ui/TranchesPopUpWindow/leftCorner
+  rotate: false
+  xy: 505, 494
+  size: 55, 51
+  orig: 55, 51
+  offset: 0, 0
+  index: 0
+ui/boxCollecorDialog
+  rotate: false
+  xy: 210, 570
+  size: 49, 49
+  orig: 49, 49
+  offset: 0, 0
+  index: 0
+ui/combo
+  rotate: false
+  xy: 446, 545
+  size: 49, 46
+  orig: 49, 46
+  offset: 0, 0
+  index: 0
+ui/logoLight
+  rotate: false
+  xy: 974, 510
+  size: 48, 24
+  orig: 48, 24
+  offset: 0, 0
+  index: 0
+ui/adysLogo27
+  rotate: false
+  xy: 331, 543
+  size: 42, 36
+  orig: 44, 44
+  offset: 1, 4
+  index: 0
+ui/boxDialog
+  rotate: false
+  xy: 757, 423
+  size: 37, 34
+  orig: 37, 37
+  offset: 0, 0
+  index: 0
+ui/boxThink
+  rotate: false
+  xy: 870, 407
+  size: 35, 27
+  orig: 35, 27
+  offset: 0, 0
+  index: 0
+ui/ps4Options
+  rotate: false
+  xy: 391, 185
+  size: 35, 12
+  orig: 35, 12
+  offset: 0, 0
+  index: 0
+ui/chestCurse
+  rotate: false
+  xy: 376, 470
+  size: 33, 21
+  orig: 33, 21
+  offset: 0, 0
+  index: 0
+ui/ps4Share
+  rotate: false
+  xy: 128, 320
+  size: 33, 12
+  orig: 35, 12
+  offset: 1, 0
+  index: 0
+ui/skillSlotLegendary
+  rotate: false
+  xy: 645, 443
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+ui/skillSlotColorless
+  rotate: false
+  xy: 718, 496
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+ui/boxAchievement
+  rotate: false
+  xy: 190, 456
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+ui/portrait
+  rotate: false
+  xy: 263, 499
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+ui/test
+  rotate: false
+  xy: 147, 529
+  size: 31, 31
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+ui/PurpleTriangle
+  rotate: false
+  xy: 974, 537
+  size: 31, 28
+  orig: 49, 49
+  offset: 9, 8
+  index: 0
+ui/miniMapLine
+  rotate: false
+  xy: 147, 563
+  size: 31, 1
+  orig: 31, 1
+  offset: 0, 0
+  index: 0
+ui/skillSlotBot
+  rotate: false
+  xy: 303, 426
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_3
+  rotate: false
+  xy: 376, 567
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotBi
+  rotate: false
+  xy: 409, 567
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_9
+  rotate: false
+  xy: 331, 582
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_11
+  rotate: false
+  xy: 262, 611
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_8
+  rotate: false
+  xy: 295, 611
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_7
+  rotate: false
+  xy: 210, 622
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_6
+  rotate: false
+  xy: 133, 637
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_5
+  rotate: false
+  xy: 166, 637
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotFull
+  rotate: false
+  xy: 74, 651
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotTop
+  rotate: false
+  xy: 1, 655
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_4
+  rotate: false
+  xy: 34, 655
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_0
+  rotate: false
+  xy: 563, 516
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_10
+  rotate: false
+  xy: 596, 516
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_10
+  rotate: false
+  xy: 498, 548
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_7
+  rotate: false
+  xy: 531, 549
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_1
+  rotate: false
+  xy: 498, 581
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_8
+  rotate: false
+  xy: 442, 594
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_5
+  rotate: false
+  xy: 364, 600
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_4
+  rotate: false
+  xy: 328, 615
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_3
+  rotate: false
+  xy: 397, 600
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_9
+  rotate: false
+  xy: 564, 549
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_0
+  rotate: false
+  xy: 597, 549
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_2
+  rotate: false
+  xy: 243, 644
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_14
+  rotate: false
+  xy: 199, 655
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_13
+  rotate: false
+  xy: 276, 644
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_13
+  rotate: false
+  xy: 630, 569
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_1
+  rotate: false
+  xy: 663, 569
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_14
+  rotate: false
+  xy: 107, 670
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_2
+  rotate: false
+  xy: 67, 684
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_12
+  rotate: false
+  xy: 140, 670
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_11
+  rotate: false
+  xy: 1, 688
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeTop_12
+  rotate: false
+  xy: 34, 688
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/skillSlotAnimeBot_6
+  rotate: false
+  xy: 531, 582
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: 0
+ui/heart_empty
+  rotate: false
+  xy: 830, 480
+  size: 30, 27
+  orig: 32, 32
+  offset: 1, 2
+  index: 0
+ui/heart_full
+  rotate: false
+  xy: 475, 614
+  size: 30, 27
+  orig: 32, 32
+  offset: 1, 2
+  index: 0
+ui/skillBgB
+  rotate: false
+  xy: 430, 627
+  size: 30, 27
+  orig: 30, 27
+  offset: 0, 0
+  index: 0
+ui/heart_half
+  rotate: false
+  xy: 564, 582
+  size: 30, 27
+  orig: 32, 32
+  offset: 1, 2
+  index: 0
+ui/big_ps4Tactile
+  rotate: false
+  xy: 757, 460
+  size: 29, 16
+  orig: 29, 16
+  offset: 0, 0
+  index: 0
+ui/skillSlotBg
+  rotate: false
+  xy: 597, 582
+  size: 28, 28
+  orig: 28, 28
+  offset: 0, 0
+  index: 0
+ui/selectArrowDown
+  rotate: false
+  xy: 572, 421
+  size: 28, 18
+  orig: 28, 18
+  offset: 0, 0
+  index: 0
+ui/selectArrowUp
+  rotate: false
+  xy: 718, 531
+  size: 28, 18
+  orig: 28, 18
+  offset: 0, 0
+  index: 0
+ui/incentive27
+  rotate: false
+  xy: 564, 612
+  size: 27, 27
+  orig: 29, 29
+  offset: 1, 1
+  index: 0
+ui/affixes/iconSynergyBleedOn18
+  rotate: false
+  xy: 508, 615
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconNegativeAffix18
+  rotate: false
+  xy: 463, 644
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconAffix18
+  rotate: false
+  xy: 361, 633
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyBlueFireOn18
+  rotate: false
+  xy: 391, 633
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyBlueFire18
+  rotate: false
+  xy: 421, 657
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyIceOn18
+  rotate: false
+  xy: 309, 648
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconAffectQuad18
+  rotate: false
+  xy: 232, 677
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyElectric18
+  rotate: false
+  xy: 262, 677
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconAffectLeech18
+  rotate: false
+  xy: 173, 688
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyOil18
+  rotate: false
+  xy: 100, 703
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconAffectDouble18
+  rotate: false
+  xy: 67, 717
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyElectricOn18
+  rotate: false
+  xy: 130, 703
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyFire18
+  rotate: false
+  xy: 1, 721
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyIce18
+  rotate: false
+  xy: 31, 721
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyFireOn18
+  rotate: false
+  xy: 339, 663
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyOilOn18
+  rotate: false
+  xy: 292, 678
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/logoFacebook
+  rotate: false
+  xy: 369, 663
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyTaunt18
+  rotate: false
+  xy: 203, 707
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/logoTwitter
+  rotate: false
+  xy: 160, 718
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyPoison18
+  rotate: false
+  xy: 233, 707
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyTauntOn18
+  rotate: false
+  xy: 97, 733
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconRare18
+  rotate: false
+  xy: 127, 733
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergySuperBleedOn18
+  rotate: false
+  xy: 61, 747
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergySuperBleed18
+  rotate: false
+  xy: 1, 751
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyStunOn18
+  rotate: false
+  xy: 31, 751
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyStun18
+  rotate: false
+  xy: 628, 602
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergySlowOn18
+  rotate: false
+  xy: 594, 613
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyBleed18
+  rotate: false
+  xy: 538, 642
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyPoisonOn18
+  rotate: false
+  xy: 493, 645
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyRootOn18
+  rotate: false
+  xy: 451, 674
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyRoot18
+  rotate: false
+  xy: 399, 687
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergySlow18
+  rotate: false
+  xy: 658, 602
+  size: 27, 27
+  orig: 27, 27
+  offset: 0, 0
+  index: 0
+ui/big_ps5Tactile
+  rotate: false
+  xy: 688, 602
+  size: 27, 16
+  orig: 27, 16
+  offset: 0, 0
+  index: 0
+ui/new_ps4Tactile
+  rotate: false
+  xy: 164, 320
+  size: 27, 14
+  orig: 27, 14
+  offset: 0, 0
+  index: 0
+ui/iconCoin27
+  rotate: false
+  xy: 263, 707
+  size: 26, 29
+  orig: 26, 29
+  offset: 0, 0
+  index: 0
+ui/iconCursed27
+  rotate: false
+  xy: 190, 737
+  size: 26, 29
+  orig: 26, 29
+  offset: 0, 0
+  index: 0
+ui/skillBgA
+  rotate: false
+  xy: 157, 748
+  size: 26, 27
+  orig: 26, 27
+  offset: 0, 0
+  index: 0
+ui/mapCircleTeleport
+  rotate: false
+  xy: 219, 737
+  size: 26, 26
+  orig: 26, 26
+  offset: 0, 0
+  index: 0
+ui/mapCircleHero
+  rotate: false
+  xy: 91, 763
+  size: 26, 26
+  orig: 26, 26
+  offset: 0, 0
+  index: 0
+ui/adysLogo18
+  rotate: false
+  xy: 61, 777
+  size: 26, 23
+  orig: 28, 28
+  offset: 1, 2
+  index: 0
+ui/iconForge27
+  rotate: false
+  xy: 120, 763
+  size: 26, 22
+  orig: 26, 27
+  offset: 0, 2
+  index: 0
+ui/ps4Tactile
+  rotate: false
+  xy: 203, 688
+  size: 26, 14
+  orig: 26, 14
+  offset: 0, 0
+  index: 0
+ui/new_ps5Tactile
+  rotate: false
+  xy: 645, 478
+  size: 25, 15
+  orig: 25, 15
+  offset: 0, 0
+  index: 0
+ui/arrowDownEmpty
+  rotate: false
+  xy: 998, 347
+  size: 24, 27
+  orig: 25, 27
+  offset: 0, 0
+  index: 0
+ui/arrowDown
+  rotate: false
+  xy: 998, 377
+  size: 24, 27
+  orig: 25, 27
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueTop1
+  rotate: false
+  xy: 998, 407
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueBackHighlight
+  rotate: false
+  xy: 1, 781
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueWeapon1
+  rotate: false
+  xy: 28, 781
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueWeapon3
+  rotate: false
+  xy: 322, 693
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueBackSelectHighlight
+  rotate: false
+  xy: 292, 708
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueBackSelect
+  rotate: false
+  xy: 349, 693
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueTop2
+  rotate: false
+  xy: 688, 621
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueBack
+  rotate: false
+  xy: 624, 632
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/flask_3
+  rotate: false
+  xy: 823, 644
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/flask_2
+  rotate: false
+  xy: 796, 644
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/flask_1
+  rotate: false
+  xy: 769, 644
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/flask_0
+  rotate: false
+  xy: 742, 621
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/collectorTabIconWeapons
+  rotate: false
+  xy: 651, 632
+  size: 24, 24
+  orig: 30, 30
+  offset: 3, 3
+  index: 0
+ui/collectorTabIconAll
+  rotate: false
+  xy: 568, 643
+  size: 24, 24
+  orig: 30, 30
+  offset: 3, 3
+  index: 0
+ui/affixes/perkBg
+  rotate: false
+  xy: 595, 643
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/flaskD_4
+  rotate: false
+  xy: 715, 621
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/flaskD_0
+  rotate: false
+  xy: 742, 621
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/flaskD_1
+  rotate: false
+  xy: 769, 644
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/flaskD_2
+  rotate: false
+  xy: 796, 644
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/flask_4
+  rotate: false
+  xy: 715, 621
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/flaskD_3
+  rotate: false
+  xy: 823, 644
+  size: 24, 24
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueWeapon2
+  rotate: false
+  xy: 850, 646
+  size: 24, 23
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueTop3
+  rotate: false
+  xy: 877, 646
+  size: 24, 23
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueTop0
+  rotate: false
+  xy: 789, 553
+  size: 24, 20
+  orig: 24, 24
+  offset: 0, 2
+  index: 0
+ui/textDark
+  rotate: false
+  xy: 904, 646
+  size: 24, 20
+  orig: 25, 20
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueBase3
+  rotate: false
+  xy: 678, 648
+  size: 24, 20
+  orig: 24, 24
+  offset: 0, 4
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueBaseHotk
+  rotate: false
+  xy: 622, 659
+  size: 24, 20
+  orig: 24, 24
+  offset: 0, 4
+  index: 0
+ui/big_ps4Share
+  rotate: false
+  xy: 649, 659
+  size: 24, 20
+  orig: 24, 20
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueSkull3
+  rotate: false
+  xy: 568, 670
+  size: 24, 16
+  orig: 24, 24
+  offset: 0, 4
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueSkull2
+  rotate: false
+  xy: 595, 670
+  size: 24, 16
+  orig: 24, 24
+  offset: 0, 4
+  index: 0
+ui/selectArrowUpOff
+  rotate: false
+  xy: 523, 672
+  size: 24, 14
+  orig: 26, 16
+  offset: 1, 1
+  index: 0
+ui/selectArrowDownOff
+  rotate: false
+  xy: 481, 675
+  size: 24, 14
+  orig: 26, 16
+  offset: 1, 1
+  index: 0
+ui/ps5Tactile
+  rotate: false
+  xy: 705, 648
+  size: 24, 14
+  orig: 24, 16
+  offset: 0, 1
+  index: 0
+ui/affixes/scrollUpBg
+  rotate: false
+  xy: 538, 615
+  size: 23, 24
+  orig: 24, 24
+  offset: 1, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueCap3
+  rotate: false
+  xy: 732, 648
+  size: 23, 23
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueWeaponGiant
+  rotate: false
+  xy: 705, 665
+  size: 23, 23
+  orig: 24, 24
+  offset: 0, 0
+  index: 0
+ui/big_ps4Options
+  rotate: false
+  xy: 676, 671
+  size: 23, 20
+  orig: 23, 20
+  offset: 0, 0
+  index: 0
+ui/flaskC_3
+  rotate: false
+  xy: 622, 682
+  size: 22, 24
+  orig: 24, 24
+  offset: 1, 0
+  index: 0
+ui/flaskC_2
+  rotate: false
+  xy: 647, 682
+  size: 22, 24
+  orig: 24, 24
+  offset: 1, 0
+  index: 0
+ui/flaskC_1
+  rotate: false
+  xy: 758, 671
+  size: 22, 24
+  orig: 24, 24
+  offset: 1, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueWeapon0
+  rotate: false
+  xy: 731, 674
+  size: 22, 22
+  orig: 24, 24
+  offset: 1, 1
+  index: 0
+ui/adysLogo12
+  rotate: false
+  xy: 702, 691
+  size: 22, 20
+  orig: 24, 24
+  offset: 1, 2
+  index: 0
+ui/flaskC_0
+  rotate: false
+  xy: 672, 694
+  size: 22, 20
+  orig: 24, 24
+  offset: 1, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueCap2
+  rotate: false
+  xy: 783, 671
+  size: 22, 20
+  orig: 24, 24
+  offset: 2, 2
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueBase2
+  rotate: false
+  xy: 808, 671
+  size: 22, 20
+  orig: 24, 24
+  offset: 1, 4
+  index: 0
+ui/boxSelect
+  rotate: false
+  xy: 931, 651
+  size: 22, 20
+  orig: 22, 20
+  offset: 0, 0
+  index: 0
+ui/boxSelectRed
+  rotate: false
+  xy: 904, 669
+  size: 22, 20
+  orig: 22, 20
+  offset: 0, 0
+  index: 0
+ui/big_ps4StickLLeft
+  rotate: false
+  xy: 173, 670
+  size: 22, 15
+  orig: 22, 27
+  offset: 0, 5
+  index: 0
+ui/big_ps4StickLRight
+  rotate: false
+  xy: 107, 651
+  size: 22, 15
+  orig: 22, 27
+  offset: 0, 5
+  index: 0
+ui/big_ps4StickRLeft
+  rotate: false
+  xy: 956, 651
+  size: 22, 15
+  orig: 22, 27
+  offset: 0, 5
+  index: 0
+ui/big_ps4StickRRight
+  rotate: false
+  xy: 981, 651
+  size: 22, 15
+  orig: 22, 27
+  offset: 0, 5
+  index: 0
+ui/big_StickLLeft
+  rotate: false
+  xy: 956, 669
+  size: 22, 15
+  orig: 22, 27
+  offset: 0, 5
+  index: 0
+ui/big_StickLRight
+  rotate: false
+  xy: 929, 674
+  size: 22, 15
+  orig: 22, 27
+  offset: 0, 5
+  index: 0
+ui/big_StickRRight
+  rotate: false
+  xy: 981, 669
+  size: 22, 15
+  orig: 22, 27
+  offset: 0, 5
+  index: 0
+ui/big_switchStickArrowLeft
+  rotate: false
+  xy: 833, 672
+  size: 22, 15
+  orig: 22, 27
+  offset: 0, 5
+  index: 0
+ui/big_switchStickArrowRight
+  rotate: false
+  xy: 858, 672
+  size: 22, 15
+  orig: 22, 27
+  offset: 0, 5
+  index: 0
+ui/big_switchStickRArrowLeft
+  rotate: false
+  xy: 954, 687
+  size: 22, 15
+  orig: 22, 27
+  offset: 0, 5
+  index: 0
+ui/big_switchStickRArrowRight
+  rotate: false
+  xy: 979, 687
+  size: 22, 15
+  orig: 22, 27
+  offset: 0, 5
+  index: 0
+ui/big_StickRLeft
+  rotate: false
+  xy: 833, 690
+  size: 22, 15
+  orig: 22, 27
+  offset: 0, 5
+  index: 0
+ui/big_ps4La
+  rotate: false
+  xy: 858, 690
+  size: 22, 13
+  orig: 22, 13
+  offset: 0, 0
+  index: 0
+ui/big_ps4Ra
+  rotate: false
+  xy: 783, 694
+  size: 22, 13
+  orig: 22, 13
+  offset: 0, 0
+  index: 0
+ui/skillTipBg
+  rotate: false
+  xy: 303, 459
+  size: 22, 8
+  orig: 22, 8
+  offset: 0, 0
+  index: 0
+ui/flaskB_2
+  rotate: false
+  xy: 684, 370
+  size: 21, 24
+  orig: 24, 24
+  offset: 2, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatuePant2
+  rotate: false
+  xy: 1001, 568
+  size: 21, 24
+  orig: 24, 24
+  offset: 2, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatuePant1
+  rotate: false
+  xy: 1001, 595
+  size: 21, 24
+  orig: 24, 24
+  offset: 2, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueSkull1
+  rotate: false
+  xy: 684, 397
+  size: 21, 20
+  orig: 24, 24
+  offset: 3, 2
+  index: 0
+ui/big_switchZr
+  rotate: false
+  xy: 1001, 622
+  size: 21, 16
+  orig: 21, 16
+  offset: 0, 0
+  index: 0
+ui/big_switchZl
+  rotate: false
+  xy: 808, 694
+  size: 21, 16
+  orig: 21, 16
+  offset: 0, 0
+  index: 0
+ui/cptBg
+  rotate: false
+  xy: 756, 698
+  size: 21, 13
+  orig: 21, 13
+  offset: 0, 0
+  index: 0
+ui/miniMapLineBox
+  rotate: false
+  xy: 1001, 641
+  size: 21, 1
+  orig: 21, 1
+  offset: 0, 0
+  index: 0
+ui/logo_small
+  rotate: false
+  xy: 376, 693
+  size: 20, 32
+  orig: 20, 32
+  offset: 0, 0
+  index: 0
+ui/locked
+  rotate: false
+  xy: 780, 710
+  size: 20, 24
+  orig: 24, 24
+  offset: 2, 0
+  index: 0
+ui/leaderboardStar
+  rotate: false
+  xy: 727, 699
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: 0
+ui/lifePill
+  rotate: false
+  xy: 697, 714
+  size: 20, 18
+  orig: 20, 18
+  offset: 0, 0
+  index: 0
+ui/big_btnLb
+  rotate: false
+  xy: 475, 594
+  size: 20, 15
+  orig: 20, 15
+  offset: 0, 0
+  index: 0
+ui/big_btnRb
+  rotate: false
+  xy: 750, 714
+  size: 20, 15
+  orig: 20, 15
+  offset: 0, 0
+  index: 0
+ui/big_keyboardShift
+  rotate: false
+  xy: 720, 722
+  size: 20, 14
+  orig: 20, 14
+  offset: 0, 0
+  index: 0
+ui/big_keyboardTab
+  rotate: false
+  xy: 743, 732
+  size: 20, 14
+  orig: 20, 14
+  offset: 0, 0
+  index: 0
+ui/new_keyboardShift
+  rotate: false
+  xy: 720, 722
+  size: 20, 14
+  orig: 20, 14
+  offset: 0, 0
+  index: 0
+ui/big_xboxDpadRight
+  rotate: false
+  xy: 319, 720
+  size: 20, 14
+  orig: 20, 27
+  offset: 0, 6
+  index: 0
+ui/new_keyboardTab
+  rotate: false
+  xy: 743, 732
+  size: 20, 14
+  orig: 20, 14
+  offset: 0, 0
+  index: 0
+ui/big_xboxDpadLeft
+  rotate: false
+  xy: 292, 735
+  size: 20, 14
+  orig: 20, 27
+  offset: 0, 6
+  index: 0
+ui/btnLb
+  rotate: false
+  xy: 342, 720
+  size: 20, 13
+  orig: 20, 13
+  offset: 0, 0
+  index: 0
+ui/big_switchL
+  rotate: false
+  xy: 248, 739
+  size: 20, 13
+  orig: 20, 13
+  offset: 0, 0
+  index: 0
+ui/btnRb
+  rotate: false
+  xy: 883, 692
+  size: 20, 13
+  orig: 20, 13
+  offset: 0, 0
+  index: 0
+ui/big_switchR
+  rotate: false
+  xy: 858, 706
+  size: 20, 13
+  orig: 20, 13
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueBase1
+  rotate: false
+  xy: 832, 708
+  size: 20, 11
+  orig: 22, 22
+  offset: 1, 3
+  index: 0
+ui/collectorTabIconMeta
+  rotate: false
+  xy: 429, 687
+  size: 19, 24
+  orig: 30, 30
+  offset: 6, 3
+  index: 0
+ui/collectorTabIconSkills
+  rotate: false
+  xy: 696, 569
+  size: 19, 24
+  orig: 30, 30
+  offset: 6, 3
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueSkirt3
+  rotate: false
+  xy: 803, 713
+  size: 19, 22
+  orig: 24, 24
+  offset: 2, 0
+  index: 0
+ui/leaderboardTime
+  rotate: false
+  xy: 399, 663
+  size: 19, 20
+  orig: 20, 20
+  offset: 1, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueCap1
+  rotate: false
+  xy: 766, 737
+  size: 19, 20
+  orig: 22, 22
+  offset: 2, 1
+  index: 0
+ui/big_ps4Rb
+  rotate: false
+  xy: 906, 692
+  size: 19, 18
+  orig: 19, 18
+  offset: 0, 0
+  index: 0
+ui/big_ps4Lb
+  rotate: false
+  xy: 881, 708
+  size: 19, 18
+  orig: 19, 18
+  offset: 0, 0
+  index: 0
+ui/new_btnLb
+  rotate: false
+  xy: 194, 320
+  size: 19, 13
+  orig: 19, 13
+  offset: 0, 0
+  index: 0
+ui/new_switchZr
+  rotate: false
+  xy: 928, 692
+  size: 19, 13
+  orig: 19, 13
+  offset: 0, 0
+  index: 0
+ui/new_btnRb
+  rotate: false
+  xy: 825, 722
+  size: 19, 13
+  orig: 19, 13
+  offset: 0, 0
+  index: 0
+ui/new_switchZl
+  rotate: false
+  xy: 847, 722
+  size: 19, 13
+  orig: 19, 13
+  offset: 0, 0
+  index: 0
+ui/affixes/iconAffectLegendary18
+  rotate: false
+  xy: 339, 648
+  size: 19, 12
+  orig: 19, 19
+  offset: 0, 4
+  index: 0
+ui/bossRushStatueIcones/iconBRStatuePant0
+  rotate: false
+  xy: 1004, 687
+  size: 18, 24
+  orig: 24, 24
+  offset: 3, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueCap0
+  rotate: false
+  xy: 271, 739
+  size: 18, 21
+  orig: 24, 24
+  offset: 3, 1
+  index: 0
+ui/worldMapBoss
+  rotate: false
+  xy: 248, 755
+  size: 18, 21
+  orig: 24, 24
+  offset: 3, 1
+  index: 0
+ui/big_ps4DpadUp
+  rotate: false
+  xy: 219, 766
+  size: 18, 19
+  orig: 18, 19
+  offset: 0, 0
+  index: 0
+ui/big_ps4DpadDown
+  rotate: false
+  xy: 186, 769
+  size: 18, 19
+  orig: 18, 20
+  offset: 0, 1
+  index: 0
+ui/big_ps4Dpad
+  rotate: false
+  xy: 149, 778
+  size: 18, 19
+  orig: 18, 19
+  offset: 0, 0
+  index: 0
+ui/big_ps4DpadLeft
+  rotate: false
+  xy: 120, 788
+  size: 18, 19
+  orig: 18, 19
+  offset: 0, 0
+  index: 0
+ui/big_ps4DpadRight
+  rotate: false
+  xy: 90, 792
+  size: 18, 19
+  orig: 18, 19
+  offset: 0, 0
+  index: 0
+ui/new_ps4Share
+  rotate: false
+  xy: 55, 803
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 0
+ui/leaderboardDeath
+  rotate: false
+  xy: 950, 705
+  size: 18, 18
+  orig: 20, 20
+  offset: 1, 1
+  index: 0
+ui/incentive18
+  rotate: false
+  xy: 928, 708
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueSkull0
+  rotate: false
+  xy: 903, 713
+  size: 18, 18
+  orig: 22, 22
+  offset: 2, 2
+  index: 0
+ui/switchStickRArrowUp
+  rotate: false
+  xy: 883, 672
+  size: 18, 17
+  orig: 18, 17
+  offset: 0, 0
+  index: 0
+ui/switchStickArrowUp
+  rotate: false
+  xy: 971, 705
+  size: 18, 17
+  orig: 18, 17
+  offset: 0, 0
+  index: 0
+ui/switchStickArrowDown
+  rotate: false
+  xy: 992, 714
+  size: 18, 17
+  orig: 18, 17
+  offset: 0, 0
+  index: 0
+ui/switchStickRArrowDown
+  rotate: false
+  xy: 971, 725
+  size: 18, 17
+  orig: 18, 17
+  offset: 0, 0
+  index: 0
+ui/new_xboxDpadLeft
+  rotate: false
+  xy: 949, 726
+  size: 18, 13
+  orig: 18, 24
+  offset: 0, 5
+  index: 0
+ui/new_xboxDpadRight
+  rotate: false
+  xy: 924, 729
+  size: 18, 13
+  orig: 18, 24
+  offset: 0, 5
+  index: 0
+ui/keyboardShift
+  rotate: false
+  xy: 945, 742
+  size: 18, 13
+  orig: 18, 13
+  offset: 0, 0
+  index: 0
+ui/keyboardTab
+  rotate: false
+  xy: 992, 734
+  size: 18, 13
+  orig: 18, 13
+  offset: 0, 0
+  index: 0
+ui/big_mousePrevious
+  rotate: false
+  xy: 1005, 293
+  size: 17, 23
+  orig: 17, 23
+  offset: 0, 0
+  index: 0
+ui/big_mouseNext
+  rotate: false
+  xy: 1005, 319
+  size: 17, 23
+  orig: 17, 23
+  offset: 0, 0
+  index: 0
+ui/iconCoin18
+  rotate: false
+  xy: 769, 621
+  size: 17, 20
+  orig: 17, 20
+  offset: 0, 0
+  index: 0
+ui/iconCursed18
+  rotate: false
+  xy: 966, 745
+  size: 17, 20
+  orig: 17, 20
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueSkirt2
+  rotate: false
+  xy: 869, 729
+  size: 17, 19
+  orig: 22, 22
+  offset: 2, 2
+  index: 0
+ui/big_btnLt
+  rotate: false
+  xy: 889, 734
+  size: 17, 18
+  orig: 17, 18
+  offset: 0, 0
+  index: 0
+ui/big_btnRt
+  rotate: false
+  xy: 909, 745
+  size: 17, 18
+  orig: 17, 18
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyOilOn12
+  rotate: false
+  xy: 929, 758
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyOil12
+  rotate: false
+  xy: 986, 750
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyIceOn12
+  rotate: false
+  xy: 949, 768
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergySuperBleedOn12
+  rotate: false
+  xy: 1, 808
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyFireOn12
+  rotate: false
+  xy: 21, 808
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyFire12
+  rotate: false
+  xy: 969, 770
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconAffectDouble12
+  rotate: false
+  xy: 989, 770
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyElectricOn12
+  rotate: false
+  xy: 788, 738
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergySuperBleed12
+  rotate: false
+  xy: 808, 738
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/checkOn
+  rotate: false
+  xy: 828, 738
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconAffectQuad12
+  rotate: false
+  xy: 848, 738
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/radioButtonOn
+  rotate: false
+  xy: 868, 751
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/radioButtonOff
+  rotate: false
+  xy: 888, 755
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyElectric12
+  rotate: false
+  xy: 908, 766
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconAffix12
+  rotate: false
+  xy: 928, 778
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyBlueFireOn12
+  rotate: false
+  xy: 948, 788
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconNegativeAffix12
+  rotate: false
+  xy: 968, 790
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconRare12
+  rotate: false
+  xy: 988, 790
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyBlueFire12
+  rotate: false
+  xy: 788, 758
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyBleedOn12
+  rotate: false
+  xy: 808, 758
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconAffectLeech12
+  rotate: false
+  xy: 828, 758
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/checkOff
+  rotate: false
+  xy: 848, 758
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyIce12
+  rotate: false
+  xy: 868, 771
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/sliderButtonOff
+  rotate: false
+  xy: 888, 775
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/switchStickArrowRight
+  rotate: false
+  xy: 908, 786
+  size: 17, 17
+  orig: 18, 17
+  offset: 1, 0
+  index: 0
+ui/sliderButtonOn
+  rotate: false
+  xy: 928, 798
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyStun12
+  rotate: false
+  xy: 948, 808
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyTauntOn12
+  rotate: false
+  xy: 968, 810
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyBleed12
+  rotate: false
+  xy: 988, 810
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyStunOn12
+  rotate: false
+  xy: 508, 689
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/switchStickRArrowLeft
+  rotate: false
+  xy: 481, 692
+  size: 17, 17
+  orig: 18, 17
+  offset: 0, 0
+  index: 0
+ui/switchStickArrowLeft
+  rotate: false
+  xy: 451, 704
+  size: 17, 17
+  orig: 18, 17
+  offset: 0, 0
+  index: 0
+ui/switchStickRArrowRight
+  rotate: false
+  xy: 429, 714
+  size: 17, 17
+  orig: 18, 17
+  offset: 1, 0
+  index: 0
+ui/affixes/iconSynergyPoison12
+  rotate: false
+  xy: 399, 717
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyTaunt12
+  rotate: false
+  xy: 365, 728
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergySlow12
+  rotate: false
+  xy: 342, 736
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyRootOn12
+  rotate: false
+  xy: 315, 737
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyRoot12
+  rotate: false
+  xy: 292, 752
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergyPoisonOn12
+  rotate: false
+  xy: 269, 763
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSynergySlowOn12
+  rotate: false
+  xy: 240, 779
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: 0
+ui/StickLUp
+  rotate: false
+  xy: 207, 788
+  size: 17, 16
+  orig: 17, 16
+  offset: 0, 0
+  index: 0
+ui/StickLDown
+  rotate: false
+  xy: 170, 791
+  size: 17, 16
+  orig: 17, 16
+  offset: 0, 0
+  index: 0
+ui/StickRDown
+  rotate: false
+  xy: 141, 800
+  size: 17, 16
+  orig: 17, 16
+  offset: 0, 0
+  index: 0
+ui/StickRUp
+  rotate: false
+  xy: 111, 810
+  size: 17, 16
+  orig: 17, 16
+  offset: 0, 0
+  index: 0
+ui/ps4StickRUp
+  rotate: false
+  xy: 76, 814
+  size: 17, 15
+  orig: 17, 15
+  offset: 0, 0
+  index: 0
+ui/new_switchStickArrowLeft
+  rotate: false
+  xy: 41, 824
+  size: 17, 15
+  orig: 17, 22
+  offset: 0, 3
+  index: 0
+ui/ps4StickRDown
+  rotate: false
+  xy: 1, 828
+  size: 17, 15
+  orig: 17, 15
+  offset: 0, 0
+  index: 0
+ui/new_switchStickRArrowRight
+  rotate: false
+  xy: 21, 828
+  size: 17, 15
+  orig: 17, 22
+  offset: 0, 3
+  index: 0
+ui/new_switchStickArrowRight
+  rotate: false
+  xy: 528, 689
+  size: 17, 15
+  orig: 17, 22
+  offset: 0, 3
+  index: 0
+ui/new_StickLLeft
+  rotate: false
+  xy: 548, 689
+  size: 17, 15
+  orig: 17, 22
+  offset: 0, 3
+  index: 0
+ui/new_ps4StickLRight
+  rotate: false
+  xy: 568, 689
+  size: 17, 15
+  orig: 17, 22
+  offset: 0, 3
+  index: 0
+ui/ps4StickLUp
+  rotate: false
+  xy: 588, 689
+  size: 17, 15
+  orig: 17, 15
+  offset: 0, 0
+  index: 0
+ui/ps4StickLDown
+  rotate: false
+  xy: 528, 707
+  size: 17, 15
+  orig: 17, 15
+  offset: 0, 0
+  index: 0
+ui/new_ps4StickRLeft
+  rotate: false
+  xy: 501, 709
+  size: 17, 15
+  orig: 17, 22
+  offset: 0, 3
+  index: 0
+ui/new_ps4StickRRight
+  rotate: false
+  xy: 471, 712
+  size: 17, 15
+  orig: 17, 23
+  offset: 0, 4
+  index: 0
+ui/new_StickRRight
+  rotate: false
+  xy: 449, 724
+  size: 17, 15
+  orig: 17, 22
+  offset: 0, 3
+  index: 0
+ui/new_StickRLeft
+  rotate: false
+  xy: 419, 734
+  size: 17, 15
+  orig: 17, 22
+  offset: 0, 3
+  index: 0
+ui/new_StickLRight
+  rotate: false
+  xy: 385, 737
+  size: 17, 15
+  orig: 17, 23
+  offset: 0, 4
+  index: 0
+ui/new_ps4StickLLeft
+  rotate: false
+  xy: 362, 748
+  size: 17, 15
+  orig: 17, 22
+  offset: 0, 3
+  index: 0
+ui/new_switchStickRArrowLeft
+  rotate: false
+  xy: 335, 756
+  size: 17, 15
+  orig: 17, 22
+  offset: 0, 3
+  index: 0
+ui/iconForge18
+  rotate: false
+  xy: 312, 757
+  size: 17, 14
+  orig: 17, 18
+  offset: 0, 2
+  index: 0
+ui/new_ps4Ra
+  rotate: false
+  xy: 289, 772
+  size: 17, 12
+  orig: 17, 12
+  offset: 0, 0
+  index: 0
+ui/new_ps4La
+  rotate: false
+  xy: 260, 783
+  size: 17, 12
+  orig: 17, 12
+  offset: 0, 0
+  index: 0
+ui/new_switchR
+  rotate: false
+  xy: 548, 707
+  size: 17, 11
+  orig: 17, 11
+  offset: 0, 0
+  index: 0
+ui/new_switchL
+  rotate: false
+  xy: 568, 707
+  size: 17, 11
+  orig: 17, 11
+  offset: 0, 0
+  index: 0
+ui/ps4Ra
+  rotate: false
+  xy: 588, 707
+  size: 17, 11
+  orig: 17, 11
+  offset: 0, 0
+  index: 0
+ui/ps4La
+  rotate: false
+  xy: 608, 709
+  size: 17, 11
+  orig: 17, 11
+  offset: 0, 0
+  index: 0
+ui/flaskA_1
+  rotate: false
+  xy: 1006, 645
+  size: 16, 23
+  orig: 24, 24
+  offset: 2, 0
+  index: 0
+ui/switchStickL
+  rotate: false
+  xy: 628, 709
+  size: 16, 21
+  orig: 16, 21
+  offset: 0, 0
+  index: 0
+ui/switchStickR
+  rotate: false
+  xy: 647, 709
+  size: 16, 21
+  orig: 16, 21
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueMat0
+  rotate: false
+  xy: 666, 717
+  size: 16, 20
+  orig: 24, 24
+  offset: 4, 1
+  index: 0
+ui/new_ps4Options
+  rotate: false
+  xy: 243, 622
+  size: 16, 18
+  orig: 16, 18
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueMat3
+  rotate: false
+  xy: 1006, 750
+  size: 16, 17
+  orig: 22, 22
+  offset: 3, 3
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueMat2
+  rotate: false
+  xy: 685, 735
+  size: 16, 17
+  orig: 22, 22
+  offset: 3, 3
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueMat1
+  rotate: false
+  xy: 704, 739
+  size: 16, 17
+  orig: 22, 22
+  offset: 3, 3
+  index: 0
+ui/TranchesPopUpWindow/rightCorner_bot
+  rotate: false
+  xy: 723, 739
+  size: 16, 17
+  orig: 16, 17
+  offset: 0, 0
+  index: 0
+ui/new_ps4DpadUp
+  rotate: false
+  xy: 742, 749
+  size: 16, 17
+  orig: 16, 17
+  offset: 0, 0
+  index: 0
+ui/new_ps4Dpad
+  rotate: false
+  xy: 761, 760
+  size: 16, 17
+  orig: 16, 17
+  offset: 0, 0
+  index: 0
+ui/new_ps4DpadRight
+  rotate: false
+  xy: 548, 721
+  size: 16, 17
+  orig: 16, 17
+  offset: 0, 0
+  index: 0
+ui/new_ps4DpadLeft
+  rotate: false
+  xy: 521, 725
+  size: 16, 17
+  orig: 16, 17
+  offset: 0, 0
+  index: 0
+ui/new_ps4DpadDown
+  rotate: false
+  xy: 491, 727
+  size: 16, 17
+  orig: 16, 17
+  offset: 0, 0
+  index: 0
+ui/StickLLeft
+  rotate: false
+  xy: 469, 730
+  size: 16, 16
+  orig: 17, 16
+  offset: 0, 0
+  index: 0
+ui/StickLRight
+  rotate: false
+  xy: 439, 742
+  size: 16, 16
+  orig: 17, 16
+  offset: 1, 0
+  index: 0
+ui/new_keyboardArrowUp
+  rotate: false
+  xy: 624, 733
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/new_keyboardArrowRight
+  rotate: false
+  xy: 374, 774
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/keyboardArrowDown
+  rotate: false
+  xy: 405, 752
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/StickRRight
+  rotate: false
+  xy: 382, 755
+  size: 16, 16
+  orig: 17, 16
+  offset: 1, 0
+  index: 0
+ui/new_keyboardArrowLeft
+  rotate: false
+  xy: 401, 771
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/new_keyboardArrowDown
+  rotate: false
+  xy: 424, 761
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/unlocked
+  rotate: false
+  xy: 355, 766
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/keyboardArrowUp
+  rotate: false
+  xy: 567, 721
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/keyboardArrowRight
+  rotate: false
+  xy: 586, 721
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/keyboardArrowLeft
+  rotate: false
+  xy: 605, 723
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/StickRLeft
+  rotate: false
+  xy: 567, 740
+  size: 16, 16
+  orig: 17, 16
+  offset: 0, 0
+  index: 0
+ui/ps4Dpad
+  rotate: false
+  xy: 586, 740
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/ps4DpadDown
+  rotate: false
+  xy: 540, 741
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/ps4DpadLeft
+  rotate: false
+  xy: 510, 745
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/ps4DpadRight
+  rotate: false
+  xy: 488, 747
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/ps4DpadUp
+  rotate: false
+  xy: 458, 749
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/big_keyboardArrowDown
+  rotate: false
+  xy: 424, 761
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/big_keyboardArrowLeft
+  rotate: false
+  xy: 401, 771
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/big_keyboardArrowRight
+  rotate: false
+  xy: 374, 774
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/big_keyboardArrowUp
+  rotate: false
+  xy: 624, 733
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 0
+ui/ps4StickLRight
+  rotate: false
+  xy: 605, 742
+  size: 16, 15
+  orig: 17, 15
+  offset: 1, 0
+  index: 0
+ui/ps4StickRLeft
+  rotate: false
+  xy: 643, 733
+  size: 16, 15
+  orig: 17, 15
+  offset: 0, 0
+  index: 0
+ui/ps4StickRRight
+  rotate: false
+  xy: 662, 740
+  size: 16, 15
+  orig: 17, 15
+  offset: 1, 0
+  index: 0
+ui/ps4StickLLeft
+  rotate: false
+  xy: 643, 751
+  size: 16, 15
+  orig: 17, 15
+  offset: 0, 0
+  index: 0
+ui/levelPill
+  rotate: false
+  xy: 624, 752
+  size: 16, 14
+  orig: 16, 14
+  offset: 0, 0
+  index: 0
+ui/xboxDpadLeft
+  rotate: false
+  xy: 1006, 671
+  size: 16, 12
+  orig: 20, 20
+  offset: 0, 4
+  index: 0
+ui/xboxDpadRight
+  rotate: false
+  xy: 681, 755
+  size: 16, 12
+  orig: 20, 20
+  offset: 4, 4
+  index: 0
+ui/big_mouseLeftClic
+  rotate: false
+  xy: 662, 758
+  size: 15, 23
+  orig: 15, 23
+  offset: 0, 0
+  index: 0
+ui/big_mouse
+  rotate: false
+  xy: 700, 759
+  size: 15, 23
+  orig: 15, 23
+  offset: 0, 0
+  index: 0
+ui/big_mouseMiddleClic
+  rotate: false
+  xy: 680, 770
+  size: 15, 23
+  orig: 15, 23
+  offset: 0, 0
+  index: 0
+ui/big_mouseRightClic
+  rotate: false
+  xy: 718, 759
+  size: 15, 23
+  orig: 15, 23
+  offset: 0, 0
+  index: 0
+ui/big_ps4StickRUp
+  rotate: false
+  xy: 736, 769
+  size: 15, 22
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/big_StickLUp
+  rotate: false
+  xy: 698, 785
+  size: 15, 22
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/big_StickRUp
+  rotate: false
+  xy: 716, 785
+  size: 15, 22
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/big_switchStickArrowUp
+  rotate: false
+  xy: 309, 774
+  size: 15, 22
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/big_switchStickRArrowUp
+  rotate: false
+  xy: 327, 774
+  size: 15, 22
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/big_ps4StickLUp
+  rotate: false
+  xy: 280, 787
+  size: 15, 22
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueSkirt1
+  rotate: false
+  xy: 260, 798
+  size: 15, 21
+  orig: 22, 22
+  offset: 4, 1
+  index: 0
+ui/big_StickRDown
+  rotate: false
+  xy: 345, 785
+  size: 15, 20
+  orig: 15, 27
+  offset: 0, 0
+  index: 0
+ui/big_ps4StickRDown
+  rotate: false
+  xy: 227, 799
+  size: 15, 20
+  orig: 15, 27
+  offset: 0, 0
+  index: 0
+ui/new_mousePrevious
+  rotate: false
+  xy: 190, 807
+  size: 15, 20
+  orig: 15, 20
+  offset: 0, 0
+  index: 0
+ui/new_mouseNext
+  rotate: false
+  xy: 208, 807
+  size: 15, 20
+  orig: 15, 20
+  offset: 0, 0
+  index: 0
+ui/big_StickLDown
+  rotate: false
+  xy: 161, 810
+  size: 15, 20
+  orig: 15, 27
+  offset: 0, 0
+  index: 0
+ui/big_switchStickArrowDown
+  rotate: false
+  xy: 131, 819
+  size: 15, 20
+  orig: 15, 27
+  offset: 0, 0
+  index: 0
+ui/big_switchStickRArrowDown
+  rotate: false
+  xy: 96, 829
+  size: 15, 20
+  orig: 15, 27
+  offset: 0, 0
+  index: 0
+ui/big_ps4StickLDown
+  rotate: false
+  xy: 61, 832
+  size: 15, 20
+  orig: 15, 27
+  offset: 0, 0
+  index: 0
+ui/new_switchStickArrowUp
+  rotate: false
+  xy: 41, 842
+  size: 15, 19
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/new_StickLUp
+  rotate: false
+  xy: 1, 846
+  size: 15, 19
+  orig: 15, 23
+  offset: 0, 4
+  index: 0
+ui/new_StickRUp
+  rotate: false
+  xy: 19, 846
+  size: 15, 19
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/new_ps4StickRUp
+  rotate: false
+  xy: 559, 759
+  size: 15, 19
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/new_switchStickRArrowUp
+  rotate: false
+  xy: 577, 759
+  size: 15, 19
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/new_ps4StickLUp
+  rotate: false
+  xy: 595, 760
+  size: 15, 19
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/big_stickRS
+  rotate: false
+  xy: 529, 760
+  size: 15, 18
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/big_ps4L3
+  rotate: false
+  xy: 507, 764
+  size: 15, 18
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/big_switchStickL
+  rotate: false
+  xy: 477, 766
+  size: 15, 18
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/big_stickLS
+  rotate: false
+  xy: 443, 768
+  size: 15, 18
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/mousePrevious
+  rotate: false
+  xy: 420, 780
+  size: 15, 18
+  orig: 16, 18
+  offset: 0, 0
+  index: 0
+ui/mouseNext
+  rotate: false
+  xy: 393, 790
+  size: 15, 18
+  orig: 16, 18
+  offset: 1, 0
+  index: 0
+ui/big_switchStickR
+  rotate: false
+  xy: 363, 793
+  size: 15, 18
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/big_ps4R3
+  rotate: false
+  xy: 298, 799
+  size: 15, 18
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/new_switchStickArrowDown
+  rotate: false
+  xy: 278, 812
+  size: 15, 18
+  orig: 15, 22
+  offset: 0, 0
+  index: 0
+ui/new_StickRDown
+  rotate: false
+  xy: 316, 799
+  size: 15, 18
+  orig: 15, 22
+  offset: 0, 0
+  index: 0
+ui/new_StickLDown
+  rotate: false
+  xy: 334, 808
+  size: 15, 18
+  orig: 15, 22
+  offset: 0, 0
+  index: 0
+ui/new_switchStickRArrowDown
+  rotate: false
+  xy: 296, 820
+  size: 15, 18
+  orig: 15, 22
+  offset: 0, 0
+  index: 0
+ui/new_ps4StickLDown
+  rotate: false
+  xy: 314, 820
+  size: 15, 18
+  orig: 15, 22
+  offset: 0, 0
+  index: 0
+ui/new_ps4StickRDown
+  rotate: false
+  xy: 613, 769
+  size: 15, 18
+  orig: 15, 22
+  offset: 0, 0
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueSkirt0
+  rotate: false
+  xy: 631, 769
+  size: 15, 17
+  orig: 22, 22
+  offset: 4, 3
+  index: 0
+ui/new_stickLS
+  rotate: false
+  xy: 649, 784
+  size: 15, 17
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/new_switchStickL
+  rotate: false
+  xy: 631, 789
+  size: 15, 17
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/new_ps4R3
+  rotate: false
+  xy: 667, 796
+  size: 15, 17
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/new_ps4L3
+  rotate: false
+  xy: 649, 804
+  size: 15, 17
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/new_stickRS
+  rotate: false
+  xy: 226, 822
+  size: 15, 17
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/new_switchStickR
+  rotate: false
+  xy: 244, 822
+  size: 15, 17
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/big_btnX
+  rotate: false
+  xy: 262, 833
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_switchPlus
+  rotate: false
+  xy: 179, 830
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_switchDirRightB
+  rotate: false
+  xy: 197, 830
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_switchY
+  rotate: false
+  xy: 149, 833
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_btnA
+  rotate: false
+  xy: 114, 842
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_switchX
+  rotate: false
+  xy: 79, 852
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_btnSelect
+  rotate: false
+  xy: 59, 855
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_btnY
+  rotate: false
+  xy: 37, 864
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_btnStart
+  rotate: false
+  xy: 1, 868
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/ps4Ls
+  rotate: false
+  xy: 19, 868
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_switchMinus
+  rotate: false
+  xy: 215, 842
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_switchPrintscreen
+  rotate: false
+  xy: 233, 842
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_switchHome
+  rotate: false
+  xy: 167, 849
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_btnB
+  rotate: false
+  xy: 185, 849
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_switchDirUpB
+  rotate: false
+  xy: 132, 852
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_switchDirLeftB
+  rotate: false
+  xy: 97, 861
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_switchDirDownB
+  rotate: false
+  xy: 77, 871
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_switchA
+  rotate: false
+  xy: 55, 874
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_ps4Square
+  rotate: false
+  xy: 37, 883
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/ps4Rs
+  rotate: false
+  xy: 1, 887
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_ps4Home
+  rotate: false
+  xy: 19, 887
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_ps4Cross
+  rotate: false
+  xy: 525, 781
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_ps4Triangle
+  rotate: false
+  xy: 495, 785
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_switchB
+  rotate: false
+  xy: 461, 787
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_ps4Circle
+  rotate: false
+  xy: 438, 789
+  size: 15, 16
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/big_switchStickRNeutral
+  rotate: false
+  xy: 411, 801
+  size: 15, 15
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/new_switchStickRNeutral
+  rotate: false
+  xy: 381, 811
+  size: 15, 15
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/new_ps4StickL
+  rotate: false
+  xy: 352, 814
+  size: 15, 15
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/big_StickL
+  rotate: false
+  xy: 332, 829
+  size: 15, 15
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/switchZl
+  rotate: false
+  xy: 543, 781
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 0
+ui/switchZr
+  rotate: false
+  xy: 561, 781
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 0
+ui/new_ps4StickR
+  rotate: false
+  xy: 579, 782
+  size: 15, 15
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/big_StickRR
+  rotate: false
+  xy: 597, 790
+  size: 15, 15
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/switchProDirUp
+  rotate: false
+  xy: 543, 799
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 0
+ui/switchProDirRight
+  rotate: false
+  xy: 561, 799
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 0
+ui/switchProDirLeft
+  rotate: false
+  xy: 579, 800
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 0
+ui/big_ps4StickR
+  rotate: false
+  xy: 513, 800
+  size: 15, 15
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/ps4L3
+  rotate: false
+  xy: 597, 808
+  size: 15, 15
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/new_StickR
+  rotate: false
+  xy: 479, 804
+  size: 15, 15
+  orig: 17, 15
+  offset: 1, 0
+  index: 0
+ui/new_StickRR
+  rotate: false
+  xy: 456, 806
+  size: 15, 15
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/big_ps4StickL
+  rotate: false
+  xy: 429, 808
+  size: 15, 15
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/big_switchStickLNeutral
+  rotate: false
+  xy: 399, 819
+  size: 15, 15
+  orig: 15, 27
+  offset: 0, 5
+  index: 0
+ui/new_StickL
+  rotate: false
+  xy: 370, 829
+  size: 15, 15
+  orig: 15, 19
+  offset: 0, 4
+  index: 0
+ui/ps4R3
+  rotate: false
+  xy: 350, 832
+  size: 15, 15
+  orig: 15, 16
+  offset: 0, 0
+  index: 0
+ui/switchProDirDown
+  rotate: false
+  xy: 615, 809
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 0
+ui/new_switchStickLNeutral
+  rotate: false
+  xy: 531, 817
+  size: 15, 15
+  orig: 15, 22
+  offset: 0, 3
+  index: 0
+ui/new_ps4Lb
+  rotate: false
+  xy: 550, 672
+  size: 15, 14
+  orig: 15, 14
+  offset: 0, 0
+  index: 0
+ui/new_ps4Rb
+  rotate: false
+  xy: 549, 817
+  size: 15, 14
+  orig: 15, 14
+  offset: 0, 0
+  index: 0
+ui/stickLS
+  rotate: false
+  xy: 567, 818
+  size: 15, 14
+  orig: 15, 14
+  offset: 0, 0
+  index: 0
+ui/stickRS
+  rotate: false
+  xy: 549, 834
+  size: 15, 14
+  orig: 15, 14
+  offset: 0, 0
+  index: 0
+ui/ps4Rb
+  rotate: false
+  xy: 585, 826
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
+  index: 0
+ui/ps4Lb
+  rotate: false
+  xy: 567, 835
+  size: 15, 13
+  orig: 15, 13
+  offset: 0, 0
+  index: 0
+ui/arrowLight
+  rotate: false
+  xy: 497, 818
+  size: 15, 12
+  orig: 15, 12
+  offset: 0, 0
+  index: 0
+ui/arrow
+  rotate: false
+  xy: 474, 822
+  size: 15, 12
+  orig: 15, 12
+  offset: 0, 0
+  index: 0
+ui/arrowReverse
+  rotate: false
+  xy: 447, 824
+  size: 15, 12
+  orig: 15, 12
+  offset: 0, 0
+  index: 0
+ui/switchR
+  rotate: false
+  xy: 417, 826
+  size: 15, 12
+  orig: 15, 12
+  offset: 0, 0
+  index: 0
+ui/switchL
+  rotate: false
+  xy: 388, 837
+  size: 15, 12
+  orig: 15, 12
+  offset: 0, 0
+  index: 0
+ui/mouseLeftClic
+  rotate: false
+  xy: 336, 426
+  size: 14, 18
+  orig: 16, 18
+  offset: 1, 0
+  index: 0
+ui/mouseMiddleClic
+  rotate: false
+  xy: 1008, 537
+  size: 14, 18
+  orig: 16, 18
+  offset: 1, 0
+  index: 0
+ui/mouseRightClic
+  rotate: false
+  xy: 1008, 790
+  size: 14, 18
+  orig: 16, 18
+  offset: 1, 0
+  index: 0
+ui/btnLt
+  rotate: false
+  xy: 79, 832
+  size: 14, 15
+  orig: 14, 15
+  offset: 0, 0
+  index: 0
+ui/new_btnRt
+  rotate: false
+  xy: 150, 852
+  size: 14, 15
+  orig: 14, 15
+  offset: 0, 0
+  index: 0
+ui/btnRt
+  rotate: false
+  xy: 115, 861
+  size: 14, 15
+  orig: 14, 15
+  offset: 0, 0
+  index: 0
+ui/new_btnLt
+  rotate: false
+  xy: 336, 447
+  size: 14, 15
+  orig: 14, 15
+  offset: 0, 0
+  index: 0
+ui/iconCell
+  rotate: false
+  xy: 1008, 811
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: 0
+ui/affixes/iconSurvive
+  rotate: false
+  xy: 190, 791
+  size: 14, 13
+  orig: 16, 16
+  offset: 0, 2
+  index: 0
+ui/bossRushStatueIcones/iconBRStatueBase0
+  rotate: false
+  xy: 322, 678
+  size: 14, 9
+  orig: 22, 22
+  offset: 4, 3
+  index: 0
+ui/vscroller
+  rotate: false
+  xy: 280, 833
+  size: 13, 39
+  orig: 13, 39
+  offset: 0, 0
+  index: 0
+ui/worldMapBeheaded_1
+  rotate: false
+  xy: 629, 516
+  size: 13, 22
+  orig: 24, 24
+  offset: 6, 2
+  index: 0
+ui/worldMapBeheaded_7
+  rotate: false
+  xy: 633, 809
+  size: 13, 22
+  orig: 24, 24
+  offset: 5, 2
+  index: 0
+ui/worldMapBeheaded_8
+  rotate: false
+  xy: 515, 818
+  size: 13, 22
+  orig: 24, 24
+  offset: 6, 2
+  index: 0
+ui/big_xboxDpadUp
+  rotate: false
+  xy: 1008, 828
+  size: 13, 21
+  orig: 13, 27
+  offset: 0, 5
+  index: 0
+ui/worldMapBeheaded_9
+  rotate: false
+  xy: 531, 835
+  size: 13, 21
+  orig: 22, 22
+  offset: 5, 1
+  index: 0
+ui/new_mouseMiddleClic
+  rotate: false
+  xy: 368, 847
+  size: 13, 20
+  orig: 13, 20
+  offset: 0, 0
+  index: 0
+ui/big_xboxDpadDown
+  rotate: false
+  xy: 492, 833
+  size: 13, 20
+  orig: 13, 27
+  offset: 0, 0
+  index: 0
+ui/new_mouseRightClic
+  rotate: false
+  xy: 508, 843
+  size: 13, 20
+  orig: 13, 20
+  offset: 0, 0
+  index: 0
+ui/new_mouseLeftClic
+  rotate: false
+  xy: 465, 837
+  size: 13, 20
+  orig: 13, 20
+  offset: 0, 0
+  index: 0
+ui/worldMapBeheaded0
+  rotate: false
+  xy: 481, 856
+  size: 13, 20
+  orig: 22, 22
+  offset: 4, 1
+  index: 0
+ui/new_mouse
+  rotate: false
+  xy: 251, 852
+  size: 13, 20
+  orig: 13, 20
+  offset: 0, 0
+  index: 0
+ui/btnSelect
+  rotate: false
+  xy: 461, 768
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/ps4Triangle
+  rotate: false
+  xy: 479, 787
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/btnStart
+  rotate: false
+  xy: 615, 790
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/big_switchProDirRight
+  rotate: false
+  xy: 1009, 770
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_switchPlus
+  rotate: false
+  xy: 603, 827
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/btnY
+  rotate: false
+  xy: 585, 842
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/big_switchProDirDown
+  rotate: false
+  xy: 435, 839
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_switchMinus
+  rotate: false
+  xy: 406, 841
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_switchHome
+  rotate: false
+  xy: 384, 852
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_switchDirUpB
+  rotate: false
+  xy: 296, 841
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/big_switchProDirLeft
+  rotate: false
+  xy: 312, 841
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/big_xboxDpad
+  rotate: false
+  xy: 328, 847
+  size: 13, 14
+  orig: 13, 27
+  offset: 0, 6
+  index: 0
+ui/new_switchPrintscreen
+  rotate: false
+  xy: 344, 850
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/big_switchProDirUp
+  rotate: false
+  xy: 296, 858
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/btnX
+  rotate: false
+  xy: 312, 858
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/big_switchProDir
+  rotate: false
+  xy: 328, 864
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/btnA
+  rotate: false
+  xy: 344, 867
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_btnStart
+  rotate: false
+  xy: 547, 851
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_btnA
+  rotate: false
+  xy: 563, 851
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_btnB
+  rotate: false
+  xy: 524, 859
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_btnSelect
+  rotate: false
+  xy: 497, 866
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_btnX
+  rotate: false
+  xy: 422, 856
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_btnY
+  rotate: false
+  xy: 400, 858
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/switchPlus
+  rotate: false
+  xy: 384, 869
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/switchMinus
+  rotate: false
+  xy: 360, 870
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/switchHome
+  rotate: false
+  xy: 438, 856
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/switchDirUpB
+  rotate: false
+  xy: 454, 860
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/switchDirRightB
+  rotate: false
+  xy: 416, 873
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_ps4Circle
+  rotate: false
+  xy: 400, 875
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/switchDirLeftB
+  rotate: false
+  xy: 432, 873
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/switchDirDownB
+  rotate: false
+  xy: 376, 886
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/switchB
+  rotate: false
+  xy: 448, 877
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/switchA
+  rotate: false
+  xy: 464, 877
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/switchY
+  rotate: false
+  xy: 480, 879
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_switchA
+  rotate: false
+  xy: 416, 890
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/switchX
+  rotate: false
+  xy: 432, 890
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/ps4Home
+  rotate: false
+  xy: 392, 892
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_switchDirRightB
+  rotate: false
+  xy: 448, 894
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_switchDirLeftB
+  rotate: false
+  xy: 464, 894
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_switchX
+  rotate: false
+  xy: 408, 907
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/ps4Cross
+  rotate: false
+  xy: 424, 907
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_switchB
+  rotate: false
+  xy: 203, 861
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/ps4Square
+  rotate: false
+  xy: 219, 861
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_ps4Home
+  rotate: false
+  xy: 235, 861
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_switchY
+  rotate: false
+  xy: 167, 868
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/btnB
+  rotate: false
+  xy: 150, 870
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_ps4Cross
+  rotate: false
+  xy: 132, 871
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/ps4Circle
+  rotate: false
+  xy: 115, 879
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_switchDirDownB
+  rotate: false
+  xy: 183, 868
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_ps4Square
+  rotate: false
+  xy: 95, 880
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/new_ps4Triangle
+  rotate: false
+  xy: 73, 890
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/btnBackpack
+  rotate: false
+  xy: 55, 893
+  size: 13, 13
+  orig: 13, 14
+  offset: 0, 0
+  index: 0
+ui/affixes/iconAffectLegendary12
+  rotate: false
+  xy: 929, 745
+  size: 13, 8
+  orig: 13, 13
+  offset: 0, 3
+  index: 0
+ui/big_ps5Options
+  rotate: false
+  xy: 630, 541
+  size: 12, 25
+  orig: 12, 25
+  offset: 0, 0
+  index: 0
+ui/flaskB_1
+  rotate: false
+  xy: 523, 645
+  size: 12, 24
+  orig: 24, 24
+  offset: 6, 0
+  index: 0
+ui/TranchesPopUpWindow/mid_big_2
+  rotate: false
+  xy: 37, 902
+  size: 12, 24
+  orig: 12, 24
+  offset: 0, 0
+  index: 0
+ui/TranchesPopUpWindow/mid_big_0
+  rotate: false
+  xy: 1, 906
+  size: 12, 24
+  orig: 12, 24
+  offset: 0, 0
+  index: 0
+ui/TranchesPopUpWindow/mid_big_1
+  rotate: false
+  xy: 16, 906
+  size: 12, 24
+  orig: 12, 24
+  offset: 0, 0
+  index: 0
+ui/worldMapBeheaded_2
+  rotate: false
+  xy: 251, 875
+  size: 12, 22
+  orig: 24, 24
+  offset: 7, 2
+  index: 0
+ui/worldMapBeheaded_0
+  rotate: false
+  xy: 199, 878
+  size: 12, 21
+  orig: 22, 22
+  offset: 5, 1
+  index: 0
+ui/flaskB_0
+  rotate: false
+  xy: 245, 799
+  size: 12, 20
+  orig: 24, 24
+  offset: 5, 0
+  index: 0
+ui/new_xboxDpadUp
+  rotate: false
+  xy: 166, 885
+  size: 12, 19
+  orig: 12, 24
+  offset: 0, 5
+  index: 0
+ui/worldMapBeheaded3
+  rotate: false
+  xy: 181, 885
+  size: 12, 18
+  orig: 22, 22
+  offset: 6, 1
+  index: 0
+ui/affixes/iconNeutral
+  rotate: false
+  xy: 148, 887
+  size: 12, 18
+  orig: 18, 18
+  offset: 3, 0
+  index: 0
+ui/new_xboxDpadDown
+  rotate: false
+  xy: 131, 888
+  size: 12, 18
+  orig: 12, 24
+  offset: 0, 0
+  index: 0
+ui/xboxDpadDown
+  rotate: false
+  xy: 111, 896
+  size: 12, 16
+  orig: 20, 20
+  offset: 4, 0
+  index: 0
+ui/affixes/iconTactic
+  rotate: false
+  xy: 89, 897
+  size: 12, 16
+  orig: 18, 18
+  offset: 3, 1
+  index: 0
+ui/xboxDpadUp
+  rotate: false
+  xy: 71, 907
+  size: 12, 16
+  orig: 20, 19
+  offset: 4, 3
+  index: 0
+ui/iconGold
+  rotate: false
+  xy: 52, 909
+  size: 12, 14
+  orig: 14, 14
+  offset: 1, 0
+  index: 0
+ui/new_switchProDirLeft
+  rotate: false
+  xy: 214, 878
+  size: 12, 13
+  orig: 12, 13
+  offset: 0, 0
+  index: 0
+ui/new_switchProDirRight
+  rotate: false
+  xy: 229, 878
+  size: 12, 13
+  orig: 12, 13
+  offset: 0, 0
+  index: 0
+ui/switchDirUp
+  rotate: false
+  xy: 214, 894
+  size: 12, 13
+  orig: 12, 13
+  offset: 0, 0
+  index: 0
+ui/new_xboxDpad
+  rotate: false
+  xy: 196, 902
+  size: 12, 13
+  orig: 13, 24
+  offset: 1, 5
+  index: 0
+ui/new_switchProDirDown
+  rotate: false
+  xy: 181, 906
+  size: 12, 13
+  orig: 12, 13
+  offset: 0, 0
+  index: 0
+ui/btnNone
+  rotate: false
+  xy: 163, 907
+  size: 12, 13
+  orig: 14, 15
+  offset: 1, 1
+  index: 0
+ui/new_switchProDir
+  rotate: false
+  xy: 146, 908
+  size: 12, 13
+  orig: 12, 13
+  offset: 0, 0
+  index: 0
+ui/switchDirRight
+  rotate: false
+  xy: 126, 909
+  size: 12, 13
+  orig: 12, 13
+  offset: 0, 0
+  index: 0
+ui/switchDirLeft
+  rotate: false
+  xy: 229, 894
+  size: 12, 13
+  orig: 12, 13
+  offset: 0, 0
+  index: 0
+ui/new_switchProDirUp
+  rotate: false
+  xy: 104, 915
+  size: 12, 13
+  orig: 12, 13
+  offset: 0, 0
+  index: 0
+ui/switchDirDown
+  rotate: false
+  xy: 86, 916
+  size: 12, 13
+  orig: 12, 13
+  offset: 0, 0
+  index: 0
+ui/incentive12
+  rotate: false
+  xy: 96, 814
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 0
+ui/TranchesPopUpWindow/mid_medium_1
+  rotate: false
+  xy: 52, 926
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 0
+ui/TranchesPopUpWindow/mid_medium_2
+  rotate: false
+  xy: 67, 926
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 0
+ui/TranchesPopUpWindow/mid_medium_3
+  rotate: false
+  xy: 31, 929
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 0
+ui/TranchesPopUpWindow/mid_medium_0
+  rotate: false
+  xy: 1, 933
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 0
+ui/xboxDpad
+  rotate: false
+  xy: 16, 933
+  size: 12, 12
+  orig: 18, 18
+  offset: 3, 3
+  index: 0
+ui/TranchesPopUpWindow/mid_small_0
+  rotate: false
+  xy: 190, 491
+  size: 12, 5
+  orig: 12, 5
+  offset: 0, 0
+  index: 0
+ui/TranchesPopUpWindow/mid_verySmall_0
+  rotate: false
+  xy: 909, 734
+  size: 12, 2
+  orig: 12, 2
+  offset: 0, 0
+  index: 0
+ui/worldMapBeheaded_3
+  rotate: false
+  xy: 797, 369
+  size: 11, 22
+  orig: 24, 24
+  offset: 7, 2
+  index: 0
+ui/worldMapBeheaded_10
+  rotate: false
+  xy: 416, 127
+  size: 11, 22
+  orig: 24, 24
+  offset: 7, 2
+  index: 0
+ui/worldMapBeheaded_4
+  rotate: false
+  xy: 133, 600
+  size: 11, 22
+  orig: 24, 24
+  offset: 7, 2
+  index: 0
+ui/worldMapBeheaded_5
+  rotate: false
+  xy: 619, 827
+  size: 11, 22
+  orig: 24, 24
+  offset: 7, 2
+  index: 0
+ui/worldMapBeheaded2
+  rotate: false
+  xy: 412, 470
+  size: 11, 20
+  orig: 22, 22
+  offset: 6, 1
+  index: 0
+ui/worldMapBeheaded_6
+  rotate: false
+  xy: 816, 553
+  size: 11, 20
+  orig: 22, 22
+  offset: 6, 1
+  index: 0
+ui/worldMapBeheaded1
+  rotate: false
+  xy: 416, 152
+  size: 11, 19
+  orig: 22, 22
+  offset: 6, 1
+  index: 0
+ui/affixes/iconBrutality
+  rotate: false
+  xy: 608, 689
+  size: 11, 17
+  orig: 18, 18
+  offset: 4, 0
+  index: 0
+ui/lifeBg
+  rotate: false
+  xy: 601, 844
+  size: 11, 15
+  orig: 11, 15
+  offset: 0, 0
+  index: 0
+ui/tierBg
+  rotate: false
+  xy: 579, 859
+  size: 11, 15
+  orig: 11, 15
+  offset: 0, 0
+  index: 0
+ui/hourglass
+  rotate: false
+  xy: 451, 839
+  size: 11, 14
+  orig: 11, 14
+  offset: 0, 0
+  index: 0
+ui/iconCoin12
+  rotate: false
+  xy: 540, 868
+  size: 11, 14
+  orig: 11, 14
+  offset: 0, 0
+  index: 0
+ui/iconPerfect
+  rotate: false
+  xy: 554, 868
+  size: 11, 14
+  orig: 14, 14
+  offset: 1, 0
+  index: 0
+ui/iconCursed12
+  rotate: false
+  xy: 513, 876
+  size: 11, 14
+  orig: 11, 14
+  offset: 0, 0
+  index: 0
+ui/switchPrintscreen
+  rotate: false
+  xy: 41, 808
+  size: 11, 12
+  orig: 11, 12
+  offset: 0, 0
+  index: 0
+ui/boxInfo
+  rotate: false
+  xy: 508, 675
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: 0
+ui/iconForge12
+  rotate: false
+  xy: 925, 258
+  size: 11, 10
+  orig: 11, 12
+  offset: 0, 1
+  index: 0
+ui/new_ps5Options
+  rotate: false
+  xy: 685, 796
+  size: 10, 21
+  orig: 10, 21
+  offset: 0, 0
+  index: 0
+ui/listArrowLOn
+  rotate: false
+  xy: 74, 516
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: 0
+ui/listArrowROn
+  rotate: false
+  xy: 160, 703
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: 0
+ui/listArrowROff
+  rotate: false
+  xy: 190, 718
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: 0
+ui/listArrowLOff
+  rotate: false
+  xy: 170, 778
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: 0
+ui/vscroller_bg
+  rotate: false
+  xy: 1013, 190
+  size: 9, 31
+  orig: 11, 37
+  offset: 1, 3
+  index: 0
+ui/gaugeBorder
+  rotate: false
+  xy: 430, 600
+  size: 9, 20
+  orig: 9, 20
+  offset: 0, 0
+  index: 0
+ui/ps5Options
+  rotate: false
+  xy: 1013, 714
+  size: 9, 18
+  orig: 20, 20
+  offset: 5, 1
+  index: 0
+ui/listArrowUpOff
+  rotate: false
+  xy: 364, 582
+  size: 9, 11
+  orig: 9, 11
+  offset: 0, 0
+  index: 0
+ui/listArrowUpOn
+  rotate: false
+  xy: 463, 627
+  size: 9, 11
+  orig: 9, 11
+  offset: 0, 0
+  index: 0
+ui/listArrowDownOn
+  rotate: false
+  xy: 451, 657
+  size: 9, 11
+  orig: 9, 11
+  offset: 0, 0
+  index: 0
+ui/listArrowDownOff
+  rotate: false
+  xy: 207, 769
+  size: 9, 11
+  orig: 9, 11
+  offset: 0, 0
+  index: 0
+ui/boxLine
+  rotate: false
+  xy: 76, 803
+  size: 9, 8
+  orig: 9, 8
+  offset: 0, 0
+  index: 0
+ui/boxMain
+  rotate: false
+  xy: 685, 717
+  size: 9, 8
+  orig: 9, 8
+  offset: 0, 0
+  index: 0
+ui/dirDown
+  rotate: false
+  xy: 992, 705
+  size: 9, 5
+  orig: 11, 11
+  offset: 1, 3
+  index: 0
+ui/dirUp
+  rotate: false
+  xy: 61, 824
+  size: 9, 5
+  orig: 11, 11
+  offset: 1, 3
+  index: 0
+ui/new_keyboardRight
+  rotate: false
+  xy: 568, 868
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: 0
+ui/sliderLineOff
+  rotate: false
+  xy: 232, 655
+  size: 8, 16
+  orig: 17, 17
+  offset: 4, 1
+  index: 0
+ui/sliderLineOn
+  rotate: false
+  xy: 758, 648
+  size: 8, 16
+  orig: 17, 17
+  offset: 4, 1
+  index: 0
+ui/new_keyboardLeft
+  rotate: false
+  xy: 481, 837
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: 0
+ui/keyboardLeft
+  rotate: false
+  xy: 179, 810
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: 0
+ui/keyboardRight
+  rotate: false
+  xy: 495, 766
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: 0
+ui/big_keyboardLeft
+  rotate: false
+  xy: 481, 837
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: 0
+ui/big_keyboardRight
+  rotate: false
+  xy: 568, 868
+  size: 8, 16
+  orig: 8, 16
+  offset: 0, 0
+  index: 0
+ui/skillBg
+  rotate: false
+  xy: 199, 637
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: 0
+ui/flaskA_0
+  rotate: false
+  xy: 181, 529
+  size: 6, 19
+  orig: 24, 24
+  offset: 8, 0
+  index: 0
+ui/dirLeft
+  rotate: false
+  xy: 900, 353
+  size: 5, 9
+  orig: 11, 11
+  offset: 3, 1
+  index: 0
+ui/dirRight
+  rotate: false
+  xy: 789, 460
+  size: 5, 9
+  orig: 11, 11
+  offset: 3, 1
+  index: 0
+ui/boxLifeBoss
+  rotate: false
+  xy: 603, 421
+  size: 5, 5
+  orig: 5, 5
+  offset: 0, 0
+  index: 0
+ui/boxLife
+  rotate: false
+  xy: 749, 531
+  size: 5, 5
+  orig: 5, 5
+  offset: 0, 0
+  index: 0
+ui/boxHud
+  rotate: false
+  xy: 149, 763
+  size: 5, 5
+  orig: 5, 5
+  offset: 0, 0
+  index: 0
+ui/affixBullet
+  rotate: false
+  xy: 365, 720
+  size: 5, 5
+  orig: 5, 5
+  offset: 0, 0
+  index: 0
+ui/lifeSeparator
+  rotate: false
+  xy: 117, 400
+  size: 3, 12
+  orig: 3, 12
+  offset: 0, 0
+  index: 0
+ui/uiToolTip_corner
+  rotate: false
+  xy: 611, 122
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: 0
+ui/new_keyboardTile
+  rotate: false
+  xy: 426, 251
+  size: 1, 16
+  orig: 1, 16
+  offset: 0, 0
+  index: 0
+ui/big_keyboardTile
+  rotate: false
+  xy: 426, 251
+  size: 1, 16
+  orig: 1, 16
+  offset: 0, 0
+  index: 0
+ui/keyboardTile
+  rotate: false
+  xy: 680, 443
+  size: 1, 16
+  orig: 1, 16
+  offset: 0, 0
+  index: 0
+ui/gaugeBg
+  rotate: false
+  xy: 442, 567
+  size: 1, 16
+  orig: 1, 20
+  offset: 0, 2
+  index: 0
+ui/LifeBar/purple_gradient_darker
+  rotate: false
+  xy: 624, 613
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/lifeFullBossModified
+  rotate: false
+  xy: 186, 748
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/lifeReco
+  rotate: false
+  xy: 950, 692
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/cellFull
+  rotate: false
+  xy: 924, 713
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/LifeBar/white_gradient_darker
+  rotate: false
+  xy: 945, 729
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/LifeBar/red_gradient_darker
+  rotate: false
+  xy: 240, 766
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/lifeFullBoss
+  rotate: false
+  xy: 401, 755
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/LifeBar/pink_gradient_darker
+  rotate: false
+  xy: 681, 740
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/LifeBar/blue_gradient_darker
+  rotate: false
+  xy: 114, 829
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/lifeFull
+  rotate: false
+  xy: 37, 846
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/lifeEmpty
+  rotate: false
+  xy: 525, 764
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/babar
+  rotate: false
+  xy: 465, 824
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/lifeBonusFull
+  rotate: false
+  xy: 435, 826
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/lifeDecay
+  rotate: false
+  xy: 73, 874
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/LifeBar/gold_gradient_darker
+  rotate: false
+  xy: 111, 880
+  size: 1, 10
+  orig: 1, 10
+  offset: 0, 0
+  index: 0
+ui/lifeBonusStartEnd
+  rotate: false
+  xy: 672, 682
+  size: 1, 8
+  orig: 1, 10
+  offset: 0, 1
+  index: 0
+ui/cellStartEnd
+  rotate: false
+  xy: 761, 749
+  size: 1, 8
+  orig: 1, 10
+  offset: 0, 1
+  index: 0
+ui/lifeBossModifiedStartEnd
+  rotate: false
+  xy: 345, 774
+  size: 1, 8
+  orig: 1, 8
+  offset: 0, 0
+  index: 0
+ui/LifeBar/Cunstom_LifeStartEnd/pink_gradient_transparent
+  rotate: false
+  xy: 227, 788
+  size: 1, 8
+  orig: 1, 10
+  offset: 0, 1
+  index: 0
+ui/LifeBar/Cunstom_LifeStartEnd/red_gradient_transparent
+  rotate: false
+  xy: 262, 822
+  size: 1, 8
+  orig: 1, 10
+  offset: 0, 1
+  index: 0
+ui/LifeBar/Cunstom_LifeStartEnd/purple_gradient_transparent
+  rotate: false
+  xy: 411, 790
+  size: 1, 8
+  orig: 1, 10
+  offset: 0, 1
+  index: 0
+ui/LifeBar/Cunstom_LifeStartEnd/gold_gradient_transparent
+  rotate: false
+  xy: 328, 459
+  size: 1, 8
+  orig: 1, 10
+  offset: 0, 1
+  index: 0
+ui/LifeBar/Cunstom_LifeStartEnd/blue_gradient_transparent
+  rotate: false
+  xy: 492, 822
+  size: 1, 8
+  orig: 1, 10
+  offset: 0, 1
+  index: 0
+ui/lifeDecayStartEnd
+  rotate: false
+  xy: 82, 926
+  size: 1, 8
+  orig: 1, 10
+  offset: 0, 1
+  index: 0
+ui/lifeStartEnd
+  rotate: false
+  xy: 67, 909
+  size: 1, 8
+  orig: 1, 10
+  offset: 0, 1
+  index: 0
+ui/LifeBar/Cunstom_LifeStartEnd/white_gradient_transparent
+  rotate: false
+  xy: 416, 174
+  size: 1, 8
+  orig: 1, 10
+  offset: 0, 1
+  index: 0
+ui/lifeBossStartEnd
+  rotate: false
+  xy: 615, 844
+  size: 1, 8
+  orig: 1, 10
+  offset: 0, 1
+  index: 0
+ui/uiToolTip_whiteLine
+  rotate: false
+  xy: 822, 245
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: 0
+ui/gauge
+  rotate: false
+  xy: 309, 644
+  size: 1, 1
+  orig: 127, 12
+  offset: 126, 0
+  index: 0
+ui/walterWhite
+  rotate: false
+  xy: 822, 245
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: 0

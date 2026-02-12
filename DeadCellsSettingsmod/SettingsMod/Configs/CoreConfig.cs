@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ChiuYiUI
 {
@@ -14,7 +10,7 @@ namespace ChiuYiUI
         public bool pop { get; set; } = false;
         public bool rsty { get; set; } = false;
 
-        
+
         public bool UseScarfGray { get; set; } = true;
 
         public bool Allscarf { get; set; } = false;
@@ -42,5 +38,7 @@ namespace ChiuYiUI
         public bool HaslightTip { get; set; } = false;
         public bool HasNoPopText { get; set; } = false;
         public bool HasNoStatusIcon { get; set; } = false;
+
+        public double LifeBarcolor { get; set; } = 0;
     }
 }

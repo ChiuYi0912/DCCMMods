@@ -1,5 +1,6 @@
 using Amazon.Runtime.Internal.Util;
 using dc.en;
+using dc.hl.types;
 using dc.level;
 using dc.libs;
 using dc.pr;
@@ -89,45 +90,6 @@ namespace DebugMod.Commands.activateDebug
             {
                 Game.Class.ME.user.game.spawnMimicInNextLevel = true;
             }
-        }
-
-        [ConsoleMethod("math-seed", "test")]
-        public static void Calculateseed(TextWriter writer,int seed ,int doubleUps)
-        {
-            int IsWeighting10 = 10;
-
-            int IsWeighting100 = 100;
-
-            int IsdoubleUps = doubleUps;
-
-            Rand rand = new Rand(seed);
-            double israndom = seed  * 16807.0 % 2147483647.0;
-            writer.Write($"下一关随机数：{israndom}");
-
-            const int Multiplication = 3;
-            int i = 0;
-            while (i < IsdoubleUps)
-            {
-                i++;
-
-                
-                // random = random + 16807;
-                //israndom = israndom + (16807 * seed);
-
-                bool flag = ((int)israndom & 1073741823) % (IsWeighting10 + IsWeighting100) < IsWeighting10;
-                if (flag)
-                {
-                    IsWeighting100 *= Multiplication;
-                    writer.Write("生成高位卷轴组合");
-                }
-                else
-                {
-                    IsWeighting10 += 40;
-                    writer.Write("生成次级卷轴组");
-                }
-
-            }
-
         }
     }
 }

@@ -21,6 +21,7 @@ using ChiuYiUI.Settings.HasUi;
 using dc.level;
 using dc.cine;
 using ChiuYiUI.GameCm;
+using SettingsMod.Settings;
 
 namespace ChiuYiUI;
 
@@ -30,6 +31,7 @@ public class ChiuYiUI
     private readonly CHIUYIMain _mod;
     private readonly Scraf _scraf;
     private HasUiSetting _hasUi;
+    private DisplayUI _displayUI;
 
 
     public ChiuYiUI(CHIUYIMain mod)
@@ -37,6 +39,7 @@ public class ChiuYiUI
         _mod = mod;
         _scraf = new Scraf(mod);
         _hasUi = new HasUiSetting();
+        _displayUI = new DisplayUI();
         GetText.Instance.RegisterMod("SettingsLang");
     }
 
@@ -213,6 +216,8 @@ public class ChiuYiUI
 
         _hasUi.Markets(self);
 
+        _displayUI.addSetting(self);
+
 
         scrollerFlow = options.scrollerFlow;
         self.addSeparator(GetText.Instance.GetString("特殊设置").AsHaxeString(), scrollerFlow);
@@ -329,6 +334,7 @@ public class ChiuYiUI
 
     private void Hook__LevelStruct_applyDifficulty(Hook_LevelStruct.orig_applyDifficulty orig, LevelStruct self)
     {
+        //testroom(self);
         if (dc.pr.Game.Class.ME.user.game.spawnMimicInNextLevel && CHIUYIMain.config.Value.LoreBankMimicRoom && Main.Class.ME.options.disableLoreRooms)
         {
             addMimicrooom(self);
@@ -347,6 +353,19 @@ public class ChiuYiUI
             }
         }
     }
+
+    public void testroom(LevelStruct Struct)
+    {
+        for (int i = 92; i <= 105; i++)
+        {
+            dynamic lore = Data.Class.loreRoom.all.array.getDyn(i);
+            if (lore == null) return;
+            lore.levels.push("PrisonStart".AsHaxeString());
+            Struct.tryAddLoreRoom(((HaxeProxyBase)lore).ToVirtual<virtual_arc_examinables_fxEmitters_Intention_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>());
+        }
+    }
+
+
 
 
     private void Hook_NewsPanel_update(Hook_NewsPanel.orig_update orig, NewsPanel self)

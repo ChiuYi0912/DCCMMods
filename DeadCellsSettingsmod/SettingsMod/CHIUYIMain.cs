@@ -15,6 +15,8 @@ using ModCore.Events.Interfaces.Game;
 using dc.tool;
 using ModCore.Storage;
 using CiuYiUI;
+using SettingsMod.Settings;
+using dc.tool.mod;
 
 namespace ChiuYiUI;
 
@@ -23,17 +25,19 @@ IOnGameEndInit,
 IOnAfterLoadingCDB
 {
 
-    private ChiuYiUI _ui;
-    private Scraf _toscarf;
-    #pragma warning disable CS8618 
+    private ChiuYiUI? _ui;
+    private Scraf? _toscarf;
+    private static CHIUYIMain? _instance;
+    private Config? _config;
+    private LevelMusic? _levelMusic;
+
+    public static Config<PothionsConfig> config = new("ScarafConfig");
+
+
     public CHIUYIMain(ModInfo info) : base(info)
     {
         _instance = this;
     }
-    private static CHIUYIMain? _instance;
-    private Config _config;
-    private LevelMusic _levelMusic;
-    public static Config<PothionsConfig> config = new("ScarafConfig");
     public override void Initialize()
     {
         Log.Information("整合包运行成功！by ChiuYi.秋");
@@ -44,6 +48,7 @@ IOnAfterLoadingCDB
         _ui = new ChiuYiUI(this);
         _ui.Viewporthook();
         _toscarf = new Scraf(this);
+
 
 
         Hook_Hero.hasSkin += allaskin;
@@ -69,7 +74,7 @@ IOnAfterLoadingCDB
     void IOnAfterLoadingCDB.OnAfterLoadingCDB(dc._Data_ cdb)
     {
         #region 加载围巾配置
-        _scarfConfigs = _config.ScarfConfigs;
+        _scarfConfigs = _config!.ScarfConfigs;
         GetAllScarfIndices().ForEach(index =>
         {
             var config = _scarfConfigs[index];
@@ -81,12 +86,17 @@ IOnAfterLoadingCDB
     }
 
 
-    public void OnGameEndInit()
+    void IOnGameEndInit.OnGameEndInit()
     {
-        Log.Information("[Lang]lodar语言切换加入");
-        Log.Information("游戏初始化完成！");
-        var res = this.Info.ModRoot!.GetFilePath("res.pak");
-        FsPak.Instance.FileSystem.loadPak(res.AsHaxeString());
+        try
+        {
+            var res = this.Info.ModRoot!.GetFilePath("SettingRes.pak");
+            FsPak.Instance.FileSystem.loadPak(res.AsHaxeString());
+        }
+        catch (System.Exception ex)
+        {
+            Logger.Error($"error{ex}");
+        }
     }
 
 
@@ -164,7 +174,7 @@ IOnAfterLoadingCDB
         }
     }
 
- 
+
     private void sty(Hook_Entity.orig_popDamage orig, Entity self, AttackData a)
     {
         if (dc.ui.Console.Class.ME.flags.exists("NoPopText".AsHaxeString())) return;

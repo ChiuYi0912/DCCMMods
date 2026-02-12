@@ -10,7 +10,7 @@ namespace ChiuYiUI
     public class Config
     {
 
-        public Dictionary<int, ScarfConfig> ScarfConfigs { get; set; } = new ()
+        public Dictionary<int, ScarfConfig> ScarfConfigs { get; set; } = new()
         {
 
         };

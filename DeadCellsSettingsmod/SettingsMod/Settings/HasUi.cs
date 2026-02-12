@@ -1,4 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
+using Amazon.Runtime.Internal.Util;
 using dc;
 using dc.libs.heaps.slib;
 using dc.pr;
@@ -6,6 +7,7 @@ using dc.ui;
 using HaxeProxy.Runtime;
 using ModCore.Modules;
 using ModCore.Utilities;
+using Serilog;
 
 namespace ChiuYiUI.Settings.HasUi
 {
@@ -19,8 +21,8 @@ namespace ChiuYiUI.Settings.HasUi
         {
             Hook__GameCinematic.__constructor__ += Hook__GameCinematic___constructor__;
             Hook_Game.init += Hook_Game_init;
+           
         }
-
 
 
         private void Hook_Game_init(Hook_Game.orig_init orig, dc.pr.Game self)

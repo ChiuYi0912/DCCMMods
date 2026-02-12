@@ -11,8 +11,12 @@ using dc.hl.types;
 using dc.hxd;
 using dc.level;
 using dc.libs;
+using dc.pow;
 using dc.tool;
+using dc.ui.hud;
+using DebugMod.Utitities;
 using Hashlink.Proxy.Clousre;
+using Hashlink.Proxy.DynamicAccess;
 using Hashlink.Proxy.Objects;
 using Hashlink.Reflection.Types;
 using Hashlink.Virtuals;
@@ -31,6 +35,13 @@ namespace DebugMod
         IOnHeroUpdate,
         IOnAfterLoadingCDB
     {
+
+        public override void Initialize()
+        {
+            base.Initialize();
+
+        }
+
         private void Hook_Console_ctor(HashlinkClosure orig, HashlinkObject self)
         {
             orig.DynamicInvoke(self);
@@ -40,7 +51,6 @@ namespace DebugMod
             ss.HIDE_DEBUG = "FDMM_HIDE_DEBUG".AsHaxeString();
             ss.HIDE_CONSOLE = "FDMM_HIDE_CONSOLE".AsHaxeString();
             s.activateDebug();
-
 
 
         }
@@ -54,18 +64,7 @@ namespace DebugMod
 
             hh.CreateHook("ui.$Console", "__constructor__", Hook_Console_ctor).Enable();
 
-            Hook__LootGen.__constructor__ += Hook__LootGen__constructor__;
         }
-
-        public static double isseed;
-        private void Hook__LootGen__constructor__(Hook__LootGen.orig___constructor__ orig, LootGen arg1, User user, ArrayObj maps, int seed, TierDistribution tierDistrib, Hero hero, Ref<bool> _hasExplorationBonusIncentive, Ref<bool> forceNoGenerate)
-        {
-            orig(arg1, user, maps, seed, tierDistrib, hero, _hasExplorationBonusIncentive, forceNoGenerate);
-            Logger.Debug($"原始随机数：{arg1.rseed.seed}");
-            Logger.Debug($"种子：{seed}");
-            isseed = arg1.rseed.seed;
-        }
-
 
         private void Hook__Console__constructor__(Hook__Console.orig___constructor__ orig, dc.h2d.Console arg1, Font font, dc.h2d.Object parent)
         {
@@ -91,7 +90,7 @@ namespace DebugMod
         }
 
 
-
+        private bool isswitch = false;
         void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
             if (Key.Class.isPressed(37))
@@ -122,16 +121,14 @@ namespace DebugMod
 
         void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb)
         {
-            for (int i = 0; i < cdb.level.all.get_length(); i++)
-            {
-                var data = cdb.level.all.array.getDyn(i);
-                data.doubleUps = 5;
-            }
+           
         }
 
-
-
+        
     }
+
+
+
 
 }
 
