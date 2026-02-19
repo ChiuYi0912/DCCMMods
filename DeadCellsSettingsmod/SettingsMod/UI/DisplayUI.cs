@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ChiuYiUI;
+using ChiuYiUI.Core;
 using dc;
 using dc.ui;
 using HaxeProxy.Runtime;
 using ModCore.Utilities;
 
-namespace SettingsMod.Settings
+namespace ChiuYiUI.UI
 {
     public class DisplayUI
     {

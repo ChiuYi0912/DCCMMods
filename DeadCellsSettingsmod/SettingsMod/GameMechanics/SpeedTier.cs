@@ -5,7 +5,7 @@ using dc.tool;
 using dc.ui;
 using HaxeProxy.Runtime;
 
-namespace ChiuYiUI.GameCm
+namespace ChiuYiUI.GameMechanics
 {
     public class SpeedTier : GameCinematic
     {

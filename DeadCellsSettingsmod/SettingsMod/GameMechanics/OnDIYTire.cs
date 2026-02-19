@@ -16,7 +16,7 @@ using dc.ui.icon;
 using HaxeProxy.Runtime;
 using ModCore.Utilities;
 
-namespace ChiuYiUI.GameCm
+namespace ChiuYiUI.GameMechanics
 {
     public class OnDIYTire : GameCinematic
     {

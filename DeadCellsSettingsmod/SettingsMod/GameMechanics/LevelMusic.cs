@@ -1,13 +1,13 @@
 using System;
 using ModCore.Modules;
 using ModCore.Events.Interfaces;
-using ChiuYiUI;
+using ChiuYiUI.Core;
 using dc.tool;
 using dc.hxd.res;
 using dc.hxd.fs;
 using System.Diagnostics;
 
-namespace CiuYiUI;
+namespace ChiuYiUI.GameMechanics;
 
 public class LevelMusic
 {

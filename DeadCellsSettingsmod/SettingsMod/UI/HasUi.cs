@@ -1,5 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
 using dc;
+using ChiuYiUI.Core;
 using dc.libs.heaps.slib;
 using dc.pr;
 using dc.ui;
@@ -8,7 +9,7 @@ using ModCore.Modules;
 using ModCore.Utilities;
 using Serilog;
 
-namespace ChiuYiUI.Settings.HasUi
+namespace ChiuYiUI.UI
 {
     public class HasUiSetting
     {

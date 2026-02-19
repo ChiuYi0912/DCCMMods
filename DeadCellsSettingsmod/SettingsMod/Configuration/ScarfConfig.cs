@@ -5,9 +5,9 @@ using dc;
 using ModCore.Events.Interfaces.Game;
 using Serilog;
 
-namespace ChiuYiUI
+namespace ChiuYiUI.Configuration
 {
-    public class Config
+    public class ScarfSettings
     {
 
         public Dictionary<int, ScarfConfig> ScarfConfigs { get; set; } = new()
@@ -78,14 +78,14 @@ namespace ChiuYiUI
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "DeadCells", "Mods", "Skines", "config.json");
 
-        public static Config LoadConfig()
+        public static ScarfSettings LoadConfig()
         {
             try
             {
                 if (File.Exists(ConfigPath))
                 {
                     string json = File.ReadAllText(ConfigPath);
-                    return JsonSerializer.Deserialize<Config>(json) ?? new Config();
+                    return JsonSerializer.Deserialize<ScarfSettings>(json) ?? new ScarfSettings();
                 }
             }
             catch (Exception ex)
@@ -93,10 +93,10 @@ namespace ChiuYiUI
                 Log.Error($"加载配置失败: {ex.Message}");
             }
 
-            return new Config();
+            return new ScarfSettings();
         }
 
-        public static void SaveConfig(Config config)
+        public static void SaveConfig(ScarfSettings config)
         {
             try
             {

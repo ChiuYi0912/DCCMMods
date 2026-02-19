@@ -1,5 +1,5 @@
 
-namespace ChiuYiUI
+namespace ChiuYiUI.Configuration
 {
     public class PothionsConfig
     {

@@ -15,15 +15,16 @@ using dc.libs.heaps.slib;
 using dc.en;
 using ModCore.Modules;
 using dc.libs.heaps;
-using ChiuYiUI.Settings.HasUi;
+using ChiuYiUI.UI;
+using ChiuYiUI.Core;
 using dc.level;
 using dc.cine;
-using ChiuYiUI.GameCm;
+using ChiuYiUI.GameMechanics;
 using ModCore.Menu;
 using ModCore.Events;
-using SettingsMod.Settings;
+using dc.hl.types;
 
-namespace ChiuYiUI;
+namespace ChiuYiUI.UI;
 
 public class ChiuYiUI : IModMenu, IEventReceiver
 {
@@ -32,6 +33,16 @@ public class ChiuYiUI : IModMenu, IEventReceiver
     private readonly Scraf _scraf;
     private HasUiSetting _hasUi;
     private DisplayUI _displayUI;
+
+    public string GetName()
+    {
+        return "ChiuYi Mod 设置";
+    }
+
+    public string? GetSubText()
+    {
+        return $"version: {CHIUYIMain.Instance.Info.Version} 包含了各种各样的功能开关和数值调整，欢迎使用!";
+    }
 
 
     public ChiuYiUI(CHIUYIMain mod)
@@ -111,6 +122,7 @@ public class ChiuYiUI : IModMenu, IEventReceiver
             Ref<bool>.From(ref proxyRef),
             scrollerFlow
         );
+
 
 
         scrollerFlow = options.scrollerFlow;
@@ -315,7 +327,10 @@ public class ChiuYiUI : IModMenu, IEventReceiver
         Hook_NewsPanel.updateVisible += Hook_NewsPanel_updateVisible;
         Hook_NewsPanel.focusIn += Hook_NewsPanel_focusIn;
         Hook_NewsPanel.update += Hook_NewsPanel_update;
+
     }
+
+
 
     private void Hook__TierItemFound__constructor__(Hook__TierItemFound.orig___constructor__ orig, TierItemFound arg1, Hero hero, Entity e, InventItem item, double iconX, double iconY, HlAction<bool> onComplete)
     {
@@ -730,10 +745,5 @@ public class ChiuYiUI : IModMenu, IEventReceiver
             scraf,
             Ref<bool>.From(ref sf),
             scrollerFlow);
-    }
-
-    public string GetName()
-    {
-        return "ChiuYi Mod 设置";
     }
 }

@@ -1,4 +1,3 @@
-using ChiuYiUI;
 using dc;
 using dc.en;
 using dc.en.inter;
@@ -12,24 +11,19 @@ using dc.ui;
 using HaxeProxy.Runtime;
 using ModCore.Utilities;
 
-namespace SettingsMod.GameCm
+namespace ChiuYiUI.GameMechanics
 {
-    public class DIYFlashTeleport : GameCinematic
+    public class FlashTeleport : GameCinematic
     {
 
         public readonly Hero hero;
         public readonly Entity to;
-        public double viewportzoom = 0;
 
-        public DIYFlashTeleport(Hero owen, Teleport from, Entity entity)
+        public FlashTeleport(Hero owen, Teleport from, Entity entity)
         {
             hero = owen;
             to = entity;
             bool restoreHUD = false;
-            CHIUYIMain.config.Value.playerCameraSpeed = Main.Class.ME.options.playerCameraSpeed;
-            CHIUYIMain.config.Save();
-
-            dynamicviewport();
             HUD.Class.ME.fullscreenMap(false, Ref<bool>.From(ref restoreHUD));
 
             double baseTime = 0.75;
@@ -37,8 +31,7 @@ namespace SettingsMod.GameCm
             hero.disableRepellingForS(baseTime + 1.2, true);
             hero.lockControlsS(2.5);
             hero.cancelVelocities();
-            viewportzoom = Game.Class.ME.curLevel.viewport.zoom;
-            Game.Class.ME.curLevel.viewport.zoomFromTo(Game.Class.ME.curLevel.viewport.zoom, 0.5, 0.5, null);
+
 
             Game.Class.ME.curLevel.fx.teleporterStart(from, 16022016, 53492);
             Audio.Class.ME.playUIEvent((Sound)Res.Class.get_loader().loadCache("sfx/inter/portal_use1.wav".AsHaxeString(), Sound.Class), null);
@@ -52,8 +45,6 @@ namespace SettingsMod.GameCm
                   double x = ((double)this.hero.cx + this.hero.xr) * 24.0;
                   double y = ((double)this.hero.cy + this.hero.yr) * 24.0 - this.hero.hei * 0.5 - 96.0;
                   HParticle hparticle = fx.playAnimOld("fxTeleportRoR".AsHaxeString(), x, y, 1, 1.5, null, null, Ref<bool>.Null);
-
-
               }),
                 (cooldownSeconds) =>
                 {
@@ -62,7 +53,6 @@ namespace SettingsMod.GameCm
                         double x = (hero.cx + hero.xr) * 24.0;
                         double y = (hero.cy + hero.yr) * 24.0 - hero.hei * 0.5 - 96.0;
                         Game.Class.ME.curLevel.fx.playAnimOld("fxTeleportRoR".AsHaxeString(), x, y, 1, 1.5, null, null, Ref<bool>.Null);
-
                     }
                 });
 
@@ -89,51 +79,16 @@ namespace SettingsMod.GameCm
             SetupCooldownAndCallback(this.cd, 809500672, baseTime + 0.3,
                 new HlAction(() =>
                 {
-                    // Game.Class.ME.curLevel.fx.customMask(0, 1.0, 0.3, 0.4, 0.3, false);
+                    Game.Class.ME.curLevel.fx.customMask(0, 1.0, 0.3, 0.4, 0.3, false);
                 }),
                 (cooldownSeconds) =>
                 {
                     if (cooldownSeconds <= 0)
                     {
-                        // Game.Class.ME.curLevel.fx.customMask(0, 1.0, 0.3, 0.4, 0.3, false);
+                        Game.Class.ME.curLevel.fx.customMask(0, 1.0, 0.3, 0.4, 0.3, false);
                     }
                 });
         }
-
-        public void dynamicviewport()
-        {
-
-            double portalX = ((double)this.to.cx + this.to.xr) * 24.0;
-            double portalY = ((double)this.to.cy + this.to.yr) * 24.0;
-
-            double heroX = ((double)this.hero.cx + this.hero.xr) * 24.0;
-            double heroY = ((double)this.hero.cy + this.hero.yr) * 24.0;
-            double distance = System.Math.Sqrt(System.Math.Pow(portalX - heroX, 2) + System.Math.Pow(portalY - heroY, 2));
-
-            double minDistance = 300.0;
-            double maxDistance = 10000.0;
-            double minSpeed = 2.0;
-            double maxSpeed = 5.0;
-
-            double cameraSpeed = minSpeed;
-            if (distance <= minDistance)
-            {
-                cameraSpeed = minSpeed;
-            }
-            else if (distance >= maxDistance)
-            {
-                cameraSpeed = maxSpeed;
-            }
-            else
-            {
-
-                double t = (distance - minDistance) / (maxDistance - minDistance);
-                cameraSpeed = minSpeed + t * (maxSpeed - minSpeed);
-            }
-
-            Main.Class.ME.options.playerCameraSpeed = cameraSpeed;
-        }
-
 
         public void ArrowFunctionEntry_16340()
         {
@@ -207,7 +162,10 @@ namespace SettingsMod.GameCm
 
         public void ArrowFunction_move_16342()
         {
-            if (!Std.Class.@is(this.to, Teleport.Class)) return;
+            if (!Std.Class.@is(this.to, Teleport.Class))
+            {
+                return;
+            }
             Game.Class.ME.curLevel.fx.teleporterEnd((Teleport)this.to, 53492);
         }
 
@@ -219,7 +177,6 @@ namespace SettingsMod.GameCm
             double x = ((double)hero.cx + hero.xr) * 24.0;
             double y = ((double)hero2.cy + hero2.yr) * 24.0 - hero2.hei * 0.5 - 96.0;
             HParticle hparticle = fx.playAnimOld("fxTeleportRoR".AsHaxeString(), x, y, 1, 1.5, null, null, Ref<bool>.Null);
-
         }
 
         public void end()
@@ -291,8 +248,7 @@ namespace SettingsMod.GameCm
             Hero hero = this.hero;
             hero.setPosCase(this.to.cx, this.to.cy, null, null);
             hero.onTeleportation();
-            Game.Class.ME.curLevel.viewport.track(hero, false);
-
+            Game.Class.ME.curLevel.viewport.track(hero, true);
 
             SetupCooldownAndCallback(801112064, 0.4, ArrowFunction_move_16342, (cdInst, cooldownSeconds, callback) =>
             {
@@ -309,8 +265,6 @@ namespace SettingsMod.GameCm
                     double x = (hero.cx + hero.xr) * 24.0;
                     double y = (hero.cy + hero.yr) * 24.0 - hero.hei * 0.5 - 96.0;
                     Game.Class.ME.curLevel.fx.playAnimOld("fxTeleportRoR".AsHaxeString(), x, y, 1, 1.5, null, null, Ref<bool>.Null);
-
-
                 }
             });
 
@@ -320,6 +274,8 @@ namespace SettingsMod.GameCm
                 {
                     callback.Invoke();
                 }
+
+
                 var pets = this.hero._level.entitiesByClass.get(584) as ArrayObj;
                 if (pets != null)
                 {
@@ -335,9 +291,6 @@ namespace SettingsMod.GameCm
                 UserStats stats = this.hero._level.game.user.userStats;
                 stats.teleportation++;
             });
-            Game.Class.ME.curLevel.viewport.zoomFromTo(Game.Class.ME.curLevel.viewport.zoom, this.viewportzoom, 0.5, null);
-            Main.Class.ME.options.playerCameraSpeed = CHIUYIMain.config.Value.playerCameraSpeed;
-
         }
 
         private void SetupCooldownAndCallback(int id, double timeFactor, HlAction callback, Action<CdInst, double, HlAction> immediateAction)
@@ -385,7 +338,7 @@ namespace SettingsMod.GameCm
             CdInst callbackCdInst = cd._getCdObject(id);
             if (callbackCdInst == null)
             {
-                throw new Exception($"无法绑定 onComplete({id}): cooldown {id} 没运行");
+                throw new Exception($"cannot bind onComplete({id}): cooldown {id} isn't running");
             }
 
             callbackCdInst.cb = callback;

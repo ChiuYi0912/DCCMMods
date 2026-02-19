@@ -2,7 +2,7 @@ using dc;
 using dc.en;
 using dc.pr;
 
-namespace SettingsMod.GameCm.Utils
+namespace ChiuYiUI.GameMechanics.Utils
 {
     public static class createFlash
     {

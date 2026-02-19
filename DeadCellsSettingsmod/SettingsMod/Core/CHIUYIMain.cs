@@ -14,13 +14,12 @@ using dc.tool.atk;
 using ModCore.Events.Interfaces.Game;
 using dc.tool;
 using ModCore.Storage;
-using CiuYiUI;
+using ChiuYiUI.GameMechanics;
 using ModCore.Menu;
-using SettingsMod.Settings;
+using ChiuYiUI.UI;
+using ChiuYiUI.Configuration;
 using dc.tool.mod;
-using SettingsMod.GameCm;
-
-namespace ChiuYiUI;
+namespace ChiuYiUI.Core;
 
 public class CHIUYIMain : ModBase,
 IOnGameEndInit,
@@ -28,10 +27,10 @@ IOnAfterLoadingCDB,
 IModMenuProvider
 {
 
-    private ChiuYiUI? _ui;
-    private Scraf? _toscarf;
+    private UI.ChiuYiUI? _ui;
+    private UI.Scraf? _toscarf;
     private static CHIUYIMain? _instance;
-    private Config? _config;
+    private ScarfSettings? _config;
     private LevelMusic? _levelMusic;
 
     public static Config<PothionsConfig> config = new("ScarafConfig");
@@ -43,12 +42,13 @@ IModMenuProvider
     }
     public override void Initialize()
     {
+        Info.Version = "1.9.2";
         Log.Information("整合包运行成功！by ChiuYi.秋");
         base.Initialize();
         _config = ConfigManager.LoadConfig();
         _levelMusic = new LevelMusic(this);
         _levelMusic.HookInitialize();
-        _ui = new ChiuYiUI(this);
+        _ui = new UI.ChiuYiUI(this);
         _ui.Viewporthook();
         _toscarf = new Scraf(this);
 

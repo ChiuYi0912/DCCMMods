@@ -4,8 +4,9 @@ using HaxeProxy.Runtime;
 using ModCore.Modules;
 using ModCore.Utilities;
 using Serilog;
+using ChiuYiUI.Core;
 
-namespace ChiuYiUI;
+namespace ChiuYiUI.UI;
 
 
 public class Scraf

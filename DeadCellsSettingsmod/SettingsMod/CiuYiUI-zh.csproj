@@ -6,7 +6,7 @@
 
     <ModType>mod</ModType>
     <ModName>Dead Cells Enhanced Settings</ModName>
-    <ModMain>ChiuYiUI.CHIUYIMain</ModMain>
+    <ModMain>ChiuYiUI.Core.CHIUYIMain</ModMain>
 	  <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
