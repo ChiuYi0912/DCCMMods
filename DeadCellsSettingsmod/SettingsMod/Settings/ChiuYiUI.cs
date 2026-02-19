@@ -14,7 +14,6 @@ using dc.tool;
 using dc.pr;
 using dc.libs.heaps.slib;
 using dc.en;
-using Amazon.DynamoDBv2.Model;
 using ModCore.Modules;
 using dc.libs.heaps;
 using ChiuYiUI.Settings.HasUi;
@@ -239,6 +238,24 @@ public class ChiuYiUI
         );
 
 
+        scrollerFlow = options.scrollerFlow;
+        HlFunc<bool> DIYFlashTeleport = static () =>
+        {
+            bool newValue = !CHIUYIMain.config.Value.DIYFlashTeleport;
+            CHIUYIMain.config.Value.DIYFlashTeleport = newValue;
+            CHIUYIMain.config.Save();
+            return newValue;
+        };
+        bool hasDIYFlashTeleport = CHIUYIMain.config.Value.DIYFlashTeleport;
+        options.addToggleWidget(
+            GetText.Instance.GetString("开启平滑传送").AsHaxeString(),
+            GetText.Instance.GetString("").AsHaxeString(),
+            DIYFlashTeleport,
+            new Ref<bool>(ref hasDIYFlashTeleport),
+            scrollerFlow
+        );
+
+
 
         scrollerFlow = options.scrollerFlow;
         HlFunc<bool> loreBankMimicRoom = static () =>
@@ -256,6 +273,8 @@ public class ChiuYiUI
             new Ref<bool>(ref hasloreBankMimicRoom),
             scrollerFlow
         );
+
+
 
 
 
@@ -332,9 +351,14 @@ public class ChiuYiUI
         orig(arg1, hero, e, item, iconX, iconY, onComplete);
     }
 
+    public static bool flag = false;
     private void Hook__LevelStruct_applyDifficulty(Hook_LevelStruct.orig_applyDifficulty orig, LevelStruct self)
     {
-        //testroom(self);
+        // if (flag)
+        // {
+        //     testroom(self);
+        // }
+
         if (dc.pr.Game.Class.ME.user.game.spawnMimicInNextLevel && CHIUYIMain.config.Value.LoreBankMimicRoom && Main.Class.ME.options.disableLoreRooms)
         {
             addMimicrooom(self);
@@ -356,7 +380,7 @@ public class ChiuYiUI
 
     public void testroom(LevelStruct Struct)
     {
-        for (int i = 92; i <= 105; i++)
+        for (int i = 169; i <= 169; i++)
         {
             dynamic lore = Data.Class.loreRoom.all.array.getDyn(i);
             if (lore == null) return;

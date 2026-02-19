@@ -11,9 +11,8 @@ namespace MoreHeadsandskins.customHeadEntry
         public customHeadMian(Entry entry)
         {
             GetEntry = entry;
-
-            _ = new Heads(this);
             EventSystem.AddReceiver(this);
+            _ = new Heads(this);
         }
     }
 }

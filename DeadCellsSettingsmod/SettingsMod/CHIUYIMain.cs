@@ -17,6 +17,7 @@ using ModCore.Storage;
 using CiuYiUI;
 using SettingsMod.Settings;
 using dc.tool.mod;
+using SettingsMod.GameCm;
 
 namespace ChiuYiUI;
 
@@ -103,7 +104,7 @@ IOnAfterLoadingCDB
     #region 储存配置
     public void SaveConfiguration()
     {
-        _config.ScarfConfigs = _scarfConfigs;
+        _config!.ScarfConfigs = _scarfConfigs;
         ConfigManager.SaveConfig(_config);
     }
     #endregion
@@ -146,7 +147,11 @@ IOnAfterLoadingCDB
     private void yuteleport(Hook_Teleport.orig_startTeleport orig, Teleport self, Hero hero, Entity to)
     {
         if (to == null) return;
-
+        if (CHIUYIMain.config.Value.DIYFlashTeleport)
+        {
+            DIYFlashTeleport t = new DIYFlashTeleport(hero, self, to);
+            return;
+        }
         if (CHIUYIMain.config.Value.teleport)
         {
             TeleportationRoR teleportationRoR = new TeleportationRoR(hero, self, to);

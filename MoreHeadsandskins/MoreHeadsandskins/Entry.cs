@@ -8,6 +8,7 @@ using ModCore.Events.Interfaces.Game;
 using ModCore.Modules;
 using ModCore.Utilities;
 using dc.tool.mod;
+using MoreHeadsandskins.Cofing;
 
 
 namespace MoreHeadsandskins;
@@ -17,6 +18,7 @@ public class Entry : ModBase,
     IOnEntryHookInitialize,
     IOnGameEndInit
 {
+    public static ModCore.Storage.Config<ModCofing> GetConfig = new("MoreHeadsandskins");
     public Entry(ModInfo info) : base(info)
     {
     }

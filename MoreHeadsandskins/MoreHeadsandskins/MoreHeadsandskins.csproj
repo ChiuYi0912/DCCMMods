@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
 
     <ModType>mod</ModType>
-    <ModName>MoreHeadsandskins</ModName>
+    <ModName>MoreHeadsAndSkins</ModName>
     <ModMain>MoreHeadsandskins.Entry</ModMain>
 	  <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

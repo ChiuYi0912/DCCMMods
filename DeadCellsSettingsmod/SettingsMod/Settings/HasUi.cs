@@ -1,5 +1,4 @@
 using System.Security.Cryptography.X509Certificates;
-using Amazon.Runtime.Internal.Util;
 using dc;
 using dc.libs.heaps.slib;
 using dc.pr;
@@ -21,7 +20,7 @@ namespace ChiuYiUI.Settings.HasUi
         {
             Hook__GameCinematic.__constructor__ += Hook__GameCinematic___constructor__;
             Hook_Game.init += Hook_Game_init;
-           
+
         }
 
 

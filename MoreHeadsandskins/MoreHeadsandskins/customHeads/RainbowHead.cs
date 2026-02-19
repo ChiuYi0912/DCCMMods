@@ -1,12 +1,22 @@
 using dc;
+using dc.en;
+using dc.pr;
+using dc.ui.sel;
 using ModCore.Events;
+using ModCore.Events.Interfaces;
 using ModCore.Events.Interfaces.Game;
+using ModCore.Events.Interfaces.Game.Hero;
+using ModCore.Utilities;
+using MoreHeadsandskins.EntryHookInitialize;
+using Serilog;
 
-namespace MoreHeadsandskins.customHeads.Rainbow
+namespace MoreHeadsandskins.customHeads
 {
-    public class RainbowHead:
+    public class RainbowHead :
     IEventReceiver,
-    IOnAfterLoadingCDB
+    IOnAfterLoadingCDB,
+    IOnHeroUpdate,
+    IOnEntryHookInitialize
     {
         public RainbowHead(Heads heads)
         {
@@ -151,5 +161,19 @@ namespace MoreHeadsandskins.customHeads.Rainbow
                 particleConf.colorProps.colorEnd = endColor;
             }
         }
+
+
+        void IOnHeroUpdate.OnHeroUpdate(double dt)
+        {
+            if (Game.Class.ME.user.heroHeadSkin.ToString() == "customhead")
+                UpdateColorsPerFrame();
+        }
+
+        void IOnEntryHookInitialize.HookInitialize(Entry entry)
+        {
+
+        }
+
+
     }
 }

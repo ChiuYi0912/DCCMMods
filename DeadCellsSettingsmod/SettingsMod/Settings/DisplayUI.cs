@@ -84,7 +84,7 @@ namespace SettingsMod.Settings
             var scrollerFlow = self.scrollerFlow;
             var string4 = Lang.Class.t.get("血条颜色".AsHaxeString(), null);
             self.addSeparator(string4, scrollerFlow);
-            var string3 = Lang.Class.t.get("0:原版,1:金色,2:蓝色,3:粉色,4:紫色,5:红色,6:白色".AsHaxeString(), null);
+            var string3 = Lang.Class.t.get("血条颜色描述".AsHaxeString(), null);
             double num = CHIUYIMain.config.Value.LifeBarcolor;
             scrollerFlow = self.scrollerFlow;
 

@@ -1,5 +1,4 @@
-﻿using ChiuYiUI.GameCm;
-using dc;
+﻿using dc;
 using dc._Data;
 using dc.cine;
 using dc.en;
@@ -10,7 +9,10 @@ using dc.haxe.ds;
 using dc.hl.types;
 using dc.hxd;
 using dc.level;
+using dc.level.disp;
 using dc.libs;
+using dc.libs.tilemap;
+using dc.light;
 using dc.pow;
 using dc.tool;
 using dc.ui.hud;
@@ -66,12 +68,13 @@ namespace DebugMod
 
         }
 
+
+
+
         private void Hook__Console__constructor__(Hook__Console.orig___constructor__ orig, dc.h2d.Console arg1, Font font, dc.h2d.Object parent)
         {
             orig(arg1, font, parent);
             StringMap commands = arg1.commands;
-
-
         }
 
         private void Hook_Console_log1(dc.ui.Hook_Console.orig_log orig, dc.ui.Console self,
@@ -90,7 +93,8 @@ namespace DebugMod
         }
 
 
-        private bool isswitch = false;
+
+
         void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
             if (Key.Class.isPressed(37))
@@ -121,10 +125,10 @@ namespace DebugMod
 
         void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb)
         {
-           
+
         }
 
-        
+
     }
 
 

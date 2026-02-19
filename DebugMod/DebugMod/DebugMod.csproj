@@ -18,8 +18,5 @@
   <ItemGroup>
     <ModDependency Include="DebugConsole" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\DeadCellsSettingsmod\SettingsMod\CiuYiUI-zh.csproj" />
-  </ItemGroup>
 
 </Project>

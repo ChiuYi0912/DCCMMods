@@ -1,5 +1,4 @@
 using System;
-using Amazon.DynamoDBv2.Model;
 using dc.ui;
 using static dc.ui.OptionsSection;
 

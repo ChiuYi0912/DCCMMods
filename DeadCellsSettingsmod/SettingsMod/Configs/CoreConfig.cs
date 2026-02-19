@@ -9,6 +9,7 @@ namespace ChiuYiUI
         public bool teleport { get; set; } = false;
         public bool pop { get; set; } = false;
         public bool rsty { get; set; } = false;
+        public bool DIYFlashTeleport { get; set; } = false;
 
 
         public bool UseScarfGray { get; set; } = true;
@@ -40,5 +41,7 @@ namespace ChiuYiUI
         public bool HasNoStatusIcon { get; set; } = false;
 
         public double LifeBarcolor { get; set; } = 0;
+
+        public double playerCameraSpeed { get; set; }
     }
 }

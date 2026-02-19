@@ -257,3 +257,12 @@ msgstr "Activate Speed Scroll Pickup"
 
 msgid "竞速模式快速拾取卷轴常驻"
 msgstr "Racing Mode: Quick Pickup Scrolls Permanently Available"
+
+msgid "开启平滑传送"
+msgstr "Enable smooth transport"
+
+msgid "血条颜色"
+msgstr "Health bar colour"
+
+msgid "血条颜色描述"
+msgstr "0: Original, 1: Gold, 2: Blue, 3: Pink, 4: Purple, 5: Red, 6: White"
