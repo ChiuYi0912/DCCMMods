@@ -15,6 +15,7 @@ using ModCore.Events.Interfaces.Game;
 using dc.tool;
 using ModCore.Storage;
 using CiuYiUI;
+using ModCore.Menu;
 using SettingsMod.Settings;
 using dc.tool.mod;
 using SettingsMod.GameCm;
@@ -23,7 +24,8 @@ namespace ChiuYiUI;
 
 public class CHIUYIMain : ModBase,
 IOnGameEndInit,
-IOnAfterLoadingCDB
+IOnAfterLoadingCDB,
+IModMenuProvider
 {
 
     private ChiuYiUI? _ui;
@@ -59,11 +61,6 @@ IOnAfterLoadingCDB
         Hook_Entity.popDamage += sty;
 
         Hook__ScarfManager.create += _toscarf.ScarfManager_create;
-
-        dc.ui.Hook_Options.showMain += _ui.Hook_Options_showmain;
-        dc.ui.Hook_Options.buildCurSection += _ui.Hook_Options_buildCurSection;
-
-
 
     }
 
@@ -793,5 +790,8 @@ IOnAfterLoadingCDB
         return new ScarfConfig(sprId, maxLength, friction, color, count, gravity, thickness);
     }
 
-
+    public IModMenu GetModMenu()
+    {
+        return _ui;
+    }
 }

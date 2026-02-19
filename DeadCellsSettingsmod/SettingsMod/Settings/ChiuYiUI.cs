@@ -8,7 +8,6 @@ using Options = dc.ui.Options;
 using System;
 using dc.h2d;
 using Serilog;
-using S_ChiuYi;
 using dc.tool.mod;
 using dc.tool;
 using dc.pr;
@@ -20,11 +19,13 @@ using ChiuYiUI.Settings.HasUi;
 using dc.level;
 using dc.cine;
 using ChiuYiUI.GameCm;
+using ModCore.Menu;
+using ModCore.Events;
 using SettingsMod.Settings;
 
 namespace ChiuYiUI;
 
-public class ChiuYiUI
+public class ChiuYiUI : IModMenu, IEventReceiver
 {
     #region 主函数
     private readonly CHIUYIMain _mod;
@@ -35,6 +36,8 @@ public class ChiuYiUI
 
     public ChiuYiUI(CHIUYIMain mod)
     {
+        EventSystem.AddReceiver(this);
+
         _mod = mod;
         _scraf = new Scraf(mod);
         _hasUi = new HasUiSetting();
@@ -42,66 +45,39 @@ public class ChiuYiUI
         GetText.Instance.RegisterMod("SettingsLang");
     }
 
-    public void Hook_Options_buildCurSection(Hook_Options.orig_buildCurSection orig, Options self)
+    public void BuildMenu(Options self)
     {
-        OptionsSection curSection = self.curSection;
-        int index = curSection.RawIndex;
-        if (index == 20)
+        self.bg.alpha = 0f;
+        Graphics graphics = self.createScroller(1);
+        AddCustomOptionsToSoundPage();
+        Flow scrollerFlow = self.scrollerFlow;
+        self.addSeparator(GetText.Instance.GetString("更多易用性设置").AsHaxeString(), scrollerFlow);
+        addoverskin(self);
+        UIsettings(self);
+        Viewport(self);
+        if (CHIUYIMain.config.Value.Allscarf)
         {
-            self.bg.alpha = 0f;
-            Graphics graphics = self.createScroller(1);
-            AddCustomOptionsToSoundPage();
-            Flow scrollerFlow = self.scrollerFlow;
-            self.addSeparator(GetText.Instance.GetString("更多易用性设置").AsHaxeString(), scrollerFlow);
-            addoverskin(self);
-            UIsettings(self);
-            Viewport(self);
-            if (CHIUYIMain.config.Value.Allscarf)
-            {
-                scrollerFlow = self.scrollerFlow;
-                self.addSeparator(GetText.Instance.GetString("飘带布料设置").AsHaxeString(), scrollerFlow);
-                _scraf.AddSprIdToggle();
-                self.addSeparator(GetText.Instance.GetString("飘带一配置").AsHaxeString(), scrollerFlow);
-                _scraf.AddScarfOption(0);
-                scrollerFlow = self.scrollerFlow;
-                self.addSeparator(GetText.Instance.GetString("飘带二配置").AsHaxeString(), scrollerFlow);
-                _scraf.AddScarfOption(1);
-                scrollerFlow = self.scrollerFlow;
-                self.addSeparator(GetText.Instance.GetString("飘带三配置").AsHaxeString(), scrollerFlow);
-                _scraf.AddScarfOption(2);
-                scrollerFlow = self.scrollerFlow;
-                self.addSeparator(GetText.Instance.GetString("飘带四配置").AsHaxeString(), scrollerFlow);
-                _scraf.AddScarfOption(3);
-                scrollerFlow = self.scrollerFlow;
-                self.addSeparator(GetText.Instance.GetString("飘带五配置").AsHaxeString(), scrollerFlow);
-                _scraf.AddScarfOption(4);
-                scrollerFlow = self.scrollerFlow;
-            }
-            return;
+            scrollerFlow = self.scrollerFlow;
+            self.addSeparator(GetText.Instance.GetString("飘带布料设置").AsHaxeString(), scrollerFlow);
+            _scraf.AddSprIdToggle();
+            self.addSeparator(GetText.Instance.GetString("飘带一配置").AsHaxeString(), scrollerFlow);
+            _scraf.AddScarfOption(0);
+            scrollerFlow = self.scrollerFlow;
+            self.addSeparator(GetText.Instance.GetString("飘带二配置").AsHaxeString(), scrollerFlow);
+            _scraf.AddScarfOption(1);
+            scrollerFlow = self.scrollerFlow;
+            self.addSeparator(GetText.Instance.GetString("飘带三配置").AsHaxeString(), scrollerFlow);
+            _scraf.AddScarfOption(2);
+            scrollerFlow = self.scrollerFlow;
+            self.addSeparator(GetText.Instance.GetString("飘带四配置").AsHaxeString(), scrollerFlow);
+            _scraf.AddScarfOption(3);
+            scrollerFlow = self.scrollerFlow;
+            self.addSeparator(GetText.Instance.GetString("飘带五配置").AsHaxeString(), scrollerFlow);
+            _scraf.AddScarfOption(4);
+            scrollerFlow = self.scrollerFlow;
         }
-        orig(self);
     }
 
-    public void Hook_Options_showmain(Hook_Options.orig_showMain orig, Options self)
-    {
-        HlAction offsetX;
-        OptionWidget optionWidge;
-        int flow = 5;
-        Log.Information($"语言初始化：{GetText.Instance.GetString("ChiuYi Mod 设置")}");
-        dc.String subStr2 = Lang.Class.t.get("ChiuYi Mod 设置".AsHaxeString(), null);
-        offsetX = new HlAction(() => ArrowFunction_showMain_Custom());
-        optionWidge = self.addSimpleWidget(GetText.Instance.GetString("ChiuYi Mod 设置").AsHaxeString(), null, offsetX, new Ref<int>(ref flow), null);
-        orig(self);
-
-    }
-
-
-    private void ArrowFunction_showMain_Custom()
-    {
-        S_ChiuYi.S_ChiuYi customSection = new S_ChiuYi.S_ChiuYi();
-        var options = Options.Class.ME;
-        options.setSection(customSection);
-    }
 
     private void AddCustomOptionsToSoundPage()
     {
@@ -754,5 +730,10 @@ public class ChiuYiUI
             scraf,
             Ref<bool>.From(ref sf),
             scrollerFlow);
+    }
+
+    public string GetName()
+    {
+        return "ChiuYi Mod 设置";
     }
 }
