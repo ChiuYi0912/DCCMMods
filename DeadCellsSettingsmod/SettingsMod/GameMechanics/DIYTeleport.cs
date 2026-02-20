@@ -26,8 +26,8 @@ namespace ChiuYiUI.GameMechanics
             hero = owen;
             to = entity;
             bool restoreHUD = false;
-            CHIUYIMain.config.Value.playerCameraSpeed = Main.Class.ME.options.playerCameraSpeed;
-            CHIUYIMain.config.Save();
+            ChiuYiMain.config.Value.playerCameraSpeed = Main.Class.ME.options.playerCameraSpeed;
+            ChiuYiMain.config.Save();
 
             dynamicviewport();
             HUD.Class.ME.fullscreenMap(false, Ref<bool>.From(ref restoreHUD));
@@ -336,7 +336,7 @@ namespace ChiuYiUI.GameMechanics
                 stats.teleportation++;
             });
             Game.Class.ME.curLevel.viewport.zoomFromTo(Game.Class.ME.curLevel.viewport.zoom, this.viewportzoom, 0.5, null);
-            Main.Class.ME.options.playerCameraSpeed = CHIUYIMain.config.Value.playerCameraSpeed;
+            Main.Class.ME.options.playerCameraSpeed = ChiuYiMain.config.Value.playerCameraSpeed;
 
         }
 

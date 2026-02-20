@@ -11,8 +11,8 @@ namespace ChiuYiUI.GameMechanics;
 
 public class LevelMusic
 {
-    private CHIUYIMain _me;
-    public LevelMusic(CHIUYIMain cHIUYIMain)
+    private ChiuYiMain _me;
+    public LevelMusic(ChiuYiMain cHIUYIMain)
     {
         _me = cHIUYIMain;
     }

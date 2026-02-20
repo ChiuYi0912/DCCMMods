@@ -1,7 +1,7 @@
 
 namespace ChiuYiUI.Configuration
 {
-    public class PothionsConfig
+    public class SettingsConfig
     {
 
         public bool SkinEnabled { get; set; } = false;
@@ -41,7 +41,10 @@ namespace ChiuYiUI.Configuration
         public bool HasNoStatusIcon { get; set; } = false;
 
         public double LifeBarcolor { get; set; } = 0;
+        public bool NowTimeVisible { get; set; } = false;
 
         public double playerCameraSpeed { get; set; }
+
+
     }
 }

@@ -9,19 +9,19 @@ using ChiuYiUI.Core;
 namespace ChiuYiUI.UI;
 
 
-public class Scraf
+public class ScarfManager
 {
-    private CHIUYIMain _mod;
-    public Scraf(CHIUYIMain mod)
+    private ChiuYiMain _mod;
+    public ScarfManager(ChiuYiMain mod)
     {
         _mod = mod;
     }
 
 
 
-    internal ScarfManager ScarfManager_create(Hook__ScarfManager.orig_create orig, Entity e, dc.String id)
+    internal dc.tool.ScarfManager ScarfManager_Create(Hook__ScarfManager.orig_create orig, Entity e, dc.String id)
     {
-        if (CHIUYIMain.config.Value.Allscarf)
+        if (ChiuYiMain.config.Value.Allscarf)
         {
             id = "KingWhite".AsHaxeString();
         }
@@ -34,11 +34,11 @@ public class Scraf
         var options = dc.ui.Options.Class.ME;
 
         var scrollerFlow = options.scrollerFlow;
-        bool scarfbool = CHIUYIMain.UseScarfGray;
+        bool scarfbool = ChiuYiMain.UseScarfGray;
         HlFunc<bool> sprIdToggleFunction = static () =>
         {
-            bool newValue = !CHIUYIMain.UseScarfGray;
-            CHIUYIMain.UseScarfGray = newValue;
+            bool newValue = !ChiuYiMain.UseScarfGray;
+            ChiuYiMain.UseScarfGray = newValue;
             return newValue;
 
         };
@@ -57,7 +57,7 @@ public class Scraf
         var options = dc.ui.Options.Class.ME;
         var scrollerFlow = options.scrollerFlow;
 
-        int value5 = (int)CHIUYIMain.GetScarfProperty<double>(scarfIndex, c => c.Color);
+        int value5 = (int)ChiuYiMain.GetScarfProperty<double>(scarfIndex, c => c.Color);
         int currentScarfIndex5 = scarfIndex;
         int currentScarfValue5 = value5;
         int scarfProxy5 = currentScarfValue5;
@@ -77,19 +77,19 @@ public class Scraf
                 switch (currentScarfIndex5)
                 {
                     case 0:
-                        CHIUYIMain.Scarf0Color = (int)value;
+                        ChiuYiMain.Scarf0Color = (int)value;
                         break;
                     case 1:
-                        CHIUYIMain.Scarf1Color = (int)value;
+                        ChiuYiMain.Scarf1Color = (int)value;
                         break;
                     case 2:
-                        CHIUYIMain.Scarf2Color = (int)value;
+                        ChiuYiMain.Scarf2Color = (int)value;
                         break;
                     case 3:
-                        CHIUYIMain.Scarf3Color = (int)value;
+                        ChiuYiMain.Scarf3Color = (int)value;
                         break;
                     case 4:
-                        CHIUYIMain.Scarf4Color = (int)value;
+                        ChiuYiMain.Scarf4Color = (int)value;
                         break;
                 }
                 _mod.SaveConfiguration();
@@ -102,7 +102,7 @@ public class Scraf
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"更新围巾长度失败: {ex.Message}");
+                    Log.Error($"更新围巾颜色失败: {ex.Message}");
                 }
 
             }
@@ -120,7 +120,7 @@ public class Scraf
 
 
         scrollerFlow = options.scrollerFlow;
-        double value = CHIUYIMain.GetScarfProperty<double>(scarfIndex, c => c.MaxLength);
+        double value = ChiuYiMain.GetScarfProperty<double>(scarfIndex, c => c.MaxLength);
         double currentScarfIndex = scarfIndex;
         double currentScarfValue = value;
 
@@ -134,19 +134,19 @@ public class Scraf
                 switch (currentScarfIndex)
                 {
                     case 0:
-                        CHIUYIMain.Scarf0MaxLength = intValue;
+                        ChiuYiMain.Scarf0MaxLength = intValue;
                         break;
                     case 1:
-                        CHIUYIMain.Scarf1MaxLength = intValue;
+                        ChiuYiMain.Scarf1MaxLength = intValue;
                         break;
                     case 2:
-                        CHIUYIMain.Scarf2MaxLength = intValue;
+                        ChiuYiMain.Scarf2MaxLength = intValue;
                         break;
                     case 3:
-                        CHIUYIMain.Scarf3MaxLength = intValue;
+                        ChiuYiMain.Scarf3MaxLength = intValue;
                         break;
                     case 4:
-                        CHIUYIMain.Scarf4MaxLength = intValue;
+                        ChiuYiMain.Scarf4MaxLength = intValue;
                         break;
                 }
                 _mod.SaveConfiguration();
@@ -159,7 +159,7 @@ public class Scraf
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"更新围巾长度失败: {ex.Message}");
+                    Log.Error($"更新围巾最大长度失败: {ex.Message}");
                 }
             }
         });
@@ -185,7 +185,7 @@ public class Scraf
 
 
         scrollerFlow = options.scrollerFlow;
-        double value1 = CHIUYIMain.GetScarfProperty<double>(scarfIndex, c => c.Gravity);
+        double value1 = ChiuYiMain.GetScarfProperty<double>(scarfIndex, c => c.Gravity);
         double currentScarfIndex1 = scarfIndex;
         double currentScarfValue1 = value1;
         double scarfProxy1 = (double)currentScarfValue1;
@@ -199,19 +199,19 @@ public class Scraf
                 switch (currentScarfIndex1)
                 {
                     case 0:
-                        CHIUYIMain.Scarf0Gravity = value;
+                        ChiuYiMain.Scarf0Gravity = value;
                         break;
                     case 1:
-                        CHIUYIMain.Scarf1Gravity = value;
+                        ChiuYiMain.Scarf1Gravity = value;
                         break;
                     case 2:
-                        CHIUYIMain.Scarf2Gravity = value;
+                        ChiuYiMain.Scarf2Gravity = value;
                         break;
                     case 3:
-                        CHIUYIMain.Scarf3Gravity = value;
+                        ChiuYiMain.Scarf3Gravity = value;
                         break;
                     case 4:
-                        CHIUYIMain.Scarf4Gravity = value;
+                        ChiuYiMain.Scarf4Gravity = value;
                         break;
                 }
                 _mod.SaveConfiguration();
@@ -224,7 +224,7 @@ public class Scraf
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"更新围巾长度失败: {ex.Message}");
+                    Log.Error($"更新围巾重力设置失败: {ex.Message}");
                 }
 
             }
@@ -256,7 +256,7 @@ public class Scraf
 
 
         scrollerFlow = options.scrollerFlow;
-        double value2 = (double)CHIUYIMain.GetScarfProperty<double>(scarfIndex, c => c.Thickness);
+        double value2 = (double)ChiuYiMain.GetScarfProperty<double>(scarfIndex, c => c.Thickness);
         double currentScarfIndex2 = scarfIndex;
         double currentScarfValue2 = value2;
         double scarfProxy2 = (double)currentScarfValue2;
@@ -270,19 +270,19 @@ public class Scraf
                 switch (currentScarfIndex1)
                 {
                     case 0:
-                        CHIUYIMain.Scarf0Thickness = value;
+                        ChiuYiMain.Scarf0Thickness = value;
                         break;
                     case 1:
-                        CHIUYIMain.Scarf1Thickness = value;
+                        ChiuYiMain.Scarf1Thickness = value;
                         break;
                     case 2:
-                        CHIUYIMain.Scarf2Thickness = value;
+                        ChiuYiMain.Scarf2Thickness = value;
                         break;
                     case 3:
-                        CHIUYIMain.Scarf3Thickness = value;
+                        ChiuYiMain.Scarf3Thickness = value;
                         break;
                     case 4:
-                        CHIUYIMain.Scarf4Thickness = value;
+                        ChiuYiMain.Scarf4Thickness = value;
                         break;
                 }
                 _mod.SaveConfiguration();
@@ -295,7 +295,7 @@ public class Scraf
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"更新围巾长度失败: {ex.Message}");
+                    Log.Error($"更新围巾粗细设置失败: {ex.Message}");
                 }
 
             }
@@ -327,7 +327,7 @@ public class Scraf
 
 
         scrollerFlow = options.scrollerFlow;
-        int value3 = (int)CHIUYIMain.GetScarfProperty<double>(scarfIndex, c => c.Count);
+        int value3 = (int)ChiuYiMain.GetScarfProperty<double>(scarfIndex, c => c.Count);
         int currentScarfIndex3 = scarfIndex;
         int currentScarfValue3 = value3;
         double scarfProxy3 = (double)currentScarfValue3;
@@ -341,19 +341,19 @@ public class Scraf
                 switch (currentScarfIndex1)
                 {
                     case 0:
-                        CHIUYIMain.Scarf0Count = (int)value;
+                        ChiuYiMain.Scarf0Count = (int)value;
                         break;
                     case 1:
-                        CHIUYIMain.Scarf1Count = (int)value;
+                        ChiuYiMain.Scarf1Count = (int)value;
                         break;
                     case 2:
-                        CHIUYIMain.Scarf2Count = (int)value;
+                        ChiuYiMain.Scarf2Count = (int)value;
                         break;
                     case 3:
-                        CHIUYIMain.Scarf3Count = (int)value;
+                        ChiuYiMain.Scarf3Count = (int)value;
                         break;
                     case 4:
-                        CHIUYIMain.Scarf4Count = (int)value;
+                        ChiuYiMain.Scarf4Count = (int)value;
                         break;
                 }
                 _mod.SaveConfiguration();
@@ -395,7 +395,7 @@ public class Scraf
 
 
         scrollerFlow = options.scrollerFlow;
-        double value4 = CHIUYIMain.GetScarfProperty<double>(scarfIndex, c => c.Friction);
+        double value4 = ChiuYiMain.GetScarfProperty<double>(scarfIndex, c => c.Friction);
         double currentScarfIndex4 = scarfIndex;
         double currentScarfValue4 = value4;
         double scarfProxy4 = (double)currentScarfValue4;
@@ -409,19 +409,19 @@ public class Scraf
                 switch (currentScarfIndex1)
                 {
                     case 0:
-                        CHIUYIMain.Scarf0Friction = value;
+                        ChiuYiMain.Scarf0Friction = value;
                         break;
                     case 1:
-                        CHIUYIMain.Scarf1Friction = value;
+                        ChiuYiMain.Scarf1Friction = value;
                         break;
                     case 2:
-                        CHIUYIMain.Scarf2Friction = value;
+                        ChiuYiMain.Scarf2Friction = value;
                         break;
                     case 3:
-                        CHIUYIMain.Scarf3Friction = value;
+                        ChiuYiMain.Scarf3Friction = value;
                         break;
                     case 4:
-                        CHIUYIMain.Scarf4Friction = value;
+                        ChiuYiMain.Scarf4Friction = value;
                         break;
                 }
                 _mod.SaveConfiguration();
@@ -465,7 +465,7 @@ public class Scraf
 
 
         scrollerFlow = options.scrollerFlow;
-        double value6 = CHIUYIMain.GetScarfProperty<double>(scarfIndex, c => c.MinLength);
+        double value6 = ChiuYiMain.GetScarfProperty<double>(scarfIndex, c => c.MinLength);
         double currentScarfIndex6 = scarfIndex;
         double currentScarfValue6 = value6;
         double scarfProxy6 = (double)currentScarfValue6;
@@ -479,19 +479,19 @@ public class Scraf
                 switch (currentScarfIndex1)
                 {
                     case 0:
-                        CHIUYIMain.scarf0MinLangh = value;
+                        ChiuYiMain.Scarf0MinLength = value;
                         break;
                     case 1:
-                        CHIUYIMain.scarf1MinLangh = value;
+                        ChiuYiMain.Scarf1MinLength = value;
                         break;
                     case 2:
-                        CHIUYIMain.scarf2MinLangh = value;
+                        ChiuYiMain.Scarf2MinLength = value;
                         break;
                     case 3:
-                        CHIUYIMain.scarf3MinLangh = value;
+                        ChiuYiMain.Scarf3MinLength = value;
                         break;
                     case 4:
-                        CHIUYIMain.scarf4MinLangh = value;
+                        ChiuYiMain.Scarf4MinLength = value;
                         break;
                 }
                 _mod.SaveConfiguration();
@@ -534,6 +534,27 @@ public class Scraf
         );
 
 
+    }
+
+    public void DisplayScarfasettings(dc.ui.Options self)
+    {
+        var scrollerFlow = self.scrollerFlow;
+        self.addSeparator(GetText.Instance.GetString("飘带布料设置").AsHaxeString(), scrollerFlow);
+        AddSprIdToggle();
+        self.addSeparator(GetText.Instance.GetString("飘带一配置").AsHaxeString(), scrollerFlow);
+        AddScarfOption(0);
+        scrollerFlow = self.scrollerFlow;
+        self.addSeparator(GetText.Instance.GetString("飘带二配置").AsHaxeString(), scrollerFlow);
+        AddScarfOption(1);
+        scrollerFlow = self.scrollerFlow;
+        self.addSeparator(GetText.Instance.GetString("飘带三配置").AsHaxeString(), scrollerFlow);
+        AddScarfOption(2);
+        scrollerFlow = self.scrollerFlow;
+        self.addSeparator(GetText.Instance.GetString("飘带四配置").AsHaxeString(), scrollerFlow);
+        AddScarfOption(3);
+        scrollerFlow = self.scrollerFlow;
+        self.addSeparator(GetText.Instance.GetString("飘带五配置").AsHaxeString(), scrollerFlow);
+        AddScarfOption(4);
     }
 
 }

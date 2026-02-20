@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SttingMod", "SttingMod", "{2795A0C0-34C6-BCB6-CE2E-3050127EC785}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CiuYiUI-zh", "SttingMod\CiuYiUI-zh.csproj", "{9012D324-A49C-4B9A-AD14-934276C8D4A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChiuYiUI-zh", "SttingMod\ChiuYiUI-zh.csproj", "{9012D324-A49C-4B9A-AD14-934276C8D4A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

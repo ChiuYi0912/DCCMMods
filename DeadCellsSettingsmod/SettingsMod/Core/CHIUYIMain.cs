@@ -21,22 +21,22 @@ using ChiuYiUI.Configuration;
 using dc.tool.mod;
 namespace ChiuYiUI.Core;
 
-public class CHIUYIMain : ModBase,
+public class ChiuYiMain : ModBase,
 IOnGameEndInit,
 IOnAfterLoadingCDB,
 IModMenuProvider
 {
 
     private UI.ChiuYiUI? _ui;
-    private UI.Scraf? _toscarf;
-    private static CHIUYIMain? _instance;
+    private UI.ScarfManager? _toscarf;
+    private static ChiuYiMain? _instance;
     private ScarfSettings? _config;
     private LevelMusic? _levelMusic;
 
-    public static Config<PothionsConfig> config = new("ScarafConfig");
+    public static Config<SettingsConfig> config = new("ScarfConfig");
 
 
-    public CHIUYIMain(ModInfo info) : base(info)
+    public ChiuYiMain(ModInfo info) : base(info)
     {
         _instance = this;
     }
@@ -49,8 +49,7 @@ IModMenuProvider
         _levelMusic = new LevelMusic(this);
         _levelMusic.HookInitialize();
         _ui = new UI.ChiuYiUI(this);
-        _ui.Viewporthook();
-        _toscarf = new Scraf(this);
+        _toscarf = new UI.ScarfManager(this);
 
 
 
@@ -60,7 +59,7 @@ IModMenuProvider
         Hook_Entity.popDamage += popmiami;
         Hook_Entity.popDamage += sty;
 
-        Hook__ScarfManager.create += _toscarf.ScarfManager_create;
+        Hook__ScarfManager.create += _toscarf.ScarfManager_Create;
 
     }
 
@@ -110,20 +109,20 @@ IModMenuProvider
 
     private bool allaskin(Hook_Hero.orig_hasSkin orig, Hero self, dc.String model, dc.String itemId)
     {
-        return CHIUYIMain.config.Value.SkinEnabled;
+        return ChiuYiMain.config.Value.SkinEnabled;
     }
 
 
 
 #pragma warning disable CS8603
-    public static CHIUYIMain Instance => _instance;
+    public static ChiuYiMain Instance => _instance;
 #pragma warning restore CS8603 
 
     private static bool katanaskin(Hook_Hero.orig_hasSkin orig, Hero self, dc.String model, dc.String itemId)
     {
         if (itemId != null && itemId.ToString() == "KatanaZero")
         {
-            return CHIUYIMain.config.Value.skinkatana;
+            return ChiuYiMain.config.Value.skinkatana;
         }
 
         bool a = orig(self, model, itemId);
@@ -144,12 +143,12 @@ IModMenuProvider
     private void yuteleport(Hook_Teleport.orig_startTeleport orig, Teleport self, Hero hero, Entity to)
     {
         if (to == null) return;
-        if (CHIUYIMain.config.Value.DIYFlashTeleport)
+        if (ChiuYiMain.config.Value.DIYFlashTeleport)
         {
             DIYFlashTeleport t = new DIYFlashTeleport(hero, self, to);
             return;
         }
-        if (CHIUYIMain.config.Value.teleport)
+        if (ChiuYiMain.config.Value.teleport)
         {
             TeleportationRoR teleportationRoR = new TeleportationRoR(hero, self, to);
             return;
@@ -161,7 +160,7 @@ IModMenuProvider
     private void popmiami(Hook_Entity.orig_popDamage orig, Entity self, AttackData a)
     {
         if (dc.ui.Console.Class.ME.flags.exists("NoPopText".AsHaxeString())) return;
-        if (CHIUYIMain.config.Value.pop)
+        if (ChiuYiMain.config.Value.pop)
         {
             a.hasTag(2);
             virtual_chars_font_ virtual_chars_font_ = new virtual_chars_font_();
@@ -180,7 +179,7 @@ IModMenuProvider
     private void sty(Hook_Entity.orig_popDamage orig, Entity self, AttackData a)
     {
         if (dc.ui.Console.Class.ME.flags.exists("NoPopText".AsHaxeString())) return;
-        if (CHIUYIMain.config.Value.rsty)
+        if (ChiuYiMain.config.Value.rsty)
         {
             a.hasTag(2);
             virtual_chars_font_ virtual_chars_font_ = new virtual_chars_font_();
@@ -590,7 +589,7 @@ IModMenuProvider
     }
     #endregion
     #region 围巾最小长度
-    public static double scarf0MinLangh
+    public static double Scarf0MinLength
     {
         get { return GetScarfProperty(0, c => c.MinLength); }
         set
@@ -602,7 +601,7 @@ IModMenuProvider
             }
         }
     }
-    public static double scarf1MinLangh
+    public static double Scarf1MinLength
     {
         get { return GetScarfProperty(1, c => c.MinLength); }
         set
@@ -614,7 +613,7 @@ IModMenuProvider
             }
         }
     }
-    public static double scarf2MinLangh
+    public static double Scarf2MinLength
     {
         get { return GetScarfProperty(2, c => c.MinLength); }
         set
@@ -626,7 +625,7 @@ IModMenuProvider
             }
         }
     }
-    public static double scarf3MinLangh
+    public static double Scarf3MinLength
     {
         get { return GetScarfProperty(3, c => c.MinLength); }
         set
@@ -638,7 +637,7 @@ IModMenuProvider
             }
         }
     }
-    public static double scarf4MinLangh
+    public static double Scarf4MinLength
     {
         get { return GetScarfProperty(4, c => c.MinLength); }
         set
@@ -671,14 +670,14 @@ IModMenuProvider
     {
         try
         {
-            var config = CHIUYIMain.GetScarfConfig(scarfIndex);
+            var config = ChiuYiMain.GetScarfConfig(scarfIndex);
 
             _Data_ cdb = dc.Data.Class;
             dynamic cdb_ = cdb.skin.all.array.getDyn(44);
             dynamic scarf = cdb_.scarfs.getDyn(scarfIndex);
 
 
-            if (CHIUYIMain.config.Value.UseScarfGray)
+            if (ChiuYiMain.config.Value.UseScarfGray)
             {
                 scarf.sprId = "scarfGray";
             }
@@ -716,7 +715,7 @@ IModMenuProvider
 
     public static void ApplyAllScarfConfigs()
     {
-        foreach (var scarfIndex in CHIUYIMain.GetAllScarfIndices())
+        foreach (var scarfIndex in ChiuYiMain.GetAllScarfIndices())
         {
             ApplyScarfConfig(scarfIndex);
         }
