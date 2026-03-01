@@ -5,9 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     
-    <ModName>DebugMod</ModName>
+    <ModName>SimpleshaderMod</ModName>
     <ModType>mod</ModType>
-    <ModMain>DebugMod.DebugModMod</ModMain>
+    <ModMain>ShaderTest.Simpleshaders</ModMain>
     <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
   </PropertyGroup>
 
@@ -17,9 +17,6 @@
   </ItemGroup>
   <ItemGroup>
     <ModDependency Include="DebugConsole" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\DeadCellsSettingsmod\SettingsMod\ChiuYiUI.csproj" />
   </ItemGroup>
 
 </Project>

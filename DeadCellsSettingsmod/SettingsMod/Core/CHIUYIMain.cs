@@ -19,6 +19,8 @@ using ModCore.Menu;
 using ChiuYiUI.UI;
 using ChiuYiUI.Configuration;
 using dc.tool.mod;
+using SettingsMod.shaders;
+using dc.shader;
 namespace ChiuYiUI.Core;
 
 public class ChiuYiMain : ModBase,

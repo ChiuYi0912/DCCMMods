@@ -1,0 +1,20 @@
+
+testFlag.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+flag-=0=-
+  rotate: false
+  xy: 1, 1
+  size: 414, 396
+  orig: 414, 396
+  offset: 0, 0
+  index: 0
+flag_0
+  rotate: false
+  xy: 1, 400
+  size: 100, 67
+  orig: 100, 100
+  offset: 0, 24
+  index: 0

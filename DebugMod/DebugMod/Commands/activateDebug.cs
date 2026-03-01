@@ -1,4 +1,5 @@
 using dc.en;
+using dc.h2d;
 using dc.hl.types;
 using dc.level;
 using dc.libs;
@@ -8,6 +9,7 @@ using dc.ui;
 using HaxeProxy.Runtime;
 using IngameDebugConsole;
 using ModCore.Utilities;
+using SettingsMod.shaders;
 
 namespace DebugMod.Commands.activateDebug
 {

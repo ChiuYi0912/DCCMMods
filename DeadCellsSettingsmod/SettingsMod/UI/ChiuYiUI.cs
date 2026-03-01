@@ -53,7 +53,7 @@ public partial class ChiuYiUI : IModMenu, IEventReceiver
 
         _scarfManager = new ScarfManager(mod);
         _uiSettings = new UISettings();
-        _lifeBarManager = new PlayerSettings();
+        _lifeBarManager = new PlayerSettings(false);
         _viewportSettings = new ViewportSettings();
         _skinSetting = new SkinSettings(_scarfManager);
         _gameplaySettings = new GameplaySettings();

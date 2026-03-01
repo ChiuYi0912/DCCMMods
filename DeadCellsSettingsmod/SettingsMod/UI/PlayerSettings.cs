@@ -3,25 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChiuYiUI.Core;
+using ChiuYiUI.GameMechanics.Utils;
 using dc;
+using dc.en;
+using dc.en.mob;
 using dc.h2d;
+using dc.h2d.filter;
+using dc.h3d.shader;
+using dc.haxe.ds;
 using dc.hl.types;
+using dc.hxsl;
+using dc.level.disp;
+using dc.light;
 using dc.pr;
+using dc.shader;
+using dc.spine;
 using dc.tool;
 using dc.ui;
+using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Utilities;
 using Serilog;
 using Serilog.Core;
+using SettingsMod.shaders;
+using static dc.hxsl.VarKind;
 
 namespace ChiuYiUI.UI
 {
     public class PlayerSettings
     {
-        public PlayerSettings()
+        public PlayerSettings(bool external)
         {
+            if (external)
+                return;
             Initialize();
-
         }
 
         public void Initialize()
@@ -33,17 +48,23 @@ namespace ChiuYiUI.UI
             Hook_HUD.postUpdate += Hook_HUD_PostUpdate;
         }
 
+
+
+
+
         private DateTime _lastUpdateTime = DateTime.MinValue;
         private readonly TimeSpan _updateInterval = TimeSpan.FromSeconds(1);
+
+
 
         private void Hook_HUD_PostUpdate(Hook_HUD.orig_postUpdate orig, HUD self)
         {
             orig(self);
-            if (this.NowTimeFlow.visible!=Core.ChiuYiMain.config.Value.NowTimeVisible)
-            {
+            if (this.NowTimeFlow.visible != Core.ChiuYiMain.config.Value.NowTimeVisible)
                 this.NowTimeFlow.set_visible(Core.ChiuYiMain.config.Value.NowTimeVisible);
-            }
-            
+
+
+
             if (!this.NowTimeFlow.visible)
                 return;
 
@@ -53,12 +74,16 @@ namespace ChiuYiUI.UI
                 this.TimeText.set_text($"{now}".AsHaxeString());
 
                 _lastUpdateTime = now;
+
             }
         }
+
+
 
         private void Hook_HUD_onResize(Hook_HUD.orig_onResize orig, HUD self)
         {
             orig(self);
+
             if (this.TimeText != null)
             {
                 this.TimeText.set_textAlign(new Align.Right());
@@ -73,24 +98,23 @@ namespace ChiuYiUI.UI
         }
 
         private Flow NowTimeFlow = null!;
-        private dc.ui.Text TimeText = null!;
+        public dc.ui.Text TimeText = null!;
         private void Hook_HUD___constructor__(Hook__HUD.orig___constructor__ orig, HUD arg1, Game game)
         {
             orig(arg1, game);
             this.NowTimeFlow = new Flow(null);
             this.NowTimeFlow.set_maxWidth(arg1.aboveMapFlow.maxWidth);
-            this.NowTimeFlow.set_maxHeight(arg1.aboveMapFlow.maxHeight);
+            this.NowTimeFlow.set_maxHeight(1);
             this.NowTimeFlow.set_verticalAlign(new FlowAlign.Top());
-            this.NowTimeFlow.set_horizontalAlign(new FlowAlign.Left());
+            this.NowTimeFlow.set_horizontalAlign(new FlowAlign.Middle());
+
             this.TimeText = new dc.ui.Text(this.NowTimeFlow, true, null, Ref<double>.Null, null, null);
+
             DateTime currentTime = DateTime.Now;
             this.TimeText.set_text($"{currentTime}".AsHaxeString());
-            arg1.rightFlowL.addChild(this.NowTimeFlow);
+            arg1.rightFlowR.addChild(this.NowTimeFlow);
         }
-        public double get_pixelScale()
-        {
-            return Main.Class.ME.pixelScale * HUD.Class.ME.get_hudSize();
-        }
+
 
 
         private dc.String Hook_LifeBar_getStartEndName(dc.ui.hud.Hook_LifeBar.orig_getStartEndName orig, dc.ui.hud.LifeBar self)
