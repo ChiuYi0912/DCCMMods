@@ -8,6 +8,8 @@ using PopDamage.Override;
 using ModCore.Menu;
 using dc.h2d;
 using ModCore.Modules;
+using ModCore.Events;
+using PopDamage.Main.lnterface;
 
 namespace PopDamage;
 
@@ -18,7 +20,9 @@ public class PopDamageEntry(ModInfo info) : ModBase(info),
     {
         base.Initialize();
         _ = new EntityPopDaamage();
+        _ = new BasePopDamage();
         Logger.Information("Hello DCCM!");
+        EventSystem.BroadcastEvent<IOnHookInitalize,PopDamageEntry>(this);
     }
 
 

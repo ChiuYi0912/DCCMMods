@@ -1,4 +1,5 @@
-﻿using dc;
+﻿using System.ComponentModel.DataAnnotations;
+using dc;
 using dc._Data;
 using dc.cine;
 using dc.en;
@@ -15,6 +16,8 @@ using dc.libs.tilemap;
 using dc.light;
 using dc.pow;
 using dc.tool;
+using dc.tool.vote;
+using dc.ui;
 using dc.ui.hud;
 using DebugMod.Utitities;
 using Hashlink.Proxy.Clousre;
@@ -71,10 +74,10 @@ namespace DebugMod
 
 
 
-        private void Hook__Console__constructor__(Hook__Console.orig___constructor__ orig, dc.h2d.Console arg1, Font font, dc.h2d.Object parent)
+        private void Hook__Console__constructor__(dc.h2d.Hook__Console.orig___constructor__ orig, dc.h2d.Console nextLevelVote, Font font, dc.h2d.Object parent)
         {
-            orig(arg1, font, parent);
-            StringMap commands = arg1.commands;
+            orig(nextLevelVote, font, parent);
+            StringMap commands = nextLevelVote.commands;
         }
 
         private void Hook_Console_log1(dc.ui.Hook_Console.orig_log orig, dc.ui.Console self,
@@ -120,6 +123,50 @@ namespace DebugMod
 
         public void Debugmethod()
         {
+            var vote = new TwitchVote();
+            vote.setDesc("选择".AsHaxeString());
+            vote.addVoteOption("!red".AsHaxeString(), "红色".AsHaxeString(), null);
+            vote.addVoteOption("!blue".AsHaxeString(), "蓝色".AsHaxeString(), null);
+            vote.addAlias("!r".AsHaxeString(), "!red".AsHaxeString());
+            vote.oneVotePerUser = true;
+            vote.showPct = true;
+            vote.setExpireS(30.0);
+            vote.keepOnNextLevel = true;
+            vote.longVoteLabels = false;
+            vote.init();
+
+            var nextLevelVote = new NextLevel();
+            nextLevelVote.showPct = true;
+            nextLevelVote.blinkOnVote = false;
+            nextLevelVote.longVoteLabels = true;
+            nextLevelVote.locksTwitchDoor = false; 
+            nextLevelVote.setForcedInitS(99999.0);
+            var desc = Lang.Class.t.get("Ou voudriez-vous aller ensuite ?".AsHaxeString(), null);
+            nextLevelVote.setDesc(desc);
+
+
+            string deathReason = "被陷阱杀死";
+            var tauntVote = new DeathTaunt(deathReason.AsHaxeString());
+            tauntVote.showPct = true;
+            tauntVote.oneVotePerUser = true;
+            tauntVote.blinkOnVote = true;
+
+            desc = Lang.Class.t.get("Should we open the secret door?".AsHaxeString(), null);
+            var vote2 = new DoOrDont(desc);
+
+            var vote3 = new dc.tool.vote.Taunt("test".AsHaxeString());
+
+            var vote4 = new SecretTip();
+
+            var vote5 = new Praise("test".AsHaxeString());
+
+            // var chat = new TwitchChest(dc.pr.Game.Class.ME.curLevel, dc.pr.Game.Class.ME.hero.cx, dc.pr.Game.Class.ME.hero.cy);
+
+            // var vote6 = new OpenChest(chat);
+
+            var vote7 = new Encourage("test".AsHaxeString());
+
+
 
         }
 
