@@ -16,13 +16,15 @@ namespace PopDamage;
 public class PopDamageEntry(ModInfo info) : ModBase(info),
     IModMenu
 {
+    public string GetName() => "PopDamageSetting";
+    public string? GetSubText() => $"version: {Info.Version = "0.9.12"},DCCMVersion:{Info.DCCMVersion}";
     public override void Initialize()
     {
         base.Initialize();
         _ = new EntityPopDaamage();
         _ = new BasePopDamage();
         Logger.Information("Hello DCCM!");
-        EventSystem.BroadcastEvent<IOnHookInitalize,PopDamageEntry>(this);
+        EventSystem.BroadcastEvent<IOnHookInitalize, PopDamageEntry>(this);
     }
 
 
@@ -54,8 +56,5 @@ public class PopDamageEntry(ModInfo info) : ModBase(info),
         options.title.set_text(GetText.Instance.GetString("模组设置").AsHaxeString());
     }
 
-    public string GetName()
-    {
-        return "PopDamageSetting";
-    }
+
 }

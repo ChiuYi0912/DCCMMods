@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    
+    <ModName>EquipWeapons</ModName>
+    <ModType>mod</ModType>
+    <ModMain>EquipWeapons.EquipWeaponsEntry</ModMain>
+    <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
+    <Reference Include="DebugConsole" />
+  </ItemGroup>
+  <ItemGroup>
+    <ModDependency Include="DebugConsole" />
+  </ItemGroup>
+
+</Project>

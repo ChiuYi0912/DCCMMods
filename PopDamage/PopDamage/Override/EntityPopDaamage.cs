@@ -41,7 +41,7 @@ namespace PopDamage.Override
         private const string FONT_HOTLINE = "hotline";
         private const string FONT_STS = "sts";
         private const string FONT_REVEAL = "hotline";
-
+        
         // Cooldown calculation constants
         private const double COOLDOWN_MULTIPLIER_1 = 0.3;
         private const double COOLDOWN_MULTIPLIER_2 = 0.4;
@@ -52,20 +52,14 @@ namespace PopDamage.Override
         private enum PopDamageType { Hotline, Sts, Default, Reveal }
         public static ModCore.Storage.Config<CoreConfig> GetConfig = new("CunstumPopDamage");
 
-        public EntityPopDaamage()
-        {
-            Hook_Entity.popDamage += Hook_Entity_PopDamage;
-        }
+        public EntityPopDaamage() => Hook_Entity.popDamage += Hook_Entity_PopDamage;
 
         // Helper methods
-        private static virtual_chars_font_ CreateFontData(string fontType)
+        private static virtual_chars_font_ CreateFontData(string fontType) => new virtual_chars_font_
         {
-            return new virtual_chars_font_
-            {
-                chars = FONT_NUMBERS.AsHaxeString(),
-                font = fontType.AsHaxeString()
-            };
-        }
+            chars = FONT_NUMBERS.AsHaxeString(),
+            font = fontType.AsHaxeString()
+        };
 
         private static bool CheckHotlineSkins(Hero hero)
         {
@@ -186,9 +180,8 @@ namespace PopDamage.Override
         {
             entity.dmgIdx++;
             if (entity.dmgIdx >= MAX_DAMAGE_INDEX)
-            {
                 entity.dmgIdx = 0;
-            }
+
         }
 
 
