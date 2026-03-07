@@ -43,7 +43,7 @@ public partial class ChiuYiUI : IModMenu, IEventReceiver
 
     public string? GetSubText()
     {
-        return $"version: {ChiuYiMain.Instance.Info.Version} 包含了各种各样的功能开关和数值调整，欢迎使用!";
+        return $"version: {ChiuYiMain.Instance.Info.Version}";
     }
 
 

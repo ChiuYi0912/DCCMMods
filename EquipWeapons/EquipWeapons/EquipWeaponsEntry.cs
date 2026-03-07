@@ -18,7 +18,7 @@ public class EquipWeaponsEntry(ModInfo info) : ModBase(info),
     private void Hook_Hero_initGfx(Hook_Hero.orig_initGfx orig, Hero self)
     {
         orig(self);
-        _ = new EquipProcess(self._level,Logger,self);
+        _ = new EquipProcess(self._level, Logger, self);
     }
 
     void IOnGameEndInit.OnGameEndInit()

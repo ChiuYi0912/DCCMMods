@@ -54,8 +54,8 @@ namespace EquipWeapons
 
             if (WeaponIcons.Count > 0)
             {
-                var (leftX, leftY) = GetLPosition(BoneNames.FingerBones.Left.Finger0);
-                var (rightX, rightY) = GetLPosition(BoneNames.FingerBones.Right.Finger0);
+                var (leftX, leftY) = GetPosition(BoneNames.FingerBones.Left.Finger0);
+                var (rightX, rightY) = GetPosition(BoneNames.FingerBones.Right.Finger0);
 
                 if (WeaponIcons.Count >= 1)
                 {
@@ -72,8 +72,8 @@ namespace EquipWeapons
 
             if (ActiveIcons.Count > 0)
             {
-                var (neckX, neckY) = GetLPosition(BoneNames.FootBones.Left.Main);
-                var (Thighx, Thighy) = GetLPosition(BoneNames.FootBones.Right.Main);
+                var (neckX, neckY) = GetPosition(BoneNames.FootBones.Left.Main);
+                var (Thighx, Thighy) = GetPosition(BoneNames.FootBones.Right.Main);
 
                 if (ActiveIcons.Count >= 1)
                 {
@@ -102,7 +102,7 @@ namespace EquipWeapons
         }
 
 
-        public (double X, double Y) GetLPosition(string BONENAME)
+        public (double X, double Y) GetPosition(string BONENAME)
         {
             var spr = GetHero.spr;
             if (spr == null)
