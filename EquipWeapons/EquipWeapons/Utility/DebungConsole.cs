@@ -10,7 +10,7 @@ namespace EquipWeapons.Utility
         public static void TEST(TextWriter writer)
         {
             var owen = Game.Instance.HeroInstance;
-            var process = new EquipProcess(owen!._level, Game.Logger);
+            var process = new EquipProcess(owen!._level, Game.Logger,owen);
         }
     }
 }

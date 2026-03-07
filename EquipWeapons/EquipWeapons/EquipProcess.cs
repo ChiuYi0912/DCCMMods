@@ -13,6 +13,7 @@ using dc.tool._AnimationTrack;
 using dc.ui;
 using HaxeProxy.Runtime;
 using dc.h2d;
+using dc.tool;
 
 
 namespace EquipWeapons
@@ -20,50 +21,71 @@ namespace EquipWeapons
 
     public class EquipProcess(dc.libs.Process parent) : dc.ui.Process(parent)
     {
-
-        private const string LeftHandBone = "Bip001 L Hand";
-        private const string WaistBone = "Bip001 Spine2";
-        private const string PropBone = "Bip001 Prop2";
-        private const string HeadBone = "headBone";
-
-        public const int HandBox = 1;
-
-
         private const string TrackDataPath = "atlas/beheaded_tracks.json";
         private const double IconScale = 0.5;
         private const double IconYOffset = -5;
-        private readonly HashSet<string> Abandoned = [
-            "PrisonerCloth-I<StartItem>", "LadderKey", "TeleportKey", "ScoringKey", "BreakableGroundKey", "WallJumpKey",
-            "BossRune1", "BossRune2", "BossRune3", "BossRune4", "HomKey", "CustomKey", "BossRune5", "ExploKey",
-            "TrainingUnlock","Talisman0","Talisman1", "Talisman2","Talisman3", "Talisman4","Talisman5"
-        ];
+
+        private HashSet<string> ActiveItem = new();
+        public List<Icon> WeaponIcons { get; } = [];
+        public List<Icon> ActiveIcons { get; } = [];
+        private Dictionary<string, ArrayBytes_Int> _trackCache = new();
 
 
-
-        public Hero GetHero { get; } = Game.Instance.HeroInstance!;
+        public Hero GetHero { get; } = null!;
         private Serilog.ILogger? GetLogger { get; }
-        public List<Icon> Icons { get; } = [];
-        public FlowBox? handbox { get; set; }
+        private ArrayObj items { get; } = null!;
 
-        public EquipProcess(dc.libs.Process parent, ILogger log) : this(parent)
+        public EquipProcess(dc.libs.Process parent, ILogger log, Hero hero) : this(parent)
         {
             GetLogger = log;
-
-            handbox = FlowBox.Class.createBoxMain(null, HandBox, HandBox, null);
-            handbox.box.alpha = 0;
-            handbox.set_horizontalAlign(new FlowAlign.Middle());
-            GetHero._level.scroller.addChildAt(handbox, Const.Class.DP_ROOM_MAIN_FX);
-            CreateIcon();
+            GetHero = hero;
+            items = items = GetHero.inventory.items;
+            CreateWeaponIcons();
+            CreateActiveIcons();
         }
 
         public override void postUpdate()
         {
             base.postUpdate();
-            if (handbox != null && Icons.Count > 0)
+
+            if (Checkenitem())
+                UpdateIcons();
+
+
+            if (WeaponIcons.Count > 0)
             {
-                var (x, y) = GetLHandPosition();
-                handbox.x = x;
-                handbox.y = y + IconYOffset;
+                var (leftX, leftY) = GetLPosition(BoneNames.FingerBones.Left.Finger0);
+                var (rightX, rightY) = GetLPosition(BoneNames.FingerBones.Right.Finger0);
+
+                if (WeaponIcons.Count >= 1)
+                {
+                    WeaponIcons[0].x = leftX + IconYOffset;
+                    WeaponIcons[0].y = leftY + IconYOffset;
+                }
+
+                if (WeaponIcons.Count >= 2)
+                {
+                    WeaponIcons[1].x = rightX + IconYOffset;
+                    WeaponIcons[1].y = rightY + IconYOffset;
+                }
+            }
+
+            if (ActiveIcons.Count > 0)
+            {
+                var (neckX, neckY) = GetLPosition(BoneNames.FootBones.Left.Main);
+                var (Thighx, Thighy) = GetLPosition(BoneNames.FootBones.Right.Main);
+
+                if (ActiveIcons.Count >= 1)
+                {
+                    ActiveIcons[0].x = neckX + IconYOffset;
+                    ActiveIcons[0].y = neckY + IconYOffset;
+                }
+
+                if (ActiveIcons.Count >= 2)
+                {
+                    ActiveIcons[1].x = Thighx + IconYOffset;
+                    ActiveIcons[1].y = Thighy + IconYOffset;
+                }
             }
         }
 
@@ -80,27 +102,17 @@ namespace EquipWeapons
         }
 
 
-        public double GetLHandX()
-        {
-            var (x, _) = GetLHandPosition();
-            return x;
-        }
-
-        public double GetLHandY()
-        {
-            var (_, y) = GetLHandPosition();
-            return y;
-        }
-
-        public (double X, double Y) GetLHandPosition()
+        public (double X, double Y) GetLPosition(string BONENAME)
         {
             var spr = GetHero.spr;
+            if (spr == null)
+                return (0, 0);
             var frame = spr.frame;
             var frameData = spr.frameData;
             var pivot = spr.pivot;
             var dir = GetHero.dir;
 
-            var headBoneTrack = LoadTrack(HeadBone);
+            var headBoneTrack = LoadTrack(BONENAME);
             double baseX = spr.x - frameData.realWid * pivot.centerFactorX * dir;
             double baseY = spr.y - frameData.realHei * pivot.centerFactorY;
 
@@ -111,43 +123,102 @@ namespace EquipWeapons
         }
 
 
-        public void CreateIcon()
+        public bool Checkenitem()
         {
-            var items = GetHero.inventory.items;
+            var currentIds = new HashSet<string>();
 
             for (int i = 0; i < items.length; i++)
             {
-                var useweapon = items.getDyn(i)._itemData;
-                if (useweapon == null)
-                    continue;
-                if (Abandoned.Contains(useweapon.id.ToString()))
+                var item = items.getDyn(i);
+                var itemData = item._itemData;
+                var kind = item.kind;
+                if (itemData == null)
                     continue;
 
-                GetLogger?.Debug($"{useweapon}");
+                if (kind is not InventItemKind.Weapon && kind is not InventItemKind.Active)
+                    continue;
+
+                currentIds.Add(itemData.id.ToString());
+            }
+
+            if (currentIds.Count != ActiveItem.Count)
+                return true;
+
+            foreach (var id in currentIds)
+                if (!ActiveItem.Contains(id))
+                    return true;
+
+            return false;
+        }
+
+        public void UpdateIcons()
+        {
+            DisposeIcons();
+            CreateWeaponIcons();
+            CreateActiveIcons();
+        }
+
+
+        public void CreateWeaponIcons()
+        {
+            for (int i = 0; i < items.length; i++)
+            {
+                var useweapon = items.getDyn(i)._itemData;
+
+                if (useweapon == null)
+                    continue;
+                if (items.getDyn(i).kind is not InventItemKind.Weapon)
+                    continue;
 
                 var allicons = Icon.Class.createItemIcon(useweapon.id, null);
                 allicons.scaleX = IconScale;
                 allicons.scaleY = IconScale;
-                if (handbox != null)
-                    handbox.addChild(allicons);
-                Icons.Add(allicons);
+
+                GetHero._level.scroller.addChildAt(allicons, Const.Class.DP_ROOM_MAIN_FX);
+
+                WeaponIcons.Add(allicons);
+                ActiveItem.Add(useweapon.id.ToString());
+            }
+        }
+
+        public void CreateActiveIcons()
+        {
+            for (int i = 0; i < items.length; i++)
+            {
+                var useweapon = items.getDyn(i)._itemData;
+
+                if (useweapon == null)
+                    continue;
+                if (items.getDyn(i).kind is not InventItemKind.Active)
+                    continue;
+
+                var allicons = Icon.Class.createItemIcon(useweapon.id, null);
+                allicons.scaleX = IconScale;
+                allicons.scaleY = IconScale;
+
+                GetHero._level.scroller.addChildAt(allicons, Const.Class.DP_ROOM_MAIN_FX);
+
+                ActiveIcons.Add(allicons);
+                ActiveItem.Add(useweapon.id.ToString());
             }
         }
 
         public override void onDispose()
         {
             base.onDispose();
-            foreach (var icon in Icons)
-            {
-                icon.parent?.removeChild(icon);
-            }
-            Icons.Clear();
+            DisposeIcons();
+        }
 
-            if (handbox != null)
-            {
-                handbox.parent?.removeChild(handbox);
-                handbox = null;
-            }
+        public void DisposeIcons()
+        {
+            foreach (var icon in WeaponIcons)
+                icon.parent?.removeChild(icon);
+            foreach (var icon in ActiveIcons)
+                icon.parent?.removeChild(icon);
+
+            WeaponIcons.Clear();
+            ActiveIcons.Clear();
+            ActiveItem.Clear();
         }
     }
 }
