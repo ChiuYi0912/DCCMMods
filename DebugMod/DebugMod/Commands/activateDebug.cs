@@ -23,7 +23,7 @@ namespace DebugMod.Commands.activateDebug
                 writer.Write("请保证细胞人实例存在！");
                 return;
             }
-            PerkSelect perkSelect = new PerkSelect(Game.Class.ME.hero, Game.Class.ME.hero);
+            _ = new PerkSelect(Game.Class.ME.hero, Game.Class.ME.hero);
         }
 
 
@@ -57,9 +57,8 @@ namespace DebugMod.Commands.activateDebug
             hero.inventory.removeAll(itemName.AsHaxeString());
 
             for (int i = 0; i < targetCount - 1; i++)
-            {
                 hero.inventory.add(InventItem.Class.fromItem(itemName.AsHaxeString(), null));
-            }
+            
         }
 
         [ConsoleMethod("nt", "英雄不会被视为目标")]
@@ -88,9 +87,8 @@ namespace DebugMod.Commands.activateDebug
             }
             writer.Write($"下一关是否生成拟态商人：{Game.Class.ME.user.game.spawnMimicInNextLevel}");
             if (!Game.Class.ME.user.game.spawnMimicInNextLevel)
-            {
                 Game.Class.ME.user.game.spawnMimicInNextLevel = true;
-            }
+            
         }
     }
 }

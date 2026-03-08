@@ -1,8 +1,10 @@
-namespace DebugMod.Utitities
+using System;
+
+namespace DebugMod.Core.Utilities
 {
-    public static class CreateCL
+    public static class CreateColor
     {
-        public static int CreateColor(int r, int g, int b, int a = 255)
+        public static int FromRgba(int r, int g, int b, int a = 255)
         {
             return (a << 24) | (r << 16) | (g << 8) | b;
         }

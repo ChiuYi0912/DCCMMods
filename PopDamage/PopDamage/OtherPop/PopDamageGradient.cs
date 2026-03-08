@@ -1,9 +1,12 @@
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using dc;
 using dc.en.mob;
 using dc.h2d;
 using dc.h3d.shader;
+using dc.hl;
 using dc.hl.types;
+using dc.hxsl;
 using dc.libs.misc;
 using dc.shader;
 using dc.tool.atk;
@@ -12,7 +15,6 @@ using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Utilities;
 using PopDamage.shader;
-using PopDamage.shader.ShaderSRC;
 
 
 namespace PopDamage.OtherPop
@@ -33,12 +35,10 @@ namespace PopDamage.OtherPop
         private const double HorizontalMultiplier = 0.5;
         private const double WaveFrequency1 = 0.3;
         private const double WaveFrequency2 = 0.5;
+            
 
         public PopDamageGradient(Entity e, AttackData ad, int dmgIdx, Ref<bool> big, virtual_chars_font_ customFont) : base(e, ad, dmgIdx, big, customFont)
         {
-            var RevealSRC = ShaderSRC.RevealSRC;
-            HaxeProxy.Runtime.HaxeProxyUtils.GetClass<_ScreenShader>(typeof(SimpleRevealShader)).SRC = RevealSRC;
-
             jiggle = 1.0;
             texts = (ArrayObj)ArrayUtils.CreateDyn().array;
 
@@ -50,13 +50,11 @@ namespace PopDamage.OtherPop
 
             dc.String damageText = Std.Class.@string(ad.finalDmg);
             if (ad.dmgBonusMul > 1.0)
-            {
                 damageText = dc.String.Class.__add__(damageText, "+".AsHaxeString());
-            }
+            
             else if (ad.dmgScaledAdd > 0.0)
-            {
                 damageText = dc.String.Class.__add__(damageText, "+".AsHaxeString());
-            }
+            
             text_.set_text(damageText);
 
 
@@ -71,13 +69,13 @@ namespace PopDamage.OtherPop
 
             SimpleRevealShader shader2 = new SimpleRevealShader(text.font.tile.innerTex);
             shader2.progress__ = 0;
-            revealShaders.Add(shader2);
             text.set_filter(new dc.h2d.filter.Shader(shader2, "texture".AsHaxeString()));
             text.blendMode = new BlendMode.Alpha();
             text.posChanged = true;
             text.x = 0.0;
             text.y = 0.0;
             flow.set_needReflow(true);
+            revealShaders.Add(shader2);
         }
 
 
