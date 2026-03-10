@@ -21,7 +21,7 @@ namespace DebugMod
         IOnHeroUpdate,
         IOnAfterLoadingCDB
     {
-        public static ModCore.Storage.Config<DebugMod.Core.Configuration.CoreCfig> GetConfig =new("DebugMODCfig");
+        public static ModCore.Storage.Config<DebugMod.Core.Configuration.CoreCfig> GetConfig = new("DebugMODCfig");
         public override void Initialize()
         {
             base.Initialize();
@@ -77,9 +77,6 @@ namespace DebugMod
 
         void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
-            Hero owen = ModCore.Modules.Game.Instance.HeroInstance!;
-            owen._level.fx.biomeCemetery(2, false);
-
             if (Key.Class.isPressed(37))
             {
                 LevelTransition.Class.@goto("BackGarden".AsHaxeString());
@@ -88,12 +85,13 @@ namespace DebugMod
             {
                 Hero hero = ModCore.Modules.Game.Instance.HeroInstance!;
                 hero._level.fx.customMask(12231073, 0.35, 0.04, 0.35, 2, null);
-
             }
+
             if (Key.Class.isPressed(39))
             {
                 dc.cine.LevelTransition.Class.@goto("PrisonRoof".AsHaxeString());
             }
+
             if (Key.Class.isPressed(40))
             {
                 Debugmethod();

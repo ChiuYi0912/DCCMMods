@@ -5,9 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     
-    <ModName>DebugMod</ModName>
+    <ModName>LightOptMod</ModName>
     <ModType>mod</ModType>
-    <ModMain>DebugMod.DebugModMod</ModMain>
+    <ModMain>LightOpt.LightOptEntry</ModMain>
     <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
   </PropertyGroup>
 

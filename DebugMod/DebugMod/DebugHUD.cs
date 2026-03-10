@@ -1,5 +1,6 @@
 using dc;
 using dc.h2d;
+using dc.h3d;
 using dc.haxe.ds;
 using dc.level;
 using dc.libs.heaps;
@@ -12,12 +13,73 @@ using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Events;
 using ModCore.Utilities;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using File = System.IO.File;
 
 namespace DebugMod
 {
     public class DebugHUD : IEventReceiver
     {
+        private readonly List<dc.h2d.Text> logTexts = new();
+        private readonly List<string> lastLogContent = new();
+        private DateTime lastFileModTime = DateTime.MinValue;
+        private string lastLogFilePath = "";
+        public dc.ui.DebugHud debug { get; set; } = null!;
+
+        public double TextSize = DebugModMod.GetConfig.Value.LogTextSize;
+
+        private static string[] ReadLogFileSafe(string filePath)
+        {
+            try
+            {
+                using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using var reader = new StreamReader(stream);
+                var lines = new List<string>();
+                string? line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    lines.Add(line);
+                }
+                return lines.ToArray();
+            }
+            catch (IOException)
+            {
+                return Array.Empty<string>();
+            }
+            catch
+            {
+                return Array.Empty<string>();
+            }
+        }
+
+        private static List<string> SplitTextForViewport(string text)
+        {
+            var result = new List<string>();
+            if (string.IsNullOrEmpty(text)) return result;
+
+            int maxCharsPerLine = 100;
+
+            if (Game.Class.ME != null && Game.Class.ME.curLevel != null && Game.Class.ME.curLevel.viewport != null)
+            {
+                var winwid = dc.hxd.Window.Class.getInstance().get_width();
+                var viewport = Game.Class.ME.curLevel.viewport;
+                double availableWidth = viewport.wid;
+                double charWidth = 3.6;
+                maxCharsPerLine = System.Math.Max(40, (int)(availableWidth / charWidth));
+            }
+
+
+            for (int i = 0; i < text.Length; i += maxCharsPerLine)
+            {
+                int length = System.Math.Min(maxCharsPerLine, text.Length - i);
+                result.Add(text.Substring(i, length));
+            }
+
+            return result;
+        }
 
         public DebugHUD()
         {
@@ -26,12 +88,19 @@ namespace DebugMod
             Hook_DebugHud.postUpdate += Hook_DebugHud_postUpdate;
             Hook__DebugHud.__constructor__ += Hook_DebugHud_initialize;
             Hook_DebugHud.initLogsUi += Hook_DebugHud_initlogui;
+            Hook_Game.onDispose += hook_Game_onDispose;
+        }
+
+        private void hook_Game_onDispose(Hook_Game.orig_onDispose orig, Game self)
+        {
+            orig(self);
+            debug.destroy();
         }
 
         private void Hook_Game_init(Hook_Game.orig_init orig, dc.pr.Game self)
         {
             orig(self);
-            dc.ui.DebugHud debug = new DebugHud();
+            debug = new DebugHud();
             debug.initLogsUi();
             debug.initShaderCacheErrorUi();
             debug.initCollisionText();
@@ -40,11 +109,19 @@ namespace DebugMod
             debug.initCpuTexts();
         }
 
+
+
         public string GetLatestLog()
         {
             string filePath = System.IO.Path.Combine(DebugModMod.GetConfig.Value.DebugUILogPATH, "log_latest.log");
             if (File.Exists(filePath))
-                return File.ReadAllText(filePath);
+            {
+                string[] lines = ReadLogFileSafe(filePath);
+                if (lines.Length > 0)
+                    return string.Join("\n", lines);
+                else
+                    return "日志文件为空或无法读取";
+            }
             else
                 return "未获取到路径中的Log";
         }
@@ -54,8 +131,17 @@ namespace DebugMod
 
         private void Hook_DebugHud_initlogui(Hook_DebugHud.orig_initLogsUi orig, DebugHud self)
         {
-            DebugHudOutput logOutput = (DebugHudOutput)LogUtils.Class.getOutput(DebugHudOutput.Class);
-            if (logOutput == null) return;
+            if (self.logsFlow != null)
+            {
+                self.logsFlow.remove();
+                self.logsFlow = null;
+            }
+
+            foreach (var text in logTexts)
+            {
+                text.remove();
+            }
+            logTexts.Clear();
 
             self.logsFlow = new Flow(self.root);
 
@@ -65,34 +151,173 @@ namespace DebugMod
             self.logsFlow.set_paddingTop(5);
             self.logsFlow.set_paddingBottom(5);
             self.logsFlow.set_horizontalSpacing(25);
-            self.logsFlow.set_horizontalAlign(new FlowAlign.Middle());
+            self.logsFlow.set_horizontalAlign(new FlowAlign.Left());
             self.logsFlow.set_verticalAlign(new FlowAlign.Middle());
+            self.logsFlow.isVertical = true;
 
-
-            var bgTile = Tile.Class.fromColor(logOutput.bgColor, null, null, 0.9, null);
+            var bgTile = Tile.Class.fromColor(0, null, null, 0.4, null);
             self.logsFlow.set_backgroundTile(bgTile);
-
             self.logsFlow.set_visible(true);
-
             self.logsTexts = new EnumValueMap();
 
-            var iterator = logOutput.severityData.keys().ToVirtual<virtual_hasNext_next_<HlFunc<Severity>>>();
-
-
-            while (iterator.hasNext.Invoke())
+            string logFilePath = System.IO.Path.Combine(DebugModMod.GetConfig.Value.DebugUILogPATH, "log_latest.log");
+            lastLogFilePath = logFilePath;
+            if (File.Exists(logFilePath))
             {
-                Severity severity = iterator.next.Invoke();
+                string[] lines = ReadLogFileSafe(logFilePath);
+                if (lines.Length > 0)
+                {
+                    int startIndex = System.Math.Max(0, lines.Length - 10);
+                    for (int i = startIndex; i < lines.Length; i++)
+                    {
+                        string line = lines[i];
+                        var splitLines = SplitTextForViewport(line);
+                        foreach (var splitLine in splitLines)
+                        {
+                            var logText = new dc.h2d.Text(Assets.Class.font18, self.logsFlow);
+                            logText.set_textColor(0xFFFFFF);
+                            logText.set_text(splitLine.AsHaxeString());
+                            logText.scaleX = TextSize;
+                            logText.scaleY = TextSize;
+                            logTexts.Add(logText);
+                        }
+                    }
+                }
+                else
+                {
+                    var infoLines = SplitTextForViewport("日志文件为空或无法读取");
+                    foreach (var infoLine in infoLines)
+                    {
+                        var infoText = new dc.h2d.Text(Assets.Class.font18, self.logsFlow);
+                        infoText.set_textColor(0xFFFF00);
+                        infoText.set_text(infoLine.AsHaxeString());
+                        logTexts.Add(infoText);
+                    }
+                }
+            }
+            else
+            {
+                var errorLines = SplitTextForViewport("未找到日志文件");
+                foreach (var errorLine in errorLines)
+                {
+                    var errorText = new dc.h2d.Text(Assets.Class.font18, self.logsFlow);
+                    errorText.set_textColor(0xFF0000);
+                    errorText.set_text(errorLine.AsHaxeString());
+                    errorText.scaleX = TextSize;
+                    errorText.scaleY = TextSize;
+                    logTexts.Add(errorText);
+                }
+            }
+            self.onResize();
+        }
 
-                dc.h2d.Text severityText = new dc.h2d.Text(Assets.Class.font18, self.logsFlow);
+        private void UpdateLogTexts(DebugHud debugHud)
+        {
+            if (string.IsNullOrEmpty(lastLogFilePath)) return;
 
-                int textColor = logOutput.severityData.get(severity).ToVirtual<virtual_count_textColor_>().textColor;
-                severityText.set_textColor(textColor);
-                self.logsTexts.set(severity, severityText);
-                logOutput.receiveLog(self.logsTexts.ToVirtual<virtual_date_pos_severity_text_>());
+            if (!File.Exists(lastLogFilePath))
+            {
+                foreach (var text in logTexts)
+                {
+                    text.remove();
+                }
+                logTexts.Clear();
+
+                var errorLines = SplitTextForViewport("未找到日志文件");
+                foreach (var errorLine in errorLines)
+                {
+                    var errorText = new dc.h2d.Text(Assets.Class.font18, debugHud.logsFlow);
+                    errorText.set_textColor(0xFF0000);
+                    errorText.set_text(errorLine.AsHaxeString());
+                    errorText.scaleX = TextSize;
+                    errorText.scaleY = TextSize;
+                    logTexts.Add(errorText);
+                }
+                return;
             }
 
-            self.updateLogsDisplay();
-            self.onResize();
+            DateTime currentModTime;
+            try
+            {
+                currentModTime = File.GetLastWriteTime(lastLogFilePath);
+                if (currentModTime <= lastFileModTime && lastLogContent.Count > 0)
+                    return;
+            }
+            catch
+            {
+                currentModTime = DateTime.MinValue;
+            }
+
+            string[] lines = ReadLogFileSafe(lastLogFilePath);
+
+            if (lines.Length == 0)
+            {
+                if (lastLogContent.Count > 0)
+                    return;
+
+                foreach (var text in logTexts)
+                {
+                    text.remove();
+                }
+                logTexts.Clear();
+
+                var infoLines = SplitTextForViewport("日志文件无法读取或为空");
+                foreach (var infoLine in infoLines)
+                {
+                    var infoText = new dc.h2d.Text(Assets.Class.font18, debugHud.logsFlow);
+                    infoText.set_textColor(0xFFFF00);
+                    infoText.set_text(infoLine.AsHaxeString());
+                    infoText.scaleX = TextSize;
+                    infoText.scaleY = TextSize;
+                    logTexts.Add(infoText);
+                }
+                return;
+            }
+
+            int startIndex = System.Math.Max(0, lines.Length - 10);
+            var currentContent = new List<string>();
+            for (int i = startIndex; i < lines.Length; i++)
+            {
+                currentContent.Add(lines[i]);
+            }
+
+            if (lastLogContent.SequenceEqual(currentContent))
+            {
+                lastFileModTime = currentModTime;
+                return;
+            }
+
+            lastLogContent.Clear();
+            lastLogContent.AddRange(currentContent);
+            lastFileModTime = currentModTime;
+
+            var splitLines = new List<string>();
+            foreach (var line in currentContent)
+            {
+                var splitLineList = SplitTextForViewport(line);
+                splitLines.AddRange(splitLineList);
+            }
+
+            while (logTexts.Count < splitLines.Count)
+            {
+                var newText = new dc.h2d.Text(Assets.Class.font18, debugHud.logsFlow);
+                newText.set_textColor(0xFFFFFF);
+                newText.scaleX = TextSize;
+                newText.scaleY = TextSize;
+                logTexts.Add(newText);
+            }
+
+            while (logTexts.Count > splitLines.Count)
+            {
+                var text = logTexts[^1];
+                text.remove();
+                logTexts.RemoveAt(logTexts.Count - 1);
+            }
+
+            for (int i = 0; i < splitLines.Count; i++)
+            {
+                logTexts[i].set_text(splitLines[i].AsHaxeString());
+            }
         }
 
 
@@ -108,7 +333,7 @@ namespace DebugMod
             if (self.logsFlow != null)
             {
                 self.logsFlow.set_visible(true);
-                self.updateLogsDisplay();
+                UpdateLogTexts(self);
             }
             if (!self.root.visible || Game.Class.ME == null || Game.Class.ME.curLevel == null)
                 return;

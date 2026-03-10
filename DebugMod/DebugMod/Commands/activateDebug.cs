@@ -9,7 +9,6 @@ using dc.ui;
 using HaxeProxy.Runtime;
 using IngameDebugConsole;
 using ModCore.Utilities;
-using SettingsMod.shaders;
 
 namespace DebugMod.Commands.activateDebug
 {
