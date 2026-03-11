@@ -4,7 +4,7 @@ using ModCore.Utilities;
 using System.Collections.Generic;
 using System.IO;
 
-namespace DebugMod.Core.Extensions
+namespace DebugMod.Commands.activateDebug
 {
     public static class GotolevelCommands
     {
@@ -12,24 +12,19 @@ namespace DebugMod.Core.Extensions
         public static void ShowAllLevels(TextWriter writer)
         {
             if (allLevels.Count == 0)
-            {
                 getlvlid();
-            }
+
 
             for (int i = 0; i < allLevels.Count; i++)
-            {
                 writer.Write($"{i + 1}. {allLevels[i]}");
-            }
+
 
         }
-        [ConsoleMethod("goto-lvl", "前往编号对应关卡", "关卡编号")]
+        [ConsoleMethod("goto-lvl", "前往编号对应关卡", "关卡编号(show-lvls 显示所有关卡编号)")]
         public static void Gotolevel(TextWriter writer, int levelIndex)
         {
             if (allLevels.Count == 0)
-            {
                 getlvlid();
-            }
-
 
             Hero hero = ModCore.Modules.Game.Instance.HeroInstance!;
             if (hero == null)
@@ -49,9 +44,7 @@ namespace DebugMod.Core.Extensions
 
             }
             else
-            {
                 writer.Write($"关卡编号无效。请输入 1 到 {allLevels.Count} 之间的数字。");
-            }
 
         }
 

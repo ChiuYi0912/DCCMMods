@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using File = System.IO.File;
+using CoreLibrary.Core.Utilities;
 
 namespace DebugMod
 {
@@ -30,7 +31,8 @@ namespace DebugMod
         public dc.ui.DebugHud debug { get; set; } = null!;
 
         public double TextSize = DebugModMod.GetConfig.Value.LogTextSize;
-
+        public int TextColor = CreateColor.ColorFromHex(DebugModMod.GetConfig.Value.LogTextColor);
+        
         private static string[] ReadLogFileSafe(string filePath)
         {
             try
@@ -175,10 +177,11 @@ namespace DebugMod
                         foreach (var splitLine in splitLines)
                         {
                             var logText = new dc.h2d.Text(Assets.Class.font18, self.logsFlow);
-                            logText.set_textColor(0xFFFFFF);
+
                             logText.set_text(splitLine.AsHaxeString());
                             logText.scaleX = TextSize;
                             logText.scaleY = TextSize;
+                            logText.set_textColor(TextColor);
                             logTexts.Add(logText);
                         }
                     }
@@ -189,8 +192,9 @@ namespace DebugMod
                     foreach (var infoLine in infoLines)
                     {
                         var infoText = new dc.h2d.Text(Assets.Class.font18, self.logsFlow);
-                        infoText.set_textColor(0xFFFF00);
+
                         infoText.set_text(infoLine.AsHaxeString());
+                        infoText.set_textColor(TextColor);
                         logTexts.Add(infoText);
                     }
                 }
@@ -201,10 +205,10 @@ namespace DebugMod
                 foreach (var errorLine in errorLines)
                 {
                     var errorText = new dc.h2d.Text(Assets.Class.font18, self.logsFlow);
-                    errorText.set_textColor(0xFF0000);
                     errorText.set_text(errorLine.AsHaxeString());
                     errorText.scaleX = TextSize;
                     errorText.scaleY = TextSize;
+                    errorText.set_textColor(TextColor);
                     logTexts.Add(errorText);
                 }
             }
@@ -227,10 +231,10 @@ namespace DebugMod
                 foreach (var errorLine in errorLines)
                 {
                     var errorText = new dc.h2d.Text(Assets.Class.font18, debugHud.logsFlow);
-                    errorText.set_textColor(0xFF0000);
                     errorText.set_text(errorLine.AsHaxeString());
                     errorText.scaleX = TextSize;
                     errorText.scaleY = TextSize;
+                    errorText.set_textColor(TextColor);
                     logTexts.Add(errorText);
                 }
                 return;
@@ -265,10 +269,10 @@ namespace DebugMod
                 foreach (var infoLine in infoLines)
                 {
                     var infoText = new dc.h2d.Text(Assets.Class.font18, debugHud.logsFlow);
-                    infoText.set_textColor(0xFFFF00);
                     infoText.set_text(infoLine.AsHaxeString());
                     infoText.scaleX = TextSize;
                     infoText.scaleY = TextSize;
+                    infoText.set_textColor(TextColor);
                     logTexts.Add(infoText);
                 }
                 return;
@@ -301,9 +305,9 @@ namespace DebugMod
             while (logTexts.Count < splitLines.Count)
             {
                 var newText = new dc.h2d.Text(Assets.Class.font18, debugHud.logsFlow);
-                newText.set_textColor(0xFFFFFF);
                 newText.scaleX = TextSize;
                 newText.scaleY = TextSize;
+                newText.set_textColor(TextColor);
                 logTexts.Add(newText);
             }
 

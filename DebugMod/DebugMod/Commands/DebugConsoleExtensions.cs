@@ -11,7 +11,7 @@ using ModCore.Modules;
 using ModCore.Utilities;
 using Serilog;
 
-namespace DebugMod.Core.Extensions
+namespace DebugMod.Commands.activateDebug
 {
     public static class DebugConsoleExtensions
     {
