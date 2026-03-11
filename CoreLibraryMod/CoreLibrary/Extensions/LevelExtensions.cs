@@ -5,7 +5,6 @@ using dc.level;
 using dc.pr;
 using dc.libs;
 using HaxeProxy.Runtime;
-using DebugMod.Core.Utilities;
 using Hashlink.Virtuals;
 using dc.libs.heaps.slib;
 using dc.h2d;
@@ -15,23 +14,12 @@ using dc.light;
 using dc.en;
 using Hashlink.Proxy.DynamicAccess;
 using dc.en.mob;
+using CoreLibrary.Core.Utilities;
 
-namespace DebugMod.Core.Extensions
+namespace CoreLibrary.Core.Extensions
 {
     public static class LevelExtensions
     {
-        public static bool IsBackGarden(this dc.pr.Level level)
-        {
-            ValidationHelper.NotNull(level, nameof(level));
-            ValidationHelper.NotNull(level.map, nameof(level.map));
-
-            var biomeId = level.map.biome?.id;
-            if (biomeId == null) return false;
-
-            return biomeId.ToString().EqualsIgnoreCase(GameConstants.Levels.BackGarden);
-        }
-
-
         public static bool IsLevel(this dc.pr.Level level, string levelId)
         {
             ValidationHelper.NotNull(level, nameof(level));
@@ -181,10 +169,6 @@ namespace DebugMod.Core.Extensions
         }
 
 
-
-
-
-
         public static IEnumerable<Entity> GetEntitiesByClass(this dc.pr.Level level, int classId)
         {
             ValidationHelper.NotNull(level, nameof(level));
@@ -298,11 +282,6 @@ namespace DebugMod.Core.Extensions
             return levelData.GetId().EqualsIgnoreCase(levelId);
         }
 
-        public static bool IsBackGarden(this virtual_baseLootLevel_biome_bonusTripleScrollAfterBC_cellBonus_dlc_doubleUps_eliteRoomChance_eliteWanderChance_flagsProps_group_icon_id_index_loreDescriptions_mapDepth_minGold_mobDensity_mobs_name_nextLevels_parallax_props_quarterUpsBC3_quarterUpsBC4_specificLoots_specificSubBiome_transitionTo_tripleUps_worldDepth_ levelData)
-        {
-            ValidationHelper.NotNull(levelData, nameof(levelData));
-            return levelData.IsLevelId(GameConstants.Levels.BackGarden);
-        }
 
         public static string? GetBiomeSafe(this virtual_baseLootLevel_biome_bonusTripleScrollAfterBC_cellBonus_dlc_doubleUps_eliteRoomChance_eliteWanderChance_flagsProps_group_icon_id_index_loreDescriptions_mapDepth_minGold_mobDensity_mobs_name_nextLevels_parallax_props_quarterUpsBC3_quarterUpsBC4_specificLoots_specificSubBiome_transitionTo_tripleUps_worldDepth_ levelData)
         {

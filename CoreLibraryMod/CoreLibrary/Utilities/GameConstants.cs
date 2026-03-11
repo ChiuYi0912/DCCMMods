@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DebugMod.Core.Utilities
+namespace CoreLibrary.Core.Utilities
 {
 
     public static class GameConstants
@@ -212,19 +212,8 @@ namespace DebugMod.Core.Utilities
             public const string LogReset = "\x1b[0m";
         }
 
-
-        public static class ConfigNames
-        {
-            public const string BackGardenConfig = "BackGardenConfig";
-            public const string ModSettings = "ModSettings";
-            public const string WeaponConfig = "WeaponConfig";
-            public const string MobConfig = "MobConfig";
-        }
-
-
         public static class ResourcePaths
         {
-            public const string BackGardenAssets = "BackGardenAsstes/";
             public const string Atlas = "atlas/";
             public const string Tiled = "tiled/tmx/";
         }

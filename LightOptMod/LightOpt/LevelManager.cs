@@ -20,9 +20,10 @@ using ModCore.Utilities;
 using dc.tool.quadTree;
 using Hashlink.Virtuals;
 using ModCore.Events;
-using Midjourney.Core.Interfaces;
-using LightOpt.Core.Utilities;
 using LightOpt.OptLayers;
+using CoreLibrary.Core.Interfaces;
+using Serilog.Core;
+using CoreLibrary.Core.Utilities;
 
 
 namespace LightOpt;
@@ -32,15 +33,17 @@ public class LevelManager :
         IEventReceiver
 
 {
+    public readonly Serilog.ILogger GetSerilog;
     public LevelManager(LightOptEntry entry)
     {
-        entry.Logger.LogInformation("Level Manager initialisation commences");
+        GetSerilog = entry.Logger;
+        GetSerilog.LogInformation("Level Manager initialisation commences");
         EventSystem.AddReceiver(this);
     }
 
-    void IOnHookInitialize.HookInitialize(LightOptEntry entry)
+    void IOnHookInitialize.HookInitialize()
     {
-        using (entry.Logger.LogMethodScope(nameof(IOnHookInitialize.HookInitialize)))
+        using (GetSerilog.LogMethodScope(nameof(IOnHookInitialize.HookInitialize)))
         {
 
         }

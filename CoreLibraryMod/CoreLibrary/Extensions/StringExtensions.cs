@@ -2,7 +2,7 @@ using Hashlink.Proxy.Objects;
 using HaxeProxy.Runtime;
 using ModCore.Utilities;
 
-namespace DebugMod.Core.Extensions
+namespace CoreLibrary.Core.Extensions
 {
 
     public static class StringExtensions
@@ -20,12 +20,12 @@ namespace DebugMod.Core.Extensions
         }
 
 
-        public static dc.String Add_TwoHaxeStrings(this string str ,string str2)
+        public static dc.String Add_TwoHaxeStrings(this string str, string str2)
         {
-            return dc.String.Class.__add__( str.ToHaxeString(), str2.ToHaxeString());
+            return dc.String.Class.__add__(str.ToHaxeString(), str2.ToHaxeString());
         }
 
-        
+
 
         public static bool IsNullOrWhiteSpace(this string? str)
         {
@@ -57,7 +57,7 @@ namespace DebugMod.Core.Extensions
 
         public static string AsBlue(this string str)
         {
-            return str.WithColor("\x1b[34m");
+            return str.WithColor(Utilities.GameConstants.Colors.LogBlue);
         }
         public static string AsGreen(this string str)
         {

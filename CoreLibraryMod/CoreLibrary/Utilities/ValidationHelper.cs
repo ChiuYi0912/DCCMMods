@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Serilog;
 using Serilog.Core;
 
-namespace LightOpt.Core.Utilities
+namespace CoreLibrary.Core.Utilities
 {
 
     public static class ValidationHelper

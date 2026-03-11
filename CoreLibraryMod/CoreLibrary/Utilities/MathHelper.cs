@@ -1,7 +1,7 @@
 using System;
 using dc.libs;
 
-namespace DebugMod.Core.Utilities
+namespace CoreLibrary.Core.Utilities
 {
     public static class MathHelper
     {

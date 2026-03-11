@@ -1,8 +1,9 @@
 using System;
 using System.Diagnostics;
+using CoreLibrary.Core.Configuration;
 using Serilog;
 
-namespace LightOpt.Core.Utilities
+namespace CoreLibrary.Core.Utilities
 {
     public static class LoggingHelper
     {
@@ -19,7 +20,7 @@ namespace LightOpt.Core.Utilities
 
         public static void LogSuccess(this ILogger logger, string message, string? module = null)
         {
-            if (!LightOpt.LightOptEntry.GetConfig.Value.DebugMode)
+            if (!CoreCfig.DebugMode)
                 return;
 
             ValidationHelper.NotNull(logger, nameof(logger));
@@ -40,7 +41,7 @@ namespace LightOpt.Core.Utilities
 
         public static void LogError(this ILogger logger, string message, Exception? exception = null, string? module = null)
         {
-            if (!LightOpt.LightOptEntry.GetConfig.Value.DebugMode)
+            if (!CoreCfig.DebugMode)
                 return;
 
             ValidationHelper.NotNull(logger, nameof(logger));
@@ -60,7 +61,7 @@ namespace LightOpt.Core.Utilities
 
         public static void LogDebug(this ILogger logger, string message, string? module = null)
         {
-            if (!LightOpt.LightOptEntry.GetConfig.Value.DebugMode)
+            if (!CoreCfig.DebugMode)
                 return;
 
             ValidationHelper.NotNull(logger, nameof(logger));
@@ -72,7 +73,7 @@ namespace LightOpt.Core.Utilities
 
         public static void LogVerbose(this ILogger logger, string message, string? module = null)
         {
-            if (!LightOpt.LightOptEntry.GetConfig.Value.DebugMode)
+            if (!CoreCfig.DebugMode)
                 return;
 
             ValidationHelper.NotNull(logger, nameof(logger));
@@ -95,7 +96,7 @@ namespace LightOpt.Core.Utilities
             ValidationHelper.NotNull(logger, nameof(logger));
             ValidationHelper.NotNullOrWhiteSpace(methodName, nameof(methodName));
 
-            if (!LightOpt.LightOptEntry.GetConfig.Value.DebugMode)
+            if (!CoreCfig.DebugMode)
                 return new DisposableAction(() => { });
 
             logger.LogDebug($"Method of entry: {methodName}", module);
@@ -168,7 +169,7 @@ namespace LightOpt.Core.Utilities
                 _module = module;
                 _stopwatch = Stopwatch.StartNew();
 
-                if (LightOpt.LightOptEntry.GetConfig.Value.DebugMode)
+                if (CoreCfig.DebugMode)
                     _logger.LogDebug($"Commencing operation: {_operationName}", _module);
             }
 

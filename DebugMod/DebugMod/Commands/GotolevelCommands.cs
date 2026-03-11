@@ -4,7 +4,7 @@ using ModCore.Utilities;
 using System.Collections.Generic;
 using System.IO;
 
-namespace DebugMod.Commands
+namespace DebugMod.Core.Extensions
 {
     public static class GotolevelCommands
     {

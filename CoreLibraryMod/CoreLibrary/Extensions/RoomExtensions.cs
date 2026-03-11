@@ -7,10 +7,9 @@ using dc.hl.types;
 using dc.level;
 using dc.pr;
 using HaxeProxy.Runtime;
-using DebugMod.Core.Utilities;
 using Serilog;
 
-namespace DebugMod.Core.Extensions
+namespace CoreLibrary.Core.Extensions
 {
     public static class RoomExtensions
     {

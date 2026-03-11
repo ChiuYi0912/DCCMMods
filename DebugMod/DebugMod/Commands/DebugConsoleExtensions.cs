@@ -1,9 +1,10 @@
+using CoreLibrary.Core.Extensions;
+using CoreLibrary.Core.Utilities;
 using dc;
 using dc.en;
 using dc.hl.types;
 using dc.hxsl;
 using dc.shader;
-using DebugMod.Core.Utilities;
 using HaxeProxy.Runtime;
 using IngameDebugConsole;
 using ModCore.Modules;

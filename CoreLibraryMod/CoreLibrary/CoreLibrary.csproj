@@ -5,20 +5,19 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     
-    <ModName>LightOptMod</ModName>
-    <ModType>mod</ModType>
-    <ModMain>LightOpt.LightOptEntry</ModMain>
+    <ModName>CoreLibraryMod</ModName>
+    <ModType>library</ModType>
     <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
-    <Reference Include="CoreLibrary" />
+    <Reference Include="DebugConsole" />
+  </ItemGroup>
+  <ItemGroup>
+    <ModDependency Include="DebugConsole" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ModDependency Include="CoreLibraryMod" />
-    <ProjectReference Include="..\..\CoreLibraryMod\CoreLibrary\CoreLibrary.csproj" />
-  </ItemGroup>
+  
 
 </Project>

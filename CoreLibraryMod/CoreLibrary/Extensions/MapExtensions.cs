@@ -1,11 +1,11 @@
+using CoreLibrary.Core.Utilities;
 using dc;
 using dc.hl.types;
 using dc.level;
 using dc.pr;
-using LightOpt.Core.Utilities;
 using Serilog;
 
-namespace LightOpt.Core.Extensions
+namespace CoreLibrary.Core.Extensions
 {
     public static class MapExtensions
     {

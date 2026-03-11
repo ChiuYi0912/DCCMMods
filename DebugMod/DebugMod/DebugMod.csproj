@@ -14,9 +14,14 @@
   <ItemGroup>
     <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
     <Reference Include="DebugConsole" />
+    <Reference Include="CoreLibrary" />
   </ItemGroup>
   <ItemGroup>
+    <ModDependency Include="CoreLibraryMod" />
     <ModDependency Include="DebugConsole" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CoreLibraryMod\CoreLibrary\CoreLibrary.csproj" />
   </ItemGroup>
 
 </Project>

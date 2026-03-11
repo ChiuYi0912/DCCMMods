@@ -4,3 +4,4 @@
 .vs/
 /DeadCellsSettingsmod/SettingsMod/Properties/launchSettings.json
 *.user
+./claude

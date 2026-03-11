@@ -1,6 +1,6 @@
 using System;
 
-namespace LightOpt.Core.Utilities
+namespace CoreLibrary.Core.Utilities
 {
     public static class CreateColor
     {

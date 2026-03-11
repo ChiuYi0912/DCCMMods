@@ -21,7 +21,7 @@ namespace DebugMod
         IOnHeroUpdate,
         IOnAfterLoadingCDB
     {
-        public static ModCore.Storage.Config<DebugMod.Core.Configuration.CoreCfig> GetConfig = new("DebugMODCfig");
+        public static ModCore.Storage.Config<DebugMod.Configuration.CoreCfig> GetConfig = new("DebugMODCfig");
         public override void Initialize()
         {
             base.Initialize();

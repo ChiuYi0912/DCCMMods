@@ -5,9 +5,9 @@ using ModCore.Utilities;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using LightOpt.Core.Utilities;
+using CoreLibrary.Core.Utilities;
 
-namespace LightOpt.Core.Extensions
+namespace CoreLibrary.Core.Extensions
 {
 
     public static class EnumerableExtensions
