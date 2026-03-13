@@ -45,7 +45,7 @@ public class LevelManager :
     {
         using (GetSerilog.LogMethodScope(nameof(IOnHookInitialize.HookInitialize)))
         {
-
+            Hook_Level.init += Hook_Level_init;
         }
     }
 
