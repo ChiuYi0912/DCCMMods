@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using File = System.IO.File;
 using CoreLibrary.Core.Utilities;
+using CoreLibrary.Core.Extensions;
 
 namespace DebugMod
 {
@@ -32,7 +33,7 @@ namespace DebugMod
 
         public double TextSize = DebugModMod.GetConfig.Value.LogTextSize;
         public int TextColor = CreateColor.ColorFromHex(DebugModMod.GetConfig.Value.LogTextColor);
-        
+
         private static string[] ReadLogFileSafe(string filePath)
         {
             try

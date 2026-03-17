@@ -12,9 +12,5 @@
 
   <ItemGroup>
     <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
-    <Reference Include="DebugConsole" />
-  </ItemGroup>
-  <ItemGroup>
-    <ModDependency Include="DebugConsole" />
   </ItemGroup>
 </Project>

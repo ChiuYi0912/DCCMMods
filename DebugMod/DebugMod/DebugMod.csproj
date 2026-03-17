@@ -24,4 +24,8 @@
     <ProjectReference Include="..\..\CoreLibraryMod\CoreLibrary\CoreLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="D:\Adeadcellsmod\ModTool\DLC\Midjourney\Midjourney.csproj" />
+  </ItemGroup>
+
 </Project>

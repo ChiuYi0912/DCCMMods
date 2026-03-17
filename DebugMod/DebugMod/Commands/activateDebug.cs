@@ -1,3 +1,4 @@
+using CoreLibrary.Core.Extensions;
 using dc.en;
 using dc.h2d;
 using dc.hl.types;
@@ -8,6 +9,7 @@ using dc.tool;
 using dc.ui;
 using HaxeProxy.Runtime;
 using IngameDebugConsole;
+using Midjourney.Entities.Mob.FlyMob;
 using ModCore.Utilities;
 
 namespace DebugMod.Commands.activateDebug
@@ -57,7 +59,7 @@ namespace DebugMod.Commands.activateDebug
 
             for (int i = 0; i < targetCount - 1; i++)
                 hero.inventory.add(InventItem.Class.fromItem(itemName.AsHaxeString(), null));
-            
+
         }
 
         [ConsoleMethod("nt", "英雄不会被视为目标")]
@@ -87,7 +89,15 @@ namespace DebugMod.Commands.activateDebug
             writer.Write($"下一关是否生成拟态商人：{Game.Class.ME.user.game.spawnMimicInNextLevel}");
             if (!Game.Class.ME.user.game.spawnMimicInNextLevel)
                 Game.Class.ME.user.game.spawnMimicInNextLevel = true;
-            
+
+        }
+
+
+        [ConsoleMethod("create-mob", "创建：(createmob 怪物id)")]
+        public static void CreateMob(TextWriter writer, string id)
+        {
+            Hero hero = Game.Class.ME.hero;
+            dc.en.Mob.Class.create(id.ToHaxeString(), hero._level, hero.cx, hero.cy, 100, Ref<int>.In(100));
         }
     }
 }
