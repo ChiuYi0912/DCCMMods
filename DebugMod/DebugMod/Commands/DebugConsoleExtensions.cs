@@ -86,6 +86,8 @@ namespace DebugMod.Commands.activateDebug
                 return;
             }
             ValidationHelper.NotNull(hero, nameof(hero));
+
+            hero._level.fx.DebugAllTiles(hero._level.lDisp);
         }
     }
 }
