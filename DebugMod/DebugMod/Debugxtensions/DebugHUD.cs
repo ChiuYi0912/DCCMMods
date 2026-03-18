@@ -21,7 +21,7 @@ using File = System.IO.File;
 using CoreLibrary.Core.Utilities;
 using CoreLibrary.Core.Extensions;
 
-namespace DebugMod
+namespace DebugMod.Debugxtensions
 {
     public class DebugHUD : IEventReceiver
     {
@@ -86,7 +86,6 @@ namespace DebugMod
 
         public DebugHUD()
         {
-            EventSystem.AddReceiver(this);
             Hook_Game.init += Hook_Game_init;
             Hook_DebugHud.postUpdate += Hook_DebugHud_postUpdate;
             Hook__DebugHud.__constructor__ += Hook_DebugHud_initialize;

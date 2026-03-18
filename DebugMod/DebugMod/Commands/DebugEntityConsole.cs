@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Utilities;
+using CoreLibrary.Core.Enums;
 using dc;
 using dc.en;
 using dc.hl.types;
@@ -10,10 +13,11 @@ using IngameDebugConsole;
 using ModCore.Modules;
 using ModCore.Utilities;
 using Serilog;
+using dc.spine.attachments;
 
 namespace DebugMod.Commands.activateDebug
 {
-    public static class DebugConsoleExtensions
+    public static class DebugEntityConsole
     {
         private static List<Entity>? Entities;
         [ConsoleMethod("remove-all-mobs", "移除所有怪物")]
@@ -76,18 +80,36 @@ namespace DebugMod.Commands.activateDebug
             level.map.AddMobsFromArray(obj, writer);
         }
 
-        [ConsoleMethod("test", "修改英雄着色器颜色")]
-        public static void ChangeHeroShaderColor(TextWriter writer)
+        [ConsoleMethod("mimic", "下一关是否生成拟态商人")]
+        public static void loreRoommim(TextWriter writer)
         {
-            Hero hero = Game.Instance.HeroInstance!;
-            if (hero == null)
+            if (dc.pr.Game.Class.ME == null)
             {
-                writer.WriteLine("无法找到英雄实例");
+                writer.Write("请保证细胞人实例存在！");
                 return;
             }
-            ValidationHelper.NotNull(hero, nameof(hero));
+            writer.Write($"下一关是否生成拟态商人：{dc.pr.Game.Class.ME.user.game.spawnMimicInNextLevel}");
+            if (!dc.pr.Game.Class.ME.user.game.spawnMimicInNextLevel)
+                dc.pr.Game.Class.ME.user.game.spawnMimicInNextLevel = true;
 
-            hero._level.fx.DebugAllTiles(hero._level.lDisp);
         }
+
+        [ConsoleMethod("create-mob", "创建：(createmob 怪物id)")]
+        public static void CreateMob(TextWriter writer, string id)
+        {
+            Hero hero = dc.pr.Game.Class.ME.hero;
+            dc.en.Mob.Class.create(id.ToHaxeString(), hero._level, hero.cx, hero.cy, 100, Ref<int>.In(100));
+        }
+
+        [ConsoleMethod("tree", "实体四叉树,线条越多:所在区域实体越多(下个关卡开始生效)")]
+        public static void QuadTreeDrawing(TextWriter writer)
+        {
+            bool isdraw = DebugModMod.GetConfig.Value.IsQuadTreeDrawingEnabled;
+            if (isdraw)
+                isdraw = false;
+            isdraw = true;
+        }
+
+
     }
 }

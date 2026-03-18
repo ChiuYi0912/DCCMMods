@@ -6,7 +6,7 @@ using System.IO;
 
 namespace DebugMod.Commands.activateDebug
 {
-    public static class GotolevelCommands
+    public static class DebugLevelConsonle
     {
         [ConsoleMethod("show-lvls", "显示关卡编号")]
         public static void ShowAllLevels(TextWriter writer)

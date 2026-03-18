@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoreLibrary.Core.Enums;
 using CoreLibrary.Core.Utilities;
 using dc;
+using dc.en;
 using dc.h2d;
 using dc.hl.types;
 using dc.level;
 using dc.libs.heaps;
+using dc.pr;
 using dc.tool;
 using HaxeProxy.Runtime;
 using Serilog;
@@ -17,65 +20,58 @@ namespace CoreLibrary.Core.Extensions
 {
     public static class FxExtensions
     {
-        public static void DebugTile(this Fx fx, ArrayObj? tiles, double x, double y, double width, double height, int color, double duration = 0.1)
+        public static dc.h2d.Graphics DebugTileGroups(this Fx fx, LevelDisp disp, params TileGroupType[] groupTypes)
         {
-            var fxTile = Assets.Class.fxTile;
+            if (groupTypes == null || groupTypes.Length == 0)
+                return DebugTileGroup(fx, disp, TileGroupType.None);
 
-            FxTile? tile;
-            if (tiles != null && tiles.length > 0)
-            {
-                int index = Std.Class.random(tiles.length);
+            TileGroupType combined = TileGroupType.None;
+            foreach (var type in groupTypes)
+                combined |= type;
 
-                tile = tiles.getDyn(index) as FxTile;
-                if (tile == null)
-                    tile = fxTile._fxDebugSquare.getDyn(0) as FxTile;
-            }
-            else
-            {
-                tile = fxTile._fxDebugSquare.getDyn(0) as FxTile;
-            }
-
-            if (tile == null)
-                return;
-
-            var particle = fx.allocTop(tile, x, y, Ref<bool>.Null, null, Ref<bool>.Null);
-            if (particle == null)
-                return;
-
-            particle.scaleX = width / particle.t.width;
-            particle.scaleY = height / particle.t.height;
-
-            double r = ((color >> 16) & 0xFF) / 255.0;
-            double g = ((color >> 8) & 0xFF) / 255.0;
-            double b = (color & 0xFF) / 255.0;
-            particle.r = r;
-            particle.g = g;
-            particle.b = b;
-
-            particle.setFadeS(1.0, 0.0, duration);
-            particle.set_lifeS(duration);
+            return DebugTileGroup(fx, disp, combined);
         }
 
-
-
-        public static void DebugAllTiles(this Fx fx, LevelDisp disp, double duration = 10)
+        public static dc.h2d.Graphics DebugTileGroup(this Fx fx, LevelDisp disp, TileGroupType groupTypes = TileGroupType.None)
         {
-            var groups = new StaticGeometryGroup[]
-            {
-                disp.groupBackWalls,
-                disp.groupBackWallProps,
-                disp.groupBackWallProps2,
-                disp.groupBackProps,
-                disp.groupMainProps,
-                disp.groupGameplayProps,
-                disp.groupBgFilterProps,
-                disp.groupFrontWalls,
-                disp.groupFrontWallProps,
-            };
+            var groupsToDraw = new List<StaticGeometryGroup>();
+
+            if (groupTypes.HasFlag(TileGroupType.BackWalls))
+                groupsToDraw.Add(disp.groupBackWalls);
+
+            if (groupTypes.HasFlag(TileGroupType.BackWallProps))
+                groupsToDraw.Add(disp.groupBackWallProps);
+
+            if (groupTypes.HasFlag(TileGroupType.BackWallProps2))
+                groupsToDraw.Add(disp.groupBackWallProps2);
+
+            if (groupTypes.HasFlag(TileGroupType.BackProps))
+                groupsToDraw.Add(disp.groupBackProps);
+
+            if (groupTypes.HasFlag(TileGroupType.MainProps))
+                groupsToDraw.Add(disp.groupMainProps);
+
+            if (groupTypes.HasFlag(TileGroupType.GameplayProps))
+                groupsToDraw.Add(disp.groupGameplayProps);
+
+            if (groupTypes.HasFlag(TileGroupType.BgFilterProps))
+                groupsToDraw.Add(disp.groupBgFilterProps);
+
+            if (groupTypes.HasFlag(TileGroupType.FrontWalls))
+                groupsToDraw.Add(disp.groupFrontWalls);
+
+            if (groupTypes.HasFlag(TileGroupType.FrontWallProps))
+                groupsToDraw.Add(disp.groupFrontWallProps);
+
+            if (groupsToDraw.Count == 0)
+                return null!;
 
 
 
-            foreach (var group in groups)
+            var g = new dc.h2d.Graphics(null);
+            g.lineStyle(Ref<double>.In(1), Ref<int>.In(CreateColor.ColorFromHex("#0dff00")), Ref<double>.In(1));
+            Game.Class.ME.curLevel.scroller.addChildAt(g, Const.Class.DP_DEBUG);
+            foreach (var group in groupsToDraw)
             {
                 var iterator = group.getTileGroups();
                 while (iterator.hasNext.Invoke())
@@ -109,10 +105,350 @@ namespace CoreLibrary.Core.Extensions
                         float minY = Math.Min(Math.Min(y0, y1), Math.Min(y2, y3));
                         float maxX = Math.Max(Math.Max(x0, x1), Math.Max(x2, x3));
                         float maxY = Math.Max(Math.Max(y0, y1), Math.Max(y2, y3));
-                        var g = new dc.h2d.Graphics(fx.root);
-                        g.lineStyle(Ref<double>.In(1), Ref<int>.In(CreateColor.ColorFromHex("#ffffff")), Ref<double>.In(1));
-                        g.drawRect(minX, minY, maxX - minX, maxY - minY);
 
+                        g.drawRect(minX, minY, maxX - minX, maxY - minY);
+                    }
+                }
+            }
+            return g;
+        }
+
+
+
+        public static void DebugDrawCollisionBits(this Fx fx)
+        {
+            Hero hero = Game.Class.ME.hero;
+            var debug = hero._level.lDisp.debug;
+            var lmap = hero._level.map;
+            if (debug == null || lmap == null) return;
+
+            debug.clear();
+
+            int wid = lmap.wid;
+            int hei = lmap.hei;
+            ArrayBytes_Int collisions = lmap.collisions;
+
+            var flags = new (int bit, string color, string name)[]
+            {
+                (1,    "#ff00f7", "Solid"),
+                (2,    "#00ff2a", "Bit2"),
+                (8,    "#2b00ff", "OneWay?"),
+                (16,    "#00d5ff", "Bit4"),
+                (32,    "#ffffff", "Bit5"),
+                (64,    "#e1ff00", "Bit6"),
+                (128,    "#ff8000", "Bit7"),
+                (256,    "#ff6ead", "Bit8"),
+                (512,    "#51004f", "Bit9"),
+            };
+
+            foreach (var f in flags)
+            {
+                bool[,] visited = new bool[hei, wid];
+
+                for (int y = 0; y < hei; y++)
+                {
+                    for (int x = 0; x < wid; x++)
+                    {
+                        int index = y * wid + x;
+                        int value = collisions.getDyn(index);
+                        bool hasFlag = (value & f.bit) != 0;
+
+                        if (hasFlag && !visited[y, x])
+                        {
+                            var regionCells = new List<(int x, int y)>();
+                            var queue = new Queue<(int x, int y)>();
+                            queue.Enqueue((x, y));
+                            visited[y, x] = true;
+
+                            while (queue.Count > 0)
+                            {
+                                var (cx, cy) = queue.Dequeue();
+                                regionCells.Add((cx, cy));
+
+                                int[] dx = { -1, 1, 0, 0 };
+                                int[] dy = { 0, 0, -1, 1 };
+                                for (int d = 0; d < 4; d++)
+                                {
+                                    int nx = cx + dx[d];
+                                    int ny = cy + dy[d];
+                                    if (nx >= 0 && nx < wid && ny >= 0 && ny < hei && !visited[ny, nx])
+                                    {
+                                        int nIndex = ny * wid + nx;
+                                        int nValue = collisions.getDyn(nIndex);
+                                        if ((nValue & f.bit) != 0)
+                                        {
+                                            visited[ny, nx] = true;
+                                            queue.Enqueue((nx, ny));
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            List<((int x1, int y1) topLeft, (int x2, int y2) bottomRight)> rectangles = new();
+
+                            var rows = regionCells.GroupBy(cell => cell.y)
+                                                  .OrderBy(g => g.Key)
+                                                  .ToDictionary(g => g.Key, g => g.Select(c => c.x).OrderBy(x => x).ToList());
+
+                            int minY = rows.Keys.Min();
+                            int maxY = rows.Keys.Max();
+
+                            var activeRects = new List<(int x1, int x2, int yStart)>();
+
+                            for (int ry = minY; ry <= maxY; ry++)
+                            {
+                                if (!rows.TryGetValue(ry, out var xList))
+                                {
+                                    foreach (var rect in activeRects)
+                                    {
+                                        rectangles.Add(((rect.x1, rect.yStart), (rect.x2, ry - 1)));
+                                    }
+                                    activeRects.Clear();
+                                    continue;
+                                }
+
+                                var runs = new List<(int x1, int x2)>();
+                                int start = xList[0];
+                                int prev = start;
+                                for (int i = 1; i < xList.Count; i++)
+                                {
+                                    if (xList[i] == prev + 1)
+                                    {
+                                        prev = xList[i];
+                                    }
+                                    else
+                                    {
+                                        runs.Add((start, prev));
+                                        start = xList[i];
+                                        prev = start;
+                                    }
+                                }
+                                runs.Add((start, prev));
+
+
+                                var newActiveRects = new List<(int x1, int x2, int yStart)>();
+                                foreach (var rect in activeRects)
+                                {
+                                    var matchedRun = runs.FirstOrDefault(r => r.x1 == rect.x1 && r.x2 == rect.x2);
+                                    if (matchedRun != default)
+                                    {
+                                        newActiveRects.Add(rect);
+                                        runs.Remove(matchedRun);
+                                    }
+                                    else
+                                    {
+                                        rectangles.Add(((rect.x1, rect.yStart), (rect.x2, ry - 1)));
+                                    }
+                                }
+
+                                foreach (var run in runs)
+                                {
+                                    newActiveRects.Add((run.x1, run.x2, ry));
+                                }
+
+                                activeRects = newActiveRects;
+                            }
+
+                            foreach (var rect in activeRects)
+                            {
+                                rectangles.Add(((rect.x1, rect.yStart), (rect.x2, maxY)));
+                            }
+
+                            foreach (var rect in rectangles)
+                            {
+                                double px1 = rect.topLeft.x1 * 24.0;
+                                double py1 = rect.topLeft.y1 * 24.0;
+                                double px2 = (rect.bottomRight.x2 + 1) * 24.0;
+                                double py2 = (rect.bottomRight.y2 + 1) * 24.0;
+                                double w = px2 - px1;
+                                double h = py2 - py1;
+                                double alpha = 1;
+
+                                debug.lineStyle(Ref<double>.In(1),
+                                                Ref<int>.In(CreateColor.ColorFromHex(f.color)),
+                                                Ref<double>.In(alpha));
+                                debug.drawRect(px1, py1, w, h);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 绘制碰撞标志位的连通区域边框（调试用）。
+        /// </summary>
+        /// <remarks>
+        /// 此方法执行大量计算，会显著影响性能，仅在 DEBUG 模式下有效。
+        /// 建议通过 range 参数限制绘制范围。
+        /// </remarks>
+        public static void DebugDrawUpdateCollisionBits(this Fx fx, int range = 30)
+        {
+            Hero hero = Game.Class.ME.hero;
+            if (hero == null) return;
+
+            var debug = hero._level.lDisp.debug;
+            var lmap = hero._level.map;
+            if (debug == null || lmap == null) return;
+
+            debug.clear();
+
+            int wid = lmap.wid;
+            int hei = lmap.hei;
+            ArrayBytes_Int collisions = lmap.collisions;
+
+            int heroCx = hero.cx;
+            int heroCy = hero.cy;
+
+            int mincX = Math.Max(0, heroCx - range);
+            int maxcX = Math.Min(wid, heroCx + range + 1);
+            int mincY = Math.Max(0, heroCy - range);
+            int maxcY = Math.Min(hei, heroCy + range + 1);
+
+            var flags = new (int bit, string color, string name)[]
+            {
+                (1,    "#ff00f7", "Solid"),
+                (2,    "#00ff2a", "Bit2"),
+                (8,    "#2b00ff", "OneWay?"),
+                (16,   "#00d5ff", "Bit4"),
+                (32,   "#ffffff", "Bit5"),
+                (64,   "#e1ff00", "Bit6"),
+                (128,  "#ff8000", "Bit7"),
+                (256,  "#ff6ead", "Bit8"),
+                (512,  "#51004f", "Bit9"),
+            };
+
+            foreach (var f in flags)
+            {
+                bool[,] visited = new bool[hei, wid];
+
+                for (int y = mincY; y < maxcY; y++)
+                {
+                    for (int x = mincX; x < maxcX; x++)
+                    {
+                        int index = y * wid + x;
+                        int value = collisions.getDyn(index);
+                        bool hasFlag = (value & f.bit) != 0;
+
+                        if (hasFlag && !visited[y, x])
+                        {
+                            var regionCells = new List<(int x, int y)>();
+                            var queue = new Queue<(int x, int y)>();
+                            queue.Enqueue((x, y));
+                            visited[y, x] = true;
+
+                            while (queue.Count > 0)
+                            {
+                                var (cx, cy) = queue.Dequeue();
+                                regionCells.Add((cx, cy));
+
+                                int[] dx = { -1, 1, 0, 0 };
+                                int[] dy = { 0, 0, -1, 1 };
+                                for (int d = 0; d < 4; d++)
+                                {
+                                    int nx = cx + dx[d];
+                                    int ny = cy + dy[d];
+                                    if (nx >= mincX && nx < maxcX && ny >= mincY && ny < maxcY && !visited[ny, nx])
+                                    {
+                                        int nIndex = ny * wid + nx;
+                                        int nValue = collisions.getDyn(nIndex);
+                                        if ((nValue & f.bit) != 0)
+                                        {
+                                            visited[ny, nx] = true;
+                                            queue.Enqueue((nx, ny));
+                                        }
+                                    }
+                                }
+                            }
+
+                            List<((int x1, int y1) topLeft, (int x2, int y2) bottomRight)> rectangles = new();
+
+                            var rows = regionCells.GroupBy(cell => cell.y)
+                                                  .OrderBy(g => g.Key)
+                                                  .ToDictionary(g => g.Key, g => g.Select(c => c.x).OrderBy(x => x).ToList());
+
+                            int minY = rows.Keys.Min();
+                            int maxY = rows.Keys.Max();
+
+                            var activeRects = new List<(int x1, int x2, int yStart)>();
+
+                            for (int ry = minY; ry <= maxY; ry++)
+                            {
+                                if (!rows.TryGetValue(ry, out var xList))
+                                {
+                                    foreach (var rect in activeRects)
+                                    {
+                                        rectangles.Add(((rect.x1, rect.yStart), (rect.x2, ry - 1)));
+                                    }
+                                    activeRects.Clear();
+                                    continue;
+                                }
+
+                                var runs = new List<(int x1, int x2)>();
+                                int start = xList[0];
+                                int prev = start;
+                                for (int i = 1; i < xList.Count; i++)
+                                {
+                                    if (xList[i] == prev + 1)
+                                    {
+                                        prev = xList[i];
+                                    }
+                                    else
+                                    {
+                                        runs.Add((start, prev));
+                                        start = xList[i];
+                                        prev = start;
+                                    }
+                                }
+                                runs.Add((start, prev));
+
+
+                                var newActiveRects = new List<(int x1, int x2, int yStart)>();
+                                foreach (var rect in activeRects)
+                                {
+                                    var matchedRun = runs.FirstOrDefault(r => r.x1 == rect.x1 && r.x2 == rect.x2);
+                                    if (matchedRun != default)
+                                    {
+                                        newActiveRects.Add(rect);
+                                        runs.Remove(matchedRun);
+                                    }
+                                    else
+                                    {
+                                        rectangles.Add(((rect.x1, rect.yStart), (rect.x2, ry - 1)));
+                                    }
+                                }
+
+                                foreach (var run in runs)
+                                {
+                                    newActiveRects.Add((run.x1, run.x2, ry));
+                                }
+
+                                activeRects = newActiveRects;
+                            }
+
+                            foreach (var rect in activeRects)
+                            {
+                                rectangles.Add(((rect.x1, rect.yStart), (rect.x2, maxY)));
+                            }
+
+                            foreach (var rect in rectangles)
+                            {
+                                double px1 = rect.topLeft.x1 * 24.0;
+                                double py1 = rect.topLeft.y1 * 24.0;
+                                double px2 = (rect.bottomRight.x2 + 1) * 24.0;
+                                double py2 = (rect.bottomRight.y2 + 1) * 24.0;
+                                double w = px2 - px1;
+                                double h = py2 - py1;
+                                double alpha = 1;
+
+                                debug.lineStyle(Ref<double>.In(1),
+                                                Ref<int>.In(CreateColor.ColorFromHex(f.color)),
+                                                Ref<double>.In(alpha));
+                                debug.drawRect(px1, py1, w, h);
+                            }
+                        }
                     }
                 }
             }

@@ -48,7 +48,7 @@ namespace DebugMod.Commands
         public static void AddhideCineBars(TextWriter writer) => dc.ui.Console.Class.ME.flags.set("hideCineBars".ToHaxeString(), null);
 
 
-        [ConsoleMethod("addall-flags", "添加所有flags")]
+        [ConsoleMethod("add-all-flags", "添加所有flags")]
         public static void Addallfalgs(TextWriter writer)
         {
             dc.ui.Console.Class.ME.flags.set("area".ToHaxeString(), null);
@@ -62,7 +62,7 @@ namespace DebugMod.Commands
             dc.ui.Console.Class.ME.flags.set("active".ToHaxeString(), null);
         }
 
-        [ConsoleMethod("removeall-flags", "移除所有flags")]
+        [ConsoleMethod("remove-all-flags", "移除所有flags")]
         public static void removeallfalgs(TextWriter writer)
         {
             dc.ui.Console.Class.ME.flags.remove("area".ToHaxeString());

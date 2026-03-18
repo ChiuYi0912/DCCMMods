@@ -11,5 +11,6 @@ namespace DebugMod.Configuration
         public string DebugUILogPATH = FolderInfo.Logs.FullPath;
         public string LogTextColor = "#61D6D6";
         public double LogTextSize = 0.8;
+        public bool IsQuadTreeDrawingEnabled = true;
     }
 }

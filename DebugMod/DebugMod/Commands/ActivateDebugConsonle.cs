@@ -1,4 +1,5 @@
 using CoreLibrary.Core.Extensions;
+using CoreLibrary.Core.Utilities;
 using dc.en;
 using dc.h2d;
 using dc.hl.types;
@@ -11,6 +12,7 @@ using HaxeProxy.Runtime;
 using IngameDebugConsole;
 using Midjourney.Entities.Mob.FlyMob;
 using ModCore.Utilities;
+using Serilog;
 
 namespace DebugMod.Commands.activateDebug
 {
@@ -78,26 +80,13 @@ namespace DebugMod.Commands.activateDebug
         }
 
 
-        [ConsoleMethod("mimic", "下一关是否生成拟态商人")]
-        public static void loreRoommim(TextWriter writer)
+
+
+
+        [ConsoleMethod("test", "作者测试用的")]
+        public static void ChangeHeroShaderColor(TextWriter writer)
         {
-            if (Game.Class.ME == null)
-            {
-                writer.Write("请保证细胞人实例存在！");
-                return;
-            }
-            writer.Write($"下一关是否生成拟态商人：{Game.Class.ME.user.game.spawnMimicInNextLevel}");
-            if (!Game.Class.ME.user.game.spawnMimicInNextLevel)
-                Game.Class.ME.user.game.spawnMimicInNextLevel = true;
-
-        }
-
-
-        [ConsoleMethod("create-mob", "创建：(createmob 怪物id)")]
-        public static void CreateMob(TextWriter writer, string id)
-        {
-            Hero hero = Game.Class.ME.hero;
-            dc.en.Mob.Class.create(id.ToHaxeString(), hero._level, hero.cx, hero.cy, 100, Ref<int>.In(100));
+           
         }
     }
 }

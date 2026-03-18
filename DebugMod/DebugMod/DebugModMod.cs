@@ -4,6 +4,7 @@ using dc.en;
 using dc.h2d;
 using dc.haxe.ds;
 using dc.hxd;
+using DebugMod.Debugxtensions;
 using Hashlink.Proxy.Clousre;
 using Hashlink.Proxy.Objects;
 using Hashlink.Reflection.Types;
@@ -26,6 +27,9 @@ namespace DebugMod
         {
             base.Initialize();
             _ = new DebugHUD();
+            _ = new DebugGraphic();
+
+            Info.Version = "1.2";
         }
 
         private void Hook_Console_ctor(HashlinkClosure orig, HashlinkObject self)
@@ -49,6 +53,12 @@ namespace DebugMod
 
             hh.CreateHook("ui.$Console", "__constructor__", Hook_Console_ctor).Enable();
         }
+
+        void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb)
+        {
+
+        }
+
 
 
         private void Hook__Console__constructor__(dc.h2d.Hook__Console.orig___constructor__ orig, dc.h2d.Console nextLevelVote, Font font, dc.h2d.Object parent)
@@ -105,10 +115,6 @@ namespace DebugMod
 
         }
 
-        void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb)
-        {
-
-        }
 
 
     }
