@@ -101,13 +101,15 @@ namespace DebugMod.Commands.activateDebug
             dc.en.Mob.Class.create(id.ToHaxeString(), hero._level, hero.cx, hero.cy, 100, Ref<int>.In(100));
         }
 
-        [ConsoleMethod("tree", "实体四叉树,线条越多:所在区域实体越多(下个关卡开始生效)")]
+        [ConsoleMethod("show-tree", "实体四叉树,线条越多:所在区域实体越多(下个关卡开始生效)")]
         public static void QuadTreeDrawing(TextWriter writer)
         {
-            bool isdraw = DebugModMod.GetConfig.Value.IsQuadTreeDrawingEnabled;
-            if (isdraw)
-                isdraw = false;
-            isdraw = true;
+
+            if (DebugModMod.GetConfig.Value.IsQuadTreeDrawingEnabled)
+                DebugModMod.GetConfig.Value.IsQuadTreeDrawingEnabled = false;
+            else
+                DebugModMod.GetConfig.Value.IsQuadTreeDrawingEnabled = true;
+            writer.Write($"tree:{DebugModMod.GetConfig.Value.IsQuadTreeDrawingEnabled}");
         }
 
 

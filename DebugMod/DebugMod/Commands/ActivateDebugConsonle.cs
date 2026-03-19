@@ -1,5 +1,6 @@
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Utilities;
+using dc;
 using dc.en;
 using dc.h2d;
 using dc.hl.types;
@@ -86,7 +87,7 @@ namespace DebugMod.Commands.activateDebug
         [ConsoleMethod("test", "作者测试用的")]
         public static void ChangeHeroShaderColor(TextWriter writer)
         {
-           
+            Hero hero = Game.Class.ME.hero;
         }
     }
 }

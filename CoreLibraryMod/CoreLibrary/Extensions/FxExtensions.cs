@@ -284,7 +284,7 @@ namespace CoreLibrary.Core.Extensions
         /// 此方法执行大量计算，会显著影响性能，仅在 DEBUG 模式下有效。
         /// 建议通过 range 参数限制绘制范围。
         /// </remarks>
-        public static void DebugDrawUpdateCollisionBits(this Fx fx, int range = 30)
+        public static void DebugDrawUpdateCollisionBits(this Fx fx, int range = 10)
         {
             Hero hero = Game.Class.ME.hero;
             if (hero == null) return;

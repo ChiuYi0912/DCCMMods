@@ -14,7 +14,7 @@ using Serilog;
 
 namespace DebugMod.Debugxtensions
 {
-    public class DebugGraphic:
+    public class DebugGraphic :
     IEventReceiver
     {
         public DebugGraphic()
@@ -29,6 +29,7 @@ namespace DebugMod.Debugxtensions
         {
             orig(arg1, p, map, parallaxInfo);
             arg1.debug = new dc.h2d.Graphics(null);
+            p.scroller.addChildAt(arg1.debug, Const.Class.DP_DEBUG);
         }
 
         private void Hook_QuadTree_initBoundaries(Hook_QuadTree.orig_initBoundaries orig, QuadTree self, QtRectangle boundary, int capacity, int minimumSquareSize, Graphics _debugGraphic)
@@ -37,15 +38,16 @@ namespace DebugMod.Debugxtensions
 
             self.colorQuad = GenerateRandomColor();
 
-            // if (DebugModMod.GetConfig.Value.IsQuadTreeDrawingEnabled)
-            // {
-            self.debugGraphic = _debugGraphic;
-            double thickness = 2.0;
-            int color = self.colorQuad;
-            self.debugGraphic.lineStyle(Ref<double>.In(thickness), Ref<int>.In(color), Ref<double>.Null);
-            self.debugGraphic.drawRect(boundary.x * 24, boundary.y * 24, boundary.w * 24, boundary.h * 24);
-            self.debugGraphic.lineStyle(Ref<double>.Null, Ref<int>.Null, Ref<double>.Null);
-            //}
+            if (DebugModMod.GetConfig.Value.IsQuadTreeDrawingEnabled)
+            {
+                self.debugGraphic = _debugGraphic;
+                double thickness = 2.0;
+                int color = self.colorQuad;
+                self.debugGraphic.lineStyle(Ref<double>.In(thickness), Ref<int>.In(color), Ref<double>.Null);
+                self.debugGraphic.drawRect(boundary.x * 24, boundary.y * 24, boundary.w * 24, boundary.h * 24);
+                self.debugGraphic.lineStyle(Ref<double>.Null, Ref<int>.Null, Ref<double>.Null);
+
+            }
 
             self.capacity = capacity;
             self.minimumSquareSize = minimumSquareSize;
@@ -54,10 +56,6 @@ namespace DebugMod.Debugxtensions
             self.points = (ArrayObj)ArrayUtils.CreateDyn().array;
 
             self.divided = false;
-
-            if (Game.Class.ME.curLevel != null)
-                Game.Class.ME.curLevel.scroller.addChildAt(_debugGraphic, Const.Class.DP_DEBUG);
-
         }
 
         private int GenerateRandomColor()
@@ -95,7 +93,5 @@ namespace DebugMod.Debugxtensions
 
             return (ir << 16) | (ig << 8) | ib;
         }
-
-
     }
 }
