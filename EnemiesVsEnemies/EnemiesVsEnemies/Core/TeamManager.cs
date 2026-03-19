@@ -16,7 +16,7 @@ namespace EnemiesVsEnemies.Core
 
         public void Initialize(ModConfig config)
         {
-            GetModConfig =config;
+            GetModConfig = config;
 
             teams.Clear();
             originalTeamPointers.Clear();
@@ -85,6 +85,7 @@ namespace EnemiesVsEnemies.Core
             GetModConfig.Teams.Remove(teamId);
         }
 
+        //来自(HkLab)
         private void CreateTeam(TeamConfig teamConfig)
         {
             var team = new Team();
@@ -98,6 +99,7 @@ namespace EnemiesVsEnemies.Core
             teams[teamConfig.Id] = team;
         }
 
+        //(仇恨配置)
         private void SetupTeamRelationships()
         {
             foreach (var teamConfig in GetModConfig.Teams.Values)

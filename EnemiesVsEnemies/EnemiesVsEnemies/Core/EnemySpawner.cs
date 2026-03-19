@@ -28,7 +28,7 @@ namespace EnemiesVsEnemies.Core
             GetModconfig = config;
         }
 
-
+        //(配置创建Mob)
         public void SpawnDefaultEnemiesForTeam(string teamId)
         {
             if (!GetModconfig.Teams.TryGetValue(teamId, out var teamConfig))
@@ -50,6 +50,7 @@ namespace EnemiesVsEnemies.Core
             }
         }
 
+        //(创建Mob)
         public void SpawnEnemy(string teamId, EnemySpawnConfig spawnConfig)
         {
             var hero = Game.Instance.HeroInstance;
@@ -101,6 +102,7 @@ namespace EnemiesVsEnemies.Core
             SpawnEnemy(teamId, spawnConfig);
         }
 
+        //(创建金块)
         public void SpawnGoldNugget(int value = 10)
         {
             var hero = Game.Instance.HeroInstance;
@@ -113,6 +115,7 @@ namespace EnemiesVsEnemies.Core
             goldNugget.init();
         }
 
+        //(创建引力场)
         public dc.en.inter.ForceField? SpawnForceField(bool open = false)
         {
             var hero = Game.Instance.HeroInstance;
