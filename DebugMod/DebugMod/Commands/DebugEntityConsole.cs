@@ -73,10 +73,7 @@ namespace DebugMod.Commands.activateDebug
                 writer.WriteLine("列表不存在实体");
                 return;
             }
-            ValidationHelper.NoNullElements(Entities!, nameof(Entities));
-
             ArrayObj obj = Entities!.ToArrayObj();
-
             level.map.AddMobsFromArray(obj, writer);
         }
 
@@ -98,6 +95,11 @@ namespace DebugMod.Commands.activateDebug
         public static void CreateMob(TextWriter writer, string id)
         {
             Hero hero = dc.pr.Game.Class.ME.hero;
+            if (hero == null)
+            {
+                writer.Write("保证英雄存在！");
+                return;
+            }
             dc.en.Mob.Class.create(id.ToHaxeString(), hero._level, hero.cx, hero.cy, 100, Ref<int>.In(100));
         }
 

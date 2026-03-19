@@ -1,4 +1,7 @@
-﻿using dc;
+﻿using CoreLibrary.Core.Extensions;
+using CoreLibrary.Core.Utilities;
+using CoreLibrary.Extensions;
+using dc;
 using dc.cine;
 using dc.en;
 using dc.h2d;
@@ -20,14 +23,16 @@ namespace DebugMod
     public class DebugModMod(ModInfo info) : ModBase(info),
         IOnBeforeGameInit,
         IOnHeroUpdate,
-        IOnAfterLoadingCDB
+        IOnAfterLoadingCDB,
+        IOnGameExit
     {
         public static ModCore.Storage.Config<DebugMod.Configuration.CoreCfig> GetConfig = new("DebugMODCfig");
+        public DebugGraphic GetGraphic = null!;
         public override void Initialize()
         {
             base.Initialize();
             _ = new DebugHUD();
-            _ = new DebugGraphic();
+            GetGraphic = new DebugGraphic();
 
             Info.Version = "1.3.1";
         }
@@ -59,6 +64,11 @@ namespace DebugMod
 
         }
 
+        void IOnGameExit.OnGameExit()
+        {
+            GetConfig.Value.IsQuadTreeDrawingEnabled = false;
+            GetConfig.Save();
+        }
 
 
         private void Hook__Console__constructor__(dc.h2d.Hook__Console.orig___constructor__ orig, dc.h2d.Console nextLevelVote, Font font, dc.h2d.Object parent)
@@ -84,7 +94,7 @@ namespace DebugMod
 
 
 
-
+        public dc.h2d.Graphics debugentity = null!;
         void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
             if (Key.Class.isPressed(37))
@@ -93,8 +103,6 @@ namespace DebugMod
             }
             if (Key.Class.isPressed(38))
             {
-                Hero hero = ModCore.Modules.Game.Instance.HeroInstance!;
-                hero._level.fx.customMask(12231073, 0.35, 0.04, 0.35, 2, null);
             }
 
             if (Key.Class.isPressed(39))

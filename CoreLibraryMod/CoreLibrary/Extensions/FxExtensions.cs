@@ -32,47 +32,60 @@ namespace CoreLibrary.Core.Extensions
             return DebugTileGroup(fx, disp, combined);
         }
 
+        private static readonly Dictionary<TileGroupType, string> DebugTileGroupColorMap = new()
+        {
+                { TileGroupType.BackWalls, "#FF0000" },
+                { TileGroupType.BackWallProps, "#00FF00" },
+                { TileGroupType.BackWallProps2, "#0000FF" },
+                { TileGroupType.BackProps, "#FFFF00" },
+                { TileGroupType.MainProps, "#FF00FF" },
+                { TileGroupType.GameplayProps, "#ff007b" },
+                { TileGroupType.BgFilterProps, "#FFA500" },
+                { TileGroupType.FrontWalls, "#ffffff" },
+                { TileGroupType.FrontWallProps, "#00ffff" },
+        };
         public static dc.h2d.Graphics DebugTileGroup(this Fx fx, LevelDisp disp, TileGroupType groupTypes = TileGroupType.None)
         {
-            var groupsToDraw = new List<StaticGeometryGroup>();
+            var groupsToDraw = new List<(StaticGeometryGroup group, TileGroupType type)>();
 
             if (groupTypes.HasFlag(TileGroupType.BackWalls))
-                groupsToDraw.Add(disp.groupBackWalls);
+                groupsToDraw.Add((disp.groupBackWalls, TileGroupType.BackWalls));
 
             if (groupTypes.HasFlag(TileGroupType.BackWallProps))
-                groupsToDraw.Add(disp.groupBackWallProps);
+                groupsToDraw.Add((disp.groupBackWallProps, TileGroupType.BackWallProps));
 
             if (groupTypes.HasFlag(TileGroupType.BackWallProps2))
-                groupsToDraw.Add(disp.groupBackWallProps2);
+                groupsToDraw.Add((disp.groupBackWallProps2, TileGroupType.BackWallProps2));
 
             if (groupTypes.HasFlag(TileGroupType.BackProps))
-                groupsToDraw.Add(disp.groupBackProps);
+                groupsToDraw.Add((disp.groupBackProps, TileGroupType.BackProps));
 
             if (groupTypes.HasFlag(TileGroupType.MainProps))
-                groupsToDraw.Add(disp.groupMainProps);
+                groupsToDraw.Add((disp.groupMainProps, TileGroupType.MainProps));
 
             if (groupTypes.HasFlag(TileGroupType.GameplayProps))
-                groupsToDraw.Add(disp.groupGameplayProps);
+                groupsToDraw.Add((disp.groupGameplayProps, TileGroupType.GameplayProps));
 
             if (groupTypes.HasFlag(TileGroupType.BgFilterProps))
-                groupsToDraw.Add(disp.groupBgFilterProps);
+                groupsToDraw.Add((disp.groupBgFilterProps, TileGroupType.BgFilterProps));
 
             if (groupTypes.HasFlag(TileGroupType.FrontWalls))
-                groupsToDraw.Add(disp.groupFrontWalls);
+                groupsToDraw.Add((disp.groupFrontWalls, TileGroupType.FrontWalls));
 
             if (groupTypes.HasFlag(TileGroupType.FrontWallProps))
-                groupsToDraw.Add(disp.groupFrontWallProps);
+                groupsToDraw.Add((disp.groupFrontWallProps, TileGroupType.FrontWallProps));
 
             if (groupsToDraw.Count == 0)
                 return null!;
 
-
-
             var g = new dc.h2d.Graphics(null);
-            g.lineStyle(Ref<double>.In(1), Ref<int>.In(CreateColor.ColorFromHex("#0dff00")), Ref<double>.In(1));
             Game.Class.ME.curLevel.scroller.addChildAt(g, Const.Class.DP_DEBUG);
-            foreach (var group in groupsToDraw)
+            foreach (var (group, groupType) in groupsToDraw)
             {
+                if (!DebugTileGroupColorMap.TryGetValue(groupType, out var color))
+                    color = "#0dff00";
+
+                g.lineStyle(Ref<double>.In(1), Ref<int>.In(CreateColor.ColorFromHex(color)), Ref<double>.In(1));
                 var iterator = group.getTileGroups();
                 while (iterator.hasNext.Invoke())
                 {
@@ -115,6 +128,18 @@ namespace CoreLibrary.Core.Extensions
 
 
 
+        private static readonly (int bit, string color, string name)[] Collisionflags = new[]
+        {
+            (1,    "#ff00f7", "Solid"),
+            (2,    "#00ff2a", "Bit2"),
+            (8,    "#2b00ff", "OneWay?"),
+            (16,    "#00d5ff", "Bit4"),
+            (32,    "#ffffff", "Bit5"),
+            (64,    "#e1ff00", "Bit6"),
+            (128,    "#ff8000", "Bit7"),
+            (256,    "#ff6ead", "Bit8"),
+            (512,    "#51004f", "Bit9"),
+        };
         public static void DebugDrawCollisionBits(this Fx fx)
         {
             Hero hero = Game.Class.ME.hero;
@@ -128,20 +153,8 @@ namespace CoreLibrary.Core.Extensions
             int hei = lmap.hei;
             ArrayBytes_Int collisions = lmap.collisions;
 
-            var flags = new (int bit, string color, string name)[]
-            {
-                (1,    "#ff00f7", "Solid"),
-                (2,    "#00ff2a", "Bit2"),
-                (8,    "#2b00ff", "OneWay?"),
-                (16,    "#00d5ff", "Bit4"),
-                (32,    "#ffffff", "Bit5"),
-                (64,    "#e1ff00", "Bit6"),
-                (128,    "#ff8000", "Bit7"),
-                (256,    "#ff6ead", "Bit8"),
-                (512,    "#51004f", "Bit9"),
-            };
 
-            foreach (var f in flags)
+            foreach (var f in Collisionflags)
             {
                 bool[,] visited = new bool[hei, wid];
 
@@ -307,20 +320,8 @@ namespace CoreLibrary.Core.Extensions
             int mincY = Math.Max(0, heroCy - range);
             int maxcY = Math.Min(hei, heroCy + range + 1);
 
-            var flags = new (int bit, string color, string name)[]
-            {
-                (1,    "#ff00f7", "Solid"),
-                (2,    "#00ff2a", "Bit2"),
-                (8,    "#2b00ff", "OneWay?"),
-                (16,   "#00d5ff", "Bit4"),
-                (32,   "#ffffff", "Bit5"),
-                (64,   "#e1ff00", "Bit6"),
-                (128,  "#ff8000", "Bit7"),
-                (256,  "#ff6ead", "Bit8"),
-                (512,  "#51004f", "Bit9"),
-            };
 
-            foreach (var f in flags)
+            foreach (var f in Collisionflags)
             {
                 bool[,] visited = new bool[hei, wid];
 

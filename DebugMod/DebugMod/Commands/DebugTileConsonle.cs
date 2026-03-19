@@ -36,7 +36,7 @@ namespace DebugMod.Commands
                 writer.WriteLine("无法找到英雄实例");
                 return;
             }
-            ValidationHelper.NotNull(hero, nameof(hero));
+            
 
             var typeParts = type.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             var validTypes = new List<TileGroupType>();
@@ -57,7 +57,8 @@ namespace DebugMod.Commands
                 return;
             }
 
-            tilegt = hero._level.fx.DebugTileGroups(hero._level.lDisp, validTypes.ToArray());
+            ValidationHelper.NotNull(hero, nameof(hero));
+            tilegt = hero._level.fx.DebugTileGroups(hero._level.GetLevelDisplaySafe(), validTypes.ToArray());
         }
 
         private static TileGroupType ParseTileGroupType(string type)
@@ -117,7 +118,6 @@ namespace DebugMod.Commands
                 writer.WriteLine("无法找到英雄实例");
                 return;
             }
-            ValidationHelper.NotNull(hero, "hero");
 
             hero._level.fx.DebugDrawCollisionBits();
         }

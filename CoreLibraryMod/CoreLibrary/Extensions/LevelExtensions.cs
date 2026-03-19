@@ -43,28 +43,27 @@ namespace CoreLibrary.Core.Extensions
         }
 
 
-        public static LevelDisp? GetLevelDisplaySafe(this dc.pr.Level level)
+        public static LevelDisp GetLevelDisplaySafe(this dc.pr.Level level)
         {
             ValidationHelper.NotNull(level, nameof(level));
             return level.lDisp;
         }
 
 
-        public static LightedLayers? GetLightedLayersSafe(this dc.pr.Level level)
+        public static LightedLayers GetLightedLayersSafe(this dc.pr.Level level)
         {
             ValidationHelper.NotNull(level, nameof(level));
             return level.scroller;
         }
 
-
-        public static LevelMap? GetMapSafe(this dc.pr.Level level)
+        public static LevelMap GetMapSafe(this dc.pr.Level level)
         {
             ValidationHelper.NotNull(level, nameof(level));
             return level.map;
         }
 
 
-        public static Layers? GetRootSafe(this dc.pr.Level level)
+        public static Layers GetRootSafe(this dc.pr.Level level)
         {
             ValidationHelper.NotNull(level, nameof(level));
             return level.root;
@@ -351,6 +350,6 @@ namespace CoreLibrary.Core.Extensions
             return biomeId.Contains("boss", StringComparison.OrdinalIgnoreCase);
         }
 
-       
+
     }
 }

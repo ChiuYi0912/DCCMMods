@@ -88,6 +88,14 @@ namespace DebugMod.Commands.activateDebug
         public static void ChangeHeroShaderColor(TextWriter writer)
         {
             Hero hero = Game.Class.ME.hero;
+            var debug = hero._level.GetLevelDisplaySafe().debug;
+            debug.lineStyle(Ref<double>.In(1),Ref<int>.In(CreateColor.ColorFromHex("#ffffff")),Ref<double>.In(1));
+
+            var x1 = (hero.cx - hero.xr) * 24;
+            var y1 = (hero.cy - hero.yr) * 24;
+            var x2 = (hero.cx + hero.xr) * 24;
+            var y2 = (hero.cy + hero.yr) * 24;
+            debug.drawRect(x1, y1, x2 - x1, y2 - y1);
         }
     }
 }

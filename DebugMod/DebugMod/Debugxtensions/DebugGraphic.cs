@@ -1,5 +1,6 @@
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Utilities;
+using CoreLibrary.Extensions;
 using dc;
 using dc.h2d;
 using dc.hl.types;
@@ -17,12 +18,16 @@ namespace DebugMod.Debugxtensions
     public class DebugGraphic :
     IEventReceiver
     {
+
+
+
         public DebugGraphic()
         {
             EventSystem.AddReceiver(this);
             Hook_QuadTree.initBoundaries += Hook_QuadTree_initBoundaries;
             Hook__LevelDisp.__constructor__ += Hook_LevelDisp_init;
         }
+
 
 
         private void Hook_LevelDisp_init(Hook__LevelDisp.orig___constructor__ orig, LevelDisp arg1, Level p, LevelMap map, ArrayObj parallaxInfo)
@@ -35,7 +40,6 @@ namespace DebugMod.Debugxtensions
         private void Hook_QuadTree_initBoundaries(Hook_QuadTree.orig_initBoundaries orig, QuadTree self, QtRectangle boundary, int capacity, int minimumSquareSize, Graphics _debugGraphic)
         {
             self.boundary = boundary;
-
             self.colorQuad = GenerateRandomColor();
 
             if (DebugModMod.GetConfig.Value.IsQuadTreeDrawingEnabled)
@@ -46,7 +50,6 @@ namespace DebugMod.Debugxtensions
                 self.debugGraphic.lineStyle(Ref<double>.In(thickness), Ref<int>.In(color), Ref<double>.Null);
                 self.debugGraphic.drawRect(boundary.x * 24, boundary.y * 24, boundary.w * 24, boundary.h * 24);
                 self.debugGraphic.lineStyle(Ref<double>.Null, Ref<int>.Null, Ref<double>.Null);
-
             }
 
             self.capacity = capacity;
