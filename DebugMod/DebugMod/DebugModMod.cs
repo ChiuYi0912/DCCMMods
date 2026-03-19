@@ -29,7 +29,7 @@ namespace DebugMod
             _ = new DebugHUD();
             _ = new DebugGraphic();
 
-            Info.Version = "1.3";
+            Info.Version = "1.3.1";
         }
 
         private void Hook_Console_ctor(HashlinkClosure orig, HashlinkObject self)
