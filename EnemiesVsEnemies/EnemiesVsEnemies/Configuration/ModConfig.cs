@@ -16,6 +16,7 @@ namespace EnemiesVsEnemies.Configuration
 
         public static ModConfig CreateDefaultConfig()
         {
+            //TEST
             var config = new ModConfig();
 
             config.Teams["TeamA"] = new TeamConfig("TeamA", "红色队伍", 0xFF0000)

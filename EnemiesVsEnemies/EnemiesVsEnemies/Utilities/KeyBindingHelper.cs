@@ -28,25 +28,11 @@ namespace EnemiesVsEnemies.Utilities
             return Key.Class.isPressed(GetKeyconfig.SpawnGoldKey);
         }
 
-        public bool IsSpawnForceFieldPressed()
-        {
-            return Key.Class.isPressed(GetKeyconfig.SpawnForceFieldKey);
-        }
-
-        public bool IsCloseForceFieldPressed()
-        {
-            return Key.Class.isPressed(GetKeyconfig.CloseForceFieldKey);
-        }
-
         public bool IsEndBattlePressed()
         {
             return Key.Class.isPressed(GetKeyconfig.EndBattleKey);
         }
 
-        public bool IsBeginBattlePressed()
-        {
-            return Key.Class.isPressed(GetKeyconfig.BeginBattleKey);
-        }
 
         public bool IsIncreaseEnemyCountPressed()
         {
@@ -58,9 +44,5 @@ namespace EnemiesVsEnemies.Utilities
             return Key.Class.isPressed(GetKeyconfig.DecreaseEnemyCountKey);
         }
 
-        public bool IsKeyPressed(int keyCode)
-        {
-            return Key.Class.isPressed(keyCode);
-        }
     }
 }

@@ -17,7 +17,6 @@ namespace EnemiesVsEnemies
         private TeamManager teamManager = null!;
         private EnemySpawner enemySpawner = null!;
         private HookManager hookManager = null!;
-        private ForceFieldManager forceFieldManager = null!;
 
 
         private KeyBindingHelper keyBindingHelper = null!;
@@ -43,13 +42,6 @@ namespace EnemiesVsEnemies
             Info.Name = "EnemiesVsEnemies (Enhanced)";
 
             LogInfo("EnemiesVsEnemies Mod 已初始化 (增强版)");
-        }
-
-        public void Cleanup()
-        {
-            hookManager?.CleanupHooks();
-            forceFieldManager?.Reset();
-            LogInfo("EnemiesVsEnemies Mod 已清理");
         }
 
         void IOnHeroUpdate.OnHeroUpdate(double dt)
@@ -81,8 +73,6 @@ namespace EnemiesVsEnemies
 
             hookManager = new HookManager(teamManager, config.Value);
 
-            forceFieldManager = new ForceFieldManager();
-
             keyBindingHelper = new KeyBindingHelper(config.Value.KeyBindings);
 
             currentEnemyCount = config.Value.General.DefaultEnemyCount;
@@ -111,34 +101,6 @@ namespace EnemiesVsEnemies
             {
                 enemySpawner.SpawnGoldNugget();
                 LogInfo("已生成黄金块");
-            }
-
-            // 生成力场 (键3)
-            if (keyBindingHelper.IsSpawnForceFieldPressed())
-            {
-                forceFieldManager.SpawnForceField();
-                LogInfo("已生成力场");
-            }
-
-            // 关闭力场 (键4)
-            if (keyBindingHelper.IsCloseForceFieldPressed())
-            {
-                forceFieldManager.CloseForceField();
-                LogInfo("已关闭力场");
-            }
-
-            // 结束战斗 (键0)
-            if (keyBindingHelper.IsEndBattlePressed())
-            {
-                forceFieldManager.EndBattleMode();
-                LogInfo("战斗已结束");
-            }
-
-            // 开始战斗 (键5)
-            if (keyBindingHelper.IsBeginBattlePressed())
-            {
-                forceFieldManager.BeginBattleMode();
-                LogInfo("战斗已开始");
             }
 
             // 增加敌人数量 (PageUp)
@@ -174,7 +136,6 @@ namespace EnemiesVsEnemies
         public TeamManager GetTeamManager() => teamManager;
         public EnemySpawner GetEnemySpawner() => enemySpawner;
         public HookManager GetHookManager() => hookManager;
-        public ForceFieldManager GetForceFieldManager() => forceFieldManager;
         public ModConfig GetConfig() => config.Value;
 
 
