@@ -11,7 +11,6 @@ using dc.tool;
 using dc.ui;
 using HaxeProxy.Runtime;
 using IngameDebugConsole;
-using Midjourney.Entities.Mob.FlyMob;
 using ModCore.Utilities;
 using Serilog;
 

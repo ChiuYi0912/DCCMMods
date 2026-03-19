@@ -4,23 +4,21 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
-    <ModName>DebugMod</ModName>
+
     <ModType>mod</ModType>
-    <ModMain>DebugMod.DebugModMod</ModMain>
+    <ModMain>EnemiesVsEnemies.EnemiesVsEnemiesMod</ModMain>
     <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
-    <Reference Include="DebugConsole" />
     <Reference Include="CoreLibrary" />
   </ItemGroup>
+
   <ItemGroup>
     <ModDependency Include="CoreLibraryMod" />
-    <ModDependency Include="DebugConsole" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\CoreLibraryMod\CoreLibrary\CoreLibrary.csproj" />
   </ItemGroup>
+	
+
 </Project>

@@ -1,6 +1,5 @@
 ﻿using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Utilities;
-using CoreLibrary.Extensions;
 using dc;
 using dc.cine;
 using dc.en;
@@ -97,23 +96,7 @@ namespace DebugMod
         public dc.h2d.Graphics debugentity = null!;
         void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
-            if (Key.Class.isPressed(37))
-            {
-                LevelTransition.Class.@goto("BackGarden".AsHaxeString());
-            }
-            if (Key.Class.isPressed(38))
-            {
-            }
 
-            if (Key.Class.isPressed(39))
-            {
-                dc.cine.LevelTransition.Class.@goto("PrisonRoof".AsHaxeString());
-            }
-
-            if (Key.Class.isPressed(40))
-            {
-                Debugmethod();
-            }
         }
 
 
@@ -122,13 +105,6 @@ namespace DebugMod
 
 
         }
-
-
-
     }
-
-
-
-
 }
 
