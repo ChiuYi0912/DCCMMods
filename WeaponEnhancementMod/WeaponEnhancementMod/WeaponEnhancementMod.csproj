@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    
+    <ModName>WeaponEnhancementMod</ModName>
+    <ModType>mod</ModType>
+    <ModMain>WeaponEnhancementMod.Entry</ModMain>
+    <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
+  </PropertyGroup>
+
+ <ItemGroup>
+    <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
+    <Reference Include="CoreLibrary" />
+  </ItemGroup>
+  <ItemGroup>
+    <ModDependency Include="CoreLibraryMod" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CoreLibraryMod\CoreLibrary\CoreLibrary.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,4 +1,5 @@
 using dc;
+using dc.tool.weap;
 using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.Core;
 using EnemiesVsEnemies.Utilities;
@@ -42,6 +43,7 @@ namespace EnemiesVsEnemies
             Info.Name = "EnemiesVsEnemies (Enhanced)";
 
             LogInfo("EnemiesVsEnemies Mod 已初始化 (增强版)");
+            
         }
 
         void IOnHeroUpdate.OnHeroUpdate(double dt)
