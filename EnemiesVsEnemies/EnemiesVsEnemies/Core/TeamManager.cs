@@ -148,7 +148,7 @@ namespace EnemiesVsEnemies.Core
                     opposingTeams.Add(opposingTeam);
                 }
             }
-
+            
             return opposingTeams;
         }
 
