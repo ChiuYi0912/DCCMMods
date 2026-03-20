@@ -78,14 +78,12 @@ public class Entry(ModInfo info) : ModBase(info),
     {
         Hero hero = self.owner;
 
-
         double targetWorldX = ((double)e.cx + e.xr) * GridSize - (double)self.owner.dir * (e.radius + self.owner.radius);
         double targetWorldY;
         if (e.hei > HeightThreshold)
             targetWorldY = ((double)e.cy + e.yr) * GridSize - e.hei * HalfFactor - VerticalOffset;
         else
             targetWorldY = ((double)e.cy + e.yr) * GridSize - VerticalOffset;
-
 
         int gridX = (int)(targetWorldX / GridSize);
         int gridY = (int)(targetWorldY / GridSize);
@@ -108,11 +106,47 @@ public class Entry(ModInfo info) : ModBase(info),
         }
 
 
+        var map = hero._level.map;
+
+
+        bool IsWalkable(int x, int y)
+        {
+            if (x < 0 || x >= map.wid || y < 0 || y >= map.hei) return false;
+            int idx = y * map.wid + x;
+            if (idx >= map.collisions.length) return false;
+            int coll = map.collisions.getDyn(idx);
+            return (coll & 1) == 0;
+        }
+
+
+        if (!IsWalkable(gridX, gridY))
+        {
+
+            if (IsWalkable(gridX, gridY - 1))
+            {
+                gridY--;
+                offsetX = 0.5 + 0.4 * newDir;
+            }
+            else if (IsWalkable(gridX - newDir, gridY))
+            {
+                gridX -= newDir;
+                offsetX = 0.5 + 0.4 * newDir;
+            }
+            else
+                return;
+
+        }
+
+        if (IsWalkable(gridX, gridY + 1))
+        {
+            gridY++;
+        }
+
         hero.safeTpTo(gridX, gridY, offsetX, offsetY, true);
 
+        isnowall = true;
 
         hero.setAffectS(EffectId, EffectDuration, Ref<double>.Null, null);
-
 
         var animId = self.get_curSkillInf().animId;
         int hitFrame = self.get_curSkillInf().hitFrame - 1;
@@ -132,13 +166,10 @@ public class Entry(ModInfo info) : ModBase(info),
         if (e != null)
             self.owner._level.fx.dash(self.owner, -self.owner.dir, CreateColor.ColorFromHex(ColorDarkRed), Ref<int>.In(GetDistanceSq(self.owner, e)), Ref<double>.In(DashParam));
 
-
         double startX = oldHeadX + hero.dir * GridSize;
         double startY = oldHeadY;
-
         double endX = targetWorldX;
         double endY = targetWorldY;
-
 
         self.owner._level.fx.entityTeleport(
             startX, startY,
@@ -149,10 +180,7 @@ public class Entry(ModInfo info) : ModBase(info),
             Ref<bool>.In(true)
         );
 
-
         self.owner._level.lAudio.playEventOn(self.tpSfx, self.owner, DefaultVolume, DefaultPitch, null);
-
-        isnowall = false;
 
         int GetDistanceSq(Entity a, Entity b)
         {
