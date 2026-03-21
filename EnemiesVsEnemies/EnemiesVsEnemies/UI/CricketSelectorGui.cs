@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using CoreLibrary.Core.Extensions;
 using dc;
+using dc.en;
 using dc.h2d;
+using dc.hl.types;
 using dc.hxd;
 using dc.hxd.res;
 using dc.hxd.snd;
@@ -14,103 +16,66 @@ using dc.libs.heaps.slib;
 using dc.pr;
 using dc.tool;
 using dc.ui;
+using dc.ui.icon;
+using dc.ui.sel;
 using EnemiesVsEnemies.UI.Utilities;
+using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
+using Data = dc.Data;
 using Text = dc.ui.Text;
 
 namespace EnemiesVsEnemies.UI
 {
-    public class CricketSelectorGui(dc.libs.Process parent) : dc.ui.Process(parent)
+    public class CricketSelectorGui : GridSelector
     {
-        protected ControllerAccess controller = null!;
-        protected Pause pauseUI = null!;
-        protected int selectedIndex = 0;
-        protected HSprite selectionSprite = null!;
-        protected BG bg = null!;
-        protected Flow mainFlow = null!;
-        protected Text pressText = null!;
-        protected UIHelper GetIHelper = null!;
-
-
-        protected int curWidgetId = 0;
-        protected List<OptionWidget> widgets = new ();
-
-        public CricketSelectorGui(dc.libs.Process parent, Pause pause) : this(parent)
+        public CricketSelectorGui() : base()
         {
-            pauseUI = pause;
-            if (pauseUI != null)
-                parent = pauseUI;
-            else
-                parent = Main.Class.ME;
 
-
-            int layerIndex = Const.Class.ROOT_DP_MENU;
-            createRootInLayers(Main.Class.ME.root, layerIndex);
-
-
-            if (Game.Class.ME != null)
-            {
-                Game.Class.ME.hud.hide(null);
-                Game.Class.ME.modalPause(Ref<bool>.Null);
-            }
-
-            mainFlow = new Flow(null);
-            root.addChildAt(mainFlow, 2);
-
-            bg = new BG(this, Ref<bool>.Null, Ref<bool>.Null);
-            root.addChildAt(bg, 0);
-
-
-            controller = Boot.Class.ME.controller.createAccess("EVE".ToHaxeString(), true);
-            GetIHelper = new UIHelper(controller);
-
-
-            selectionSprite = new HSprite(Assets.Class.ui, "selectLeftRight".ToHaxeString(), Ref<int>.In(0), null!);
-            selectionSprite.alpha = 0.0;
-            root.addChildAt(selectionSprite, 1);
-
-            dc.String pressTextStr = Lang.Class.t.get("info:CricketSelectorGui TEST".ToHaxeString(), null);
-            pressText = new Text(null, true, null, Ref<double>.Null, null, null);
-            pressText.set_text(pressTextStr);
-            pressText.set_visible(true);
-            root.addChildAt(pressText, 5);
         }
 
-        public override void update()
+        public override int get_wid() => 6;
+        public override int get_entryWid() => 32;
+        public override int get_entryHei() => 32;
+
+        public dynamic getmobs(int index)
         {
-            base.update();
+            var arr = Data.Class.mob.all.array;
 
-            if (GetIHelper == null) return;
-            if (cd.fastCheck.exists(285212672)) return;
+            if (index < 0 || index >= arr.length)
+                return null!;
 
-            if (GetIHelper.IsDown(10)) MoveSelection(-1); // 上
-            if (GetIHelper.IsDown(12)) MoveSelection(1);  // 下
-
-
-            if (GetIHelper.IsPressed(14)) OnValidate();   // 确认键
-            if (GetIHelper.IsPressed(16)) OnQuit();        // 返回键(Esc)
+            return arr.getDyn(index);
         }
 
-        protected virtual void OnValidate()
+        public int getmoblength()
         {
-            if (curWidgetId >= 0 && curWidgetId < widgets.Count)
-            {
-                widgets[curWidgetId].onValidate?.Invoke();
-            }
+            return Data.Class.mob.all.array.length;
         }
 
-        protected virtual void OnQuit()
+        public override void initGrid()
         {
-            if (pauseUI != null)
-                pauseUI.onLeavingOptionsMenu();
+            this.curX = 0;
+            this.curY = 0;
 
-            this.destroy();
+            base.initEntries(getmoblength());
         }
 
-        protected void MoveSelection(int delta)
+        public override bool isEntryLocked(int i) => false;
+
+        public override void initRightFlow() { }
+        public override void updateRightFlow() { }
+        public override void beforeUpdateSelection() { }
+
+        public override dc.h2d.Object getIconBmp(int i, dc.h2d.Object parent)
         {
-            if (widgets.Count == 0) return;
-            curWidgetId = (curWidgetId + delta + widgets.Count) % widgets.Count;
+            var mob = getmobs(i);
+
+            if (mob == null)
+                return new Bitmap(Tile.Class.fromColor(0xFF0000, 32, 32, null, null), parent);
+
+            var icon = Icon.Class.createMobIcon(mob.id, parent);
+            icon.tile.scaleToSize(get_entryWid(), get_entryHei());
+            return icon;
         }
     }
 }
