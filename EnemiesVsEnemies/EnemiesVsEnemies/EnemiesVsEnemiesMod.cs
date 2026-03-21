@@ -6,6 +6,7 @@ using EnemiesVsEnemies.Core;
 using EnemiesVsEnemies.UI;
 using EnemiesVsEnemies.Utilities;
 using IngameDebugConsole;
+using ModCore.Events.Interfaces.Game;
 using ModCore.Events.Interfaces.Game.Hero;
 using ModCore.Mods;
 using ModCore.Storage;
@@ -13,7 +14,7 @@ using Serilog;
 
 namespace EnemiesVsEnemies
 {
-    public class EnemiesVsEnemiesMod : ModBase, IOnHeroUpdate
+    public class EnemiesVsEnemiesMod : ModBase, IOnHeroUpdate, IOnAfterLoadingCDB
     {
         public static Config<ModConfig> config = new("EnemiesVsEnemiesConfig");
 
@@ -21,9 +22,10 @@ namespace EnemiesVsEnemies
         private static TeamManager teamManager = null!;
         private static EnemySpawner enemySpawner = null!;
         private static HookManager hookManager = null!;
-
+        private static MobGroupHelper mobGroupHelper = null!;
 
         private KeyBindingHelper keyBindingHelper = null!;
+
 
 
         private int currentEnemyCount = 1;
@@ -44,17 +46,16 @@ namespace EnemiesVsEnemies
 
             hookManager.InitializeHooks();
 
-            Info.Version = "2.0.0";
+            Info.Version = "2.6.0";
             Info.Name = "EnemiesVsEnemies (Enhanced)";
 
             LogInfo("EnemiesVsEnemies Mod 已初始化 (增强版)");
 
         }
 
-        void IOnHeroUpdate.OnHeroUpdate(double dt)
-        {
-            HandleKeyBindings();
-        }
+        void IOnHeroUpdate.OnHeroUpdate(double dt) => HandleKeyBindings();
+        void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb) => mobGroupHelper.Refresh();
+
 
         private void LoadDefaultConfigIfNeeded()
         {
@@ -81,6 +82,8 @@ namespace EnemiesVsEnemies
             hookManager = new HookManager(teamManager, config.Value);
 
             keyBindingHelper = new KeyBindingHelper(config.Value.KeyBindings);
+
+            mobGroupHelper = new MobGroupHelper();
 
             currentEnemyCount = config.Value.General.DefaultEnemyCount;
 
@@ -141,9 +144,10 @@ namespace EnemiesVsEnemies
 
 
         public static TeamManager GetTeamManager() => teamManager;
-        public EnemySpawner GetEnemySpawner() => enemySpawner;
-        public HookManager GetHookManager() => hookManager;
-        public ModConfig GetConfig() => config.Value;
+        public static EnemySpawner GetEnemySpawner() => enemySpawner;
+        public static HookManager GetHookManager() => hookManager;
+        public static ModConfig GetConfig() => config.Value;
+        public static MobGroupHelper GetMobGroupHelper() => mobGroupHelper;
 
 
         public void AddNewTeam(string teamId, string name, int teamColor, List<string> opposingTeamIds, List<string> defaultEnemies)
@@ -184,5 +188,8 @@ namespace EnemiesVsEnemies
         {
             System.Console.WriteLine($"[EnemiesVsEnemies ERROR] {message}");
         }
+
+
+
     }
 }

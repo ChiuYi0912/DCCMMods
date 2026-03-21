@@ -33,6 +33,8 @@ using Text = dc.ui.Text;
 using CoreLibrary.Utilities;
 using CoreLibrary.Core.Utilities;
 using ModCore.Modules;
+using dc.h2d.col;
+using ModCore.Utilities;
 
 namespace EnemiesVsEnemies.UI
 {
@@ -42,16 +44,34 @@ namespace EnemiesVsEnemies.UI
         public NumberInput GetU = null!;
         public Config<ModConfig> GetConfig = EnemiesVsEnemiesMod.config;
         public TeamManager GetTeam = null!;
+        public FlowBox teamFlowBox = null!;
+        public string GetSelectedteamid = null!;
+
+        public class MonsterSelectionEventArgs
+        {
+            public string Id { get; set; } = null!;
+            public string Teamid { get; set; } = null!;
+        }
+        public Action<MonsterSelectionEventArgs> OnMonsterSelected { get; set; }
+
         public CricketSelectorGui(TeamManager teamManager)
         {
             GetTeam = teamManager;
+            OnMonsterSelected = (data) => { };
         }
+
+        public bool onOut = false;
 
         public override int get_wid() => 10;
         public override int get_entryWid() => 24;
         public override int get_entryHei() => 24;
 
-        public int istest = 1;
+
+        public override bool isEntryLocked(int i)
+        {
+            string data = Data.Class.mob.all.array.getDyn(i).id.ToString();
+            return EnemiesVsEnemiesMod.GetMobGroupHelper().IsRealBoss(data);
+        }
 
         public dynamic getmobs(int index)
         {
@@ -72,10 +92,9 @@ namespace EnemiesVsEnemies.UI
         public override void initGrid()
         {
             curX = curY = 0;
-            base.initEntries(getmoblength());
+            initEntries(getmoblength());
         }
 
-        public override bool isEntryLocked(int i) => false;
 
         public override void initRightFlow()
         {
@@ -123,10 +142,9 @@ namespace EnemiesVsEnemies.UI
             configTitle.set_textAlign(new Align.Center());
             base.rightFlow.addChild(configTitle);
 
-
             double teamPadH = 5.0;
             double teamPadV = 5.0;
-            var teamFlowBox = FlowBox.Class.createBoxValidation(null, Ref<double>.From(ref teamPadH), Ref<double>.From(ref teamPadV), Ref<bool>.Null, null);
+            teamFlowBox = FlowBox.Class.createBoxValidation(null, Ref<double>.From(ref teamPadH), Ref<double>.From(ref teamPadV), Ref<bool>.Null, null);
             teamFlowBox.set_isVertical(true);
             teamFlowBox.set_horizontalAlign(new FlowAlign.Middle());
             teamFlowBox.set_verticalAlign(new FlowAlign.Middle());
@@ -136,12 +154,32 @@ namespace EnemiesVsEnemies.UI
             teamFlowBox.addChild(teamsTitle);
 
 
+            Tile selectionTile = Assets.Class.ui.getTile("boxSelect".ToHaxeString(), Ref<int>.Null, Ref<double>.Null, Ref<double>.Null, null);
+            var selectionTM = new ScaleGrid(selectionTile, 8, 8, null);
+
+
             foreach (var team in config.Teams.Values)
             {
                 string teamInfo = $"- {team.Name} (ID: {team.Id})";
                 var teamText = Assets.Class.makeText(Lang.Class.t.untranslated(teamInfo), null, true, null);
                 teamText.set_textColor(team.TeamColor);
                 teamFlowBox.addChild(teamText);
+                teamText.alpha = 0.5;
+
+                var interactive = new Interactive(teamText.textWidth, teamText.textHeight, teamText, null);
+                interactive.onClick = (e) =>
+                {
+                    GetSelectedteamid = team.Id;
+                    Log.Logger.Debug($"选中队伍：{GetSelectedteamid}");
+                };
+                interactive.onOver = (e) =>
+                {
+                    teamText.alpha = 1.0;
+                };
+                interactive.onOut = (e) =>
+                {
+                    teamText.alpha = 0.5;
+                };
 
 
                 if (team.DefaultEnemies != null && team.DefaultEnemies.Count > 0)
@@ -185,6 +223,50 @@ namespace EnemiesVsEnemies.UI
             }
         }
 
+        public override void onValidate()
+        {
+            int curX = this.curX;
+            int curY = this.curY;
+
+            bool isLocked = getEntryAt(curX, curY).isLocked;
+            string soundPath = isLocked ? "sfx/ui/menu_error2.wav" : "sfx/ui/menu_click1.wav";
+            CoreLibrary.Utilities.AudioHelper.LoadAudioFormString(soundPath);
+
+
+            var entry = getEntryAt(curX, curY);
+            if (entry != null)
+            {
+                string mobId = getmobs(entry.i).id.ToString();
+                var args = new MonsterSelectionEventArgs
+                {
+                    Id = mobId,
+                    Teamid = GetSelectedteamid
+                };
+                OnMonsterSelected.Invoke(args);
+                UpdataTameConfig();
+            }
+
+            // if (closeOnValidate)
+            // {
+            //     close();
+            // }
+        }
+
+
+        public void UpdataTameConfig()
+        {
+            OnMonsterSelected = (data) =>
+            {
+                if (EnemiesVsEnemiesMod.GetMobGroupHelper().IsRealBoss(data.Id))
+                    return;
+                //if(team.IsNullOrEmpty())
+
+                Log.Logger.Debug($"选择选中怪物：{data.Id},teamid:{data.Teamid}");
+            };
+        }
+
+
+
 
         public override void updateRightFlow() { }
         public override void beforeUpdateSelection() { }
@@ -195,6 +277,7 @@ namespace EnemiesVsEnemies.UI
         public override dc.h2d.Object getIconBmp(int i, dc.h2d.Object parent)
         {
             string name = getmobs(i).id.ToString();
+
             if (name.IsNullOrEmpty())
                 return new Bitmap(Tile.Class.fromColor(0xFF0000, 32, 32, null, null), parent);
 
@@ -202,5 +285,65 @@ namespace EnemiesVsEnemies.UI
             icon.tile.scaleToSize(get_entryWid(), get_entryHei());
             return icon;
         }
+
+        public override void postUpdate()
+        {
+            Main main = Main.Class.ME;
+            int curX = this.curX;
+            int curY = this.curY;
+
+
+            Point entryGlobal = main.localToGlobal(this.getEntryAt(curX, curY).f, Ref<double>.Null, Ref<double>.Null);
+            Point maskGlobal = main.localToGlobal(this.mask, Ref<double>.Null, Ref<double>.Null);
+
+
+            double pixelScale = base.get_pixelScale.Invoke();
+            double offset = (int)(pixelScale * 5.0);
+
+
+            ScaleGrid selection = this.selectionSG;
+            selection.posChanged = true;
+            selection.x = entryGlobal.x - maskGlobal.x - offset;
+            selection.y = entryGlobal.y - maskGlobal.y - offset;
+
+
+            double timeFactor = base.ftime * 0.1;
+            string speedKey = "co_blinkCursorSpeed";
+
+
+            var speedData = Data.Class.gui.byId.get(speedKey.ToHaxeString()).v0;
+
+
+            var angle = timeFactor * speedData;
+            var cosValue = System.Math.Cos(angle);
+            var alphaOffset = 0.2 * cosValue;
+
+            this.selectionSG.alpha = 0.8 + alphaOffset;
+        }
+
+
+        public override void initEntries(int size)
+        {
+            this.sections = (ArrayObj)ArrayUtils.CreateDyn().array;
+            this.entries = (ArrayObj)ArrayUtils.CreateDyn().array;
+
+            int column = 0;
+            int row = 0;
+            int width = get_wid();
+
+            for (int index = 0; index < size; index++)
+            {
+                _ = this.addEntryAt(index, column, row, Ref<int>.Null);
+                column++;
+
+                if (column >= width)
+                {
+                    column = 0;
+                    row++;
+                }
+            }
+        }
+
+
     }
 }
