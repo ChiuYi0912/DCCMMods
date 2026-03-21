@@ -35,17 +35,20 @@ using CoreLibrary.Core.Utilities;
 using ModCore.Modules;
 using dc.h2d.col;
 using ModCore.Utilities;
+using dc.ui.hud;
 
 namespace EnemiesVsEnemies.UI
 {
     public class CricketSelectorGui : GridSelector
     {
-        public dc.ui.Text nameText = null!;
         public NumberInput GetU = null!;
         public Config<ModConfig> GetConfig = EnemiesVsEnemiesMod.config;
         public TeamManager GetTeam = null!;
         public FlowBox teamFlowBox = null!;
         public string GetSelectedteamid = null!;
+
+        public static Dictionary<string, dc.ui.Text> GetAllText = new();
+        public static Dictionary<string, FlowBox> GetallFlow = new();
 
         public class MonsterSelectionEventArgs
         {
@@ -56,6 +59,7 @@ namespace EnemiesVsEnemies.UI
 
         public CricketSelectorGui(TeamManager teamManager)
         {
+            GetAllText.Clear();
             GetTeam = teamManager;
             OnMonsterSelected = (data) => { };
         }
@@ -109,10 +113,10 @@ namespace EnemiesVsEnemies.UI
 
             base.mainFlow.addChild(base.rightFlow);
 
-            nameText = Assets.Class.makeText(Lang.Class.t.untranslated(""), null, true, null);
+            var nameText = Assets.Class.makeText(Lang.Class.t.untranslated(""), null, true, null);
             nameText.set_textColor(Text.Class.COLORS.get("ST".ToHaxeString()));
             nameText.set_textAlign(new Align.MultilineCenter());
-
+            GetAllText.Add("nameText", nameText);
             base.root.addChild(nameText);
 
             AddConfigInfoToRightFlow();
@@ -140,6 +144,7 @@ namespace EnemiesVsEnemies.UI
             var configTitle = Assets.Class.makeText(Lang.Class.t.untranslated("斗蛐蛐MOD"), null, true, null);
             configTitle.set_textColor(CreateColor.ColorFromHex("#ffffff"));
             configTitle.set_textAlign(new Align.Center());
+            GetAllText.Add("configTitle", configTitle);
             base.rightFlow.addChild(configTitle);
 
             double teamPadH = 5.0;
@@ -151,6 +156,7 @@ namespace EnemiesVsEnemies.UI
 
             var teamsTitle = Assets.Class.makeText(Lang.Class.t.untranslated("当前队伍:"), null, true, null);
             teamsTitle.set_textColor(Text.Class.COLORS.get("ST".ToHaxeString()));
+            GetAllText.Add("teamsTitle", teamsTitle);
             teamFlowBox.addChild(teamsTitle);
 
 
@@ -163,12 +169,14 @@ namespace EnemiesVsEnemies.UI
                 string teamInfo = $"- {team.Name} (ID: {team.Id})";
                 var teamText = Assets.Class.makeText(Lang.Class.t.untranslated(teamInfo), null, true, null);
                 teamText.set_textColor(team.TeamColor);
+                GetAllText.Add(team.Id, teamText);
                 teamFlowBox.addChild(teamText);
                 teamText.alpha = 0.5;
 
                 var interactive = new Interactive(teamText.textWidth, teamText.textHeight, teamText, null);
                 interactive.onClick = (e) =>
                 {
+                    AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
                     GetSelectedteamid = team.Id;
                     Log.Logger.Debug($"选中队伍：{GetSelectedteamid}");
                 };
@@ -259,7 +267,17 @@ namespace EnemiesVsEnemies.UI
             {
                 if (EnemiesVsEnemiesMod.GetMobGroupHelper().IsRealBoss(data.Id))
                     return;
-                //if(team.IsNullOrEmpty())
+                if (data.Id.IsNullOrEmpty() || data.Teamid.IsNullOrEmpty())
+                {
+                    AudioHelper.LoadAudioFormString("sfx/ui/menu_error2.wav");
+                    return;
+                }
+
+                TeamConfig TConfig = GetConfig.Value.Teams[data.Teamid];
+                TConfig.DefaultEnemies.Add(data.Id);
+
+                GetConfig.Save();
+
 
                 Log.Logger.Debug($"选择选中怪物：{data.Id},teamid:{data.Teamid}");
             };
@@ -288,6 +306,9 @@ namespace EnemiesVsEnemies.UI
 
         public override void postUpdate()
         {
+
+
+
             Main main = Main.Class.ME;
             int curX = this.curX;
             int curY = this.curY;
