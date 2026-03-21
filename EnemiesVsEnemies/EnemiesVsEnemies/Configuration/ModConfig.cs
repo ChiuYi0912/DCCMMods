@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CoreLibrary.Core.Utilities;
 
 namespace EnemiesVsEnemies.Configuration
 {
@@ -29,6 +30,12 @@ namespace EnemiesVsEnemies.Configuration
             {
                 OpposingTeamIds = new List<string> { "TeamA" },
                 DefaultEnemies = new List<string> { "U28_VacuumCleaner" }
+            };
+
+            config.Teams["TeamC"] = new TeamConfig("TeamC", "黄色队伍", CreateColor.ColorFromHex("#ffff00"))
+            {
+                OpposingTeamIds = new List<string> { "TeamC" },
+                DefaultEnemies = new List<string> { "U28_VacuumCleaner", "Mimic", "Mimic" }
             };
 
             config.EnemyPresets["U28_VacuumCleaner"] = new EnemySpawnConfig("U28_VacuumCleaner", 30, 20, 1);

@@ -146,24 +146,33 @@ namespace EnemiesVsEnemies.UI
 
                 if (team.DefaultEnemies != null && team.DefaultEnemies.Count > 0)
                 {
-                    string allmob = "";
-                    for (int i = 0; i < team.DefaultEnemies.Count; i++)
+                    var countDict = new Dictionary<string, int>();
+                    foreach (var id in team.DefaultEnemies)
                     {
-                        string id = team.DefaultEnemies[i];
                         string lang = getmobnamebyid(id);
-                        if (i > 0) allmob += ".";
-                        allmob += lang;
+                        if (countDict.ContainsKey(lang))
+                            countDict[lang]++;
+                        else
+                            countDict[lang] = 1;
                     }
-                    string enemiesInfo = $"  队伍名单: {allmob}";
+
+                    var parts = new List<string>();
+                    foreach (var kvp in countDict)
+                    {
+                        parts.Add(kvp.Value == 1 ? kvp.Key : $"{kvp.Key}+{kvp.Value}");
+                    }
+                    string allmob = string.Join("\n", parts);
+
+                    string enemiesInfo = $"队伍名单: \n   {allmob}";
                     var enemiesText = Assets.Class.makeText(enemiesInfo.ToHaxeString(), null, true, null);
-                    enemiesText.set_textColor(CreateColor.ColorFromHex("#ffffff"));
+                    enemiesText.set_textColor(Text.Class.COLORS.get("ST".ToHaxeString()));
                     teamFlowBox.addChild(enemiesText);
                 }
 
 
                 if (team.OpposingTeamIds != null && team.OpposingTeamIds.Count > 0)
                 {
-                    string opposingInfo = $"  仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
+                    string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
                     var opposingText = Assets.Class.makeText(Lang.Class.t.untranslated(opposingInfo), null, true, null);
                     opposingText.set_textColor(CreateColor.ColorFromHex("#ffffff"));
                     teamFlowBox.addChild(opposingText);
