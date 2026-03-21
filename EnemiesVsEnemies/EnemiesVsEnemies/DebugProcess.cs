@@ -20,7 +20,7 @@ namespace EnemiesVsEnemies.Debug
         [ConsoleMethod("ui", "EnemiesVsEnemiesUI Debug")]
         public static void buildprocess(TextWriter writer)
         {
-            var sel = new CricketSelectorGui();
+            var sel = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager());
         }
     }
 }

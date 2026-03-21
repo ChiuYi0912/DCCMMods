@@ -1,8 +1,11 @@
+using CoreLibrary.Core.Utilities;
 using dc;
 using dc.tool.weap;
 using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.Core;
+using EnemiesVsEnemies.UI;
 using EnemiesVsEnemies.Utilities;
+using IngameDebugConsole;
 using ModCore.Events.Interfaces.Game.Hero;
 using ModCore.Mods;
 using ModCore.Storage;
@@ -12,12 +15,12 @@ namespace EnemiesVsEnemies
 {
     public class EnemiesVsEnemiesMod : ModBase, IOnHeroUpdate
     {
-        private static Config<ModConfig> config = new("EnemiesVsEnemiesConfig");
+        public static Config<ModConfig> config = new("EnemiesVsEnemiesConfig");
 
         public static ILogger GetLogger = null!;
-        private TeamManager teamManager = null!;
-        private EnemySpawner enemySpawner = null!;
-        private HookManager hookManager = null!;
+        private static TeamManager teamManager = null!;
+        private static EnemySpawner enemySpawner = null!;
+        private static HookManager hookManager = null!;
 
 
         private KeyBindingHelper keyBindingHelper = null!;
@@ -28,6 +31,8 @@ namespace EnemiesVsEnemies
         public EnemiesVsEnemiesMod(ModInfo info) : base(info)
         {
         }
+
+
 
         public override void Initialize()
         {
@@ -43,7 +48,7 @@ namespace EnemiesVsEnemies
             Info.Name = "EnemiesVsEnemies (Enhanced)";
 
             LogInfo("EnemiesVsEnemies Mod 已初始化 (增强版)");
-            
+
         }
 
         void IOnHeroUpdate.OnHeroUpdate(double dt)
@@ -135,7 +140,7 @@ namespace EnemiesVsEnemies
         }
 
 
-        public TeamManager GetTeamManager() => teamManager;
+        public static TeamManager GetTeamManager() => teamManager;
         public EnemySpawner GetEnemySpawner() => enemySpawner;
         public HookManager GetHookManager() => hookManager;
         public ModConfig GetConfig() => config.Value;
@@ -171,7 +176,7 @@ namespace EnemiesVsEnemies
         {
             if (config.Value.General.ShowDebugInfo)
             {
-                Logger.Information($"[EnemiesVsEnemies] {message}");
+                Logger.LogInformation($"[EnemiesVsEnemies] {message}");
             }
         }
 
