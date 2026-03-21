@@ -30,6 +30,9 @@ using Serilog;
 using Data = dc.Data;
 using Interactive = dc.h2d.Interactive;
 using Text = dc.ui.Text;
+using CoreLibrary.Utilities;
+using CoreLibrary.Core.Utilities;
+using ModCore.Modules;
 
 namespace EnemiesVsEnemies.UI
 {
@@ -44,7 +47,7 @@ namespace EnemiesVsEnemies.UI
             GetTeam = teamManager;
         }
 
-        public override int get_wid() => 6;
+        public override int get_wid() => 10;
         public override int get_entryWid() => 24;
         public override int get_entryHei() => 24;
 
@@ -60,6 +63,11 @@ namespace EnemiesVsEnemies.UI
             return arr.getDyn(index);
         }
         public int getmoblength() => Data.Class.mob.all.array.length;
+        public string getmobnamebyid(string id)
+        {
+            string data = Data.Class.mob.byId.get(id.ToHaxeString()).name.ToString();
+            return Lang.Class.t.get(data.ToHaxeString(), null).ToString();
+        }
 
         public override void initGrid()
         {
@@ -77,8 +85,8 @@ namespace EnemiesVsEnemies.UI
             base.rightFlow = rightFlow;
 
             base.rightFlow.set_isVertical(true);
-            base.rightFlow.set_horizontalAlign(new FlowAlign.Middle());
-            base.rightFlow.set_verticalAlign(new FlowAlign.Middle());
+            base.rightFlow.set_horizontalAlign(new FlowAlign.Right());
+            base.rightFlow.set_verticalAlign(new FlowAlign.Bottom());
 
             base.mainFlow.addChild(base.rightFlow);
 
@@ -88,8 +96,7 @@ namespace EnemiesVsEnemies.UI
 
             base.root.addChild(nameText);
 
-
-            //var info = Assets.Class.makeText();
+            AddConfigInfoToRightFlow();
 
             // GetU = new NumberInput(this);
             // var action = new Action<int>((value) =>
@@ -99,9 +106,77 @@ namespace EnemiesVsEnemies.UI
             // var inpu = GetU.OpenNumberInput("TEST", "hello", 1, action);
         }
 
-        public void MakeTeaminfo()
+        private void AddConfigInfoToRightFlow()
         {
+            if (GetConfig == null || base.rightFlow == null || this.mainFlow == null)
+                return;
+
+            var config = GetConfig.Value;
+            if (config == null)
+                return;
+            mainFlow.set_horizontalAlign(new FlowAlign.Middle());
+            mainFlow.set_verticalAlign(new FlowAlign.Bottom());
+
+
+            var configTitle = Assets.Class.makeText(Lang.Class.t.untranslated("斗蛐蛐MOD"), null, true, null);
+            configTitle.set_textColor(CreateColor.ColorFromHex("#ffffff"));
+            configTitle.set_textAlign(new Align.Center());
+            base.rightFlow.addChild(configTitle);
+
+
+            double teamPadH = 5.0;
+            double teamPadV = 5.0;
+            var teamFlowBox = FlowBox.Class.createBoxValidation(null, Ref<double>.From(ref teamPadH), Ref<double>.From(ref teamPadV), Ref<bool>.Null, null);
+            teamFlowBox.set_isVertical(true);
+            teamFlowBox.set_horizontalAlign(new FlowAlign.Middle());
+            teamFlowBox.set_verticalAlign(new FlowAlign.Middle());
+
+            var teamsTitle = Assets.Class.makeText(Lang.Class.t.untranslated("当前队伍:"), null, true, null);
+            teamsTitle.set_textColor(Text.Class.COLORS.get("ST".ToHaxeString()));
+            teamFlowBox.addChild(teamsTitle);
+
+
+            foreach (var team in config.Teams.Values)
+            {
+                string teamInfo = $"- {team.Name} (ID: {team.Id})";
+                var teamText = Assets.Class.makeText(Lang.Class.t.untranslated(teamInfo), null, true, null);
+                teamText.set_textColor(team.TeamColor);
+                teamFlowBox.addChild(teamText);
+
+
+                if (team.DefaultEnemies != null && team.DefaultEnemies.Count > 0)
+                {
+                    string allmob = "";
+                    for (int i = 0; i < team.DefaultEnemies.Count; i++)
+                    {
+                        string id = team.DefaultEnemies[i];
+                        string lang = getmobnamebyid(id);
+                        if (i > 0) allmob += ".";
+                        allmob += lang;
+                    }
+                    string enemiesInfo = $"  队伍名单: {allmob}";
+                    var enemiesText = Assets.Class.makeText(enemiesInfo.ToHaxeString(), null, true, null);
+                    enemiesText.set_textColor(CreateColor.ColorFromHex("#ffffff"));
+                    teamFlowBox.addChild(enemiesText);
+                }
+
+
+                if (team.OpposingTeamIds != null && team.OpposingTeamIds.Count > 0)
+                {
+                    string opposingInfo = $"  仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
+                    var opposingText = Assets.Class.makeText(Lang.Class.t.untranslated(opposingInfo), null, true, null);
+                    opposingText.set_textColor(CreateColor.ColorFromHex("#ffffff"));
+                    teamFlowBox.addChild(opposingText);
+                }
+            }
+
+            if (config.Teams.Count > 0)
+            {
+                base.rightFlow.addChild(teamFlowBox);
+            }
         }
+
+
         public override void updateRightFlow() { }
         public override void beforeUpdateSelection() { }
 
