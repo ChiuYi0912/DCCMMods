@@ -43,13 +43,16 @@ namespace EnemiesVsEnemies.UI
     public class CricketSelectorGui : GridSelector
     {
         public NumberInput GetU = null!;
-        public Config<ModConfig> GetConfig = EnemiesVsEnemiesMod.config;
         public TeamManager GetTeam = null!;
         public FlowBox teamFlowBox = null!;
         public string GetSelectedteamid = null!;
 
+        public Config<ModConfig> GetConfig = EnemiesVsEnemiesMod.config;
+
+
         public static Dictionary<string, dc.ui.Text> GetAllText = new();
         public static Dictionary<string, FlowBox> GetallFlow = new();
+
 
         public class MonsterSelectionEventArgs
         {
@@ -60,7 +63,6 @@ namespace EnemiesVsEnemies.UI
 
         public CricketSelectorGui(TeamManager teamManager)
         {
-            GetAllText.Clear();
             GetTeam = teamManager;
             OnMonsterSelected = (data) => { };
         }
@@ -70,6 +72,10 @@ namespace EnemiesVsEnemies.UI
         public override int get_wid() => 10;
         public override int get_entryWid() => 24;
         public override int get_entryHei() => 24;
+
+        public const string AudioError = "sfx/ui/menu_error2.wav";
+        public const string Audiocurse = "sfx/ps5/curse_end_SE.wav";
+        public const string Audioclick = "sfx/ui/menu_click1.wav";
 
 
         public override bool isEntryLocked(int i)
@@ -87,12 +93,17 @@ namespace EnemiesVsEnemies.UI
 
             return arr.getDyn(index);
         }
+
+
         public int getmoblength() => Data.Class.mob.all.array.length;
+
+
         public string getmobnamebyid(string id)
         {
             string data = Data.Class.mob.byId.get(id.ToHaxeString()).name.ToString();
             return Lang.Class.t.get(data.ToHaxeString(), null).ToString();
         }
+
 
         public override void initGrid()
         {
@@ -101,24 +112,30 @@ namespace EnemiesVsEnemies.UI
         }
 
 
+
         public override void initRightFlow()
         {
             double padH = 5.0;
             double padV = 5.0;
-            var rightFlow = FlowBox.Class.createBoxValidation(null, Ref<double>.From(ref padH), Ref<double>.From(ref padV), Ref<bool>.Null, null);
-            base.rightFlow = rightFlow;
-
+            base.rightFlow = FlowBox.Class.createBoxValidation(null, Ref<double>.From(ref padH), Ref<double>.From(ref padV), Ref<bool>.Null, null);
             base.rightFlow.set_isVertical(true);
             base.rightFlow.set_horizontalAlign(new FlowAlign.Right());
             base.rightFlow.set_verticalAlign(new FlowAlign.Bottom());
 
+
             base.mainFlow.addChild(base.rightFlow);
+
 
             var nameText = Assets.Class.makeText(Lang.Class.t.untranslated(""), null, true, null);
             nameText.set_textColor(Text.Class.COLORS.get("ST".ToHaxeString()));
             nameText.set_textAlign(new Align.MultilineCenter());
+
+
             GetAllText.Add("nameText", nameText);
+
+
             base.root.addChild(nameText);
+
 
             AddConfigInfoToRightFlow();
 
@@ -135,18 +152,27 @@ namespace EnemiesVsEnemies.UI
             if (GetConfig == null || base.rightFlow == null || this.mainFlow == null)
                 return;
 
+
             var config = GetConfig.Value;
             if (config == null)
                 return;
+
+
             mainFlow.set_horizontalAlign(new FlowAlign.Middle());
             mainFlow.set_verticalAlign(new FlowAlign.Bottom());
+
+
+            GetAllText.Clear();
 
 
             var configTitle = Assets.Class.makeText(Lang.Class.t.untranslated("斗蛐蛐MOD"), null, true, null);
             configTitle.set_textColor(CreateColor.ColorFromHex("#ffffff"));
             configTitle.set_textAlign(new Align.Center());
+
+
             GetAllText.Add("configTitle", configTitle);
             base.rightFlow.addChild(configTitle);
+
 
             double teamPadH = 5.0;
             double teamPadV = 5.0;
@@ -155,15 +181,17 @@ namespace EnemiesVsEnemies.UI
             teamFlowBox.set_horizontalAlign(new FlowAlign.Middle());
             teamFlowBox.set_verticalAlign(new FlowAlign.Middle());
 
+
             var teamsTitle = Assets.Class.makeText(Lang.Class.t.untranslated("当前队伍:"), null, true, null);
             teamsTitle.set_textColor(Text.Class.COLORS.get("ST".ToHaxeString()));
+
+
             GetAllText.Add("teamsTitle", teamsTitle);
             teamFlowBox.addChild(teamsTitle);
-
+            
 
             Tile selectionTile = Assets.Class.ui.getTile("boxSelect".ToHaxeString(), Ref<int>.Null, Ref<double>.Null, Ref<double>.Null, null);
             var selectionTM = new ScaleGrid(selectionTile, 8, 8, null);
-
 
 
 
@@ -171,15 +199,20 @@ namespace EnemiesVsEnemies.UI
             {
                 string teamInfo = $"- {team.Name} (ID: {team.Id})";
                 var teamText = Assets.Class.makeText(Lang.Class.t.untranslated(teamInfo), null, true, null);
+                teamText.alpha = 0.5;
+                teamText.scaleX = 1.3;
+                teamText.scaleY = 1.3;
                 teamText.set_textColor(team.TeamColor);
+
+
                 GetAllText.Add(team.Id, teamText);
                 teamFlowBox.addChild(teamText);
-                teamText.alpha = 0.5;
+
 
                 var interactive = new Interactive(teamText.textWidth, teamText.textHeight, teamText, null);
                 interactive.onClick = (e) =>
                 {
-                    AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
+                    AudioHelper.LoadAudioFormString(Audioclick);
                     GetSelectedteamid = team.Id;
                     Log.Logger.Debug($"选中队伍：{GetSelectedteamid}");
                 };
@@ -198,8 +231,10 @@ namespace EnemiesVsEnemies.UI
                     string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
                     var opposingText = Assets.Class.makeText(Lang.Class.t.untranslated(opposingInfo), null, true, null);
                     opposingText.set_textColor(CreateColor.ColorFromHex("#ffffff"));
-                    opposingText.scaleX = 1.3;
-                    opposingText.scaleY = 1.3;
+                    opposingText.scaleX = 1.1;
+                    opposingText.scaleY = 1.1;
+
+
                     GetAllText.Add(team.Id + "opposingText", opposingText);
                     teamFlowBox.addChild(opposingText);
                 }
@@ -219,13 +254,16 @@ namespace EnemiesVsEnemies.UI
                             countDict[lang] = 1;
                     }
 
+
                     var parts = new List<string>();
                     foreach (var kvp in countDict)
                     {
                         parts.Add(kvp.Value == 1 ? kvp.Key : $"{kvp.Key}+{kvp.Value}");
                     }
+
+
                     double screenWidth = dc.hxd.Window.Class.getInstance().get_width();
-                    double maxWidth = screenWidth / 5;
+                    double maxWidth = screenWidth / 6;
 
 
                     var partWidths = new List<double>();
@@ -322,9 +360,6 @@ namespace EnemiesVsEnemies.UI
                     enemiesText.scaleY = 1;
                     teamFlowBox.addChild(enemiesText);
                 }
-
-
-
             }
 
             if (config.Teams.Count > 0)
@@ -338,69 +373,112 @@ namespace EnemiesVsEnemies.UI
             var entry = getEntryAt(curX, curY);
             if (entry == null)
                 return;
+
+
             string mobId = getmobs(entry.i).id.ToString();
             var args = new MonsterSelectionEventArgs { Id = mobId, Teamid = GetSelectedteamid };
+            if (string.IsNullOrEmpty(args.Id) || string.IsNullOrEmpty(args.Teamid))
+            {
+                AudioHelper.LoadAudioFormString(AudioError);
+                return;
+            }
+
+
             AddMonsterToTeam(args);
-            doMovementIcon(entry.f, GetAllText[args.Teamid]);
+
+
+            doMovementIcon(GetAllText[args.Teamid], entry, args);
         }
+
+
 
         private void AddMonsterToTeam(MonsterSelectionEventArgs args)
         {
             if (EnemiesVsEnemiesMod.GetMobGroupHelper().IsRealBoss(args.Id))
                 return;
-            if (string.IsNullOrEmpty(args.Id) || string.IsNullOrEmpty(args.Teamid))
-            {
-                AudioHelper.LoadAudioFormString("sfx/ui/menu_error2.wav");
-                return;
-            }
+
 
             if (!GetConfig.Value.Teams.TryGetValue(args.Teamid, out var team))
             {
-                AudioHelper.LoadAudioFormString("sfx/ui/menu_error2.wav");
+                AudioHelper.LoadAudioFormString(AudioError);
                 Log.Logger.Warning($"队伍 {args.Teamid} 不存在");
                 return;
             }
 
+
             team.DefaultEnemies.Add(args.Id);
             GetConfig.Save();
-            AudioHelper.LoadAudioFormString("sfx/ps5/curse_end_SE.wav");
+
+
+            AudioHelper.LoadAudioFormString(Audiocurse);
+            
             Log.Logger.Debug($"选择选中怪物：{args.Id}, teamid:{args.Teamid}");
         }
 
-        public void doMovementIcon(Flow flow, Text text)
+        public List<Flow> remove = new();
+        public void doMovementIcon(Text text, virtual_cx_cy_f_i_isLocked_sectionIdx_ seledata, MonsterSelectionEventArgs args)
         {
             double pixelScale = get_pixelScale.Invoke();
+            Flow oldflow = seledata.f;
 
-            // Horizontal movement tween
-            double horizontalTargetValue = text.x * pixelScale;
-            var horizontalTween = CreateTween(tw,
-                () => flow.x,
+
+            Flow cloneflow = new Flow(null);
+            var cloneicon = getIconBmp(seledata.i, cloneflow);
+            cloneicon.posChanged = true;
+            cloneicon.scaleX = pixelScale;
+            cloneicon.posChanged = true;
+            cloneicon.scaleY = pixelScale;
+
+            mask.addChild(cloneflow);
+
+            Main main = Main.Class.ME;
+            const double speed = 800;
+
+
+            Point oldflowGlobal = main.localToGlobal(oldflow, Ref<double>.Null, Ref<double>.Null);
+            Point startLocal = mask.globalToLocal(oldflowGlobal);
+
+
+            Point textGlobal = main.localToGlobal(text, Ref<double>.Null, Ref<double>.Null);
+            Point targetLocal = mask.globalToLocal(textGlobal);
+
+
+            cloneflow.x = startLocal.x;
+            cloneflow.y = startLocal.y;
+
+
+            var tweenX = CreateTween(
+                () => cloneflow.x,
                 value =>
                 {
-                    flow.x = value;
-                    flow.posChanged = true;
+                    cloneflow.x = value;
+                    cloneflow.posChanged = true;
                 },
-                horizontalTargetValue,
-                0);
+                targetLocal.x, speed);
 
-            // Vertical movement tween
-            double verticalTargetValue = text.y * pixelScale;
-            var verticalTween = CreateTween(tw,
-                () => flow.y,
+            var tweenY = CreateTween(
+                () => cloneflow.y,
                 value =>
                 {
-                    flow.y = value;
-                    flow.posChanged = true;
+                    cloneflow.y = value;
+                    cloneflow.posChanged = true;
                 },
-                verticalTargetValue,
-                0);
+                targetLocal.y, speed);
+
+
+            if (remove.Count >= 3)
+            {
+                Flow oldest = remove[0];
+                oldest.remove();
+                remove.RemoveAt(0);
+            }
+            remove.Add(cloneflow);
         }
 
-        private Tween CreateTween(Tweenie tw, Func<double> getter, Action<double> setterAction, double targetValue, double? duration)
+        private Tween CreateTween(Func<double> getter, Action<double> setterAction, double targetValue, double? duration)
         {
             var hlGetter = new HlFunc<double>(getter);
-            var hlAction = new HlAction<object>((_setV) => setterAction((double)_setV));
-            var hlSetter = new HlAction<double>((dt) => hlAction.Invoke(dt));
+            var hlSetter = new HlAction<double>(setterAction);
             var tweenType = new TType.TEaseOut();
             return tw.create_(hlGetter, hlSetter, null, targetValue, tweenType, duration, Ref<bool>.Null);
         }
@@ -417,20 +495,19 @@ namespace EnemiesVsEnemies.UI
         public override dc.h2d.Object getIconBmp(int i, dc.h2d.Object parent)
         {
             string name = getmobs(i).id.ToString();
-
             if (name.IsNullOrEmpty())
                 return new Bitmap(Tile.Class.fromColor(0xFF0000, 32, 32, null, null), parent);
 
+
             var icon = Icon.Class.createMobIcon(name.ToHaxeString(), parent);
             icon.tile.scaleToSize(get_entryWid(), get_entryHei());
+
+            
             return icon;
         }
 
         public override void postUpdate()
         {
-
-
-
             Main main = Main.Class.ME;
             int curX = this.curX;
             int curY = this.curY;
