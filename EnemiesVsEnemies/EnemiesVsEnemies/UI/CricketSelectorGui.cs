@@ -188,7 +188,7 @@ namespace EnemiesVsEnemies.UI
 
             GetAllText.Add("teamsTitle", teamsTitle);
             teamFlowBox.addChild(teamsTitle);
-            
+
 
             Tile selectionTile = Assets.Class.ui.getTile("boxSelect".ToHaxeString(), Ref<int>.Null, Ref<double>.Null, Ref<double>.Null, null);
             var selectionTM = new ScaleGrid(selectionTile, 8, 8, null);
@@ -197,33 +197,37 @@ namespace EnemiesVsEnemies.UI
 
             foreach (var team in config.Teams.Values)
             {
-                string teamInfo = $"- {team.Name} (ID: {team.Id})";
-                var teamText = Assets.Class.makeText(Lang.Class.t.untranslated(teamInfo), null, true, null);
-                teamText.alpha = 0.5;
-                teamText.scaleX = 1.3;
-                teamText.scaleY = 1.3;
-                teamText.set_textColor(team.TeamColor);
-
-
-                GetAllText.Add(team.Id, teamText);
-                teamFlowBox.addChild(teamText);
-
-
-                var interactive = new Interactive(teamText.textWidth, teamText.textHeight, teamText, null);
-                interactive.onClick = (e) =>
+                if (!team.Name.IsNullOrEmpty() && !team.Id.IsNullOrEmpty())
                 {
-                    AudioHelper.LoadAudioFormString(Audioclick);
-                    GetSelectedteamid = team.Id;
-                    Log.Logger.Debug($"选中队伍：{GetSelectedteamid}");
-                };
-                interactive.onOver = (e) =>
-                {
-                    teamText.alpha = 1.0;
-                };
-                interactive.onOut = (e) =>
-                {
+                    string teamInfo = $"- {team.Name} (ID: {team.Id})";
+                    var teamText = Assets.Class.makeText(Lang.Class.t.untranslated(teamInfo), null, true, null);
                     teamText.alpha = 0.5;
-                };
+                    teamText.scaleX = 1.3;
+                    teamText.scaleY = 1.3;
+                    teamText.set_textColor(team.TeamColor);
+
+
+                    GetAllText.Add(team.Id, teamText);
+                    teamFlowBox.addChild(teamText);
+
+
+                    var interactive = new Interactive(teamText.textWidth, teamText.textHeight, teamText, null);
+                    interactive.onClick = (e) =>
+                    {
+                        AudioHelper.LoadAudioFormString(Audioclick);
+                        GetSelectedteamid = team.Id;
+                        Log.Logger.Debug($"选中队伍：{GetSelectedteamid}");
+                    };
+                    interactive.onOver = (e) =>
+                    {
+                        teamText.alpha = 1.0;
+                    };
+                    interactive.onOut = (e) =>
+                    {
+                        teamText.alpha = 0.5;
+                    };
+
+                }
 
 
                 if (team.OpposingTeamIds != null && team.OpposingTeamIds.Count > 0)
@@ -240,125 +244,16 @@ namespace EnemiesVsEnemies.UI
                 }
 
 
-
-
                 if (team.DefaultEnemies != null && team.DefaultEnemies.Count > 0)
                 {
-                    var countDict = new Dictionary<string, int>();
-                    foreach (var id in team.DefaultEnemies)
-                    {
-                        string lang = getmobnamebyid(id);
-                        if (countDict.ContainsKey(lang))
-                            countDict[lang]++;
-                        else
-                            countDict[lang] = 1;
-                    }
-
-
-                    var parts = new List<string>();
-                    foreach (var kvp in countDict)
-                    {
-                        parts.Add(kvp.Value == 1 ? kvp.Key : $"{kvp.Key}+{kvp.Value}");
-                    }
-
-
-                    double screenWidth = dc.hxd.Window.Class.getInstance().get_width();
-                    double maxWidth = screenWidth / 6;
-
-
-                    var partWidths = new List<double>();
-                    foreach (var part in parts)
-                    {
-                        var tempTextPart = Assets.Class.makeText(part.ToHaxeString(), null, true, null);
-                        double width = tempTextPart.textWidth * 0.5;
-                        tempTextPart.remove();
-                        partWidths.Add(width);
-                    }
-
-
-                    var prefixText = Assets.Class.makeText("队伍名单:".ToHaxeString(), null, true, null);
-                    double prefixWidth = prefixText.textWidth * 0.5;
-                    prefixText.remove();
-
-
-                    string allmobSpace = string.Join(" ", parts);
-                    string testInfo = $"队伍名单:{allmobSpace}";
-                    var tempText = Assets.Class.makeText(testInfo.ToHaxeString(), null, true, null);
-                    double totalWidth = tempText.textWidth * 0.5;
-                    tempText.remove();
-
-                    string enemiesInfo;
-                    if (totalWidth > maxWidth)
-                    {
-
-                        var lines = new List<string>();
-                        var currentLine = new List<string>();
-                        double currentWidth = 0;
-
-                        for (int i = 0; i < parts.Count; i++)
-                        {
-                            double partWidth = partWidths[i];
-
-                            if (currentLine.Count == 0)
-                            {
-
-                                if (currentWidth + partWidth + prefixWidth > maxWidth && currentLine.Count == 0)
-                                {
-
-                                    lines.Add(parts[i]);
-                                    continue;
-                                }
-                                currentWidth += partWidth + prefixWidth;
-                                currentLine.Add(parts[i]);
-                            }
-                            else
-                            {
-
-                                double spaceWidth = 5.0;
-                                if (currentWidth + spaceWidth + partWidth > maxWidth)
-                                {
-
-                                    lines.Add(string.Join(" ", currentLine));
-                                    currentLine.Clear();
-                                    currentWidth = partWidth;
-                                    currentLine.Add(parts[i]);
-                                }
-                                else
-                                {
-                                    currentWidth += spaceWidth + partWidth;
-                                    currentLine.Add(parts[i]);
-                                }
-                            }
-                        }
-
-                        if (currentLine.Count > 0)
-                        {
-                            lines.Add(string.Join(" ", currentLine));
-                        }
-
-
-                        if (lines.Count == 1)
-                        {
-                            enemiesInfo = $"队伍名单:{lines[0]}";
-                        }
-                        else
-                        {
-                            enemiesInfo = $"队伍名单:{lines[0]}";
-                            for (int i = 1; i < lines.Count; i++)
-                            {
-                                enemiesInfo += $"\n{new string(' ', "队伍名单:".Length)}{lines[i]}";
-                            }
-                        }
-                    }
-                    else
-                    {
-                        enemiesInfo = testInfo;
-                    }
-                    var enemiesText = Assets.Class.makeText(enemiesInfo.ToHaxeString(), null, true, null);
+                    var enemiesText = Assets.Class.makeText("".ToHaxeString(), null, true, null);
                     enemiesText.set_textColor(Text.Class.COLORS.get("ST".ToHaxeString()));
                     enemiesText.scaleX = 1;
                     enemiesText.scaleY = 1;
+
+
                     teamFlowBox.addChild(enemiesText);
+                    GetAllText.Add(team.Id + "enemiesText", enemiesText);
                 }
             }
 
@@ -366,6 +261,8 @@ namespace EnemiesVsEnemies.UI
             {
                 base.rightFlow.addChild(teamFlowBox);
             }
+
+            UpdateTeamDisplay();
         }
 
         public override void onValidate()
@@ -377,7 +274,7 @@ namespace EnemiesVsEnemies.UI
 
             string mobId = getmobs(entry.i).id.ToString();
             var args = new MonsterSelectionEventArgs { Id = mobId, Teamid = GetSelectedteamid };
-            if (string.IsNullOrEmpty(args.Id) || string.IsNullOrEmpty(args.Teamid))
+            if (string.IsNullOrEmpty(args.Id) || string.IsNullOrEmpty(args.Teamid) || entry.isLocked)
             {
                 AudioHelper.LoadAudioFormString(AudioError);
                 return;
@@ -408,10 +305,11 @@ namespace EnemiesVsEnemies.UI
 
             team.DefaultEnemies.Add(args.Id);
             GetConfig.Save();
+            UpdateTeamDisplay();
 
 
             AudioHelper.LoadAudioFormString(Audiocurse);
-            
+
             Log.Logger.Debug($"选择选中怪物：{args.Id}, teamid:{args.Teamid}");
         }
 
@@ -502,7 +400,7 @@ namespace EnemiesVsEnemies.UI
             var icon = Icon.Class.createMobIcon(name.ToHaxeString(), parent);
             icon.tile.scaleToSize(get_entryWid(), get_entryHei());
 
-            
+
             return icon;
         }
 
@@ -538,7 +436,156 @@ namespace EnemiesVsEnemies.UI
             var cosValue = System.Math.Cos(angle);
             var alphaOffset = 0.2 * cosValue;
 
+
             this.selectionSG.alpha = 0.8 + alphaOffset;
+
+
+            if (GetSelectedteamid.IsNullOrEmpty())
+                return;
+
+
+            if (GetAllText.TryGetValue(GetSelectedteamid, out var text))
+                text.alpha = 0.8 + alphaOffset;
+
+        }
+
+
+        public void UpdateTeamDisplay()
+        {
+            if (GetConfig == null || teamFlowBox == null) return;
+
+            var config = GetConfig.Value;
+            if (config == null) return;
+
+            foreach (var team in config.Teams.Values)
+            {
+
+                if (GetAllText.TryGetValue(team.Id, out var teamText))
+                {
+                    string teamInfo = $"- {team.Name} (ID: {team.Id})";
+                    teamText.set_text(Lang.Class.t.untranslated(teamInfo.ToHaxeString()));
+                }
+
+
+                string opposingKey = team.Id + "opposingText";
+                if (GetAllText.TryGetValue(opposingKey, out var opposingText))
+                {
+                    if (team.OpposingTeamIds != null && team.OpposingTeamIds.Count > 0)
+                    {
+                        string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
+                        opposingText.set_text(Lang.Class.t.untranslated(opposingInfo.ToHaxeString()));
+
+                    }
+                    else
+                    {
+                        opposingText.visible = false;
+                    }
+                }
+
+
+                string enemiesKey = team.Id + "enemiesText";
+                if (GetAllText.TryGetValue(enemiesKey, out var enemiesText))
+                {
+                    string newEnemiesInfo = GenerateEnemiesInfo(team);
+                    enemiesText.set_text(Lang.Class.t.get(newEnemiesInfo.ToHaxeString(), null));
+                    enemiesText.posChanged = true;
+                }
+            }
+
+
+            teamFlowBox.reflow();
+            base.rightFlow.reflow();
+        }
+
+
+        private string GenerateEnemiesInfo(TeamConfig team)
+        {
+            if (team.DefaultEnemies == null || team.DefaultEnemies.Count == 0)
+                return "队伍名单: 无";
+
+            var countDict = new Dictionary<string, int>();
+            foreach (var id in team.DefaultEnemies)
+            {
+                string lang = getmobnamebyid(id);
+                countDict[lang] = countDict.TryGetValue(lang, out int c) ? c + 1 : 1;
+            }
+
+            var parts = new List<string>();
+            foreach (var kvp in countDict)
+                parts.Add(kvp.Value == 1 ? kvp.Key : $"{kvp.Key}+{kvp.Value}");
+
+            double screenWidth = dc.hxd.Window.Class.getInstance().get_width();
+            double maxWidth = screenWidth / 6;
+
+
+            string testInfo = $"队伍名单:{string.Join(" ", parts)}";
+            var temp = Assets.Class.makeText(testInfo.ToHaxeString(), null, true, null);
+            double totalWidth = temp.textWidth * 0.5;
+            temp.remove();
+
+            if (totalWidth <= maxWidth)
+                return testInfo;
+
+
+            var partWidths = new List<double>();
+            foreach (var part in parts)
+            {
+                var t = Assets.Class.makeText(part.ToHaxeString(), null, true, null);
+                partWidths.Add(t.textWidth * 0.5);
+                t.remove();
+            }
+
+            var prefixText = Assets.Class.makeText("队伍名单:".ToHaxeString(), null, true, null);
+            double prefixWidth = prefixText.textWidth * 0.5;
+            prefixText.remove();
+
+            var lines = new List<string>();
+            var currentLine = new List<string>();
+            double currentWidth = 0;
+
+            for (int i = 0; i < parts.Count; i++)
+            {
+                double partWidth = partWidths[i];
+                if (currentLine.Count == 0)
+                {
+                    if (currentWidth + partWidth + prefixWidth > maxWidth && currentLine.Count == 0)
+                    {
+                        lines.Add(parts[i]);
+                        continue;
+                    }
+                    currentWidth += partWidth + prefixWidth;
+                    currentLine.Add(parts[i]);
+                }
+                else
+                {
+                    double spaceWidth = 5.0;
+                    if (currentWidth + spaceWidth + partWidth > maxWidth)
+                    {
+                        lines.Add(string.Join(" ", currentLine));
+                        currentLine.Clear();
+                        currentWidth = partWidth;
+                        currentLine.Add(parts[i]);
+                    }
+                    else
+                    {
+                        currentWidth += spaceWidth + partWidth;
+                        currentLine.Add(parts[i]);
+                    }
+                }
+            }
+            if (currentLine.Count > 0)
+                lines.Add(string.Join(" ", currentLine));
+
+            string enemiesInfo;
+            if (lines.Count == 1)
+                enemiesInfo = $"队伍名单:{lines[0]}";
+            else
+            {
+                enemiesInfo = $"队伍名单:{lines[0]}";
+                for (int i = 1; i < lines.Count; i++)
+                    enemiesInfo += $"\n{new string(' ', "队伍名单:".Length)}{lines[i]}";
+            }
+            return enemiesInfo;
         }
 
 
@@ -562,6 +609,39 @@ namespace EnemiesVsEnemies.UI
                     row++;
                 }
             }
+        }
+
+        public override void setControlLabel()
+        {
+            virtual_acts_cond_label_onAdd_ creataBCreateButton(int actionId, string labelText)
+            {
+                ArrayBytes_Int acts = ArrayUtils.CreateInt();
+                acts.push(actionId);
+                var buttonConfig = new virtual_acts_cond_label_
+                {
+                    acts = acts,
+                    label = Lang.Class.t.get(labelText.ToHaxeString(), null),
+                    cond = null
+                };
+                return buttonConfig.ToVirtual<virtual_acts_cond_label_onAdd_>();
+            }
+
+            ArrayObj btns = (ArrayObj)ArrayUtils.CreateDyn().array;
+            btns.push(creataBCreateButton(14, "Valider"));
+            btns.push(creataBCreateButton(16, "Retour"));
+            btns.push(creataBCreateButton(KeyHelper.X, "X"));
+            btns.push(creataBCreateButton(KeyHelper.C, "C"));
+
+
+            createControlLabel(btns);
+        }
+
+
+        public override bool controlsUpdate()
+        {
+            bool handled = base.controlsUpdate();
+
+            return handled;
         }
     }
 }
