@@ -36,6 +36,7 @@ using ModCore.Modules;
 using dc.h2d.col;
 using ModCore.Utilities;
 using dc.ui.hud;
+using dc.libs.misc;
 
 namespace EnemiesVsEnemies.UI
 {
@@ -164,6 +165,8 @@ namespace EnemiesVsEnemies.UI
             var selectionTM = new ScaleGrid(selectionTile, 8, 8, null);
 
 
+
+
             foreach (var team in config.Teams.Values)
             {
                 string teamInfo = $"- {team.Name} (ID: {team.Id})";
@@ -190,6 +193,20 @@ namespace EnemiesVsEnemies.UI
                 };
 
 
+                if (team.OpposingTeamIds != null && team.OpposingTeamIds.Count > 0)
+                {
+                    string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
+                    var opposingText = Assets.Class.makeText(Lang.Class.t.untranslated(opposingInfo), null, true, null);
+                    opposingText.set_textColor(CreateColor.ColorFromHex("#ffffff"));
+                    opposingText.scaleX = 1.3;
+                    opposingText.scaleY = 1.3;
+                    GetAllText.Add(team.Id + "opposingText", opposingText);
+                    teamFlowBox.addChild(opposingText);
+                }
+
+
+
+
                 if (team.DefaultEnemies != null && team.DefaultEnemies.Count > 0)
                 {
                     var countDict = new Dictionary<string, int>();
@@ -207,22 +224,107 @@ namespace EnemiesVsEnemies.UI
                     {
                         parts.Add(kvp.Value == 1 ? kvp.Key : $"{kvp.Key}+{kvp.Value}");
                     }
-                    string allmob = string.Join("\n", parts);
+                    double screenWidth = dc.hxd.Window.Class.getInstance().get_width();
+                    double maxWidth = screenWidth / 5;
 
-                    string enemiesInfo = $"队伍名单: \n   {allmob}";
+
+                    var partWidths = new List<double>();
+                    foreach (var part in parts)
+                    {
+                        var tempTextPart = Assets.Class.makeText(part.ToHaxeString(), null, true, null);
+                        double width = tempTextPart.textWidth * 0.5;
+                        tempTextPart.remove();
+                        partWidths.Add(width);
+                    }
+
+
+                    var prefixText = Assets.Class.makeText("队伍名单:".ToHaxeString(), null, true, null);
+                    double prefixWidth = prefixText.textWidth * 0.5;
+                    prefixText.remove();
+
+
+                    string allmobSpace = string.Join(" ", parts);
+                    string testInfo = $"队伍名单:{allmobSpace}";
+                    var tempText = Assets.Class.makeText(testInfo.ToHaxeString(), null, true, null);
+                    double totalWidth = tempText.textWidth * 0.5;
+                    tempText.remove();
+
+                    string enemiesInfo;
+                    if (totalWidth > maxWidth)
+                    {
+
+                        var lines = new List<string>();
+                        var currentLine = new List<string>();
+                        double currentWidth = 0;
+
+                        for (int i = 0; i < parts.Count; i++)
+                        {
+                            double partWidth = partWidths[i];
+
+                            if (currentLine.Count == 0)
+                            {
+
+                                if (currentWidth + partWidth + prefixWidth > maxWidth && currentLine.Count == 0)
+                                {
+
+                                    lines.Add(parts[i]);
+                                    continue;
+                                }
+                                currentWidth += partWidth + prefixWidth;
+                                currentLine.Add(parts[i]);
+                            }
+                            else
+                            {
+
+                                double spaceWidth = 5.0;
+                                if (currentWidth + spaceWidth + partWidth > maxWidth)
+                                {
+
+                                    lines.Add(string.Join(" ", currentLine));
+                                    currentLine.Clear();
+                                    currentWidth = partWidth;
+                                    currentLine.Add(parts[i]);
+                                }
+                                else
+                                {
+                                    currentWidth += spaceWidth + partWidth;
+                                    currentLine.Add(parts[i]);
+                                }
+                            }
+                        }
+
+                        if (currentLine.Count > 0)
+                        {
+                            lines.Add(string.Join(" ", currentLine));
+                        }
+
+
+                        if (lines.Count == 1)
+                        {
+                            enemiesInfo = $"队伍名单:{lines[0]}";
+                        }
+                        else
+                        {
+                            enemiesInfo = $"队伍名单:{lines[0]}";
+                            for (int i = 1; i < lines.Count; i++)
+                            {
+                                enemiesInfo += $"\n{new string(' ', "队伍名单:".Length)}{lines[i]}";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        enemiesInfo = testInfo;
+                    }
                     var enemiesText = Assets.Class.makeText(enemiesInfo.ToHaxeString(), null, true, null);
                     enemiesText.set_textColor(Text.Class.COLORS.get("ST".ToHaxeString()));
+                    enemiesText.scaleX = 1;
+                    enemiesText.scaleY = 1;
                     teamFlowBox.addChild(enemiesText);
                 }
 
 
-                if (team.OpposingTeamIds != null && team.OpposingTeamIds.Count > 0)
-                {
-                    string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
-                    var opposingText = Assets.Class.makeText(Lang.Class.t.untranslated(opposingInfo), null, true, null);
-                    opposingText.set_textColor(CreateColor.ColorFromHex("#ffffff"));
-                    teamFlowBox.addChild(opposingText);
-                }
+
             }
 
             if (config.Teams.Count > 0)
@@ -233,54 +335,74 @@ namespace EnemiesVsEnemies.UI
 
         public override void onValidate()
         {
-            int curX = this.curX;
-            int curY = this.curY;
-
-            bool isLocked = getEntryAt(curX, curY).isLocked;
-            string soundPath = isLocked ? "sfx/ui/menu_error2.wav" : "sfx/ui/menu_click1.wav";
-            CoreLibrary.Utilities.AudioHelper.LoadAudioFormString(soundPath);
-
-
             var entry = getEntryAt(curX, curY);
-            if (entry != null)
-            {
-                string mobId = getmobs(entry.i).id.ToString();
-                var args = new MonsterSelectionEventArgs
-                {
-                    Id = mobId,
-                    Teamid = GetSelectedteamid
-                };
-                OnMonsterSelected.Invoke(args);
-                UpdataTameConfig();
-            }
-
-            // if (closeOnValidate)
-            // {
-            //     close();
-            // }
+            if (entry == null)
+                return;
+            string mobId = getmobs(entry.i).id.ToString();
+            var args = new MonsterSelectionEventArgs { Id = mobId, Teamid = GetSelectedteamid };
+            AddMonsterToTeam(args);
+            doMovementIcon(entry.f, GetAllText[args.Teamid]);
         }
 
-
-        public void UpdataTameConfig()
+        private void AddMonsterToTeam(MonsterSelectionEventArgs args)
         {
-            OnMonsterSelected = (data) =>
+            if (EnemiesVsEnemiesMod.GetMobGroupHelper().IsRealBoss(args.Id))
+                return;
+            if (string.IsNullOrEmpty(args.Id) || string.IsNullOrEmpty(args.Teamid))
             {
-                if (EnemiesVsEnemiesMod.GetMobGroupHelper().IsRealBoss(data.Id))
-                    return;
-                if (data.Id.IsNullOrEmpty() || data.Teamid.IsNullOrEmpty())
+                AudioHelper.LoadAudioFormString("sfx/ui/menu_error2.wav");
+                return;
+            }
+
+            if (!GetConfig.Value.Teams.TryGetValue(args.Teamid, out var team))
+            {
+                AudioHelper.LoadAudioFormString("sfx/ui/menu_error2.wav");
+                Log.Logger.Warning($"队伍 {args.Teamid} 不存在");
+                return;
+            }
+
+            team.DefaultEnemies.Add(args.Id);
+            GetConfig.Save();
+            AudioHelper.LoadAudioFormString("sfx/ps5/curse_end_SE.wav");
+            Log.Logger.Debug($"选择选中怪物：{args.Id}, teamid:{args.Teamid}");
+        }
+
+        public void doMovementIcon(Flow flow, Text text)
+        {
+            double pixelScale = get_pixelScale.Invoke();
+
+            // Horizontal movement tween
+            double horizontalTargetValue = text.x * pixelScale;
+            var horizontalTween = CreateTween(tw,
+                () => flow.x,
+                value =>
                 {
-                    AudioHelper.LoadAudioFormString("sfx/ui/menu_error2.wav");
-                    return;
-                }
+                    flow.x = value;
+                    flow.posChanged = true;
+                },
+                horizontalTargetValue,
+                0);
 
-                TeamConfig TConfig = GetConfig.Value.Teams[data.Teamid];
-                TConfig.DefaultEnemies.Add(data.Id);
+            // Vertical movement tween
+            double verticalTargetValue = text.y * pixelScale;
+            var verticalTween = CreateTween(tw,
+                () => flow.y,
+                value =>
+                {
+                    flow.y = value;
+                    flow.posChanged = true;
+                },
+                verticalTargetValue,
+                0);
+        }
 
-                GetConfig.Save();
-
-
-                Log.Logger.Debug($"选择选中怪物：{data.Id},teamid:{data.Teamid}");
-            };
+        private Tween CreateTween(Tweenie tw, Func<double> getter, Action<double> setterAction, double targetValue, double? duration)
+        {
+            var hlGetter = new HlFunc<double>(getter);
+            var hlAction = new HlAction<object>((_setV) => setterAction((double)_setV));
+            var hlSetter = new HlAction<double>((dt) => hlAction.Invoke(dt));
+            var tweenType = new TType.TEaseOut();
+            return tw.create_(hlGetter, hlSetter, null, targetValue, tweenType, duration, Ref<bool>.Null);
         }
 
 
@@ -364,7 +486,5 @@ namespace EnemiesVsEnemies.UI
                 }
             }
         }
-
-
     }
 }
