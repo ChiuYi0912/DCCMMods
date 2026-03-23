@@ -17,6 +17,8 @@ namespace EnemiesVsEnemies.UI.Utilities
         private static List<Flow> remove = new();
         public static void doMovementIcon(CricketSelectorGui gui, Text text, virtual_cx_cy_f_i_isLocked_sectionIdx_ seledata, MonsterSelectionEventArgs args)
         {
+
+            
             double pixelScale = gui.get_pixelScale.Invoke();
             Flow oldflow = seledata.f;
 

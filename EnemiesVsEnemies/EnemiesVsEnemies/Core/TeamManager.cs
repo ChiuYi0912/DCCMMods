@@ -68,7 +68,7 @@ namespace EnemiesVsEnemies.Core
         {
             if (!teams.ContainsKey(teamId))
             {
-                throw new KeyNotFoundException($"队伍 '{teamId}' 不存在");
+                return;
             }
 
             var teamToRemove = teams[teamId];
@@ -148,7 +148,7 @@ namespace EnemiesVsEnemies.Core
                     opposingTeams.Add(opposingTeam);
                 }
             }
-            
+
             return opposingTeams;
         }
 

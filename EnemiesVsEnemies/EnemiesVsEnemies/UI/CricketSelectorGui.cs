@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using CoreLibrary.Core.Extensions;
 using dc;
@@ -47,6 +42,7 @@ namespace EnemiesVsEnemies.UI
         public NumberInput numberInput = null!;
         public TeamManager teamManager = null!;
         public FlowBox teamFlowBox = null!;
+        public ScaleGrid selectionTeam = null!;
         public string UserSelectedteamid = null!;
 
         public UITextHelper textHelper = null!;
@@ -56,6 +52,8 @@ namespace EnemiesVsEnemies.UI
 
         public Mask rightMask = null!;
         private Interactive rightInter = null!;
+
+        public bool isLockedController = false;
 
 
         public class MonsterSelectionEventArgs
@@ -70,6 +68,8 @@ namespace EnemiesVsEnemies.UI
 
             teamManager = teammanager;
             OnMonsterSelected = (data) => { };
+
+
         }
 
 
@@ -130,6 +130,10 @@ namespace EnemiesVsEnemies.UI
             rightInter.propagateEvents = true;
             rightInter.onWheel = new HlAction<Event>(OnRightWheel);
 
+            Tile tile = Assets.Class.ui.getTile("boxSelect".ToHaxeString(), Ref<int>.Null, Ref<double>.Null, Ref<double>.Null, null);
+            selectionTeam = new ScaleGrid(tile, 8, 8, rightMask);
+            selectionTeam.alpha = 0;
+
 
 
             textHelper.AddConfigInfoToRightFlow();
@@ -150,9 +154,12 @@ namespace EnemiesVsEnemies.UI
             double delta = e.wheelDelta;
             if (delta == 0) return;
 
-            double step = 20;
+            const double step = 20;
+
             double contentHeight = base.rightFlow.get_outerHeight();
             double maskHeight = rightMask.height;
+
+
             double maxScroll = Math.Max(0, contentHeight - maskHeight);
             double newY = base.rightFlow.y - delta * step;
             newY = Math.Max(-maxScroll, Math.Min(0, newY));
@@ -245,9 +252,6 @@ namespace EnemiesVsEnemies.UI
         }
 
 
-        public override void updateRightFlow() { }
-        public override void beforeUpdateSelection() { }
-
 
         public override dc.h2d.Object getIconBmp(int i, dc.h2d.Object parent)
         {
@@ -283,7 +287,14 @@ namespace EnemiesVsEnemies.UI
             selection.x = entryGlobal.x - maskGlobal.x - offset;
             selection.y = entryGlobal.y - maskGlobal.y - offset;
 
+            if (UserSelectedteamid.IsNullOrEmpty())
+                return;
 
+            UptDateSelectionTeam();
+        }
+
+        public void UptDateSelectionTeam()
+        {
             double timeFactor = base.ftime * 0.1;
             string speedKey = "co_blinkCursorSpeed";
 
@@ -299,12 +310,45 @@ namespace EnemiesVsEnemies.UI
             this.selectionSG.alpha = 0.8 + alphaOffset;
 
 
-            if (UserSelectedteamid.IsNullOrEmpty())
+            if (!textHelper.AlluiText.ContainsKey(UserSelectedteamid))
+            {
+                selectionTeam.alpha = 0;
                 return;
+            }
 
 
             if (textHelper.AlluiText.TryGetValue(UserSelectedteamid, out var text))
-                text.alpha = 0.8 + alphaOffset;
+            {
+                Point oldflowGlobal = Main.Class.ME.localToGlobal(text, Ref<double>.Null, Ref<double>.Null);
+                Point localPos = rightMask.globalToLocal(oldflowGlobal);
+
+
+                double scaleX = text.scaleX;
+                double scaleY = text.scaleY;
+                double actualWidth = text.textWidth * scaleX;
+                double actualHeight = text.textHeight * scaleY;
+
+
+                double padding = get_pixelScale.Invoke() * 10;
+                double boxWidth = actualWidth + padding;
+                double boxHeight = actualHeight + padding / 5;
+
+
+                selectionTeam.set_width((int)boxWidth);
+                selectionTeam.set_height((int)boxHeight);
+
+
+                double offsetX = (boxWidth - actualWidth) / 2;
+                double offsetY = (boxHeight - actualHeight) / 2;
+
+
+                selectionTeam.x = localPos.x - offsetX;
+                selectionTeam.y = localPos.y - offsetY;
+
+                selectionTeam.alpha = 0.8 + alphaOffset;
+
+                selectionTeam.posChanged = true;
+            }
 
         }
 
@@ -350,13 +394,51 @@ namespace EnemiesVsEnemies.UI
             ArrayObj btns = (ArrayObj)ArrayUtils.CreateDyn().array;
             btns.push(creataBCreateButton(14, "Valider"));
             btns.push(creataBCreateButton(16, "Retour"));
-            btns.push(creataBCreateButton(KeyHelper.X, "X"));
-            btns.push(creataBCreateButton(KeyHelper.C, "C"));
 
+
+            btns.push(creataBCreateButton(1, "添加新队伍"));
+            btns.push(creataBCreateButton(2, ""));
+            btns.push(creataBCreateButton(3, ""));
+            btns.push(creataBCreateButton(4, ""));
+            btns.push(creataBCreateButton(5, "移除当前选择队伍"));
 
             createControlLabel(btns);
         }
 
+        public override bool controlsUpdate()
+        {
+            if (isLockedController)
+                return false;
 
+            Controller parent = controller.parent;
+
+
+            if (ControllerHelper.ControlsUpdateFromProcess(parent, 5))
+            {
+                if (UserSelectedteamid == null || !textHelper.AlluiText.ContainsKey(UserSelectedteamid))
+                {
+                    var popup = new dc.ui.ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
+                    popup.text("注意：\n 请用鼠标选择要移除的队伍\n".AsHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
+
+                    return false;
+                }
+                textHelper.RemoveTeamFromGui(UserSelectedteamid, teamManager);
+            }
+
+            if (ControllerHelper.ControlsUpdateFromProcess(parent, 1))
+            {
+                textHelper.AddNewTeamFromGui(teamManager);
+                return true;
+            }
+
+            if (ControllerHelper.ControlsUpdateFromProcess(parent, 2))
+            {
+                
+                return true;
+            }
+
+
+            return base.controlsUpdate();
+        }
     }
 }

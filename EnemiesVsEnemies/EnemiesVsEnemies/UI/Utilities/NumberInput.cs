@@ -15,13 +15,13 @@ namespace EnemiesVsEnemies.UI.Utilities
     public class NumberInput
     {
         public dc.ui.Process GetProcess = null!;
+        public dc.ui.TextInput Input = null!;
         public NumberInput(dc.ui.Process p)
         {
             GetProcess = p;
-
         }
 
-        public dc.ui.TextInput OpenNumberInput(string title, string subTitle, int initial, Action<int> onValidate, string okLabel = "回车确定", string cancelLabel = "EXC取消", Sound? sfx = null, int min = 1, int max = 9)
+        public dc.ui.TextInput OpenNumberInput(string title, string subTitle, int initial, Action<string> onValidate, string okLabel = "回车确定", string cancelLabel = "EXC取消", Sound? sfx = null, int min = 1, int max = 9)
         {
             var text = new dc.ui.TextInput(
                  GetProcess,
@@ -30,21 +30,13 @@ namespace EnemiesVsEnemies.UI.Utilities
                  initial.ToString().ToHaxeString(),
                  new HlAction<dc.String>(s =>
                  {
-                     string text = s?.ToString() ?? "";
-                     if (int.TryParse(text, out int value))
-                     {
-                         value = Math.Clamp(value, min, max);
-                         onValidate(value);
-                     }
-                     else
-                     {
-
-                         var str = "请输入有效数字".ToHaxeString();
-                     }
+                     onValidate(s.ToString());
                  }),
                  okLabel.ToHaxeString(),
                  cancelLabel.ToHaxeString(),
                  sfx);
+
+            Input = text;
 
             return text;
         }

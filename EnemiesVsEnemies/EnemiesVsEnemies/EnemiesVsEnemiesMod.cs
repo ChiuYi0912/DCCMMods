@@ -92,43 +92,12 @@ namespace EnemiesVsEnemies
 
         private void HandleKeyBindings()
         {
-            // 生成队伍A敌人 (键1)
+            // 生成队伍敌人 (键B)
             if (keyBindingHelper.IsSpawnTeamAPressed())
             {
-                enemySpawner.SpawnDefaultEnemiesForTeam("TeamA");
-                LogInfo($"已生成队伍A敌人 (数量: {currentEnemyCount})");
-            }
-
-            // 生成队伍B敌人 (键2)
-            if (keyBindingHelper.IsSpawnTeamBPressed())
-            {
-                enemySpawner.SpawnDefaultEnemiesForTeam("TeamB");
-                LogInfo($"已生成队伍B敌人 (数量: {currentEnemyCount})");
-            }
-
-            // 生成黄金块 (键C)
-            if (keyBindingHelper.IsSpawnGoldPressed())
-            {
-                enemySpawner.SpawnGoldNugget();
-                LogInfo("已生成黄金块");
-            }
-
-            // 增加敌人数量 (PageUp)
-            if (keyBindingHelper.IsIncreaseEnemyCountPressed())
-            {
-                currentEnemyCount++;
-                UpdateEnemySpawnCount();
-                LogInfo($"敌人数量增加至: {currentEnemyCount}");
-            }
-
-            // 减少敌人数量 (PageDown)
-            if (keyBindingHelper.IsDecreaseEnemyCountPressed())
-            {
-                if (currentEnemyCount > 1)
+                foreach (var mobs in config.Value.Teams)
                 {
-                    currentEnemyCount--;
-                    UpdateEnemySpawnCount();
-                    LogInfo($"敌人数量减少至: {currentEnemyCount}");
+                    enemySpawner.SpawnDefaultEnemiesForTeam(mobs.Value.Id);
                 }
             }
         }

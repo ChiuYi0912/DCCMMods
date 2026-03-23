@@ -36,5 +36,7 @@ namespace EnemiesVsEnemies.UI.Utilities
 
 
         public static int getmoblength() => Data.Class.mob.all.array.length;
+
+
     }
 }

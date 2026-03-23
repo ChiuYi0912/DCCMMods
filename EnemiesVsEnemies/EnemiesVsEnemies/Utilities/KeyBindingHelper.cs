@@ -1,3 +1,4 @@
+using CoreLibrary.Utilities;
 using dc;
 using dc.hxd;
 using EnemiesVsEnemies.Configuration;
@@ -15,7 +16,7 @@ namespace EnemiesVsEnemies.Utilities
 
         public bool IsSpawnTeamAPressed()
         {
-            return Key.Class.isPressed(GetKeyconfig.SpawnTeamAKey);
+            return Key.Class.isPressed(KeyHelper.B);
         }
 
         public bool IsSpawnTeamBPressed()
