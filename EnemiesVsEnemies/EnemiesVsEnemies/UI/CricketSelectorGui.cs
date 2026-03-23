@@ -37,37 +37,41 @@ using dc.h2d.col;
 using ModCore.Utilities;
 using dc.ui.hud;
 using dc.libs.misc;
+using dc.haxe.io;
+using Math = System.Math;
 
 namespace EnemiesVsEnemies.UI
 {
     public class CricketSelectorGui : GridSelector
     {
-        public NumberInput GetU = null!;
-        public TeamManager GetTeam = null!;
+        public NumberInput numberInput = null!;
+        public TeamManager teamManager = null!;
         public FlowBox teamFlowBox = null!;
-        public string GetSelectedteamid = null!;
+        public string UserSelectedteamid = null!;
+
+        public UITextHelper textHelper = null!;
 
         public Config<ModConfig> GetConfig = EnemiesVsEnemiesMod.config;
 
 
-        public static Dictionary<string, dc.ui.Text> GetAllText = new();
-        public static Dictionary<string, FlowBox> GetallFlow = new();
+        public Mask rightMask = null!;
+        private Interactive rightInter = null!;
 
 
         public class MonsterSelectionEventArgs
         {
-            public string Id { get; set; } = null!;
+            public string MobId { get; set; } = null!;
             public string Teamid { get; set; } = null!;
         }
         public Action<MonsterSelectionEventArgs> OnMonsterSelected { get; set; }
 
-        public CricketSelectorGui(TeamManager teamManager)
+        public CricketSelectorGui(TeamManager teammanager)
         {
-            GetTeam = teamManager;
+
+            teamManager = teammanager;
             OnMonsterSelected = (data) => { };
         }
 
-        public bool onOut = false;
 
         public override int get_wid() => 10;
         public override int get_entryWid() => 24;
@@ -84,37 +88,21 @@ namespace EnemiesVsEnemies.UI
             return EnemiesVsEnemiesMod.GetMobGroupHelper().IsRealBoss(data);
         }
 
-        public dynamic getmobs(int index)
-        {
-            var arr = Data.Class.mob.all.array;
-
-            if (index < 0 || index >= arr.length)
-                return null!;
-
-            return arr.getDyn(index);
-        }
-
-
-        public int getmoblength() => Data.Class.mob.all.array.length;
-
-
-        public string getmobnamebyid(string id)
-        {
-            string data = Data.Class.mob.byId.get(id.ToHaxeString()).name.ToString();
-            return Lang.Class.t.get(data.ToHaxeString(), null).ToString();
-        }
 
 
         public override void initGrid()
         {
             curX = curY = 0;
-            initEntries(getmoblength());
+            initEntries(UIMobHelper.getmoblength());
         }
 
 
 
         public override void initRightFlow()
         {
+            textHelper = new UITextHelper(this);
+
+
             double padH = 5.0;
             double padV = 5.0;
             base.rightFlow = FlowBox.Class.createBoxValidation(null, Ref<double>.From(ref padH), Ref<double>.From(ref padV), Ref<bool>.Null, null);
@@ -130,14 +118,21 @@ namespace EnemiesVsEnemies.UI
             nameText.set_textColor(Text.Class.COLORS.get("ST".ToHaxeString()));
             nameText.set_textAlign(new Align.MultilineCenter());
 
-
-            GetAllText.Add("nameText", nameText);
-
+            textHelper.AlluiText.Add("nameText", nameText);
 
             base.root.addChild(nameText);
 
+            rightMask = new Mask(200, 300, null);
+            rightMask.addChild(rightFlow);
+            base.mainFlow.addChild(rightMask);
 
-            AddConfigInfoToRightFlow();
+            rightInter = new Interactive(rightMask.width, rightMask.height, rightMask, null);
+            rightInter.propagateEvents = true;
+            rightInter.onWheel = new HlAction<Event>(OnRightWheel);
+
+
+
+            textHelper.AddConfigInfoToRightFlow();
 
             // GetU = new NumberInput(this);
             // var action = new Action<int>((value) =>
@@ -147,123 +142,25 @@ namespace EnemiesVsEnemies.UI
             // var inpu = GetU.OpenNumberInput("TEST", "hello", 1, action);
         }
 
-        private void AddConfigInfoToRightFlow()
+        private void OnRightWheel(Event e)
         {
-            if (GetConfig == null || base.rightFlow == null || this.mainFlow == null)
-                return;
+            if (controller == null) return;
+            if (controller.parent.exclusiveId != controller.id) return;
 
+            double delta = e.wheelDelta;
+            if (delta == 0) return;
 
-            var config = GetConfig.Value;
-            if (config == null)
-                return;
+            double step = 20;
+            double contentHeight = base.rightFlow.get_outerHeight();
+            double maskHeight = rightMask.height;
+            double maxScroll = Math.Max(0, contentHeight - maskHeight);
+            double newY = base.rightFlow.y - delta * step;
+            newY = Math.Max(-maxScroll, Math.Min(0, newY));
 
-
-            mainFlow.set_horizontalAlign(new FlowAlign.Middle());
-            mainFlow.set_verticalAlign(new FlowAlign.Bottom());
-
-
-            GetAllText.Clear();
-
-
-            var configTitle = Assets.Class.makeText(Lang.Class.t.untranslated("斗蛐蛐MOD"), null, true, null);
-            configTitle.set_textColor(CreateColor.ColorFromHex("#ffffff"));
-            configTitle.set_textAlign(new Align.Center());
-
-
-            GetAllText.Add("configTitle", configTitle);
-            base.rightFlow.addChild(configTitle);
-
-
-            double teamPadH = 5.0;
-            double teamPadV = 5.0;
-            teamFlowBox = FlowBox.Class.createBoxValidation(null, Ref<double>.From(ref teamPadH), Ref<double>.From(ref teamPadV), Ref<bool>.Null, null);
-            teamFlowBox.set_isVertical(true);
-            teamFlowBox.set_horizontalAlign(new FlowAlign.Middle());
-            teamFlowBox.set_verticalAlign(new FlowAlign.Middle());
-
-
-            var teamsTitle = Assets.Class.makeText(Lang.Class.t.untranslated("当前队伍:"), null, true, null);
-            teamsTitle.set_textColor(Text.Class.COLORS.get("ST".ToHaxeString()));
-
-
-            GetAllText.Add("teamsTitle", teamsTitle);
-            teamFlowBox.addChild(teamsTitle);
-
-
-            Tile selectionTile = Assets.Class.ui.getTile("boxSelect".ToHaxeString(), Ref<int>.Null, Ref<double>.Null, Ref<double>.Null, null);
-            var selectionTM = new ScaleGrid(selectionTile, 8, 8, null);
-
-
-
-            foreach (var team in config.Teams.Values)
-            {
-                if (!team.Name.IsNullOrEmpty() && !team.Id.IsNullOrEmpty())
-                {
-                    string teamInfo = $"- {team.Name} (ID: {team.Id})";
-                    var teamText = Assets.Class.makeText(Lang.Class.t.untranslated(teamInfo), null, true, null);
-                    teamText.alpha = 0.5;
-                    teamText.scaleX = 1.3;
-                    teamText.scaleY = 1.3;
-                    teamText.set_textColor(team.TeamColor);
-
-
-                    GetAllText.Add(team.Id, teamText);
-                    teamFlowBox.addChild(teamText);
-
-
-                    var interactive = new Interactive(teamText.textWidth, teamText.textHeight, teamText, null);
-                    interactive.onClick = (e) =>
-                    {
-                        AudioHelper.LoadAudioFormString(Audioclick);
-                        GetSelectedteamid = team.Id;
-                        Log.Logger.Debug($"选中队伍：{GetSelectedteamid}");
-                    };
-                    interactive.onOver = (e) =>
-                    {
-                        teamText.alpha = 1.0;
-                    };
-                    interactive.onOut = (e) =>
-                    {
-                        teamText.alpha = 0.5;
-                    };
-
-                }
-
-
-                if (team.OpposingTeamIds != null && team.OpposingTeamIds.Count > 0)
-                {
-                    string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
-                    var opposingText = Assets.Class.makeText(Lang.Class.t.untranslated(opposingInfo), null, true, null);
-                    opposingText.set_textColor(CreateColor.ColorFromHex("#ffffff"));
-                    opposingText.scaleX = 1.1;
-                    opposingText.scaleY = 1.1;
-
-
-                    GetAllText.Add(team.Id + "opposingText", opposingText);
-                    teamFlowBox.addChild(opposingText);
-                }
-
-
-                if (team.DefaultEnemies != null && team.DefaultEnemies.Count > 0)
-                {
-                    var enemiesText = Assets.Class.makeText("".ToHaxeString(), null, true, null);
-                    enemiesText.set_textColor(Text.Class.COLORS.get("ST".ToHaxeString()));
-                    enemiesText.scaleX = 1;
-                    enemiesText.scaleY = 1;
-
-
-                    teamFlowBox.addChild(enemiesText);
-                    GetAllText.Add(team.Id + "enemiesText", enemiesText);
-                }
-            }
-
-            if (config.Teams.Count > 0)
-            {
-                base.rightFlow.addChild(teamFlowBox);
-            }
-
-            UpdateTeamDisplay();
+            base.rightFlow.y = newY;
+            base.rightFlow.posChanged = true;
         }
+
 
         public override void onValidate()
         {
@@ -272,9 +169,9 @@ namespace EnemiesVsEnemies.UI
                 return;
 
 
-            string mobId = getmobs(entry.i).id.ToString();
-            var args = new MonsterSelectionEventArgs { Id = mobId, Teamid = GetSelectedteamid };
-            if (string.IsNullOrEmpty(args.Id) || string.IsNullOrEmpty(args.Teamid) || entry.isLocked)
+            string mobId = UIMobHelper.getmobs(entry.i).id.ToString();
+            var args = new MonsterSelectionEventArgs { MobId = mobId, Teamid = UserSelectedteamid };
+            if (string.IsNullOrEmpty(args.MobId) || string.IsNullOrEmpty(args.Teamid) || entry.isLocked)
             {
                 AudioHelper.LoadAudioFormString(AudioError);
                 return;
@@ -284,14 +181,14 @@ namespace EnemiesVsEnemies.UI
             AddMonsterToTeam(args);
 
 
-            doMovementIcon(GetAllText[args.Teamid], entry, args);
+            UIAnimHelper.doMovementIcon(this, textHelper.AlluiText[args.Teamid], entry, args);
         }
 
 
 
         private void AddMonsterToTeam(MonsterSelectionEventArgs args)
         {
-            if (EnemiesVsEnemiesMod.GetMobGroupHelper().IsRealBoss(args.Id))
+            if (EnemiesVsEnemiesMod.GetMobGroupHelper().IsRealBoss(args.MobId))
                 return;
 
 
@@ -303,96 +200,58 @@ namespace EnemiesVsEnemies.UI
             }
 
 
-            team.DefaultEnemies.Add(args.Id);
+            team.DefaultEnemies.Add(args.MobId);
             GetConfig.Save();
-            UpdateTeamDisplay();
+            textHelper.UpdateTeamDisplay();
 
 
             AudioHelper.LoadAudioFormString(Audiocurse);
 
-            Log.Logger.Debug($"选择选中怪物：{args.Id}, teamid:{args.Teamid}");
+            Log.Logger.Debug($"选择选中怪物：{args.MobId}, teamid:{args.Teamid}");
         }
 
-        public List<Flow> remove = new();
-        public void doMovementIcon(Text text, virtual_cx_cy_f_i_isLocked_sectionIdx_ seledata, MonsterSelectionEventArgs args)
+        public override void onResize()
         {
-            double pixelScale = get_pixelScale.Invoke();
-            Flow oldflow = seledata.f;
+            base.onResize();
+
+            double pixelScale = base.get_pixelScale.Invoke();
+            double fbWidth = base.fbItems.get_outerWidth();
+            double fbHeight = base.fbItems.get_outerHeight();
+            double leftX = base.fbItems.x;
+            double leftY = base.fbItems.y;
 
 
-            Flow cloneflow = new Flow(null);
-            var cloneicon = getIconBmp(seledata.i, cloneflow);
-            cloneicon.posChanged = true;
-            cloneicon.scaleX = pixelScale;
-            cloneicon.posChanged = true;
-            cloneicon.scaleY = pixelScale;
+            double rightX = leftX + fbWidth + 20 * pixelScale;
+            double rightY = leftY;
 
-            mask.addChild(cloneflow);
-
-            Main main = Main.Class.ME;
-            const double speed = 800;
+            rightMask.x = rightX;
+            rightMask.y = rightY;
+            rightMask.width = (int)fbWidth;
+            rightMask.height = (int)fbHeight;
 
 
-            Point oldflowGlobal = main.localToGlobal(oldflow, Ref<double>.Null, Ref<double>.Null);
-            Point startLocal = mask.globalToLocal(oldflowGlobal);
+            rightInter.width = fbWidth;
+            rightInter.height = fbHeight;
 
-
-            Point textGlobal = main.localToGlobal(text, Ref<double>.Null, Ref<double>.Null);
-            Point targetLocal = mask.globalToLocal(textGlobal);
-
-
-            cloneflow.x = startLocal.x;
-            cloneflow.y = startLocal.y;
-
-
-            var tweenX = CreateTween(
-                () => cloneflow.x,
-                value =>
-                {
-                    cloneflow.x = value;
-                    cloneflow.posChanged = true;
-                },
-                targetLocal.x, speed);
-
-            var tweenY = CreateTween(
-                () => cloneflow.y,
-                value =>
-                {
-                    cloneflow.y = value;
-                    cloneflow.posChanged = true;
-                },
-                targetLocal.y, speed);
-
-
-            if (remove.Count >= 3)
-            {
-                Flow oldest = remove[0];
-                oldest.remove();
-                remove.RemoveAt(0);
-            }
-            remove.Add(cloneflow);
+            base.rightFlow.reflow();
         }
 
-        private Tween CreateTween(Func<double> getter, Action<double> setterAction, double targetValue, double? duration)
+        public override void setMainFlowPos()
         {
-            var hlGetter = new HlFunc<double>(getter);
-            var hlSetter = new HlAction<double>(setterAction);
-            var tweenType = new TType.TEaseOut();
-            return tw.create_(hlGetter, hlSetter, null, targetValue, tweenType, duration, Ref<bool>.Null);
+            base.setMainFlowPos();
+            mainFlow.reflow();
+            mainFlow.x = 50;
+            mainFlow.posChanged = true;
         }
-
-
 
 
         public override void updateRightFlow() { }
         public override void beforeUpdateSelection() { }
 
 
-
-
         public override dc.h2d.Object getIconBmp(int i, dc.h2d.Object parent)
         {
-            string name = getmobs(i).id.ToString();
+            string name = UIMobHelper.getmobs(i).id.ToString();
             if (name.IsNullOrEmpty())
                 return new Bitmap(Tile.Class.fromColor(0xFF0000, 32, 32, null, null), parent);
 
@@ -440,153 +299,15 @@ namespace EnemiesVsEnemies.UI
             this.selectionSG.alpha = 0.8 + alphaOffset;
 
 
-            if (GetSelectedteamid.IsNullOrEmpty())
+            if (UserSelectedteamid.IsNullOrEmpty())
                 return;
 
 
-            if (GetAllText.TryGetValue(GetSelectedteamid, out var text))
+            if (textHelper.AlluiText.TryGetValue(UserSelectedteamid, out var text))
                 text.alpha = 0.8 + alphaOffset;
 
         }
 
-
-        public void UpdateTeamDisplay()
-        {
-            if (GetConfig == null || teamFlowBox == null) return;
-
-            var config = GetConfig.Value;
-            if (config == null) return;
-
-            foreach (var team in config.Teams.Values)
-            {
-
-                if (GetAllText.TryGetValue(team.Id, out var teamText))
-                {
-                    string teamInfo = $"- {team.Name} (ID: {team.Id})";
-                    teamText.set_text(Lang.Class.t.untranslated(teamInfo.ToHaxeString()));
-                }
-
-
-                string opposingKey = team.Id + "opposingText";
-                if (GetAllText.TryGetValue(opposingKey, out var opposingText))
-                {
-                    if (team.OpposingTeamIds != null && team.OpposingTeamIds.Count > 0)
-                    {
-                        string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
-                        opposingText.set_text(Lang.Class.t.untranslated(opposingInfo.ToHaxeString()));
-
-                    }
-                    else
-                    {
-                        opposingText.visible = false;
-                    }
-                }
-
-
-                string enemiesKey = team.Id + "enemiesText";
-                if (GetAllText.TryGetValue(enemiesKey, out var enemiesText))
-                {
-                    string newEnemiesInfo = GenerateEnemiesInfo(team);
-                    enemiesText.set_text(Lang.Class.t.get(newEnemiesInfo.ToHaxeString(), null));
-                    enemiesText.posChanged = true;
-                }
-            }
-
-
-            teamFlowBox.reflow();
-            base.rightFlow.reflow();
-        }
-
-
-        private string GenerateEnemiesInfo(TeamConfig team)
-        {
-            if (team.DefaultEnemies == null || team.DefaultEnemies.Count == 0)
-                return "队伍名单: 无";
-
-            var countDict = new Dictionary<string, int>();
-            foreach (var id in team.DefaultEnemies)
-            {
-                string lang = getmobnamebyid(id);
-                countDict[lang] = countDict.TryGetValue(lang, out int c) ? c + 1 : 1;
-            }
-
-            var parts = new List<string>();
-            foreach (var kvp in countDict)
-                parts.Add(kvp.Value == 1 ? kvp.Key : $"{kvp.Key}+{kvp.Value}");
-
-            double screenWidth = dc.hxd.Window.Class.getInstance().get_width();
-            double maxWidth = screenWidth / 6;
-
-
-            string testInfo = $"队伍名单:{string.Join(" ", parts)}";
-            var temp = Assets.Class.makeText(testInfo.ToHaxeString(), null, true, null);
-            double totalWidth = temp.textWidth * 0.5;
-            temp.remove();
-
-            if (totalWidth <= maxWidth)
-                return testInfo;
-
-
-            var partWidths = new List<double>();
-            foreach (var part in parts)
-            {
-                var t = Assets.Class.makeText(part.ToHaxeString(), null, true, null);
-                partWidths.Add(t.textWidth * 0.5);
-                t.remove();
-            }
-
-            var prefixText = Assets.Class.makeText("队伍名单:".ToHaxeString(), null, true, null);
-            double prefixWidth = prefixText.textWidth * 0.5;
-            prefixText.remove();
-
-            var lines = new List<string>();
-            var currentLine = new List<string>();
-            double currentWidth = 0;
-
-            for (int i = 0; i < parts.Count; i++)
-            {
-                double partWidth = partWidths[i];
-                if (currentLine.Count == 0)
-                {
-                    if (currentWidth + partWidth + prefixWidth > maxWidth && currentLine.Count == 0)
-                    {
-                        lines.Add(parts[i]);
-                        continue;
-                    }
-                    currentWidth += partWidth + prefixWidth;
-                    currentLine.Add(parts[i]);
-                }
-                else
-                {
-                    double spaceWidth = 5.0;
-                    if (currentWidth + spaceWidth + partWidth > maxWidth)
-                    {
-                        lines.Add(string.Join(" ", currentLine));
-                        currentLine.Clear();
-                        currentWidth = partWidth;
-                        currentLine.Add(parts[i]);
-                    }
-                    else
-                    {
-                        currentWidth += spaceWidth + partWidth;
-                        currentLine.Add(parts[i]);
-                    }
-                }
-            }
-            if (currentLine.Count > 0)
-                lines.Add(string.Join(" ", currentLine));
-
-            string enemiesInfo;
-            if (lines.Count == 1)
-                enemiesInfo = $"队伍名单:{lines[0]}";
-            else
-            {
-                enemiesInfo = $"队伍名单:{lines[0]}";
-                for (int i = 1; i < lines.Count; i++)
-                    enemiesInfo += $"\n{new string(' ', "队伍名单:".Length)}{lines[i]}";
-            }
-            return enemiesInfo;
-        }
 
 
         public override void initEntries(int size)
@@ -637,11 +358,5 @@ namespace EnemiesVsEnemies.UI
         }
 
 
-        public override bool controlsUpdate()
-        {
-            bool handled = base.controlsUpdate();
-
-            return handled;
-        }
     }
 }

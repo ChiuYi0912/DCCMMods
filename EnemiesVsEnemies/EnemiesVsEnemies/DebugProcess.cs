@@ -8,6 +8,7 @@ using dc.pr;
 using dc.ui.pause;
 using dc.ui.sel;
 using EnemiesVsEnemies.UI;
+using EnemiesVsEnemies.UI.Utilities;
 using HaxeProxy.Runtime;
 using IngameDebugConsole;
 using ModCore.Utilities;
