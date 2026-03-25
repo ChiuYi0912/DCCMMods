@@ -46,14 +46,23 @@ namespace EnemiesVsEnemies
 
             hookManager.InitializeHooks();
 
-            Info.Version = "2.6.0";
+            Info.Version = "0.5.0";
             Info.Name = "EnemiesVsEnemies (Enhanced)";
 
-            LogInfo("EnemiesVsEnemies Mod 已初始化 (增强版)");
+            LogInfo("EnemiesVsEnemies Mod 已初始化");
 
         }
 
-        void IOnHeroUpdate.OnHeroUpdate(double dt) => HandleKeyBindings();
+        void IOnHeroUpdate.OnHeroUpdate(double dt)
+        {
+            if (CricketSelectorGui.isLockedController)
+                return;
+
+            HandleKeyBindings();
+            Destroymobs();
+        }
+
+
         void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb) => mobGroupHelper.Refresh();
 
 
@@ -101,6 +110,15 @@ namespace EnemiesVsEnemies
                 }
             }
         }
+
+        private void Destroymobs()
+        {
+            if (keyBindingHelper.IsSpawnTeamDestroyMobs())
+            {
+                enemySpawner.DestroyAllMobsFromCreateList();
+            }
+        }
+
 
         private void UpdateEnemySpawnCount()
         {

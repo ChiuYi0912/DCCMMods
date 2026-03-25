@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
 using CoreLibrary.Core.Utilities;
 using dc;
 using dc.en;
@@ -21,6 +22,7 @@ namespace EnemiesVsEnemies.Core
     {
         private readonly TeamManager GetteamManager;
         private readonly ModConfig GetModconfig;
+        public List<Mob> CreatedMobs = new();
 
         public EnemySpawner(TeamManager teamManager, ModConfig config)
         {
@@ -80,7 +82,21 @@ namespace EnemiesVsEnemies.Core
                 {
                     boss.setReady();
                 }
+                CreatedMobs.Add(mob);
             }
+        }
+
+        public void DestroyAllMobsFromCreateList()
+        {
+            foreach (var mobs in CreatedMobs)
+            {
+                if (!mobs.destroyed)
+                {
+                    dc.pr.Game.Class.ME.curLevel.unregisterEntity(mobs);
+                    mobs.destroy();
+                }
+            }
+            CreatedMobs.Clear();
         }
 
         public void SpawnEnemies(string teamId, List<EnemySpawnConfig> spawnConfigs)

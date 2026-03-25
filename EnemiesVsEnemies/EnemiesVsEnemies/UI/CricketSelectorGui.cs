@@ -43,18 +43,14 @@ namespace EnemiesVsEnemies.UI
         public TeamManager teamManager = null!;
         public FlowBox teamFlowBox = null!;
         public ScaleGrid selectionTeam = null!;
-        public string UserSelectedteamid = null!;
-
         public UITextHelper textHelper = null!;
-
-        public Config<ModConfig> GetConfig = EnemiesVsEnemiesMod.config;
-
-
         public Mask rightMask = null!;
         private Interactive rightInter = null!;
 
-        public bool isLockedController = false;
+        public Config<ModConfig> GetConfig = EnemiesVsEnemiesMod.config;
 
+        public static bool isLockedController = false;
+        public string UserSelectedteamid = null!;
 
         public class MonsterSelectionEventArgs
         {
@@ -65,10 +61,8 @@ namespace EnemiesVsEnemies.UI
 
         public CricketSelectorGui(TeamManager teammanager)
         {
-
             teamManager = teammanager;
             OnMonsterSelected = (data) => { };
-
 
         }
 
@@ -88,8 +82,6 @@ namespace EnemiesVsEnemies.UI
             return EnemiesVsEnemiesMod.GetMobGroupHelper().IsRealBoss(data);
         }
 
-
-
         public override void initGrid()
         {
             curX = curY = 0;
@@ -102,7 +94,6 @@ namespace EnemiesVsEnemies.UI
         {
             textHelper = new UITextHelper(this);
 
-
             double padH = 5.0;
             double padV = 5.0;
             base.rightFlow = FlowBox.Class.createBoxValidation(null, Ref<double>.From(ref padH), Ref<double>.From(ref padV), Ref<bool>.Null, null);
@@ -111,7 +102,7 @@ namespace EnemiesVsEnemies.UI
             base.rightFlow.set_verticalAlign(new FlowAlign.Bottom());
 
 
-            base.mainFlow.addChild(base.rightFlow);
+            base.mainFlow.addChild(rightFlow);
 
 
             var nameText = Assets.Class.makeText(Lang.Class.t.untranslated(""), null, true, null);
@@ -135,15 +126,7 @@ namespace EnemiesVsEnemies.UI
             selectionTeam.alpha = 0;
 
 
-
             textHelper.AddConfigInfoToRightFlow();
-
-            // GetU = new NumberInput(this);
-            // var action = new Action<int>((value) =>
-            // {
-            //     istest = value;
-            // });
-            // var inpu = GetU.OpenNumberInput("TEST", "hello", 1, action);
         }
 
         private void OnRightWheel(Event e)
@@ -156,11 +139,7 @@ namespace EnemiesVsEnemies.UI
 
             const double step = 20;
 
-            double contentHeight = base.rightFlow.get_outerHeight();
-            double maskHeight = rightMask.height;
-
-
-            double maxScroll = Math.Max(0, contentHeight - maskHeight);
+            double maxScroll = Math.Max(0, rightFlow.get_outerHeight() - rightMask.height);
             double newY = base.rightFlow.y - delta * step;
             newY = Math.Max(-maxScroll, Math.Min(0, newY));
 
@@ -224,18 +203,15 @@ namespace EnemiesVsEnemies.UI
             double pixelScale = base.get_pixelScale.Invoke();
             double fbWidth = base.fbItems.get_outerWidth();
             double fbHeight = base.fbItems.get_outerHeight();
-            double leftX = base.fbItems.x;
-            double leftY = base.fbItems.y;
 
 
-            double rightX = leftX + fbWidth + 20 * pixelScale;
-            double rightY = leftY;
+            double rightX = fbItems.x + fbWidth + 20 * pixelScale;
+            double rightY = fbItems.y;
 
             rightMask.x = rightX;
             rightMask.y = rightY;
             rightMask.width = (int)fbWidth;
             rightMask.height = (int)fbHeight;
-
 
             rightInter.width = fbWidth;
             rightInter.height = fbHeight;
@@ -256,13 +232,9 @@ namespace EnemiesVsEnemies.UI
         public override dc.h2d.Object getIconBmp(int i, dc.h2d.Object parent)
         {
             string name = UIMobHelper.getmobs(i).id.ToString();
-            if (name.IsNullOrEmpty())
-                return new Bitmap(Tile.Class.fromColor(0xFF0000, 32, 32, null, null), parent);
-
 
             var icon = Icon.Class.createMobIcon(name.ToHaxeString(), parent);
             icon.tile.scaleToSize(get_entryWid(), get_entryHei());
-
 
             return icon;
         }
@@ -270,22 +242,16 @@ namespace EnemiesVsEnemies.UI
         public override void postUpdate()
         {
             Main main = Main.Class.ME;
-            int curX = this.curX;
-            int curY = this.curY;
-
-
             Point entryGlobal = main.localToGlobal(this.getEntryAt(curX, curY).f, Ref<double>.Null, Ref<double>.Null);
             Point maskGlobal = main.localToGlobal(this.mask, Ref<double>.Null, Ref<double>.Null);
 
 
-            double pixelScale = base.get_pixelScale.Invoke();
-            double offset = (int)(pixelScale * 5.0);
-
-
+            double offset = (int)(get_pixelScale.Invoke() * 5.0);
             ScaleGrid selection = this.selectionSG;
             selection.posChanged = true;
             selection.x = entryGlobal.x - maskGlobal.x - offset;
             selection.y = entryGlobal.y - maskGlobal.y - offset;
+
 
             if (UserSelectedteamid.IsNullOrEmpty())
                 return;
@@ -298,24 +264,19 @@ namespace EnemiesVsEnemies.UI
             double timeFactor = base.ftime * 0.1;
             string speedKey = "co_blinkCursorSpeed";
 
-
             var speedData = Data.Class.gui.byId.get(speedKey.ToHaxeString()).v0;
-
 
             var angle = timeFactor * speedData;
             var cosValue = System.Math.Cos(angle);
             var alphaOffset = 0.2 * cosValue;
 
-
             this.selectionSG.alpha = 0.8 + alphaOffset;
-
 
             if (!textHelper.AlluiText.ContainsKey(UserSelectedteamid))
             {
                 selectionTeam.alpha = 0;
                 return;
             }
-
 
             if (textHelper.AlluiText.TryGetValue(UserSelectedteamid, out var text))
             {
@@ -331,7 +292,7 @@ namespace EnemiesVsEnemies.UI
 
                 double padding = get_pixelScale.Invoke() * 10;
                 double boxWidth = actualWidth + padding;
-                double boxHeight = actualHeight + padding / 5;
+                double boxHeight = actualHeight + padding / 6;
 
 
                 selectionTeam.set_width((int)boxWidth);
@@ -354,28 +315,6 @@ namespace EnemiesVsEnemies.UI
 
 
 
-        public override void initEntries(int size)
-        {
-            this.sections = (ArrayObj)ArrayUtils.CreateDyn().array;
-            this.entries = (ArrayObj)ArrayUtils.CreateDyn().array;
-
-            int column = 0;
-            int row = 0;
-            int width = get_wid();
-
-            for (int index = 0; index < size; index++)
-            {
-                _ = this.addEntryAt(index, column, row, Ref<int>.Null);
-                column++;
-
-                if (column >= width)
-                {
-                    column = 0;
-                    row++;
-                }
-            }
-        }
-
         public override void setControlLabel()
         {
             virtual_acts_cond_label_onAdd_ creataBCreateButton(int actionId, string labelText)
@@ -397,8 +336,7 @@ namespace EnemiesVsEnemies.UI
 
 
             btns.push(creataBCreateButton(1, "添加新队伍"));
-            btns.push(creataBCreateButton(2, ""));
-            btns.push(creataBCreateButton(3, ""));
+            btns.push(creataBCreateButton(3, "添加仇恨队伍"));
             btns.push(creataBCreateButton(4, ""));
             btns.push(creataBCreateButton(5, "移除当前选择队伍"));
 
@@ -415,13 +353,6 @@ namespace EnemiesVsEnemies.UI
 
             if (ControllerHelper.ControlsUpdateFromProcess(parent, 5))
             {
-                if (UserSelectedteamid == null || !textHelper.AlluiText.ContainsKey(UserSelectedteamid))
-                {
-                    var popup = new dc.ui.ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
-                    popup.text("注意：\n 请用鼠标选择要移除的队伍\n".AsHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
-
-                    return false;
-                }
                 textHelper.RemoveTeamFromGui(UserSelectedteamid, teamManager);
             }
 
@@ -431,9 +362,9 @@ namespace EnemiesVsEnemies.UI
                 return true;
             }
 
-            if (ControllerHelper.ControlsUpdateFromProcess(parent, 2))
+            if (ControllerHelper.ControlsUpdateFromProcess(parent, 3))
             {
-                
+                textHelper.AddOpposingTeamFromGui(teamManager);
                 return true;
             }
 

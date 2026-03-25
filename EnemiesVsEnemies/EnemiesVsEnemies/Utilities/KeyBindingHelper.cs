@@ -19,9 +19,9 @@ namespace EnemiesVsEnemies.Utilities
             return Key.Class.isPressed(KeyHelper.B);
         }
 
-        public bool IsSpawnTeamBPressed()
+        public bool IsSpawnTeamDestroyMobs()
         {
-            return Key.Class.isPressed(GetKeyconfig.SpawnTeamBKey);
+            return Key.Class.isPressed(KeyHelper.Z);
         }
 
         public bool IsSpawnGoldPressed()

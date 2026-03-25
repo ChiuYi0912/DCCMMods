@@ -84,8 +84,8 @@ namespace EnemiesVsEnemies.UI.Utilities
 
         private void AddTeamsTitleToBox()
         {
-            var teamsTitle = Assets.Class.makeText(Lang.Class.t.untranslated("当前队伍:"), null, true, null);
-            teamsTitle.set_textColor(Text.Class.COLORS.get("ST".ToHaxeString()));
+            var teamsTitle = Assets.Class.makeText(Lang.Class.t.untranslated("[队伍列表]"), null, true, null);
+            teamsTitle.set_textColor(CreateColor.ColorFromHex("#ffffff"));
             AlluiText.Add("teamsTitle", teamsTitle);
             SelectorGui.teamFlowBox.addChild(teamsTitle);
         }
@@ -106,6 +106,14 @@ namespace EnemiesVsEnemies.UI.Utilities
 
         public void RemoveTeamFromGui(string teamid, TeamManager teamManager)
         {
+            if (SelectorGui.UserSelectedteamid == null || !AlluiText.ContainsKey(SelectorGui.UserSelectedteamid))
+            {
+                var popup = new dc.ui.ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
+                popup.text("注意：\n 请用鼠标选择要移除的队伍\n".ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
+
+                return;
+            }
+
             teamManager.RemoveTeam(teamid);
 
             if (AlluiText.TryGetValue(teamid, out var TeamEntry))
@@ -137,7 +145,7 @@ namespace EnemiesVsEnemies.UI.Utilities
             var teamText = Assets.Class.makeText(Lang.Class.t.untranslated(teamInfo), null, true, null);
             teamText.scaleX = 1.3;
             teamText.scaleY = 1.3;
-            teamText.set_textColor(CreateColor.ColorFromHex("#ffffff"));
+            teamText.set_textColor(CreateColor.ColorFromHex("#eeff00"));
 
             AlluiText.Add(team.Id, teamText);
             SelectorGui.teamFlowBox.addChild(teamText);
@@ -165,7 +173,7 @@ namespace EnemiesVsEnemies.UI.Utilities
 
             string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
             var opposingText = Assets.Class.makeText(Lang.Class.t.untranslated(opposingInfo), null, true, null);
-            opposingText.set_textColor(CreateColor.ColorFromHex("#ffffff"));
+            opposingText.set_textColor(CreateColor.ColorFromHex("#ff0000"));
             opposingText.scaleX = 1.1;
             opposingText.scaleY = 1.1;
 
@@ -335,13 +343,16 @@ namespace EnemiesVsEnemies.UI.Utilities
 
             Controller parent = SelectorGui.controller.parent;
             parent.isLocked = true;
-            SelectorGui.isLockedController = true;
+            CricketSelectorGui.isLockedController = true;
 
             var inputTeamID = new NumberInput(SelectorGui);
             var createteam = new TeamConfig("", "");
 
             var action = new Action<string>((value) =>
             {
+                parent.isLocked = false;
+                CricketSelectorGui.isLockedController = false;
+
                 createteam.Id = value;
                 teamManager.AddTeam(createteam);
                 inputTeamID.Input.close();
@@ -352,12 +363,45 @@ namespace EnemiesVsEnemies.UI.Utilities
                     AddTeamEntry(createteam);
                     AddOpposingTeamsInfo(createteam);
                     AddDefaultEnemiesPlaceholder(createteam);
-                    parent.isLocked = false;
-                    SelectorGui.isLockedController = false;
+
                 });
                 inputTeamID.Input = inputTeamID.OpenNumberInput("输入", "该队伍名称", 1, action);
             });
             dc.ui.TextInput inpu = inputTeamID.OpenNumberInput("输入", "该队伍唯一ID", 1, action);
+        }
+
+
+        public void AddOpposingTeamFromGui(TeamManager teamManager)
+        {
+            Controller parent = SelectorGui.controller.parent;
+            parent.isLocked = true;
+            CricketSelectorGui.isLockedController = true;
+
+            var inputTeamID = new NumberInput(SelectorGui);
+
+            var action = new Action<string>((value) =>
+            {
+                parent.isLocked = false;
+                CricketSelectorGui.isLockedController = false;
+
+                var targetTeamId = SelectorGui.UserSelectedteamid;
+                var teamconfig = SelectorGui.GetConfig.Value.Teams;
+                if (teamconfig.TryGetValue(targetTeamId, out var team))
+                {
+                    team.OpposingTeamIds.Add(value);
+                    SelectorGui.GetConfig.Save();
+                }
+                else
+                {
+                    var popup = new dc.ui.ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
+                    popup.text("添加失败：\n 请先选择队伍！\n".ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
+                }
+
+                inputTeamID.Input.close();
+                UpdateTeamDisplay();
+
+            });
+            dc.ui.TextInput inpu = inputTeamID.OpenNumberInput("输入", "该仇恨方队伍唯一ID", 1, action);
         }
     }
 }
