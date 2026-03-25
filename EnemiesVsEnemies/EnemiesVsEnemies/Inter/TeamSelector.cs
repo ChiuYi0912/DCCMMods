@@ -8,16 +8,23 @@ using dc.en;
 using dc.libs.heaps.slib;
 using dc.pr;
 using dc.ui;
+using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.UI;
+using EnemiesVsEnemies.UI.Utilities;
 
 namespace EnemiesVsEnemies.Inter
 {
     public class TeamSelector : Interactive
     {
+        public Level level = null!;
+
         public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y)
         {
+            level = lvl;
             xr = 0.5;
         }
+
+        public string Teamid = string.Empty;
 
         public override void initGfx()
         {
@@ -29,7 +36,36 @@ namespace EnemiesVsEnemies.Inter
         public override void onActivate(Hero by, bool longPress)
         {
             base.onActivate(by, longPress);
-            _ = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager());
+            if (Teamid.IsNullOrEmpty())
+            {
+                var inpt = new NumberInput(HUD.Class.ME);
+                Action<string> action = (userinputid) =>
+                {
+                    Teamid = userinputid;
+                    EnsureTeamConfigWithPosition(Teamid);
+                    _ = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager(), Teamid);
+                };
+                inpt.OpenNumberInput("输入", "触发器队伍id", 0, action);
+
+                return;
+            }
+            _ = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager(), Teamid);
+        }
+
+        private void EnsureTeamConfigWithPosition(string id)
+        {
+            Hero hero = ModCore.Modules.Game.Instance.HeroInstance!;
+            var config = EnemiesVsEnemiesMod.GetConfig();
+            if (!config.Teams.ContainsKey(id))
+            {
+                var teamConfig = new TeamConfig(id, $"触发器队伍 {id}", 0xFFFFFF);
+                teamConfig.TriggerLevelId = hero._level.map.id.ToString();
+                teamConfig.TriggerX = cx;
+                teamConfig.TriggerY = cy;
+                config.Teams[id] = teamConfig;
+                EnemiesVsEnemiesMod.GetTeamManager().AddTeam(teamConfig);
+                EnemiesVsEnemiesMod.config.Save();
+            }
         }
 
         public override void onFocus()

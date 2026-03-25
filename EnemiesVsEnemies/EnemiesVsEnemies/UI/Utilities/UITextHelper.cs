@@ -73,12 +73,9 @@ namespace EnemiesVsEnemies.UI.Utilities
             SelectorGui.teamFlowBox.set_verticalAlign(new FlowAlign.Middle());
 
             AddTeamsTitleToBox();
-            AddAllTeamsToBox(config);
+            AddCurrentTeamToBox(config);
 
-            if (config.Teams.Count > 0)
-            {
-                SelectorGui.rightFlow.addChild(SelectorGui.teamFlowBox);
-            }
+            SelectorGui.rightFlow.addChild(SelectorGui.teamFlowBox);
         }
 
 
@@ -90,9 +87,14 @@ namespace EnemiesVsEnemies.UI.Utilities
             SelectorGui.teamFlowBox.addChild(teamsTitle);
         }
 
-        private void AddAllTeamsToBox(ModConfig config)
+        private void AddCurrentTeamToBox(ModConfig config)
         {
-            foreach (var team in config.Teams.Values)
+            // 只显示当前队伍
+            string currentTeamId = SelectorGui.UserSelectedteamid;
+            if (string.IsNullOrEmpty(currentTeamId))
+                return;
+
+            if (config.Teams.TryGetValue(currentTeamId, out var team))
             {
                 if (!team.Name.IsNullOrEmpty() && !team.Id.IsNullOrEmpty())
                 {
@@ -149,22 +151,6 @@ namespace EnemiesVsEnemies.UI.Utilities
 
             AlluiText.Add(team.Id, teamText);
             SelectorGui.teamFlowBox.addChild(teamText);
-
-            var interactive = new Interactive(teamText.textWidth, teamText.textHeight, teamText, null);
-            interactive.onClick = (e) =>
-            {
-                AudioHelper.LoadAudioFormString(CricketSelectorGui.Audioclick);
-                SelectorGui.UserSelectedteamid = team.Id;
-                Log.Logger.Debug($"选中队伍：{SelectorGui.UserSelectedteamid}");
-            };
-            interactive.onOver = (e) =>
-            {
-
-            };
-            interactive.onOut = (e) =>
-            {
-
-            };
         }
 
 
@@ -206,42 +192,45 @@ namespace EnemiesVsEnemies.UI.Utilities
             var config = SelectorGui.GetConfig.Value;
             if (config == null) return;
 
-            foreach (var team in config.Teams.Values)
+            // 只更新当前队伍
+            string currentTeamId = SelectorGui.UserSelectedteamid;
+            if (string.IsNullOrEmpty(currentTeamId))
+                return;
+
+            if (!config.Teams.TryGetValue(currentTeamId, out var team))
+                return;
+
+            // 更新队伍信息
+            if (AlluiText.TryGetValue(team.Id, out var teamText))
             {
+                string teamInfo = $"- {team.Name} (ID: {team.Id})";
+                teamText.set_text(Lang.Class.t.untranslated(teamInfo.ToHaxeString()));
+            }
 
-                if (AlluiText.TryGetValue(team.Id, out var teamText))
+            // 更新仇恨队伍信息
+            string opposingKey = team.Id + "opposingText";
+            if (AlluiText.TryGetValue(opposingKey, out var opposingText))
+            {
+                if (team.OpposingTeamIds != null)
                 {
-                    string teamInfo = $"- {team.Name} (ID: {team.Id})";
-                    teamText.set_text(Lang.Class.t.untranslated(teamInfo.ToHaxeString()));
+                    string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
+                    opposingText.set_text(Lang.Class.t.untranslated(opposingInfo.ToHaxeString()));
                 }
-
-
-                string opposingKey = team.Id + "opposingText";
-                if (AlluiText.TryGetValue(opposingKey, out var opposingText))
+                else
                 {
-                    if (team.OpposingTeamIds != null)
-                    {
-                        string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
-                        opposingText.set_text(Lang.Class.t.untranslated(opposingInfo.ToHaxeString()));
-
-                    }
-                    else
-                    {
-                        string opposingInfo = $"仇恨队伍: 无";
-                        opposingText.set_text(Lang.Class.t.untranslated(opposingInfo.ToHaxeString()));
-                    }
-                }
-
-
-                string enemiesKey = team.Id + "enemiesText";
-                if (AlluiText.TryGetValue(enemiesKey, out var enemiesText))
-                {
-                    string newEnemiesInfo = GenerateEnemiesInfo(team);
-                    enemiesText.set_text(Lang.Class.t.get(newEnemiesInfo.ToHaxeString(), null));
-                    enemiesText.posChanged = true;
+                    string opposingInfo = $"仇恨队伍: 无";
+                    opposingText.set_text(Lang.Class.t.untranslated(opposingInfo.ToHaxeString()));
                 }
             }
 
+            // 更新敌人生成信息
+            string enemiesKey = team.Id + "enemiesText";
+            if (AlluiText.TryGetValue(enemiesKey, out var enemiesText))
+            {
+                string newEnemiesInfo = GenerateEnemiesInfo(team);
+                enemiesText.set_text(Lang.Class.t.get(newEnemiesInfo.ToHaxeString(), null));
+                enemiesText.posChanged = true;
+            }
 
             SelectorGui.teamFlowBox.reflow();
             SelectorGui.rightFlow.reflow();
@@ -390,6 +379,7 @@ namespace EnemiesVsEnemies.UI.Utilities
                 {
                     team.OpposingTeamIds.Add(value);
                     SelectorGui.GetConfig.Save();
+                    teamManager.SetupTeamRelationships();
                 }
                 else
                 {

@@ -68,17 +68,19 @@ namespace EnemiesVsEnemies
 
         private void LoadDefaultConfigIfNeeded()
         {
-            if (config.Value.Teams.Count == 0 || config.Value.EnemyPresets.Count == 0)
-            {
-                LogInfo("创建默认配置...");
-                config.Value = ModConfig.CreateDefaultConfig();
-                config.Save();
-                LogInfo("默认配置已创建并保存");
-            }
-            else
-            {
-                LogInfo("配置已加载");
-            }
+            // if (config.Value.Teams.Count == 0 || config.Value.EnemyPresets.Count == 0)
+            // {
+            //     LogInfo("创建默认配置...");
+            //     config.Value = ModConfig.CreateDefaultConfig();
+            //     config.Save();
+            //     LogInfo("默认配置已创建并保存");
+            // }
+            // else
+            // {
+            //     LogInfo("配置已加载");
+            // }
+
+
         }
 
         private void InitializeManagers()

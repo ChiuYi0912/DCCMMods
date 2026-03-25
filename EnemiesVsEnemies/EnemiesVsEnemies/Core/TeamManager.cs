@@ -104,7 +104,7 @@ namespace EnemiesVsEnemies.Core
         }
 
         //(仇恨配置)
-        private void SetupTeamRelationships()
+        public void SetupTeamRelationships()
         {
             foreach (var teamConfig in GetModConfig.Teams.Values)
             {

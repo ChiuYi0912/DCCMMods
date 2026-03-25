@@ -10,6 +10,12 @@ namespace EnemiesVsEnemies.Configuration
         public List<string> DefaultEnemies { get; set; } = new List<string>();
         public int TeamColor { get; set; } = 0xFFFFFF;
 
+
+        public string TriggerLevelId { get; set; } = string.Empty;
+        public int TriggerX { get; set; } = -1;
+        public int TriggerY { get; set; } = -1;
+        public bool HasTriggerPosition => !string.IsNullOrEmpty(TriggerLevelId);
+
         public TeamConfig() { }
 
         public TeamConfig(string id, string name, int teamColor = 0xFFFFFF)

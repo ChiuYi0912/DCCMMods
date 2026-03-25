@@ -7,6 +7,7 @@ using dc.en;
 using dc.en.inter;
 using dc.en.mob;
 using dc.en.mob.boss;
+using dc.pr;
 using dc.tool;
 using dc.tool.utils;
 using EnemiesVsEnemies.Configuration;
@@ -55,13 +56,32 @@ namespace EnemiesVsEnemies.Core
         //(创建Mob)
         public void SpawnEnemy(string teamId, EnemySpawnConfig spawnConfig)
         {
-            var hero = Game.Instance.HeroInstance;
+            var hero = ModCore.Modules.Game.Instance.HeroInstance;
             if (hero == null)
-            {
                 return;
-            }
 
             var team = GetteamManager.GetTeam(teamId);
+
+            Level spawnLevel = hero._level;
+            int spawnX = hero.cx;
+            int spawnY = hero.cy;
+
+            if (GetModconfig.Teams.TryGetValue(teamId, out var teamConfig))
+            {
+                if (teamConfig.HasTriggerPosition)
+                {
+                    string currentLevelId = hero._level.map.id.ToString();
+                    if (!string.IsNullOrEmpty(currentLevelId) && currentLevelId == teamConfig.TriggerLevelId)
+                    {
+                        spawnX = teamConfig.TriggerX;
+                        spawnY = teamConfig.TriggerY;
+                    }
+                    else
+                    {
+                        EnemiesVsEnemiesMod.GetLogger.Debug($"队伍 {teamId} 的触发器在关卡 {teamConfig.TriggerLevelId}，当前在 {currentLevelId}，使用玩家位置");
+                    }
+                }
+            }
 
             for (int i = 0; i < spawnConfig.SpawnCount; i++)
             {
@@ -70,9 +90,9 @@ namespace EnemiesVsEnemies.Core
 
                 var mob = Mob.Class.create(
                     spawnConfig.EnemyType.AsHaxeString(),
-                    hero._level,
-                    hero.cx,
-                    hero.cy,
+                    spawnLevel,
+                    spawnX,
+                    spawnY,
                     spawnConfig.DamageTier,
                     lifeTierRef
                 );
@@ -121,7 +141,7 @@ namespace EnemiesVsEnemies.Core
         //(创建金块)
         public void SpawnGoldNugget(int value = 10)
         {
-            var hero = Game.Instance.HeroInstance;
+            var hero = ModCore.Modules.Game.Instance.HeroInstance;
             if (hero == null)
             {
                 return;
@@ -134,7 +154,7 @@ namespace EnemiesVsEnemies.Core
         //(创建引力场)
         public dc.en.inter.ForceField? SpawnForceField(bool open = false)
         {
-            var hero = Game.Instance.HeroInstance;
+            var hero = ModCore.Modules.Game.Instance.HeroInstance;
             if (hero == null)
             {
                 return null;

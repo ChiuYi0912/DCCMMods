@@ -1,16 +1,9 @@
-using System.Threading.Tasks;
+
 using CoreLibrary.Core.Extensions;
 using dc;
-using dc.en;
-using dc.en.mob;
 using dc.h2d;
 using dc.hl.types;
 using dc.hxd;
-using dc.hxd.res;
-using dc.hxd.snd;
-using dc.libs;
-using dc.libs.heaps.slib;
-using dc.pr;
 using dc.tool;
 using dc.ui;
 using dc.ui.icon;
@@ -30,16 +23,13 @@ using CoreLibrary.Core.Utilities;
 using ModCore.Modules;
 using dc.h2d.col;
 using ModCore.Utilities;
-using dc.ui.hud;
-using dc.libs.misc;
-using dc.haxe.io;
 using Math = System.Math;
+using EnemiesVsEnemies.Inter;
 
 namespace EnemiesVsEnemies.UI
 {
     public class CricketSelectorGui : GridSelector
     {
-        public NumberInput numberInput = null!;
         public TeamManager teamManager = null!;
         public FlowBox teamFlowBox = null!;
         public ScaleGrid selectionTeam = null!;
@@ -55,15 +45,16 @@ namespace EnemiesVsEnemies.UI
         public class MonsterSelectionEventArgs
         {
             public string MobId { get; set; } = null!;
-            public string Teamid { get; set; } = null!;
         }
         public Action<MonsterSelectionEventArgs> OnMonsterSelected { get; set; }
 
-        public CricketSelectorGui(TeamManager teammanager)
+        public CricketSelectorGui(TeamManager teammanager, string teamId = "")
         {
             teamManager = teammanager;
             OnMonsterSelected = (data) => { };
 
+            UserSelectedteamid = teamId;
+            initMYRightFlow();
         }
 
 
@@ -89,8 +80,10 @@ namespace EnemiesVsEnemies.UI
         }
 
 
+        public override void initRightFlow() { }
 
-        public override void initRightFlow()
+
+        public void initMYRightFlow()
         {
             textHelper = new UITextHelper(this);
 
@@ -126,6 +119,25 @@ namespace EnemiesVsEnemies.UI
             selectionTeam.alpha = 0;
 
 
+            double pixelScale = base.get_pixelScale.Invoke();
+            double fbWidth = base.fbItems.get_outerWidth();
+            double fbHeight = base.fbItems.get_outerHeight();
+
+
+            double rightX = fbItems.x + fbWidth + 20 * pixelScale;
+            double rightY = fbItems.y;
+
+            rightMask.x = rightX;
+            rightMask.y = rightY;
+            rightMask.width = (int)fbWidth;
+            rightMask.height = (int)fbHeight;
+
+            rightInter.width = fbWidth;
+            rightInter.height = fbHeight;
+
+            base.rightFlow.reflow();
+
+
             textHelper.AddConfigInfoToRightFlow();
         }
 
@@ -156,18 +168,19 @@ namespace EnemiesVsEnemies.UI
 
 
             string mobId = UIMobHelper.getmobs(entry.i).id.ToString();
-            var args = new MonsterSelectionEventArgs { MobId = mobId, Teamid = UserSelectedteamid };
-            if (string.IsNullOrEmpty(args.MobId) || string.IsNullOrEmpty(args.Teamid) || entry.isLocked)
+            var args = new MonsterSelectionEventArgs { MobId = mobId };
+            if (entry.isLocked)
             {
                 AudioHelper.LoadAudioFormString(AudioError);
                 return;
             }
 
-
             AddMonsterToTeam(args);
 
-
-            UIAnimHelper.doMovementIcon(this, textHelper.AlluiText[args.Teamid], entry, args);
+            if (textHelper.AlluiText.TryGetValue(UserSelectedteamid, out var textElement))
+            {
+                UIAnimHelper.doMovementIcon(this, textElement, entry, args);
+            }
         }
 
 
@@ -177,46 +190,20 @@ namespace EnemiesVsEnemies.UI
             if (EnemiesVsEnemiesMod.GetMobGroupHelper().IsRealBoss(args.MobId))
                 return;
 
-
-            if (!GetConfig.Value.Teams.TryGetValue(args.Teamid, out var team))
+            if (!GetConfig.Value.Teams.TryGetValue(UserSelectedteamid, out var team))
             {
                 AudioHelper.LoadAudioFormString(AudioError);
-                Log.Logger.Warning($"队伍 {args.Teamid} 不存在");
+                Log.Logger.Warning($"队伍 {UserSelectedteamid} 不存在");
                 return;
             }
-
 
             team.DefaultEnemies.Add(args.MobId);
             GetConfig.Save();
             textHelper.UpdateTeamDisplay();
 
-
             AudioHelper.LoadAudioFormString(Audiocurse);
 
-            Log.Logger.Debug($"选择选中怪物：{args.MobId}, teamid:{args.Teamid}");
-        }
-
-        public override void onResize()
-        {
-            base.onResize();
-
-            double pixelScale = base.get_pixelScale.Invoke();
-            double fbWidth = base.fbItems.get_outerWidth();
-            double fbHeight = base.fbItems.get_outerHeight();
-
-
-            double rightX = fbItems.x + fbWidth + 20 * pixelScale;
-            double rightY = fbItems.y;
-
-            rightMask.x = rightX;
-            rightMask.y = rightY;
-            rightMask.width = (int)fbWidth;
-            rightMask.height = (int)fbHeight;
-
-            rightInter.width = fbWidth;
-            rightInter.height = fbHeight;
-
-            base.rightFlow.reflow();
+            Log.Logger.Debug($"选择选中怪物：{args.MobId}, teamid:{UserSelectedteamid}");
         }
 
         public override void setMainFlowPos()
@@ -226,7 +213,6 @@ namespace EnemiesVsEnemies.UI
             mainFlow.x = 50;
             mainFlow.posChanged = true;
         }
-
 
 
         public override dc.h2d.Object getIconBmp(int i, dc.h2d.Object parent)
@@ -334,11 +320,7 @@ namespace EnemiesVsEnemies.UI
             btns.push(creataBCreateButton(14, "Valider"));
             btns.push(creataBCreateButton(16, "Retour"));
 
-
-            btns.push(creataBCreateButton(1, "添加新队伍"));
             btns.push(creataBCreateButton(3, "添加仇恨队伍"));
-            btns.push(creataBCreateButton(4, ""));
-            btns.push(creataBCreateButton(5, "移除当前选择队伍"));
 
             createControlLabel(btns);
         }
@@ -346,28 +328,16 @@ namespace EnemiesVsEnemies.UI
         public override bool controlsUpdate()
         {
             if (isLockedController)
-                return false;
+                return true;
 
             Controller parent = controller.parent;
 
-
-            if (ControllerHelper.ControlsUpdateFromProcess(parent, 5))
-            {
-                textHelper.RemoveTeamFromGui(UserSelectedteamid, teamManager);
-            }
-
-            if (ControllerHelper.ControlsUpdateFromProcess(parent, 1))
-            {
-                textHelper.AddNewTeamFromGui(teamManager);
-                return true;
-            }
 
             if (ControllerHelper.ControlsUpdateFromProcess(parent, 3))
             {
                 textHelper.AddOpposingTeamFromGui(teamManager);
                 return true;
             }
-
 
             return base.controlsUpdate();
         }
