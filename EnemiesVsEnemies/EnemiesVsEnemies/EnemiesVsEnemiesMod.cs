@@ -1,5 +1,9 @@
+using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Utilities;
 using dc;
+using dc.en;
+using dc.level;
+using dc.pr;
 using dc.tool.weap;
 using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.Core;
@@ -9,12 +13,13 @@ using IngameDebugConsole;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Events.Interfaces.Game.Hero;
 using ModCore.Mods;
+using ModCore.Modules;
 using ModCore.Storage;
 using Serilog;
 
 namespace EnemiesVsEnemies
 {
-    public class EnemiesVsEnemiesMod : ModBase, IOnHeroUpdate, IOnAfterLoadingCDB
+    public class EnemiesVsEnemiesMod : ModBase, IOnHeroUpdate, IOnAfterLoadingCDB, IOnGameEndInit
     {
         public static Config<ModConfig> config = new("EnemiesVsEnemiesConfig");
 
@@ -29,6 +34,7 @@ namespace EnemiesVsEnemies
 
 
         private int currentEnemyCount = 1;
+        private static string Version = string.Empty;
 
         public EnemiesVsEnemiesMod(ModInfo info) : base(info)
         {
@@ -39,15 +45,12 @@ namespace EnemiesVsEnemies
         public override void Initialize()
         {
             base.Initialize();
-            GetLogger = Logger;
-            LoadDefaultConfigIfNeeded();
-            InitializeManagers();
-
-
-            hookManager.InitializeHooks();
-
-            Info.Version = "0.5.0";
+            Version = Info.Version = "0.5.0";
             Info.Name = "EnemiesVsEnemies (Enhanced)";
+            GetLogger = Logger;
+
+            InitializeManagers();
+            hookManager.InitializeHooks();
 
             LogInfo("EnemiesVsEnemies Mod 已初始化");
 
@@ -62,26 +65,21 @@ namespace EnemiesVsEnemies
             Destroymobs();
         }
 
+        void IOnGameEndInit.OnGameEndInit()
+        {
+            var res = Info.ModRoot!.GetFilePath("res.pak");
+            FsPak.Instance.FileSystem.loadPak(res.ToHaxeString());
+            // var json = CDBManager.Class.instance.getAlteredCDB();
+            // dc.Data.Class.loadJson(
+            //    json,
+            //    default);
+        }
+
 
         void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb) => mobGroupHelper.Refresh();
 
 
-        private void LoadDefaultConfigIfNeeded()
-        {
-            // if (config.Value.Teams.Count == 0 || config.Value.EnemyPresets.Count == 0)
-            // {
-            //     LogInfo("创建默认配置...");
-            //     config.Value = ModConfig.CreateDefaultConfig();
-            //     config.Save();
-            //     LogInfo("默认配置已创建并保存");
-            // }
-            // else
-            // {
-            //     LogInfo("配置已加载");
-            // }
 
-
-        }
 
         private void InitializeManagers()
         {
@@ -137,31 +135,7 @@ namespace EnemiesVsEnemies
         public static HookManager GetHookManager() => hookManager;
         public static ModConfig GetConfig() => config.Value;
         public static MobGroupHelper GetMobGroupHelper() => mobGroupHelper;
-
-
-        public void AddNewTeam(string teamId, string name, int teamColor, List<string> opposingTeamIds, List<string> defaultEnemies)
-        {
-            var teamConfig = new TeamConfig(teamId, name, teamColor)
-            {
-                OpposingTeamIds = opposingTeamIds,
-                DefaultEnemies = defaultEnemies
-            };
-
-            teamManager.AddTeam(teamConfig);
-            config.Save();
-
-            LogInfo($"已添加新队伍: {name} (ID: {teamId})");
-        }
-
-
-        public void AddEnemyPreset(string presetId, string enemyType, int lifeTier = 30, int damageTier = 20, int spawnCount = 1)
-        {
-            var spawnConfig = new EnemySpawnConfig(enemyType, lifeTier, damageTier, spawnCount);
-            enemySpawner.AddEnemyPreset(presetId, spawnConfig);
-            config.Save();
-
-            LogInfo($"已添加敌人预设: {presetId} ({enemyType})");
-        }
+        public static string Virsion() => Version;
 
 
 

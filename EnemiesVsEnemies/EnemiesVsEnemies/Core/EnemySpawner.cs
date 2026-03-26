@@ -92,7 +92,7 @@ namespace EnemiesVsEnemies.Core
                     spawnConfig.EnemyType.AsHaxeString(),
                     spawnLevel,
                     spawnX,
-                    spawnY,
+                    spawnY - 1,
                     spawnConfig.DamageTier,
                     lifeTierRef
                 );

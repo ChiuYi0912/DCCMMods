@@ -89,7 +89,8 @@ namespace EnemiesVsEnemies.UI
 
             double padH = 5.0;
             double padV = 5.0;
-            base.rightFlow = FlowBox.Class.createBoxValidation(null, Ref<double>.From(ref padH), Ref<double>.From(ref padV), Ref<bool>.Null, null);
+            base.rightFlow = FlowBox.Class.createBoxValidation(null, Ref<double>.From(ref padH),
+            Ref<double>.From(ref padV), Ref<bool>.Null, null);
             base.rightFlow.set_isVertical(true);
             base.rightFlow.set_horizontalAlign(new FlowAlign.Right());
             base.rightFlow.set_verticalAlign(new FlowAlign.Bottom());
@@ -114,7 +115,8 @@ namespace EnemiesVsEnemies.UI
             rightInter.propagateEvents = true;
             rightInter.onWheel = new HlAction<Event>(OnRightWheel);
 
-            Tile tile = Assets.Class.ui.getTile("boxSelect".ToHaxeString(), Ref<int>.Null, Ref<double>.Null, Ref<double>.Null, null);
+            Tile tile = Assets.Class.ui.getTile("boxSelect".ToHaxeString(), Ref<int>.Null,
+            Ref<double>.Null, Ref<double>.Null, null);
             selectionTeam = new ScaleGrid(tile, 8, 8, rightMask);
             selectionTeam.alpha = 0;
 
@@ -328,7 +330,7 @@ namespace EnemiesVsEnemies.UI
         public override bool controlsUpdate()
         {
             if (isLockedController)
-                return true;
+                return false;
 
             Controller parent = controller.parent;
 

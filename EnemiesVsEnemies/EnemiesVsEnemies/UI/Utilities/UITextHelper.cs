@@ -30,9 +30,44 @@ namespace EnemiesVsEnemies.UI.Utilities
         }
 
 
+        private dc.ui.Text CreateAndAddText(string text, string dictionaryKey, string colorHex = "#ffffff",
+                                          double scale = 1.0, FlowBox? parentContainer = null,
+                                          bool useTranslation = true)
+        {
+            dc.String haxeText;
+            if (useTranslation)
+            {
+                haxeText = Lang.Class.t.untranslated(text);
+            }
+            else
+            {
+                haxeText = text.ToHaxeString();
+            }
+
+            var uiText = Assets.Class.makeText(haxeText, null, true, null);
+            uiText.set_textColor(CreateColor.ColorFromHex(colorHex));
+            uiText.scaleX = scale;
+            uiText.scaleY = scale;
+
+
+            AlluiText.Add(dictionaryKey, uiText);
+
+            var container = parentContainer ?? SelectorGui.teamFlowBox;
+            if (container != null)
+            {
+                container.addChild(uiText);
+            }
+
+            return uiText;
+        }
+
+
+
+
         public void AddConfigInfoToRightFlow()
         {
-            if (SelectorGui.GetConfig == null || SelectorGui.rightFlow == null || SelectorGui.mainFlow == null)
+            if (SelectorGui.GetConfig == null || SelectorGui.rightFlow == null ||
+            SelectorGui.mainFlow == null)
                 return;
 
             var config = SelectorGui.GetConfig.Value;
@@ -42,54 +77,35 @@ namespace EnemiesVsEnemies.UI.Utilities
             SelectorGui.mainFlow.set_horizontalAlign(new FlowAlign.Middle());
             SelectorGui.mainFlow.set_verticalAlign(new FlowAlign.Bottom());
 
-
             AddConfigTitle();
-
-
             BuildAndAddTeamFlowBox(config);
-
-
             UpdateTeamDisplay();
         }
 
 
         private void AddConfigTitle()
         {
-            var configTitle = Assets.Class.makeText(Lang.Class.t.untranslated("斗蛐蛐MOD"), null, true, null);
+            var configTitle = Assets.Class.makeText(Lang.Class.t.untranslated("EnemiesVsEnemiesMod-" + $"Virsion:{EnemiesVsEnemiesMod.Virsion()}"), null, true, null);
             configTitle.set_textColor(CreateColor.ColorFromHex("#ffffff"));
             configTitle.set_textAlign(new Align.Center());
+            configTitle.scaleX = 1;
+            configTitle.scaleY = 1;
 
             AlluiText.Add("configTitle", configTitle);
             SelectorGui.rightFlow.addChild(configTitle);
         }
 
+
         private void BuildAndAddTeamFlowBox(ModConfig config)
         {
             double teamPadH = 5.0;
             double teamPadV = 5.0;
-            SelectorGui.teamFlowBox = FlowBox.Class.createBoxValidation(null, Ref<double>.From(ref teamPadH), Ref<double>.From(ref teamPadV), Ref<bool>.Null, null);
+            SelectorGui.teamFlowBox = FlowBox.Class.createBoxValidation(null, Ref<double>.From(ref teamPadH),
+            Ref<double>.From(ref teamPadV), Ref<bool>.Null, null);
             SelectorGui.teamFlowBox.set_isVertical(true);
             SelectorGui.teamFlowBox.set_horizontalAlign(new FlowAlign.Middle());
             SelectorGui.teamFlowBox.set_verticalAlign(new FlowAlign.Middle());
 
-            AddTeamsTitleToBox();
-            AddCurrentTeamToBox(config);
-
-            SelectorGui.rightFlow.addChild(SelectorGui.teamFlowBox);
-        }
-
-
-        private void AddTeamsTitleToBox()
-        {
-            var teamsTitle = Assets.Class.makeText(Lang.Class.t.untranslated("[队伍列表]"), null, true, null);
-            teamsTitle.set_textColor(CreateColor.ColorFromHex("#ffffff"));
-            AlluiText.Add("teamsTitle", teamsTitle);
-            SelectorGui.teamFlowBox.addChild(teamsTitle);
-        }
-
-        private void AddCurrentTeamToBox(ModConfig config)
-        {
-            // 只显示当前队伍
             string currentTeamId = SelectorGui.UserSelectedteamid;
             if (string.IsNullOrEmpty(currentTeamId))
                 return;
@@ -98,89 +114,31 @@ namespace EnemiesVsEnemies.UI.Utilities
             {
                 if (!team.Name.IsNullOrEmpty() && !team.Id.IsNullOrEmpty())
                 {
-                    AddTeamEntry(team);
-                    AddOpposingTeamsInfo(team);
-                    AddDefaultEnemiesPlaceholder(team);
+                    CreataTexts(team);
                 }
             }
+
+            SelectorGui.rightFlow.addChild(SelectorGui.teamFlowBox);
         }
 
 
-        public void RemoveTeamFromGui(string teamid, TeamManager teamManager)
+        public void CreataTexts(TeamConfig team)
         {
-            if (SelectorGui.UserSelectedteamid == null || !AlluiText.ContainsKey(SelectorGui.UserSelectedteamid))
-            {
-                var popup = new dc.ui.ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
-                popup.text("注意：\n 请用鼠标选择要移除的队伍\n".ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
+            var teamsTitle = Assets.Class.makeText(Lang.Class.t.untranslated("[队伍列表]"), null, true, null);
+            teamsTitle.set_textColor(CreateColor.ColorFromHex("#ffffff"));
+            AlluiText.Add("teamsTitle", teamsTitle);
+            SelectorGui.teamFlowBox.addChild(teamsTitle);
 
-                return;
-            }
-
-            teamManager.RemoveTeam(teamid);
-
-            if (AlluiText.TryGetValue(teamid, out var TeamEntry))
-            {
-                TeamEntry.remove();
-                AlluiText.Remove(teamid);
-            }
-
-            if (AlluiText.TryGetValue(teamid + "opposingText", out var TeamsInfo))
-            {
-                TeamsInfo.remove();
-                AlluiText.Remove(teamid + "opposingText");
-            }
-
-            if (AlluiText.TryGetValue(teamid + "enemiesText", out var EnemiesPlaceholder))
-            {
-                EnemiesPlaceholder.remove();
-                AlluiText.Remove(teamid + "enemiesText");
-            }
-            UpdateTeamDisplay();
-        }
-
-
-
-
-        public void AddTeamEntry(TeamConfig team)
-        {
             string teamInfo = $"- {team.Name} (ID: {team.Id})";
-            var teamText = Assets.Class.makeText(Lang.Class.t.untranslated(teamInfo), null, true, null);
-            teamText.scaleX = 1.3;
-            teamText.scaleY = 1.3;
-            teamText.set_textColor(CreateColor.ColorFromHex("#eeff00"));
+            CreateAndAddText(teamInfo, team.Id, "#eeff00", 1.3);
 
-            AlluiText.Add(team.Id, teamText);
-            SelectorGui.teamFlowBox.addChild(teamText);
-        }
-
-
-        public void AddOpposingTeamsInfo(TeamConfig team)
-        {
 
             string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
-            var opposingText = Assets.Class.makeText(Lang.Class.t.untranslated(opposingInfo), null, true, null);
-            opposingText.set_textColor(CreateColor.ColorFromHex("#ff0000"));
-            opposingText.scaleX = 1.1;
-            opposingText.scaleY = 1.1;
-
-            AlluiText.Add(team.Id + "opposingText", opposingText);
-            SelectorGui.teamFlowBox.addChild(opposingText);
-
-        }
+            CreateAndAddText(opposingInfo, team.Id + "opposingText", "#ff0000", 1.1);
 
 
-        public void AddDefaultEnemiesPlaceholder(TeamConfig team)
-        {
-            if (team.DefaultEnemies != null)
-            {
-                var enemiesText = Assets.Class.makeText("".ToHaxeString(), null, true, null);
-                enemiesText.set_textColor(Text.Class.COLORS.get("ST".ToHaxeString()));
-                enemiesText.scaleX = 1;
-                enemiesText.scaleY = 1;
-
-                SelectorGui.teamFlowBox.addChild(enemiesText);
-                AlluiText.Add(team.Id + "enemiesText", enemiesText);
-            }
+            string enemiesText = $"队伍暴徒: {string.Join(", ", team.OpposingTeamIds)}";
+            CreateAndAddText(enemiesText, team.Id + "enemiesText", "#787cff", 1);
         }
 
 
@@ -192,7 +150,6 @@ namespace EnemiesVsEnemies.UI.Utilities
             var config = SelectorGui.GetConfig.Value;
             if (config == null) return;
 
-            // 只更新当前队伍
             string currentTeamId = SelectorGui.UserSelectedteamid;
             if (string.IsNullOrEmpty(currentTeamId))
                 return;
@@ -200,14 +157,12 @@ namespace EnemiesVsEnemies.UI.Utilities
             if (!config.Teams.TryGetValue(currentTeamId, out var team))
                 return;
 
-            // 更新队伍信息
             if (AlluiText.TryGetValue(team.Id, out var teamText))
             {
                 string teamInfo = $"- {team.Name} (ID: {team.Id})";
                 teamText.set_text(Lang.Class.t.untranslated(teamInfo.ToHaxeString()));
             }
 
-            // 更新仇恨队伍信息
             string opposingKey = team.Id + "opposingText";
             if (AlluiText.TryGetValue(opposingKey, out var opposingText))
             {
@@ -223,7 +178,6 @@ namespace EnemiesVsEnemies.UI.Utilities
                 }
             }
 
-            // 更新敌人生成信息
             string enemiesKey = team.Id + "enemiesText";
             if (AlluiText.TryGetValue(enemiesKey, out var enemiesText))
             {
@@ -327,37 +281,6 @@ namespace EnemiesVsEnemies.UI.Utilities
             return enemiesInfo;
         }
 
-        public void AddNewTeamFromGui(TeamManager teamManager)
-        {
-
-            Controller parent = SelectorGui.controller.parent;
-            parent.isLocked = true;
-            CricketSelectorGui.isLockedController = true;
-
-            var inputTeamID = new NumberInput(SelectorGui);
-            var createteam = new TeamConfig("", "");
-
-            var action = new Action<string>((value) =>
-            {
-                parent.isLocked = false;
-                CricketSelectorGui.isLockedController = false;
-
-                createteam.Id = value;
-                teamManager.AddTeam(createteam);
-                inputTeamID.Input.close();
-                var action = new Action<string>((value) =>
-                {
-                    createteam.Name = value;
-                    SelectorGui.GetConfig.Save();
-                    AddTeamEntry(createteam);
-                    AddOpposingTeamsInfo(createteam);
-                    AddDefaultEnemiesPlaceholder(createteam);
-
-                });
-                inputTeamID.Input = inputTeamID.OpenNumberInput("输入", "该队伍名称", 1, action);
-            });
-            dc.ui.TextInput inpu = inputTeamID.OpenNumberInput("输入", "该队伍唯一ID", 1, action);
-        }
 
 
         public void AddOpposingTeamFromGui(TeamManager teamManager)

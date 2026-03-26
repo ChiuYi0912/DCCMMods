@@ -1,11 +1,20 @@
+using CoreLibrary.Core.Extensions;
 using dc;
 using dc.cine;
 using dc.en;
 using dc.en.inter;
 using dc.en.mob;
 using dc.en.mob.boss;
+using dc.h2d.col;
+using dc.hl.types;
+using dc.hxd.res;
+using dc.tool;
+using dc.tool.bossRush;
 using EnemiesVsEnemies.Configuration;
+using Hashlink.Virtuals;
+using HaxeProxy.Runtime;
 using ModCore.Modules;
+using ModCore.Utilities;
 
 namespace EnemiesVsEnemies.Core
 {
@@ -31,7 +40,19 @@ namespace EnemiesVsEnemies.Core
             Hook_Behemoth.behaviourAi += Hook_Behemoth_behaviourAi;
             dc.en.Hook_Mob.setNemesisTarget += Hook_Mob_setNemesisTarget;
             dc.en.Hook_Mob.tpHeroBackToTraining += Hook_Mob_tpHeroBackToTraining;
+            Hook__MusicManager.get += Hook__MusicManager_get;
         }
+
+
+
+
+        private Sound Hook__MusicManager_get(Hook__MusicManager.orig_get orig, dc.String musicName, dc.String folder)
+        {
+            if (musicName == null)
+                musicName = "music\\default\\lighthouse_ambiance_bg.ogg".ToHaxeString();
+            return orig(musicName, folder);
+        }
+
 
         public void CleanupHooks()
         {
@@ -44,6 +65,8 @@ namespace EnemiesVsEnemies.Core
             dc.en.Hook_Mob.setNemesisTarget -= Hook_Mob_setNemesisTarget;
             dc.en.Hook_Mob.tpHeroBackToTraining -= Hook_Mob_tpHeroBackToTraining;
         }
+
+
 
 
 
@@ -98,7 +121,8 @@ namespace EnemiesVsEnemies.Core
 
         private void Hook_Mob_tpHeroBackToTraining(dc.en.Hook_Mob.orig_tpHeroBackToTraining orig, dc.en.Mob self)
         {
-            if (self is Behemoth)
+            self.collisionMode = new CollisionMode.WallGrab();
+            if (self is Behemoth || self is Queen || self is TimeKeeper)
             {
                 return;
             }
