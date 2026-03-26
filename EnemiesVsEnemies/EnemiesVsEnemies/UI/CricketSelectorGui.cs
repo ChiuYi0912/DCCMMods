@@ -25,6 +25,7 @@ using dc.h2d.col;
 using ModCore.Utilities;
 using Math = System.Math;
 using EnemiesVsEnemies.Inter;
+using dc.en.mob;
 
 namespace EnemiesVsEnemies.UI
 {
@@ -36,6 +37,8 @@ namespace EnemiesVsEnemies.UI
         public UITextHelper textHelper = null!;
         public Mask rightMask = null!;
         private Interactive rightInter = null!;
+        private Flow figthFlowContainer = null!;
+        private dc.h2d.Object rightGridContainer = null!;
 
         public Config<ModConfig> GetConfig = EnemiesVsEnemiesMod.config;
 
@@ -92,7 +95,7 @@ namespace EnemiesVsEnemies.UI
             base.rightFlow = FlowBox.Class.createBoxValidation(null, Ref<double>.From(ref padH),
             Ref<double>.From(ref padV), Ref<bool>.Null, null);
             base.rightFlow.set_isVertical(true);
-            base.rightFlow.set_horizontalAlign(new FlowAlign.Right());
+            base.rightFlow.set_horizontalAlign(new FlowAlign.Middle());
             base.rightFlow.set_verticalAlign(new FlowAlign.Bottom());
 
 
@@ -107,11 +110,16 @@ namespace EnemiesVsEnemies.UI
 
             base.root.addChild(nameText);
 
-            rightMask = new Mask(200, 300, null);
-            rightMask.addChild(rightFlow);
-            base.mainFlow.addChild(rightMask);
+            figthFlowContainer = new Flow(rightFlow);
 
-            rightInter = new Interactive(rightMask.width, rightMask.height, rightMask, null);
+            rightGridContainer = new dc.h2d.Object(null);
+
+            rightMask = new Mask(200, 300, null);
+            rightMask.addChild(rightGridContainer);
+
+            figthFlowContainer.addChild(rightMask);
+
+            rightInter = new Interactive(figthFlowContainer.get_outerWidth(), figthFlowContainer.get_outerHeight(), rightMask, null);
             rightInter.propagateEvents = true;
             rightInter.onWheel = new HlAction<Event>(OnRightWheel);
 
@@ -120,10 +128,14 @@ namespace EnemiesVsEnemies.UI
             selectionTeam = new ScaleGrid(tile, 8, 8, rightMask);
             selectionTeam.alpha = 0;
 
-
+            const double HEIGHT_Thereal = 1.5;
             double pixelScale = base.get_pixelScale.Invoke();
             double fbWidth = base.fbItems.get_outerWidth();
-            double fbHeight = base.fbItems.get_outerHeight();
+            double fbHeight = base.fbItems.get_outerHeight() / HEIGHT_Thereal;
+
+            double screenWidth = dc.hxd.Window.Class.getInstance().get_width();
+            const double WIDTH_Thereal = 3;
+            double maxWidth = screenWidth / WIDTH_Thereal;
 
 
             double rightX = fbItems.x + fbWidth + 20 * pixelScale;
@@ -131,17 +143,54 @@ namespace EnemiesVsEnemies.UI
 
             rightMask.x = rightX;
             rightMask.y = rightY;
-            rightMask.width = (int)fbWidth;
+            rightMask.width = (int)maxWidth;
             rightMask.height = (int)fbHeight;
 
-            rightInter.width = fbWidth;
+            rightInter.width = maxWidth;
             rightInter.height = fbHeight;
 
-            base.rightFlow.reflow();
 
+
+            double pixel = get_pixelScale.Invoke() * 5.0;
+            rightGridContainer.y = pixel;
+            pixel = get_pixelScale.Invoke() * 5.0;
+            rightGridContainer.x = pixel;
+            rightGridContainer.posChanged = true;
+
+            int size = 50;
+            int cols = 7;
+            double scale = get_pixelScale.Invoke();
+            int cellWidth = (int)(get_entryWid() * scale);
+            int cellHeight = (int)(get_entryHei() * scale);
+
+            int i = 0;
+            int flowx = 0;
+            int flowy = 0;
+            int spacing = (int)(scale * 8.0);
+            while (i < size)
+            {
+                var flow = new Flow(rightGridContainer);
+                Icon icon = (Icon)getIconBmp(i, flow);
+                icon.scaleToSize(72, 72);
+
+                flow.x = flowx * (cellWidth + spacing);
+                flow.y = flowy * (cellHeight + spacing);
+                i++;
+                flowx++;
+
+                if (flowx >= cols)
+                {
+                    flowx = 0;
+                    flowy++;
+                }
+            }
+
+            figthFlowContainer.reflow();
 
             textHelper.AddConfigInfoToRightFlow();
         }
+
+
 
         private void OnRightWheel(Event e)
         {
@@ -151,14 +200,18 @@ namespace EnemiesVsEnemies.UI
             double delta = e.wheelDelta;
             if (delta == 0) return;
 
-            const double step = 20;
+            const double step = 30;
+            Bounds bounds = new Bounds();
+            rightGridContainer.getBounds(null, bounds);
+            double width = bounds.xMax - bounds.xMin;
+            double height = bounds.yMax - bounds.yMin;
 
-            double maxScroll = Math.Max(0, rightFlow.get_outerHeight() - rightMask.height);
-            double newY = base.rightFlow.y - delta * step;
+            double maxScroll = Math.Max(0, height - rightMask.height);
+            double newY = rightGridContainer.y - delta * step;
             newY = Math.Max(-maxScroll, Math.Min(0, newY));
 
-            base.rightFlow.y = newY;
-            base.rightFlow.posChanged = true;
+            rightGridContainer.y = newY;
+            rightGridContainer.posChanged = true;
         }
 
 
