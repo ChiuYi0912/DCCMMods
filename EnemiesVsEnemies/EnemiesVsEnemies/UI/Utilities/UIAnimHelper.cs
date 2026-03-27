@@ -6,6 +6,7 @@ using dc;
 using dc.h2d;
 using dc.h2d.col;
 using dc.libs.misc;
+using dc.ui.icon;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using static EnemiesVsEnemies.UI.CricketSelectorGui;
@@ -15,32 +16,37 @@ namespace EnemiesVsEnemies.UI.Utilities
     public static class UIAnimHelper
     {
         private static List<Flow> remove = new();
-        public static void doMovementIcon(CricketSelectorGui gui, Text text, virtual_cx_cy_f_i_isLocked_sectionIdx_ seledata, MonsterSelectionEventArgs args)
+        public static void doMovementIcon(CricketSelectorGui gui, dc.h2d.Object to, dc.h2d.Object from, Icon icon, bool add)
         {
             double pixelScale = gui.get_pixelScale.Invoke();
-            Flow oldflow = seledata.f;
-
 
             Flow cloneflow = new Flow(null);
-            var cloneicon = gui.getIconBmp(seledata.i, cloneflow);
-            cloneicon.posChanged = true;
-            cloneicon.scaleX = pixelScale;
-            cloneicon.posChanged = true;
-            cloneicon.scaleY = pixelScale;
+            var cloneicon = icon;
+            cloneflow.addChild(cloneicon);
+            if (add)
+            {
+                cloneicon.tile.scaleToSize(72, 72);
+            }
+            else
+            {
+                cloneicon.posChanged = true;
+                cloneicon.scaleX = pixelScale;
+                cloneicon.posChanged = true;
+                cloneicon.scaleY = pixelScale;
+            }
 
-            gui.mask.addChild(cloneflow);
+            gui.root.addChild(cloneflow);
 
             Main main = Main.Class.ME;
             const double speed = 800;
 
 
-            Point oldflowGlobal = main.localToGlobal(oldflow, Ref<double>.Null, Ref<double>.Null);
-            Point startLocal = gui.mask.globalToLocal(oldflowGlobal);
+            Point oldflowGlobal = main.localToGlobal(from, Ref<double>.Null, Ref<double>.Null);
+            Point textGlobal = main.localToGlobal(to, Ref<double>.Null, Ref<double>.Null);
 
 
-            Point textGlobal = main.localToGlobal(text, Ref<double>.Null, Ref<double>.Null);
-            Point targetLocal = gui.mask.globalToLocal(textGlobal);
-
+            Point startLocal = gui.root.globalToLocal(oldflowGlobal);
+            Point targetLocal = gui.root.globalToLocal(textGlobal);
 
             cloneflow.x = startLocal.x;
             cloneflow.y = startLocal.y;
@@ -64,6 +70,12 @@ namespace EnemiesVsEnemies.UI.Utilities
                 },
                 targetLocal.y, speed);
 
+
+            tweenX.end(() =>
+            {
+                cloneflow.remove();
+                remove.Remove(cloneflow);
+            });
 
             if (remove.Count >= 3)
             {

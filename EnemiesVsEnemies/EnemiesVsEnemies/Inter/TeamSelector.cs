@@ -17,7 +17,7 @@ namespace EnemiesVsEnemies.Inter
     public class TeamSelector : Interactive
     {
         public Level level = null!;
-
+        public CricketSelectorGui gui = null!;
         public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y)
         {
             level = lvl;
@@ -43,13 +43,13 @@ namespace EnemiesVsEnemies.Inter
                 {
                     Teamid = userinputid;
                     EnsureTeamConfigWithPosition(Teamid);
-                    _ = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager(), Teamid);
+                    gui = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager(), Teamid);
                 };
                 inpt.OpenNumberInput("输入", "触发器队伍id", 0, action);
 
                 return;
             }
-            _ = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager(), Teamid);
+            gui = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager(), Teamid);
         }
 
         private void EnsureTeamConfigWithPosition(string id)
@@ -66,6 +66,19 @@ namespace EnemiesVsEnemies.Inter
                 EnemiesVsEnemiesMod.GetTeamManager().AddTeam(teamConfig);
                 EnemiesVsEnemiesMod.config.Save();
             }
+        }
+
+        public override void postUpdate()
+        {
+            base.postUpdate();
+            if (gui == null)
+                return;
+
+            if (gui.isLockedController)
+                return;
+
+            EnemiesVsEnemiesMod.HandleKeyBindings();
+            EnemiesVsEnemiesMod.Destroymobs();
         }
 
         public override void onFocus()

@@ -19,7 +19,7 @@ using Serilog;
 
 namespace EnemiesVsEnemies
 {
-    public class EnemiesVsEnemiesMod : ModBase, IOnHeroUpdate, IOnAfterLoadingCDB, IOnGameEndInit
+    public class EnemiesVsEnemiesMod : ModBase, IOnAfterLoadingCDB, IOnGameEndInit
     {
         public static Config<ModConfig> config = new("EnemiesVsEnemiesConfig");
 
@@ -29,7 +29,7 @@ namespace EnemiesVsEnemies
         private static HookManager hookManager = null!;
         private static MobGroupHelper mobGroupHelper = null!;
 
-        private KeyBindingHelper keyBindingHelper = null!;
+        private static KeyBindingHelper keyBindingHelper = null!;
 
 
 
@@ -45,7 +45,7 @@ namespace EnemiesVsEnemies
         public override void Initialize()
         {
             base.Initialize();
-            Version = Info.Version = "0.5.0";
+            Version = Info.Version = "0.6.2";
             Info.Name = "EnemiesVsEnemies (Enhanced)";
             GetLogger = Logger;
 
@@ -56,14 +56,7 @@ namespace EnemiesVsEnemies
 
         }
 
-        void IOnHeroUpdate.OnHeroUpdate(double dt)
-        {
-            if (CricketSelectorGui.isLockedController)
-                return;
 
-            HandleKeyBindings();
-            Destroymobs();
-        }
 
         void IOnGameEndInit.OnGameEndInit()
         {
@@ -99,7 +92,7 @@ namespace EnemiesVsEnemies
             LogInfo("所有管理器已初始化");
         }
 
-        private void HandleKeyBindings()
+        public static void HandleKeyBindings()
         {
             // 生成队伍敌人 (键B)
             if (keyBindingHelper.IsSpawnTeamAPressed())
@@ -111,7 +104,7 @@ namespace EnemiesVsEnemies
             }
         }
 
-        private void Destroymobs()
+        public static void Destroymobs()
         {
             if (keyBindingHelper.IsSpawnTeamDestroyMobs())
             {

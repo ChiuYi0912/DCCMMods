@@ -34,17 +34,21 @@ namespace EnemiesVsEnemies.UI
     {
         public TeamManager teamManager = null!;
         public FlowBox teamFlowBox = null!;
-        public ScaleGrid selectionTeam = null!;
+        public ScaleGrid selectiononClickMob = null!;
         public UITextHelper textHelper = null!;
         public Mask rightMask = null!;
         private Interactive rightInter = null!;
         private Flow figthFlowContainer = null!;
-        private dc.h2d.Object rightGridContainer = null!;
+        public dc.h2d.Object rightGridContainer = null!;
+        private Icon RightIcon = null!;
 
+        private Dictionary<string, Flow> mobFlowMap = new Dictionary<string, Flow>();
+        private Dictionary<string, Text> mobCountLabelMap = new Dictionary<string, Text>();
         public Config<ModConfig> GetConfig = EnemiesVsEnemiesMod.config;
 
-        public static bool isLockedController = false;
+        public bool isLockedController = false;
         public string UserSelectedteamid = null!;
+
 
         public class MonsterSelectionEventArgs
         {
@@ -72,6 +76,8 @@ namespace EnemiesVsEnemies.UI
         public const string AudioError = "sfx/ui/menu_error2.wav";
         public const string Audiocurse = "sfx/ps5/curse_end_SE.wav";
         public const string Audioclick = "sfx/ui/menu_click1.wav";
+        public const string Audiocchestroom1 = "sfx/ps5/prison_chestroom1_SE.wav";
+
 
         public static dynamic getmobsbyIndex(int index)
         {
@@ -116,6 +122,8 @@ namespace EnemiesVsEnemies.UI
             figthFlowContainer = new Flow(rightFlow);
 
             rightGridContainer = new dc.h2d.Object(null);
+            rightGridContainer.x = get_pixelScale.Invoke() * 5;
+            rightGridContainer.posChanged = true;
 
             rightMask = new Mask(200, 300, null);
             rightMask.addChild(rightGridContainer);
@@ -125,11 +133,12 @@ namespace EnemiesVsEnemies.UI
             rightInter = new Interactive(figthFlowContainer.get_outerWidth(), figthFlowContainer.get_outerHeight(), rightMask, null);
             rightInter.propagateEvents = true;
             rightInter.onWheel = new HlAction<Event>(OnRightWheel);
+            rightInter.onMove = (e) => { };
 
             Tile tile = Assets.Class.ui.getTile("boxSelect".ToHaxeString(), Ref<int>.Null,
             Ref<double>.Null, Ref<double>.Null, null);
-            selectionTeam = new ScaleGrid(tile, 8, 8, rightMask);
-            selectionTeam.alpha = 0;
+            selectiononClickMob = new ScaleGrid(tile, 10, 10, rightMask);
+            selectiononClickMob.alpha = 1.0;
 
             const double HEIGHT_Thereal = 1.5;
             double pixelScale = base.get_pixelScale.Invoke();
@@ -137,7 +146,7 @@ namespace EnemiesVsEnemies.UI
             double fbHeight = base.fbItems.get_outerHeight() / HEIGHT_Thereal;
 
             double screenWidth = dc.hxd.Window.Class.getInstance().get_width();
-            const double WIDTH_Thereal = 3;
+            const double WIDTH_Thereal = 2.85;
             double maxWidth = screenWidth / WIDTH_Thereal;
 
 
@@ -153,14 +162,6 @@ namespace EnemiesVsEnemies.UI
             rightInter.height = fbHeight;
 
 
-
-            double pixel = get_pixelScale.Invoke() * 5.0;
-            rightGridContainer.y = pixel;
-            pixel = get_pixelScale.Invoke() * 5.0;
-            rightGridContainer.x = pixel;
-            rightGridContainer.posChanged = true;
-
-
             textHelper.AddConfigInfoToRightFlow();
 
             initRightGrid();
@@ -173,55 +174,221 @@ namespace EnemiesVsEnemies.UI
         {
             var team = GetConfig.Value.Teams[UserSelectedteamid];
 
+            ClearRightGrid();
+
             var countDict = new Dictionary<string, int>();
             foreach (var id in team.DefaultEnemies)
-            {
                 countDict[id] = countDict.TryGetValue(id, out int c) ? c + 1 : 1;
-            }
-
 
             const int cols = 7;
             double scale = get_pixelScale.Invoke();
-
             int spacing = (int)(scale * 8.0);
+            int cellWidth = (int)(get_entryWid() * scale);
+            int cellHeight = (int)(get_entryHei() * scale);
 
-            int i = 0;
-            int flowx = 0;
-            int flowy = 0;
-
-
+            int idx = 0;
             foreach (var kvp in countDict)
             {
                 string mobId = kvp.Key;
                 int count = kvp.Value;
 
-                var flow = new Flow(rightGridContainer);
-                flow.isVertical = true;
-                flow.set_horizontalAlign(new FlowAlign.Middle());
-                var icon = Icon.Class.createMobIcon(mobId.ToHaxeString(), flow);
-                icon.tile.scaleToSize(72, 72);
+                var flow = CreateMonsterFlow(mobId, count);
+                int row = idx / cols;
+                int col = idx % cols;
+                flow.x = col * (cellWidth + spacing);
+                flow.y = row * (cellHeight + spacing);
 
-                if (count > 1)
+                mobFlowMap[mobId] = flow;
+                idx++;
+            }
+        }
+
+        private void ClearRightGrid()
+        {
+            foreach (var flow in mobFlowMap.Values)
+                flow.remove();
+            mobFlowMap.Clear();
+            mobCountLabelMap.Clear();
+        }
+
+        private Flow CreateMonsterFlow(string mobId, int count)
+        {
+            var flow = new Flow(rightGridContainer);
+            flow.isVertical = true;
+            flow.set_horizontalAlign(new FlowAlign.Middle());
+
+            var icon = Icon.Class.createMobIcon(mobId.ToHaxeString(), flow);
+            icon.tile.scaleToSize(72, 72);
+
+            var interactive = new Interactive(icon.tile.width, icon.tile.height, icon, null);
+            interactive.propagateEvents = false;
+
+            string onmoveMob = mobId;
+            interactive.onClick = (e) =>
+            {
+                AudioHelper.LoadAudioFormString(Audiocurse);
+                RemoveMonsterFromTeam(onmoveMob);
+
+                var getvirtual = Data.Class.mob.byId.get(onmoveMob.ToHaxeString()).index;
+                var newicon = Icon.Class.createMobIcon(mobId.ToHaxeString(), null);
+                UIAnimHelper.doMovementIcon(this, entries.getDyn(getvirtual).f, flow, newicon, false);
+            };
+            interactive.onMove = (e) =>
+            {
+                RightIcon = icon;
+            };
+            interactive.onFocus = (e) =>
+            {
+                EnemiesVsEnemiesMod.GetLogger.LogError("onFocus");
+            };
+
+
+            if (count > 1)
+            {
+                var label = new Text(null, false, null, Ref<double>.Null, null, null);
+                flow.addChild(label);
+                label.addShader(new dc.shader.HotlineText());
+                label.scaleX = label.scaleY = 1.5;
+                label.textColor = CreateColor.ColorFromHex("#ffffff");
+                label.set_text($"+{count}".ToHaxeString());
+                mobCountLabelMap[mobId] = label;
+            }
+            else
+            {
+                if (mobCountLabelMap.ContainsKey(mobId))
+                    mobCountLabelMap.Remove(mobId);
+            }
+
+            return flow;
+        }
+
+
+        private Flow AddMonsterToRightGrid(string mobId)
+        {
+            if (mobFlowMap.TryGetValue(mobId, out var existingFlow))
+            {
+                int newCount = GetCurrentCount(mobId);
+
+                if (newCount > 1)
                 {
-                    var label = new Text(null, false, null, Ref<double>.Null, null, null);  // 根据实际框架调整
-                    flow.addChild(label);
-                    label.addShader(new dc.shader.HotlineText());
-                    label.scaleX = label.scaleY = 1.5;
-                    label.textColor = CreateColor.ColorFromHex("#ffffff");
-                    label.set_text($"+{count}".ToHaxeString());
+                    if (mobCountLabelMap.TryGetValue(mobId, out var label))
+                    {
+                        label.set_text($"+{newCount}".ToHaxeString());
+                    }
+                    else
+                    {
+                        var newLabel = new Text(null, false, null, Ref<double>.Null, null, null);
+                        existingFlow.addChild(newLabel);
+                        newLabel.addShader(new dc.shader.HotlineText());
+                        newLabel.scaleX = newLabel.scaleY = 1.5;
+                        newLabel.textColor = CreateColor.ColorFromHex("#ffffff");
+                        newLabel.set_text($"+{newCount}".ToHaxeString());
+                        mobCountLabelMap[mobId] = newLabel;
+                    }
+
+                }
+                else if (newCount == 1 && mobCountLabelMap.ContainsKey(mobId))
+                {
+                    var oldLabel = mobCountLabelMap[mobId];
+                    oldLabel.remove();
+                    mobCountLabelMap.Remove(mobId);
+
+                    return (Flow)oldLabel.parent;
                 }
 
-                flow.x = flowx * ((int)(get_entryWid() * scale) + spacing);
-                flow.y = flowy * ((int)(get_entryHei() * scale) + spacing);
-                i++;
-                flowx++;
+                return existingFlow;
+            }
+            else
+            {
+                int newCount = GetCurrentCount(mobId);
+                var newFlow = CreateMonsterFlow(mobId, newCount);
 
-                if (flowx >= cols)
+                mobFlowMap[mobId] = newFlow;
+
+                ReflowRightGrid();
+                return newFlow;
+            }
+        }
+
+        public void RemoveMonsterFromTeam(string mobId)
+        {
+            var team = GetConfig.Value.Teams[UserSelectedteamid];
+            if (team.DefaultEnemies.Remove(mobId))
+            {
+                GetConfig.Save();
+                UpdateRightGridForRemove(mobId);
+            }
+        }
+
+        private void UpdateRightGridForRemove(string mobId)
+        {
+            if (!mobFlowMap.TryGetValue(mobId, out var flow))
+                return;
+
+            int newCount = GetCurrentCount(mobId);
+            if (newCount == 0)
+            {
+                flow.remove();
+                mobFlowMap.Remove(mobId);
+                mobCountLabelMap.Remove(mobId);
+            }
+            else
+            {
+                if (newCount == 1)
                 {
-                    flowx = 0;
-                    flowy++;
+                    if (mobCountLabelMap.TryGetValue(mobId, out var label))
+                    {
+                        label.remove();
+                        mobCountLabelMap.Remove(mobId);
+                    }
+                }
+                else
+                {
+                    if (mobCountLabelMap.TryGetValue(mobId, out var label))
+                    {
+                        label.set_text($"+{newCount}".ToHaxeString());
+                    }
+                    else
+                    {
+                        var newLabel = new Text(null, false, null, Ref<double>.Null, null, null);
+                        flow.addChild(newLabel);
+                        newLabel.addShader(new dc.shader.HotlineText());
+                        newLabel.scaleX = newLabel.scaleY = 1.5;
+                        newLabel.textColor = CreateColor.ColorFromHex("#ffffff");
+                        newLabel.set_text($"+{newCount}".ToHaxeString());
+                        mobCountLabelMap[mobId] = newLabel;
+                    }
                 }
             }
+
+            ReflowRightGrid();
+        }
+
+        private int GetCurrentCount(string mobId)
+        {
+            var team = GetConfig.Value.Teams[UserSelectedteamid];
+            return team.DefaultEnemies.Count(id => id == mobId);
+        }
+
+        private void ReflowRightGrid()
+        {
+            const int cols = 7;
+            double scale = get_pixelScale.Invoke();
+            int spacing = (int)(scale * 8.0);
+            int cellWidth = (int)(get_entryWid() * scale);
+            int cellHeight = (int)(get_entryHei() * scale);
+
+            int idx = 0;
+            foreach (var kvp in mobFlowMap)
+            {
+                int row = idx / cols;
+                int col = idx % cols;
+                kvp.Value.x = col * (cellWidth + spacing);
+                kvp.Value.y = row * (cellHeight + spacing);
+                idx++;
+            }
+
+            rightGridContainer.posChanged = true;
         }
 
 
@@ -235,9 +402,9 @@ namespace EnemiesVsEnemies.UI
             if (delta == 0) return;
 
             const double step = 30;
+
             Bounds bounds = new Bounds();
             rightGridContainer.getBounds(null, bounds);
-            double width = bounds.xMax - bounds.xMin;
             double height = bounds.yMax - bounds.yMin;
 
             double maxScroll = Math.Max(0, height - rightMask.height);
@@ -247,6 +414,7 @@ namespace EnemiesVsEnemies.UI
             rightGridContainer.y = newY;
             rightGridContainer.posChanged = true;
         }
+
 
 
         public override void onValidate()
@@ -265,11 +433,9 @@ namespace EnemiesVsEnemies.UI
             }
 
             AddMonsterToTeam(args);
+            var gotoflow = AddMonsterToRightGrid(args.MobId);
+            UIAnimHelper.doMovementIcon(this, gotoflow, entry.f, (Icon)getIconBmp(entry.i, null!), true);
 
-            if (textHelper.AlluiText.TryGetValue(UserSelectedteamid, out var textElement))
-            {
-                UIAnimHelper.doMovementIcon(this, textElement, entry, args);
-            }
         }
 
 
@@ -290,7 +456,7 @@ namespace EnemiesVsEnemies.UI
             GetConfig.Save();
             textHelper.UpdateTeamDisplay();
 
-            AudioHelper.LoadAudioFormString(Audiocurse);
+            AudioHelper.LoadAudioFormString(Audiocchestroom1);
 
             Log.Logger.Debug($"选择选中怪物：{args.MobId}, teamid:{UserSelectedteamid}");
         }
@@ -307,10 +473,8 @@ namespace EnemiesVsEnemies.UI
         public override dc.h2d.Object getIconBmp(int i, dc.h2d.Object parent)
         {
             string name = getmobsbyIndex(i).id.ToString();
-
             var icon = Icon.Class.createMobIcon(name.ToHaxeString(), parent);
             icon.tile.scaleToSize(get_entryWid(), get_entryHei());
-
             return icon;
         }
 
@@ -328,13 +492,11 @@ namespace EnemiesVsEnemies.UI
             selection.y = entryGlobal.y - maskGlobal.y - offset;
 
 
-            if (UserSelectedteamid.IsNullOrEmpty())
-                return;
-
-            UptDateSelectionTeam();
+            if (!UserSelectedteamid.IsNullOrEmpty())
+                UptDateSelectiononClickMob();
         }
 
-        public void UptDateSelectionTeam()
+        public void UptDateSelectiononClickMob()
         {
             double timeFactor = base.ftime * 0.1;
             string speedKey = "co_blinkCursorSpeed";
@@ -346,45 +508,32 @@ namespace EnemiesVsEnemies.UI
             var alphaOffset = 0.2 * cosValue;
 
             this.selectionSG.alpha = 0.8 + alphaOffset;
+            selectiononClickMob.alpha = 0.8 + alphaOffset;
 
-            if (!textHelper.AlluiText.ContainsKey(UserSelectedteamid))
-            {
-                selectionTeam.alpha = 0;
+            if (RightIcon == null)
                 return;
-            }
 
-            if (textHelper.AlluiText.TryGetValue(UserSelectedteamid, out var text))
-            {
-                Point oldflowGlobal = Main.Class.ME.localToGlobal(text, Ref<double>.Null, Ref<double>.Null);
-                Point localPos = rightMask.globalToLocal(oldflowGlobal);
+            Point iconGlobal = Main.Class.ME.localToGlobal(RightIcon, Ref<double>.Null, Ref<double>.Null);
+            Point localPos = rightMask.globalToLocal(iconGlobal);
 
+            double w = RightIcon.tile.width;
+            double h = RightIcon.tile.height;
 
-                double scaleX = text.scaleX;
-                double scaleY = text.scaleY;
-                double actualWidth = text.textWidth * scaleX;
-                double actualHeight = text.textHeight * scaleY;
+            double padding = get_pixelScale.Invoke() * 10;
+            double boxWidth = w + padding / 5;
+            double boxHeight = h + padding / 5;
 
-
-                double padding = get_pixelScale.Invoke() * 10;
-                double boxWidth = actualWidth + padding;
-                double boxHeight = actualHeight + padding / 6;
+            selectiononClickMob.set_width((int)boxWidth);
+            selectiononClickMob.set_height((int)boxHeight);
 
 
-                selectionTeam.set_width((int)boxWidth);
-                selectionTeam.set_height((int)boxHeight);
+            double offsetX = (boxWidth - w) / 2;
+            double offsetY = (boxHeight - h) / 2;
 
+            selectiononClickMob.x = localPos.x - offsetX;
+            selectiononClickMob.y = localPos.y - offsetY;
 
-                double offsetX = (boxWidth - actualWidth) / 2;
-                double offsetY = (boxHeight - actualHeight) / 2;
-
-
-                selectionTeam.x = localPos.x - offsetX;
-                selectionTeam.y = localPos.y - offsetY;
-
-                selectionTeam.alpha = 0.8 + alphaOffset;
-
-                selectionTeam.posChanged = true;
-            }
+            selectiononClickMob.posChanged = true;
 
         }
 

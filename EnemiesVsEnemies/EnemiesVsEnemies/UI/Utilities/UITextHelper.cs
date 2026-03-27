@@ -103,10 +103,6 @@ namespace EnemiesVsEnemies.UI.Utilities
 
                     string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
                     CreateAndAddText(opposingInfo, team.Id + "opposingText", "#ff0000", 1.1);
-
-
-                    string enemiesText = $"队伍暴徒: {string.Join(", ", team.OpposingTeamIds)}";
-                    CreateAndAddText(enemiesText, team.Id + "enemiesText", "#787cff", 1);
                 }
             }
 
@@ -150,41 +146,12 @@ namespace EnemiesVsEnemies.UI.Utilities
                 }
             }
 
-            string enemiesKey = team.Id + "enemiesText";
-            if (AlluiText.TryGetValue(enemiesKey, out var enemiesText))
-            {
-                double screenWidth = dc.hxd.Window.Class.getInstance().get_width();
-                double maxWidth = screenWidth / 3;
-                enemiesText.set_maxWidth(maxWidth);
-
-                string newEnemiesInfo = GenerateEnemiesInfo(team);
-                enemiesText.set_text(Lang.Class.t.get(newEnemiesInfo.ToHaxeString(), null));
-                enemiesText.posChanged = true;
-            }
-
             SelectorGui.teamFlowBox.reflow();
             SelectorGui.rightFlow.reflow();
         }
 
 
-        private string GenerateEnemiesInfo(TeamConfig team)
-        {
-            var countDict = new Dictionary<string, int>();
-            foreach (var id in team.DefaultEnemies)
-            {
-                string data = Data.Class.mob.byId.get(id.ToHaxeString()).name.ToString();
-                string lang = Lang.Class.t.get(data.ToHaxeString(), null).ToString();
-                countDict[lang] = countDict.TryGetValue(lang, out int c) ? c + 1 : 1;
-            }
 
-            var parts = new List<string>();
-            foreach (var kvp in countDict)
-                parts.Add(kvp.Value == 1 ? kvp.Key : $"{kvp.Key}+{kvp.Value}");
-
-            string testInfo = $"队伍名单:{string.Join(" ", parts)}";
-
-            return testInfo;
-        }
 
 
 
@@ -192,14 +159,14 @@ namespace EnemiesVsEnemies.UI.Utilities
         {
             Controller parent = SelectorGui.controller.parent;
             parent.isLocked = true;
-            CricketSelectorGui.isLockedController = true;
+            SelectorGui.isLockedController = true;
 
             var inputTeamID = new NumberInput(SelectorGui);
 
             var action = new Action<string>((value) =>
             {
                 parent.isLocked = false;
-                CricketSelectorGui.isLockedController = false;
+                SelectorGui.isLockedController = false;
 
                 var targetTeamId = SelectorGui.UserSelectedteamid;
                 var teamconfig = SelectorGui.GetConfig.Value.Teams;
@@ -212,7 +179,7 @@ namespace EnemiesVsEnemies.UI.Utilities
                 else
                 {
                     var popup = new dc.ui.ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
-                    popup.text("添加失败：\n 请先选择队伍！\n".ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
+                    popup.text("添加失败：\n 请添加已注册的队伍！\n".ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
                 }
 
                 inputTeamID.Input.close();
