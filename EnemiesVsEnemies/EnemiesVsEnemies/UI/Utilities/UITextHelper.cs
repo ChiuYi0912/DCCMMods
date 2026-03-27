@@ -67,13 +67,7 @@ namespace EnemiesVsEnemies.UI.Utilities
 
         public void AddConfigInfoToRightFlow()
         {
-            if (SelectorGui.GetConfig == null || SelectorGui.rightFlow == null ||
-            SelectorGui.mainFlow == null)
-                return;
-
             var config = SelectorGui.GetConfig.Value;
-            if (config == null)
-                return;
 
             SelectorGui.mainFlow.set_horizontalAlign(new FlowAlign.Middle());
             SelectorGui.mainFlow.set_verticalAlign(new FlowAlign.Bottom());
@@ -175,13 +169,11 @@ namespace EnemiesVsEnemies.UI.Utilities
 
         private string GenerateEnemiesInfo(TeamConfig team)
         {
-            if (team.DefaultEnemies == null)
-                return "队伍名单: 无";
-
             var countDict = new Dictionary<string, int>();
             foreach (var id in team.DefaultEnemies)
             {
-                string lang = UIMobHelper.getMobNamebyid(id);
+                string data = Data.Class.mob.byId.get(id.ToHaxeString()).name.ToString();
+                string lang = Lang.Class.t.get(data.ToHaxeString(), null).ToString();
                 countDict[lang] = countDict.TryGetValue(lang, out int c) ? c + 1 : 1;
             }
 

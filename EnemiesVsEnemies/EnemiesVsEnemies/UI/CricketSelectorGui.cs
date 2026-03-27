@@ -26,6 +26,7 @@ using ModCore.Utilities;
 using Math = System.Math;
 using EnemiesVsEnemies.Inter;
 using dc.en.mob;
+using dc.h3d.shader;
 
 namespace EnemiesVsEnemies.UI
 {
@@ -64,27 +65,29 @@ namespace EnemiesVsEnemies.UI
         public override int get_wid() => 10;
         public override int get_entryWid() => 24;
         public override int get_entryHei() => 24;
+        public static int getmoblength() => Data.Class.mob.all.array.length;
+        public override void initGrid() { curX = curY = 0; initEntries(getmoblength()); }
+        public override void initRightFlow() { }
 
         public const string AudioError = "sfx/ui/menu_error2.wav";
         public const string Audiocurse = "sfx/ps5/curse_end_SE.wav";
         public const string Audioclick = "sfx/ui/menu_click1.wav";
 
+        public static dynamic getmobsbyIndex(int index)
+        {
+            var arr = Data.Class.mob.all.array;
+
+            if (index < 0 || index >= arr.length)
+                return null!;
+
+            return arr.getDyn(index);
+        }
 
         public override bool isEntryLocked(int i)
         {
             string data = Data.Class.mob.all.array.getDyn(i).id.ToString();
             return EnemiesVsEnemiesMod.GetMobGroupHelper().IsRealBoss(data);
         }
-
-        public override void initGrid()
-        {
-            curX = curY = 0;
-            initEntries(UIMobHelper.getmoblength());
-        }
-
-
-        public override void initRightFlow() { }
-
 
         public void initMYRightFlow()
         {
@@ -157,24 +160,59 @@ namespace EnemiesVsEnemies.UI
             rightGridContainer.x = pixel;
             rightGridContainer.posChanged = true;
 
-            int size = 50;
-            int cols = 7;
+
+            textHelper.AddConfigInfoToRightFlow();
+
+            initRightGrid();
+
+            figthFlowContainer.reflow();
+        }
+
+
+        public void initRightGrid()
+        {
+            var team = GetConfig.Value.Teams[UserSelectedteamid];
+
+            var countDict = new Dictionary<string, int>();
+            foreach (var id in team.DefaultEnemies)
+            {
+                countDict[id] = countDict.TryGetValue(id, out int c) ? c + 1 : 1;
+            }
+
+
+            const int cols = 7;
             double scale = get_pixelScale.Invoke();
-            int cellWidth = (int)(get_entryWid() * scale);
-            int cellHeight = (int)(get_entryHei() * scale);
+
+            int spacing = (int)(scale * 8.0);
 
             int i = 0;
             int flowx = 0;
             int flowy = 0;
-            int spacing = (int)(scale * 8.0);
-            while (i < size)
-            {
-                var flow = new Flow(rightGridContainer);
-                Icon icon = (Icon)getIconBmp(i, flow);
-                icon.scaleToSize(72, 72);
 
-                flow.x = flowx * (cellWidth + spacing);
-                flow.y = flowy * (cellHeight + spacing);
+
+            foreach (var kvp in countDict)
+            {
+                string mobId = kvp.Key;
+                int count = kvp.Value;
+
+                var flow = new Flow(rightGridContainer);
+                flow.isVertical = true;
+                flow.set_horizontalAlign(new FlowAlign.Middle());
+                var icon = Icon.Class.createMobIcon(mobId.ToHaxeString(), flow);
+                icon.tile.scaleToSize(72, 72);
+
+                if (count > 1)
+                {
+                    var label = new Text(null, false, null, Ref<double>.Null, null, null);  // 根据实际框架调整
+                    flow.addChild(label);
+                    label.addShader(new dc.shader.HotlineText());
+                    label.scaleX = label.scaleY = 1.5;
+                    label.textColor = CreateColor.ColorFromHex("#ffffff");
+                    label.set_text($"+{count}".ToHaxeString());
+                }
+
+                flow.x = flowx * ((int)(get_entryWid() * scale) + spacing);
+                flow.y = flowy * ((int)(get_entryHei() * scale) + spacing);
                 i++;
                 flowx++;
 
@@ -184,10 +222,6 @@ namespace EnemiesVsEnemies.UI
                     flowy++;
                 }
             }
-
-            figthFlowContainer.reflow();
-
-            textHelper.AddConfigInfoToRightFlow();
         }
 
 
@@ -222,7 +256,7 @@ namespace EnemiesVsEnemies.UI
                 return;
 
 
-            string mobId = UIMobHelper.getmobs(entry.i).id.ToString();
+            string mobId = getmobsbyIndex(entry.i).id.ToString();
             var args = new MonsterSelectionEventArgs { MobId = mobId };
             if (entry.isLocked)
             {
@@ -272,7 +306,7 @@ namespace EnemiesVsEnemies.UI
 
         public override dc.h2d.Object getIconBmp(int i, dc.h2d.Object parent)
         {
-            string name = UIMobHelper.getmobs(i).id.ToString();
+            string name = getmobsbyIndex(i).id.ToString();
 
             var icon = Icon.Class.createMobIcon(name.ToHaxeString(), parent);
             icon.tile.scaleToSize(get_entryWid(), get_entryHei());
