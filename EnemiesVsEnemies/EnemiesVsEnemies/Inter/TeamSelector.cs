@@ -103,7 +103,6 @@ namespace EnemiesVsEnemies.Inter
             teamConfig.TriggerLevelId = hero._level.map.id.ToString();
             teamConfig.TriggerX = cx;
             teamConfig.TriggerY = cy;
-            config.Teams[id] = teamConfig;
             EnemiesVsEnemiesMod.GetTeamManager().AddTeam(teamConfig);
             EnemiesVsEnemiesMod.config.Save();
             TeamSelectorkeys.Add(id, this);
