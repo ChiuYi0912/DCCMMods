@@ -227,11 +227,12 @@ namespace EnemiesVsEnemies.UI
             interactive.onClick = (e) =>
             {
                 AudioHelper.LoadAudioFormString(Audiocurse);
-                RemoveMonsterFromTeam(onmoveMob);
 
                 var getvirtual = Data.Class.mob.byId.get(onmoveMob.ToHaxeString()).index;
                 var newicon = Icon.Class.createMobIcon(mobId.ToHaxeString(), null);
                 UIAnimHelper.doMovementIcon(this, entries.getDyn(getvirtual).f, flow, newicon, false);
+                
+                RemoveMonsterFromTeam(onmoveMob);
             };
             interactive.onMove = (e) =>
             {
@@ -434,7 +435,8 @@ namespace EnemiesVsEnemies.UI
 
             AddMonsterToTeam(args);
             var gotoflow = AddMonsterToRightGrid(args.MobId);
-            UIAnimHelper.doMovementIcon(this, gotoflow, entry.f, (Icon)getIconBmp(entry.i, null!), true);
+            var icon = (Icon)getIconBmp(entry.i, null!);
+            UIAnimHelper.doMovementIcon(this, gotoflow, entry.f, icon, true);
 
         }
 

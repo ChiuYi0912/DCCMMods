@@ -172,16 +172,16 @@ namespace EnemiesVsEnemies.UI.Utilities
                 var teamconfig = SelectorGui.GetConfig.Value.Teams;
                 if (teamconfig.TryGetValue(targetTeamId, out var team))
                 {
+                    if (!teamconfig.TryGetValue(value, out var Objective))
+                    {
+                        var popup = new dc.ui.ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
+                        popup.text("添加失败：\n 请添加已注册的队伍！\n".ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
+                        return;
+                    }
                     team.OpposingTeamIds.Add(value);
                     SelectorGui.GetConfig.Save();
                     teamManager.SetupTeamRelationships();
                 }
-                else
-                {
-                    var popup = new dc.ui.ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
-                    popup.text("添加失败：\n 请添加已注册的队伍！\n".ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
-                }
-
                 inputTeamID.Input.close();
                 UpdateTeamDisplay();
 

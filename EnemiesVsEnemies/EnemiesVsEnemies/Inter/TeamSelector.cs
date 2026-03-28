@@ -11,11 +11,40 @@ using dc.ui;
 using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.UI;
 using EnemiesVsEnemies.UI.Utilities;
+using HaxeProxy.Runtime;
+using ModCore.Storage;
+using static EnemiesVsEnemies.Inter.TeamSelector;
 
 namespace EnemiesVsEnemies.Inter
 {
-    public class TeamSelector : Interactive
+    public class TeamSelector : Interactive, IHxbitSerializable<InterImportant>
     {
+        private InterImportant data = new();
+        public class InterImportant
+        {
+            public string teamId = string.Empty;
+            public int SaveCx;
+            public int SaveCy;
+
+        }
+
+        InterImportant IHxbitSerializable<InterImportant>.GetData()
+        {
+            if (data == null)
+                data = new InterImportant();
+            data.teamId = Teamid;
+            data.SaveCx = cx;
+            data.SaveCy = cy;
+            return data;
+        }
+
+        void IHxbitSerializable<InterImportant>.SetData(InterImportant data)
+        {
+            Teamid = data.teamId;
+            cx = data.SaveCx;
+            cy = data.SaveCy;
+        }
+
         public Level level = null!;
         public CricketSelectorGui gui = null!;
         public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y)
@@ -31,6 +60,7 @@ namespace EnemiesVsEnemies.Inter
             base.initGfx();
             SpriteLib gameElements = Assets.Class.gameElements;
             base.initSprite(gameElements, "switchBiomeMobs".ToHaxeString(), null, null, null, null, null, null);
+            spr.set_visible(false);
         }
 
         public override void onActivate(Hero by, bool longPress)
@@ -89,6 +119,18 @@ namespace EnemiesVsEnemies.Inter
             dc.String str = "设置团队".ToHaxeString();
             lightTip.addActivate(str, null, null);
         }
+
+        public override void destroy()
+        {
+            Fx fx = base._level.fx;
+            double x = (base.cx + base.xr) * 24.0;
+            double y = (base.cy + base.yr) * 24.0 - base.hei * 0.5;
+            double radiusScale = 0.5;
+            fx.solidExplosion(x, y, 0x776D3F, 0x334A6C, Ref<double>.In(radiusScale), Ref<double>.Null);
+            base.destroy();
+        }
+
+
     }
 
 

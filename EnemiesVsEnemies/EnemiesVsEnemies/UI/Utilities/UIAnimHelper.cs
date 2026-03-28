@@ -23,22 +23,21 @@ namespace EnemiesVsEnemies.UI.Utilities
             Flow cloneflow = new Flow(null);
             var cloneicon = icon;
             cloneflow.addChild(cloneicon);
-            if (add)
-            {
-                cloneicon.tile.scaleToSize(72, 72);
-            }
-            else
-            {
-                cloneicon.posChanged = true;
-                cloneicon.scaleX = pixelScale;
-                cloneicon.posChanged = true;
-                cloneicon.scaleY = pixelScale;
-            }
-
             gui.root.addChild(cloneflow);
 
             Main main = Main.Class.ME;
             const double speed = 800;
+
+            if (add)
+            {
+                cloneicon.tile.scaleToSize(72, 72);
+                cloneicon.posChanged = true;
+            }
+            else
+            {
+                cloneicon.tile.scaleToSize(96, 96);
+                cloneicon.posChanged = true;
+            }
 
 
             Point oldflowGlobal = main.localToGlobal(from, Ref<double>.Null, Ref<double>.Null);

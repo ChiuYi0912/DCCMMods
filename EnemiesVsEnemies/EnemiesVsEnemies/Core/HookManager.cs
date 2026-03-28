@@ -1,4 +1,5 @@
 using CoreLibrary.Core.Extensions;
+using CoreLibrary.Core.Utilities;
 using dc;
 using dc.cine;
 using dc.en;
@@ -11,6 +12,7 @@ using dc.hxd.res;
 using dc.tool;
 using dc.tool.bossRush;
 using EnemiesVsEnemies.Configuration;
+using EnemiesVsEnemies.Inter;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Modules;
@@ -41,10 +43,25 @@ namespace EnemiesVsEnemies.Core
             dc.en.Hook_Mob.setNemesisTarget += Hook_Mob_setNemesisTarget;
             dc.en.Hook_Mob.tpHeroBackToTraining += Hook_Mob_tpHeroBackToTraining;
             Hook__MusicManager.get += Hook__MusicManager_get;
+            Hook__Active.create += Hook__Active_create;
         }
 
-
-
+        public List<TeamSelector> TeamSelectordummies = new();
+        public Dictionary<string, TeamSelector> TeamSelectorkeys = new();
+        private Active Hook__Active_create(Hook__Active.orig_create orig, Hero from, Grenade g, InventItem ii)
+        {
+            dynamic kind = ii.kind;
+            string id = kind.Param0.ToString();
+            if (id.EqualsIgnoreCase("DummyActive"))
+            {
+                var active = new DummyActive(from, g.cx, g.cy, ii);
+                active.init();
+                TeamSelectordummies.Add(active.Selector);
+                //TeamSelectorkeys.Add(active.Selector.Teamid, active.Selector);
+                return active;
+            }
+            return orig(from, g, ii);
+        }
 
         private Sound Hook__MusicManager_get(Hook__MusicManager.orig_get orig, dc.String musicName, dc.String folder)
         {

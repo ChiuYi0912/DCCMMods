@@ -15,6 +15,13 @@
     <Reference Include="DebugConsole" />
     <Reference Include="CoreLibrary" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <GenerateDiffCDB>false</GenerateDiffCDB>
+    <GameVersion>35</GameVersion>
+    <GenerateSinglePakFile>false</GenerateSinglePakFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <ModDependency Include="CoreLibraryMod" />
     <ModDependency Include="DebugConsole" />
