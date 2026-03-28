@@ -168,11 +168,10 @@ namespace EnemiesVsEnemies.UI.Utilities
                 parent.isLocked = false;
                 SelectorGui.isLockedController = false;
 
-                var targetTeamId = SelectorGui.UserSelectedteamid;
                 var teamconfig = SelectorGui.GetConfig.Value.Teams;
-                if (teamconfig.TryGetValue(targetTeamId, out var team))
+                if (teamconfig.TryGetValue(SelectorGui.UserSelectedteamid, out var team))
                 {
-                    if (!teamconfig.TryGetValue(value, out var Objective))
+                    if (!teamconfig.ContainsKey(value))
                     {
                         var popup = new dc.ui.ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
                         popup.text("添加失败：\n 请添加已注册的队伍！\n".ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
@@ -186,7 +185,7 @@ namespace EnemiesVsEnemies.UI.Utilities
                 UpdateTeamDisplay();
 
             });
-            dc.ui.TextInput inpu = inputTeamID.OpenNumberInput("输入", "该仇恨方队伍唯一ID", 1, action);
+            dc.ui.TextInput inpu = inputTeamID.OpenNumberInput("输入", "该仇恨方队伍唯一ID", "Team-", action);
         }
     }
 }

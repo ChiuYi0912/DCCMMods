@@ -21,7 +21,7 @@ namespace EnemiesVsEnemies.UI.Utilities
             GetProcess = p;
         }
 
-        public dc.ui.TextInput OpenNumberInput(string title, string subTitle, int initial, Action<string> onValidate, string okLabel = "回车确定", string cancelLabel = "EXC取消", Sound? sfx = null, int min = 1, int max = 9)
+        public dc.ui.TextInput OpenNumberInput(string title, string subTitle, string initial, Action<string> onValidate, string okLabel = "回车确定", string cancelLabel = "鼠标点击取消", Sound? sfx = null, int min = 1, int max = 9)
         {
             var text = new dc.ui.TextInput(
                  GetProcess,

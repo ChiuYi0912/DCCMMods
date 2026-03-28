@@ -1,3 +1,4 @@
+using System.Dynamic;
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Utilities;
 using dc;
@@ -16,11 +17,12 @@ using ModCore.Events.Interfaces.Game.Hero;
 using ModCore.Mods;
 using ModCore.Modules;
 using ModCore.Storage;
+using Newtonsoft.Json;
 using Serilog;
 
 namespace EnemiesVsEnemies
 {
-    public class EnemiesVsEnemiesMod : ModBase, IOnAfterLoadingCDB, IOnGameEndInit
+    public class EnemiesVsEnemiesMod : ModBase, IOnAfterLoadingCDB, IOnGameEndInit, IOnHeroUpdate
     {
         public static Config<ModConfig> config = new("EnemiesVsEnemiesConfig");
 
@@ -53,9 +55,12 @@ namespace EnemiesVsEnemies
             InitializeManagers();
             hookManager.InitializeHooks();
 
+            config.Value.Teams.Clear();
+            config.Save();
             LogInfo("EnemiesVsEnemies Mod 已初始化");
-
         }
+
+
 
 
         void IOnGameEndInit.OnGameEndInit()
@@ -104,14 +109,6 @@ namespace EnemiesVsEnemies
             }
         }
 
-        public static void Destroymobs()
-        {
-            if (keyBindingHelper.IsSpawnTeamDestroyMobs())
-            {
-                enemySpawner.DestroyAllMobsFromCreateList();
-            }
-        }
-
 
         private void UpdateEnemySpawnCount()
         {
@@ -132,17 +129,14 @@ namespace EnemiesVsEnemies
 
 
 
-        public void LogInfo(string message)
+        public static void LogInfo(string message)
         {
-            if (config.Value.General.ShowDebugInfo)
-            {
-                Logger.LogInformation($"[EnemiesVsEnemies] {message}");
-            }
+            GetLogger.LogInformation($"[EnemiesVsEnemies] {message}");
         }
 
-        public void LogError(string message)
+        void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
-            Logger.LogError($"[EnemiesVsEnemies ERROR] {message}");
+            HandleKeyBindings();
         }
     }
 }

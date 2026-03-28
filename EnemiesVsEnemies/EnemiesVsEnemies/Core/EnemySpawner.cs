@@ -92,7 +92,7 @@ namespace EnemiesVsEnemies.Core
                     spawnConfig.EnemyType.AsHaxeString(),
                     spawnLevel,
                     spawnX,
-                    spawnY - 1,
+                    spawnY,
                     spawnConfig.DamageTier,
                     lifeTierRef
                 );
@@ -106,18 +106,7 @@ namespace EnemiesVsEnemies.Core
             }
         }
 
-        public void DestroyAllMobsFromCreateList()
-        {
-            foreach (var mobs in CreatedMobs)
-            {
-                if (!mobs.destroyed)
-                {
-                    dc.pr.Game.Class.ME.curLevel.unregisterEntity(mobs);
-                    mobs.destroy();
-                }
-            }
-            CreatedMobs.Clear();
-        }
+
 
         public void SpawnEnemies(string teamId, List<EnemySpawnConfig> spawnConfigs)
         {

@@ -26,17 +26,6 @@ namespace EnemiesVsEnemies.Configuration
                 DefaultEnemies = new List<string> { "U28_VacuumCleaner", "U28_VacuumCleaner" }
             };
 
-            config.Teams["TeamB"] = new TeamConfig("TeamB", "蓝色队伍", 0x0000FF)
-            {
-                OpposingTeamIds = new List<string> { "TeamA" },
-                DefaultEnemies = new List<string> { "U28_VacuumCleaner" }
-            };
-
-            config.Teams["TeamC"] = new TeamConfig("TeamC", "黄色队伍", CreateColor.ColorFromHex("#ffff00"))
-            {
-                OpposingTeamIds = new List<string> { "TeamC" },
-                DefaultEnemies = new List<string> { "U28_VacuumCleaner", "Mimic", "Mimic" }
-            };
 
             config.EnemyPresets["U28_VacuumCleaner"] = new EnemySpawnConfig("U28_VacuumCleaner", 30, 20, 1);
 
@@ -52,8 +41,8 @@ namespace EnemiesVsEnemies.Configuration
         public int DefaultEnemyCount { get; set; } = 1;
         public bool ForceFieldEnabled { get; set; } = true;
         public bool HeroInvincible { get; set; } = true;
-        public bool AutoSetEnemyTeams { get; set; } = true;
-        public bool BossCameraTrackingDisabled { get; set; } = true;
+        public bool AutoSetEnemyTeams { get; set; } = false;
+        public bool BossCameraTrackingDisabled { get; set; } = false;
         public bool ShowDebugInfo { get; set; } = true;
 
         public GeneralSettings() { }

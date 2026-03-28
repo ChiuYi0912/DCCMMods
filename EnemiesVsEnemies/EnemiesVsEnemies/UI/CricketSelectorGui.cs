@@ -138,7 +138,7 @@ namespace EnemiesVsEnemies.UI
             Tile tile = Assets.Class.ui.getTile("boxSelect".ToHaxeString(), Ref<int>.Null,
             Ref<double>.Null, Ref<double>.Null, null);
             selectiononClickMob = new ScaleGrid(tile, 10, 10, rightMask);
-            selectiononClickMob.alpha = 1.0;
+            selectiononClickMob.alpha = 0;
 
             const double HEIGHT_Thereal = 1.5;
             double pixelScale = base.get_pixelScale.Invoke();
@@ -172,8 +172,8 @@ namespace EnemiesVsEnemies.UI
 
         public void initRightGrid()
         {
-            var team = GetConfig.Value.Teams[UserSelectedteamid];
-
+            if (GetConfig.Value.Teams.TryGetValue(UserSelectedteamid, out var team)) { }
+            if (team == null) return;
             ClearRightGrid();
 
             var countDict = new Dictionary<string, int>();
@@ -231,16 +231,16 @@ namespace EnemiesVsEnemies.UI
                 var getvirtual = Data.Class.mob.byId.get(onmoveMob.ToHaxeString()).index;
                 var newicon = Icon.Class.createMobIcon(mobId.ToHaxeString(), null);
                 UIAnimHelper.doMovementIcon(this, entries.getDyn(getvirtual).f, flow, newicon, false);
-                
+
                 RemoveMonsterFromTeam(onmoveMob);
+
+                #if DEBUG
+                EnemiesVsEnemiesMod.GetLogger.Information($"RemoveRightMOB:{onmoveMob}");
+                #endif
             };
             interactive.onMove = (e) =>
             {
                 RightIcon = icon;
-            };
-            interactive.onFocus = (e) =>
-            {
-                EnemiesVsEnemiesMod.GetLogger.LogError("onFocus");
             };
 
 
@@ -460,7 +460,10 @@ namespace EnemiesVsEnemies.UI
 
             AudioHelper.LoadAudioFormString(Audiocchestroom1);
 
-            Log.Logger.Debug($"选择选中怪物：{args.MobId}, teamid:{UserSelectedteamid}");
+            #if DEBUG
+            Log.Logger.Information($"ADDToRight:{args.MobId}, teamid:{UserSelectedteamid}");
+            #endif
+
         }
 
         public override void setMainFlowPos()
@@ -561,6 +564,7 @@ namespace EnemiesVsEnemies.UI
             btns.push(creataBCreateButton(16, "Retour"));
 
             btns.push(creataBCreateButton(3, "添加仇恨队伍"));
+            btns.push(creataBCreateButton(4, "销毁此队伍"));
 
             createControlLabel(btns);
         }
@@ -576,7 +580,18 @@ namespace EnemiesVsEnemies.UI
             if (ControllerHelper.ControlsUpdateFromProcess(parent, 3))
             {
                 textHelper.AddOpposingTeamFromGui(teamManager);
-                return true;
+                return false;
+            }
+
+            if (ControllerHelper.ControlsUpdateFromProcess(parent, 4))
+            {
+                if (TeamSelector.TeamSelectorkeys.TryGetValue(UserSelectedteamid, out var teamSelector))
+                {
+                    teamManager.RemoveTeam(UserSelectedteamid);
+                    teamSelector.destroy();
+                    TeamSelector.TeamSelectorkeys.Remove(UserSelectedteamid);
+                }
+                close();
             }
 
             return base.controlsUpdate();

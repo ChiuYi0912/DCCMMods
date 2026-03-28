@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreLibrary.Core.Extensions;
+using CoreLibrary.Core.Utilities;
+using CoreLibrary.Utilities;
 using dc;
 using dc.en;
 using dc.libs.heaps.slib;
@@ -12,6 +14,7 @@ using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.UI;
 using EnemiesVsEnemies.UI.Utilities;
 using HaxeProxy.Runtime;
+using ModCore.Serialization;
 using ModCore.Storage;
 using static EnemiesVsEnemies.Inter.TeamSelector;
 
@@ -25,7 +28,6 @@ namespace EnemiesVsEnemies.Inter
             public string teamId = string.Empty;
             public int SaveCx;
             public int SaveCy;
-
         }
 
         InterImportant IHxbitSerializable<InterImportant>.GetData()
@@ -45,15 +47,13 @@ namespace EnemiesVsEnemies.Inter
             cy = data.SaveCy;
         }
 
-        public Level level = null!;
         public CricketSelectorGui gui = null!;
-        public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y)
-        {
-            level = lvl;
-            xr = 0.5;
-        }
+        public static Dictionary<string, TeamSelector> TeamSelectorkeys = new();
+        public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y) { }
+
 
         public string Teamid = string.Empty;
+
 
         public override void initGfx()
         {
@@ -66,55 +66,59 @@ namespace EnemiesVsEnemies.Inter
         public override void onActivate(Hero by, bool longPress)
         {
             base.onActivate(by, longPress);
+
+            if (!EnemiesVsEnemiesMod.GetConfig().Teams.TryGetValue(Teamid, out var team) && !Teamid.IsNullOrEmpty())
+                Teamid = string.Empty;
+
+
             if (Teamid.IsNullOrEmpty())
             {
                 var inpt = new NumberInput(HUD.Class.ME);
                 Action<string> action = (userinputid) =>
                 {
                     Teamid = userinputid;
-                    EnsureTeamConfigWithPosition(Teamid);
+                    var config = EnemiesVsEnemiesMod.GetConfig();
+                    if (config.Teams.ContainsKey(Teamid))
+                    {
+                        var popup = new ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
+                        popup.text("添加失败：\n 请输入未注册的队伍！\n".ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
+                        Teamid = string.Empty;
+                        return;
+                    }
+                    EnsureTeamConfigWithPosition(config, Teamid);
                     gui = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager(), Teamid);
                 };
-                inpt.OpenNumberInput("输入", "触发器队伍id", 0, action);
+                inpt.OpenNumberInput("输入", "触发器队伍id", "Team-", action);
 
                 return;
             }
+
             gui = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager(), Teamid);
         }
 
-        private void EnsureTeamConfigWithPosition(string id)
+        private void EnsureTeamConfigWithPosition(ModConfig config, string id)
         {
             Hero hero = ModCore.Modules.Game.Instance.HeroInstance!;
-            var config = EnemiesVsEnemiesMod.GetConfig();
-            if (!config.Teams.ContainsKey(id))
-            {
-                var teamConfig = new TeamConfig(id, $"触发器队伍 {id}", 0xFFFFFF);
-                teamConfig.TriggerLevelId = hero._level.map.id.ToString();
-                teamConfig.TriggerX = cx;
-                teamConfig.TriggerY = cy;
-                config.Teams[id] = teamConfig;
-                EnemiesVsEnemiesMod.GetTeamManager().AddTeam(teamConfig);
-                EnemiesVsEnemiesMod.config.Save();
-            }
+            var teamConfig = new TeamConfig(id, $"触发器队伍 {id}", 0xFFFFFF);
+            teamConfig.TriggerLevelId = hero._level.map.id.ToString();
+            teamConfig.TriggerX = cx;
+            teamConfig.TriggerY = cy;
+            config.Teams[id] = teamConfig;
+            EnemiesVsEnemiesMod.GetTeamManager().AddTeam(teamConfig);
+            EnemiesVsEnemiesMod.config.Save();
+            TeamSelectorkeys.Add(id, this);
+
         }
 
         public override void postUpdate()
         {
             base.postUpdate();
-            if (gui == null)
-                return;
-
-            if (gui.isLockedController)
-                return;
-
-            EnemiesVsEnemiesMod.HandleKeyBindings();
-            EnemiesVsEnemiesMod.Destroymobs();
         }
 
         public override void onFocus()
         {
             base.onFocus();
-            var lightTip = base.createLightTip(null);
+            var lightTip = createLightTip(null);
             lightTip.distance = 24.0;
             dc.String str = "设置团队".ToHaxeString();
             lightTip.addActivate(str, null, null);
@@ -122,17 +126,19 @@ namespace EnemiesVsEnemies.Inter
 
         public override void destroy()
         {
-            Fx fx = base._level.fx;
-            double x = (base.cx + base.xr) * 24.0;
-            double y = (base.cy + base.yr) * 24.0 - base.hei * 0.5;
-            double radiusScale = 0.5;
-            fx.solidExplosion(x, y, 0x776D3F, 0x334A6C, Ref<double>.In(radiusScale), Ref<double>.Null);
+            AudioHelper.LoadAudioFormString("sfx/active/active_depop.wav");
+            // Fx fx = base._level.fx;
+            // double x = (base.cx + base.xr) * 24.0;
+            // double y = (base.cy + base.yr) * 24.0 - base.hei * 0.5;
+            // double radiusScale = 1;
+            // fx.solidExplosion(x, y, 0x776D3F, 0x334A6C, Ref<double>.In(radiusScale), Ref<double>.Null);
             base.destroy();
         }
 
+        public override void onDie()
+        {
+            base.onDie();
+        }
 
     }
-
-
-
 }

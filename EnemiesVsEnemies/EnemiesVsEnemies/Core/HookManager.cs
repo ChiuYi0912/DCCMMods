@@ -11,6 +11,7 @@ using dc.hl.types;
 using dc.hxd.res;
 using dc.tool;
 using dc.tool.bossRush;
+using dc.ui.pause;
 using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.Inter;
 using Hashlink.Virtuals;
@@ -46,8 +47,8 @@ namespace EnemiesVsEnemies.Core
             Hook__Active.create += Hook__Active_create;
         }
 
-        public List<TeamSelector> TeamSelectordummies = new();
-        public Dictionary<string, TeamSelector> TeamSelectorkeys = new();
+
+
         private Active Hook__Active_create(Hook__Active.orig_create orig, Hero from, Grenade g, InventItem ii)
         {
             dynamic kind = ii.kind;
@@ -56,8 +57,6 @@ namespace EnemiesVsEnemies.Core
             {
                 var active = new DummyActive(from, g.cx, g.cy, ii);
                 active.init();
-                TeamSelectordummies.Add(active.Selector);
-                //TeamSelectorkeys.Add(active.Selector.Teamid, active.Selector);
                 return active;
             }
             return orig(from, g, ii);
@@ -108,14 +107,6 @@ namespace EnemiesVsEnemies.Core
                     {
                         shouldSetTeam = false;
                         break;
-                    }
-                }
-
-                if (shouldSetTeam)
-                {
-                    if (GetteamManager.TryGetTeam("TeamB", out var defaultTeam))
-                    {
-                        self.set_team(defaultTeam);
                     }
                 }
             }

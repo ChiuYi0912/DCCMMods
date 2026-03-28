@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Utilities;
 using dc.en;
+using dc.hl.types;
 using dc.tool;
 using EnemiesVsEnemies.Configuration;
 using Hashlink.Marshaling;
@@ -60,12 +62,18 @@ namespace EnemiesVsEnemies.Core
         {
             if (teams.ContainsKey(teamConfig.Id))
             {
-                Log.Logger.LogError($"队伍 '{teamConfig.Id}' 已存在");
+                #if DEBUG
+                EnemiesVsEnemiesMod.GetLogger.Error($"队伍 '{teamConfig.Id}' 已存在");
+                #endif
                 return;
             }
 
             CreateTeam(teamConfig);
             GetModConfig.Teams[teamConfig.Id] = teamConfig;
+
+            #if DEBUG
+            EnemiesVsEnemiesMod.GetLogger.Information($"ADD Team:{teamConfig.Id}");
+            #endif
         }
 
         public void RemoveTeam(string teamId)
@@ -87,6 +95,10 @@ namespace EnemiesVsEnemies.Core
             teams.Remove(teamId);
             originalTeamPointers.Remove(teamId);
             GetModConfig.Teams.Remove(teamId);
+
+            #if DEBUG
+            EnemiesVsEnemiesMod.GetLogger.Information($"Remove Team:{teamId}");
+            #endif
         }
 
         //来自(HkLab)
@@ -108,10 +120,14 @@ namespace EnemiesVsEnemies.Core
         {
             foreach (var teamConfig in GetModConfig.Teams.Values)
             {
-                var team = teams[teamConfig.Id];
+                if (!teams.TryGetValue(teamConfig.Id, out var team))
+                    continue;
 
-                for (int i = 0; i < team.opposingTeams.length; i++)
-                    team.opposingTeams.remove(i);
+                var array = team.opposingTeams;
+                while (array.length > 0)
+                {
+                    array.pop();
+                }
 
                 foreach (var opposingTeamId in teamConfig.OpposingTeamIds)
                 {
@@ -214,40 +230,6 @@ namespace EnemiesVsEnemies.Core
                     {
                         targetConfig.OpposingTeamIds.Add(sourceTeamId);
                     }
-                }
-            }
-        }
-
-        public void RemoveOpposingTeam(string sourceTeamId, string targetTeamId, bool bidirectional = false)
-        {
-            if (!teams.TryGetValue(sourceTeamId, out var source))
-            {
-                logger.LogError($"队伍 '{sourceTeamId}' 不存在");
-                return;
-            }
-            if (!teams.TryGetValue(targetTeamId, out var target))
-            {
-                logger.LogError($"队伍 '{targetTeamId}' 不存在");
-                return;
-            }
-
-
-            if (AreTeamsOpposing(sourceTeamId, targetTeamId))
-            {
-                source.opposingTeams.remove(target);
-
-                if (GetModConfig.Teams.TryGetValue(sourceTeamId, out var sourceConfig))
-                {
-                    sourceConfig.OpposingTeamIds.Remove(targetTeamId);
-                }
-            }
-
-            if (bidirectional && AreTeamsOpposing(targetTeamId, sourceTeamId))
-            {
-                target.opposingTeams.remove(source);
-                if (GetModConfig.Teams.TryGetValue(targetTeamId, out var targetConfig))
-                {
-                    targetConfig.OpposingTeamIds.Remove(sourceTeamId);
                 }
             }
         }
