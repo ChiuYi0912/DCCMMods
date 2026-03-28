@@ -46,7 +46,7 @@ namespace EnemiesVsEnemies
         public override void Initialize()
         {
             base.Initialize();
-            Version = Info.Version = "0.6.2";
+            Version = Info.Version = "0.6.3";
             Info.Name = "EnemiesVsEnemies (Enhanced)";
             GetLogger = Logger;
 
@@ -132,7 +132,7 @@ namespace EnemiesVsEnemies
 
 
 
-        private void LogInfo(string message)
+        public void LogInfo(string message)
         {
             if (config.Value.General.ShowDebugInfo)
             {
@@ -140,12 +140,9 @@ namespace EnemiesVsEnemies
             }
         }
 
-        private void LogError(string message)
+        public void LogError(string message)
         {
-            System.Console.WriteLine($"[EnemiesVsEnemies ERROR] {message}");
+            Logger.LogError($"[EnemiesVsEnemies ERROR] {message}");
         }
-
-
-
     }
 }

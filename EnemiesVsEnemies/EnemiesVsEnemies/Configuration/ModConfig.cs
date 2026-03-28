@@ -54,7 +54,7 @@ namespace EnemiesVsEnemies.Configuration
         public bool HeroInvincible { get; set; } = true;
         public bool AutoSetEnemyTeams { get; set; } = true;
         public bool BossCameraTrackingDisabled { get; set; } = true;
-        public bool ShowDebugInfo { get; set; } = false;
+        public bool ShowDebugInfo { get; set; } = true;
 
         public GeneralSettings() { }
     }
