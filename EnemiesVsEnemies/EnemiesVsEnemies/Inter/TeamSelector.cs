@@ -7,6 +7,7 @@ using CoreLibrary.Core.Utilities;
 using CoreLibrary.Utilities;
 using dc;
 using dc.en;
+using dc.hl.types;
 using dc.libs.heaps.slib;
 using dc.pr;
 using dc.ui;
@@ -16,11 +17,14 @@ using EnemiesVsEnemies.UI.Utilities;
 using HaxeProxy.Runtime;
 using ModCore.Serialization;
 using ModCore.Storage;
+using ModCore.Utilities;
 using static EnemiesVsEnemies.Inter.TeamSelector;
 
 namespace EnemiesVsEnemies.Inter
 {
-    public class TeamSelector : Interactive, IHxbitSerializable<InterImportant>
+    public class TeamSelector : Interactive,
+    IHxbitSerializable<InterImportant>,
+    IHxbitSerializeCallback
     {
         private InterImportant data = new();
         public class InterImportant
@@ -49,12 +53,18 @@ namespace EnemiesVsEnemies.Inter
 
         public CricketSelectorGui gui = null!;
         public static Dictionary<string, TeamSelector> TeamSelectorkeys = new();
-        public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y) { }
-
-
+        public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y){}
         public string Teamid = string.Empty;
+        public bool Isdestroyed = false;
 
 
+
+        public override void init()
+        {
+            base.init();
+            if (!EnemiesVsEnemiesMod.GetConfig().Teams.ContainsKey(Teamid) && !Teamid.IsNullOrEmpty())
+                Teamid = string.Empty;
+        }
         public override void initGfx()
         {
             base.initGfx();
@@ -67,9 +77,7 @@ namespace EnemiesVsEnemies.Inter
         {
             base.onActivate(by, longPress);
 
-            if (!EnemiesVsEnemiesMod.GetConfig().Teams.TryGetValue(Teamid, out var team) && !Teamid.IsNullOrEmpty())
-                Teamid = string.Empty;
-
+            ControllerHelper.PrintAllBindings(by.controller.parent, EnemiesVsEnemiesMod.GetLogger);
 
             if (Teamid.IsNullOrEmpty())
             {
@@ -106,8 +114,17 @@ namespace EnemiesVsEnemies.Inter
             EnemiesVsEnemiesMod.GetTeamManager().AddTeam(teamConfig);
             EnemiesVsEnemiesMod.config.Save();
             TeamSelectorkeys.Add(id, this);
+        }
+
+        public void BeforeAddTeam(string id)
+        {
+
 
         }
+
+
+
+
 
         public override void postUpdate()
         {
@@ -117,7 +134,18 @@ namespace EnemiesVsEnemies.Inter
         public override void onFocus()
         {
             base.onFocus();
-            var lightTip = createLightTip(null);
+
+
+            if (!Teamid.IsNullOrEmpty())
+            {
+                lightTip = createLightTip(null);
+                lightTip.distance = 24.0;
+                dc.String name = "Team id:".Add_TwoHaxeStrings(Teamid);
+                lightTip.addActivate(name, null, null);
+                return;
+            }
+
+            lightTip = createLightTip(null);
             lightTip.distance = 24.0;
             dc.String str = "设置团队".ToHaxeString();
             lightTip.addActivate(str, null, null);
@@ -125,19 +153,29 @@ namespace EnemiesVsEnemies.Inter
 
         public override void destroy()
         {
-            AudioHelper.LoadAudioFormString("sfx/active/active_depop.wav");
-            // Fx fx = base._level.fx;
-            // double x = (base.cx + base.xr) * 24.0;
-            // double y = (base.cy + base.yr) * 24.0 - base.hei * 0.5;
-            // double radiusScale = 1;
-            // fx.solidExplosion(x, y, 0x776D3F, 0x334A6C, Ref<double>.In(radiusScale), Ref<double>.Null);
             base.destroy();
+            if (Isdestroyed)
+                return;
+
+            AudioHelper.LoadAudioFormString("sfx/active/active_depop.wav");
+            Fx fx = base._level.fx;
+            double x = (base.cx + base.xr) * 24.0;
+            double y = (base.cy + base.yr) * 24.0 - base.hei * 0.5;
+            double radiusScale = 1;
+            fx.solidExplosion(x, y, 0x776D3F, 0x334A6C, Ref<double>.In(radiusScale), Ref<double>.Null);
         }
 
-        public override void onDie()
+        void IHxbitSerializeCallback.OnBeforeSerializing()
         {
-            base.onDie();
+            Isdestroyed = true;
+            #if DEBUG
+            EnemiesVsEnemiesMod.GetLogger.Information("Before serializing TeamSelector.");
+            #endif
         }
 
+        void IHxbitSerializeCallback.OnAfterDeserializing()
+        {
+
+        }
     }
 }

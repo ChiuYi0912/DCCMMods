@@ -79,7 +79,7 @@ namespace EnemiesVsEnemies.UI.Utilities
 
         private void BuildAndAddTeamFlowBox(ModConfig config)
         {
-            SelectorGui.title.set_text($"EnemiesVsEnemiesMod-Virsion:{EnemiesVsEnemiesMod.Virsion()}".ToHaxeString());
+            SelectorGui.title.set_text($"EnemiesVsEnemiesMod-Virsion:{EnemiesVsEnemiesMod.GetVersion()}".ToHaxeString());
 
             double teamPadH = 5.0;
             double teamPadV = 5.0;

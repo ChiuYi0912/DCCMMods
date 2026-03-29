@@ -22,14 +22,9 @@ namespace EnemiesVsEnemies.Core
         public void Initialize(ModConfig config)
         {
             GetModConfig = config;
-
+            
             teams.Clear();
             originalTeamPointers.Clear();
-
-            foreach (var teamConfig in config.Teams.Values)
-            {
-                CreateTeam(teamConfig);
-            }
 
             SetupTeamRelationships();
         }

@@ -1,5 +1,6 @@
 using System.Dynamic;
 using CoreLibrary.Core.Extensions;
+using CoreLibrary.Core.Interfaces;
 using CoreLibrary.Core.Utilities;
 using dc;
 using dc.en;
@@ -10,10 +11,11 @@ using dc.tool.weap;
 using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.Core;
 using EnemiesVsEnemies.UI;
-using EnemiesVsEnemies.Utilities;
 using IngameDebugConsole;
+using ModCore.Events;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Events.Interfaces.Game.Hero;
+using ModCore.Menu;
 using ModCore.Mods;
 using ModCore.Modules;
 using ModCore.Storage;
@@ -22,7 +24,11 @@ using Serilog;
 
 namespace EnemiesVsEnemies
 {
-    public class EnemiesVsEnemiesMod : ModBase, IOnAfterLoadingCDB, IOnGameEndInit, IOnHeroUpdate
+    public class EnemiesVsEnemiesMod : ModBase,
+    IOnAfterLoadingCDB,
+    IOnGameEndInit,
+    IOnHeroUpdate,
+    IModMenuProvider
     {
         public static Config<ModConfig> config = new("EnemiesVsEnemiesConfig");
 
@@ -31,13 +37,13 @@ namespace EnemiesVsEnemies
         private static EnemySpawner enemySpawner = null!;
         private static HookManager hookManager = null!;
         private static MobGroupHelper mobGroupHelper = null!;
-
-        private static KeyBindingHelper keyBindingHelper = null!;
+        private static ShowEnemiesOptsions showEnemiesOptsions = null!;
 
 
 
         private int currentEnemyCount = 1;
         private static string Version = string.Empty;
+        private static string ModInfoName = string.Empty;
 
         public EnemiesVsEnemiesMod(ModInfo info) : base(info)
         {
@@ -48,8 +54,8 @@ namespace EnemiesVsEnemies
         public override void Initialize()
         {
             base.Initialize();
-            Version = Info.Version = "0.6.4";
-            Info.Name = "EnemiesVsEnemies (Enhanced)";
+            Version = Info.Version = "0.6.6";
+            Info.Name = ModInfoName = "EnemiesVsEnemies (Enhanced)";
             GetLogger = Logger;
 
             InitializeManagers();
@@ -73,11 +79,8 @@ namespace EnemiesVsEnemies
                default);
         }
 
-
+        IModMenu IModMenuProvider.GetModMenu() => showEnemiesOptsions;
         void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb) => mobGroupHelper.Refresh();
-
-
-
 
         private void InitializeManagers()
         {
@@ -88,25 +91,16 @@ namespace EnemiesVsEnemies
 
             hookManager = new HookManager(teamManager, config.Value);
 
-            keyBindingHelper = new KeyBindingHelper(config.Value.KeyBindings);
 
             mobGroupHelper = new MobGroupHelper();
 
             currentEnemyCount = config.Value.General.DefaultEnemyCount;
 
-            LogInfo("所有管理器已初始化");
-        }
+            showEnemiesOptsions = new ShowEnemiesOptsions();
 
-        public static void HandleKeyBindings()
-        {
-            // 生成队伍敌人 (键B)
-            if (keyBindingHelper.IsSpawnTeamAPressed())
-            {
-                foreach (var mobs in config.Value.Teams)
-                {
-                    enemySpawner.SpawnDefaultEnemiesForTeam(mobs.Value.Id);
-                }
-            }
+            EventSystem.BroadcastEvent<IOnHookInitialize>();
+
+            LogInfo("所有管理器已初始化");
         }
 
 
@@ -125,7 +119,8 @@ namespace EnemiesVsEnemies
         public static HookManager GetHookManager() => hookManager;
         public static ModConfig GetConfig() => config.Value;
         public static MobGroupHelper GetMobGroupHelper() => mobGroupHelper;
-        public static string Virsion() => Version;
+        public static string GetVersion() => Version;
+        public static string GetName() => ModInfoName;
 
 
 
@@ -136,7 +131,7 @@ namespace EnemiesVsEnemies
 
         void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
-            HandleKeyBindings();
+           
         }
     }
 }
