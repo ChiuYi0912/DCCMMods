@@ -10,6 +10,7 @@ using dc.en;
 using dc.hl.types;
 using dc.libs.heaps.slib;
 using dc.pr;
+using dc.tool;
 using dc.tool.mod;
 using dc.ui;
 using EnemiesVsEnemies.Configuration;
@@ -53,6 +54,7 @@ namespace EnemiesVsEnemies.Inter
         }
 
         public CricketSelectorGui gui = null!;
+        public NumberInput input = null!;
         public static Dictionary<string, TeamSelector> TeamSelectorkeys = new();
         public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y) { }
         public string Teamid = string.Empty;
@@ -77,12 +79,11 @@ namespace EnemiesVsEnemies.Inter
         public override void onActivate(Hero by, bool longPress)
         {
             base.onActivate(by, longPress);
-
-            ControllerHelper.PrintAllBindings(by.controller.parent, EnemiesVsEnemiesMod.GetLogger);
+            ShowEnemiesOptsions.LockContoreLible(true);
 
             if (Teamid.IsNullOrEmpty())
             {
-                var inpt = new NumberInput(HUD.Class.ME);
+                input = new NumberInput();
                 Action<string> action = (userinputid) =>
                 {
                     Teamid = userinputid;
@@ -94,18 +95,17 @@ namespace EnemiesVsEnemies.Inter
                         Teamid = string.Empty;
                         return;
                     }
-                    EnsureTeamConfigWithPosition(config, Teamid);
+                    EnsureTeamConfigWithPosition(Teamid);
                     gui = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager(), Teamid);
+                    input.Input.close();
                 };
-                inpt.OpenNumberInput("输入", "触发器队伍id", "Team-", action);
-
+                input.OpenNumberInput(HUD.Class.ME, "输入", "触发器队伍id", "Team-", action);
                 return;
             }
-
             gui = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager(), Teamid);
         }
 
-        private void EnsureTeamConfigWithPosition(ModConfig config, string id)
+        private void EnsureTeamConfigWithPosition(string id)
         {
             Hero hero = ModCore.Modules.Game.Instance.HeroInstance!;
             var teamConfig = new TeamConfig(id, $"触发器队伍 {id}", 0xFFFFFF);
@@ -116,16 +116,6 @@ namespace EnemiesVsEnemies.Inter
             EnemiesVsEnemiesMod.config.Save();
             TeamSelectorkeys.Add(id, this);
         }
-
-        public void BeforeAddTeam(string id)
-        {
-
-
-        }
-
-
-
-
 
         public override void postUpdate()
         {

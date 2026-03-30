@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using CoreLibrary.Core.Utilities;
 using Hashlink.Virtuals;
+using CoreLibrary.Extensions.Customs;
 
 namespace CoreLibrary.Core.Extensions
 {
@@ -104,7 +105,7 @@ namespace CoreLibrary.Core.Extensions
                 ValidationHelper.NotNull(arrayObj!, $"{nameof(arrayObj)}");
                 return null;
             }
-            return arrayObj.array[index];
+            return arrayObj.getDyn(index);
         }
 
 
@@ -135,24 +136,11 @@ namespace CoreLibrary.Core.Extensions
             }
             return dictionary;
         }
+        
 
         public static IntMapLiveView<T> AsLiveView<T>(this IntMap map, Func<dynamic, T> converter)
         {
             return new IntMapLiveView<T>(map, converter);
-        }
-
-        public class IntMapLiveView<T>
-        {
-            private readonly IntMap _map;
-            private readonly Func<dynamic, T> _converter;
-
-            public IntMapLiveView(IntMap map, Func<dynamic, T> converter)
-            {
-                _map = map;
-                _converter = converter;
-            }
-
-            public T this[int key] => _converter(_map.get(key));
         }
 
 

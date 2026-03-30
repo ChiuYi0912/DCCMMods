@@ -29,6 +29,7 @@ namespace EnemiesVsEnemies.UI.Utilities
         public UITextHelper(CricketSelectorGui gui)
         {
             SelectorGui = gui;
+            inputTeamID = new NumberInput();
         }
 
 
@@ -159,13 +160,8 @@ namespace EnemiesVsEnemies.UI.Utilities
 
         public void AddOpposingTeamFromGui(TeamManager teamManager)
         {
-            SelectorGui.LockController(true);
-
-            inputTeamID = new NumberInput(SelectorGui);
-
             var action = new Action<string>((value) =>
             {
-                SelectorGui.LockController(false);
                 var teamconfig = SelectorGui.GetConfig.Value.Teams;
                 if (teamconfig.TryGetValue(SelectorGui.UserSelectedteamid, out var team))
                 {
@@ -181,10 +177,8 @@ namespace EnemiesVsEnemies.UI.Utilities
                 }
                 inputTeamID.Input.close();
                 UpdateTeamDisplay();
-
             });
-            dc.ui.TextInput inpu = inputTeamID.OpenNumberInput("输入", "该仇恨方队伍唯一ID", "Team-", action);
-
+            inputTeamID.OpenNumberInput(SelectorGui, "输入", "该仇恨方队伍唯一ID", "Team-", action);
         }
     }
 }

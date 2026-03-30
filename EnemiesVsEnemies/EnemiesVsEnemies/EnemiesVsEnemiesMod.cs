@@ -24,7 +24,7 @@ using Serilog;
 
 namespace EnemiesVsEnemies
 {
-    public class EnemiesVsEnemiesMod : ModBase,
+    public class EnemiesVsEnemiesMod(ModInfo info) : ModBase(info),
     IOnAfterLoadingCDB,
     IOnGameEndInit,
     IOnHeroUpdate,
@@ -39,17 +39,8 @@ namespace EnemiesVsEnemies
         private static MobGroupHelper mobGroupHelper = null!;
         private static ShowEnemiesOptsions showEnemiesOptsions = null!;
 
-
-
-        private int currentEnemyCount = 1;
         private static string Version = string.Empty;
         private static string ModInfoName = string.Empty;
-
-        public EnemiesVsEnemiesMod(ModInfo info) : base(info)
-        {
-        }
-
-
 
         public override void Initialize()
         {
@@ -78,9 +69,10 @@ namespace EnemiesVsEnemies
                json,
                default);
         }
-
+        void IOnHeroUpdate.OnHeroUpdate(double dt) { }
         IModMenu IModMenuProvider.GetModMenu() => showEnemiesOptsions;
         void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb) => mobGroupHelper.Refresh();
+
 
         private void InitializeManagers()
         {
@@ -91,26 +83,13 @@ namespace EnemiesVsEnemies
 
             hookManager = new HookManager(teamManager, config.Value);
 
-
             mobGroupHelper = new MobGroupHelper();
-
-            currentEnemyCount = config.Value.General.DefaultEnemyCount;
 
             showEnemiesOptsions = new ShowEnemiesOptsions();
 
             EventSystem.BroadcastEvent<IOnHookInitialize>();
 
             LogInfo("所有管理器已初始化");
-        }
-
-
-        private void UpdateEnemySpawnCount()
-        {
-            foreach (var preset in config.Value.EnemyPresets.Values)
-            {
-                preset.SpawnCount = currentEnemyCount;
-            }
-            config.Save();
         }
 
 
@@ -121,17 +100,8 @@ namespace EnemiesVsEnemies
         public static MobGroupHelper GetMobGroupHelper() => mobGroupHelper;
         public static string GetVersion() => Version;
         public static string GetName() => ModInfoName;
+        public static void LogInfo(string message) => GetLogger.LogInformation($"[EnemiesVsEnemies] {message}");
 
 
-
-        public static void LogInfo(string message)
-        {
-            GetLogger.LogInformation($"[EnemiesVsEnemies] {message}");
-        }
-
-        void IOnHeroUpdate.OnHeroUpdate(double dt)
-        {
-           
-        }
     }
 }

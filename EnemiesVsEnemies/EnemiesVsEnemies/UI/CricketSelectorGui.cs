@@ -79,6 +79,7 @@ namespace EnemiesVsEnemies.UI
         public const string Audiocchestroom1 = "sfx/ps5/prison_chestroom1_SE.wav";
 
 
+
         public static dynamic getmobsbyIndex(int index)
         {
             var arr = Data.Class.mob.all.array;
@@ -485,12 +486,6 @@ namespace EnemiesVsEnemies.UI
 
         public override void postUpdate()
         {
-            if (textHelper.inputTeamID == null)
-            {
-                GetConfig.Value.General.IslockedController = false;
-                GetConfig.Save();
-            }
-
             Main main = Main.Class.ME;
             Point entryGlobal = main.localToGlobal(this.getEntryAt(curX, curY).f, Ref<double>.Null, Ref<double>.Null);
             Point maskGlobal = main.localToGlobal(this.mask, Ref<double>.Null, Ref<double>.Null);
@@ -581,8 +576,6 @@ namespace EnemiesVsEnemies.UI
                 return false;
 
             Controller parent = controller.parent;
-
-
             if (ControllerHelper.ControlsUpdateFromProcess(parent, 3))
             {
                 textHelper.AddOpposingTeamFromGui(teamManager);
@@ -604,13 +597,10 @@ namespace EnemiesVsEnemies.UI
         }
 
 
-        public void LockController(bool lockState)
+        public override void close()
         {
-            isLockedController = lockState;
-            Controller bootController = Boot.Class.ME.controller;
-            bootController.isLocked = lockState;
-            GetConfig.Value.General.IslockedController = lockState;
-            GetConfig.Save();
+            base.close();
+            ShowEnemiesOptsions.LockContoreLible(false);
         }
     }
 }

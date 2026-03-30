@@ -30,6 +30,7 @@ namespace EnemiesVsEnemies.UI
         public ModConfig config = EnemiesVsEnemiesMod.GetConfig();
 
         public const int SpawnEnemyTriggerAct = 42;
+
         public ShowEnemiesOptsions()
         {
             EventSystem.AddReceiver(this);
@@ -66,12 +67,11 @@ namespace EnemiesVsEnemies.UI
 
         void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
-            if (Boot.Class.ME.controller.isLocked && config.General.IslockedController)
+            if (IsControllerLocked())
                 return;
 
             if (ControllerHelper.ControlsUpdateFromProcess(Boot.Class.ME.controller, SpawnEnemyTriggerAct))
             {
-
                 foreach (var mobs in config.Teams)
                 {
                     EnemiesVsEnemiesMod.GetEnemySpawner().SpawnDefaultEnemiesForTeam(mobs.Value.Id);
@@ -83,16 +83,24 @@ namespace EnemiesVsEnemies.UI
 
         }
 
-        public string GetName() { return EnemiesVsEnemiesMod.GetName(); }
+        public static void LockContoreLible(bool lockState) { EnemiesVsEnemiesMod.GetConfig().General.IslockedController = lockState; EnemiesVsEnemiesMod.config.Save(); }
+        public static bool IsControllerLocked() => EnemiesVsEnemiesMod.GetConfig().General.IslockedController;
+        public string GetName() { return "EnemiesVsEnemies模组设置"; }
         public string? GetSubText() { return $"version: {EnemiesVsEnemiesMod.GetVersion()}"; }
+
 
         void IOnHookInitialize.HookInitialize()
         {
             dc.Hook_Options.setKeyMapping += Hook_Options_setKeyMapping;
             dc.Hook__Options.dumpControllerConfig += Hook__Options_dumpControllerConfig;
+            dc.ui.Hook_TextInput.cancel += Hook_TextInput_cancel;
         }
 
-
+        private void Hook_TextInput_cancel(dc.ui.Hook_TextInput.orig_cancel orig, dc.ui.TextInput self)
+        {
+            orig(self);
+            LockContoreLible(false);
+        }
 
         private void Hook__Options_dumpControllerConfig(dc.Hook__Options.orig_dumpControllerConfig orig, object _gamepad, object _keyboard, bool isNormalBindings)
         {
