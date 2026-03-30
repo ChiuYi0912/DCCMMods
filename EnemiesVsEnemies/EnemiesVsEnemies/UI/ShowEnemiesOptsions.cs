@@ -66,8 +66,10 @@ namespace EnemiesVsEnemies.UI
 
         void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
-            Controller controller = Boot.Class.ME.controller;
-            if (ControllerHelper.ControlsUpdateFromProcess(controller, SpawnEnemyTriggerAct))
+            if (Boot.Class.ME.controller.isLocked && config.General.IslockedController)
+                return;
+
+            if (ControllerHelper.ControlsUpdateFromProcess(Boot.Class.ME.controller, SpawnEnemyTriggerAct))
             {
 
                 foreach (var mobs in config.Teams)
@@ -77,7 +79,6 @@ namespace EnemiesVsEnemies.UI
                 #if true
                 EnemiesVsEnemiesMod.GetLogger.Information("Test key SpawnEnemyTriggerAct pressed!");
                 #endif
-
             }
 
         }

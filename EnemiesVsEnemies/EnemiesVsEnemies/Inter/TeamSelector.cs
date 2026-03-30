@@ -10,6 +10,7 @@ using dc.en;
 using dc.hl.types;
 using dc.libs.heaps.slib;
 using dc.pr;
+using dc.tool.mod;
 using dc.ui;
 using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.UI;
@@ -53,9 +54,9 @@ namespace EnemiesVsEnemies.Inter
 
         public CricketSelectorGui gui = null!;
         public static Dictionary<string, TeamSelector> TeamSelectorkeys = new();
-        public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y){}
+        public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y) { }
         public string Teamid = string.Empty;
-        public bool Isdestroyed = false;
+        public const int Isdestroyed = 99;
 
 
 
@@ -134,27 +135,20 @@ namespace EnemiesVsEnemies.Inter
         public override void onFocus()
         {
             base.onFocus();
-
-
-            if (!Teamid.IsNullOrEmpty())
-            {
-                lightTip = createLightTip(null);
-                lightTip.distance = 24.0;
-                dc.String name = "Team id:".Add_TwoHaxeStrings(Teamid);
-                lightTip.addActivate(name, null, null);
-                return;
-            }
+            dc.String str = !Teamid.IsNullOrEmpty()
+            ? "Team id:".Add_TwoHaxeStrings(Teamid)
+            : "设置团队".ToHaxeString();
 
             lightTip = createLightTip(null);
             lightTip.distance = 24.0;
-            dc.String str = "设置团队".ToHaxeString();
             lightTip.addActivate(str, null, null);
         }
 
         public override void destroy()
         {
             base.destroy();
-            if (Isdestroyed)
+
+            if (cd.fastCheck.exists(Isdestroyed))
                 return;
 
             AudioHelper.LoadAudioFormString("sfx/active/active_depop.wav");
@@ -167,8 +161,9 @@ namespace EnemiesVsEnemies.Inter
 
         void IHxbitSerializeCallback.OnBeforeSerializing()
         {
-            Isdestroyed = true;
+            cd.fastCheck.set(Isdestroyed, null);
             #if DEBUG
+            EnemiesVsEnemiesMod.GetLogger.Information($"存在10086:{cd.fastCheck.exists(Isdestroyed)}");
             EnemiesVsEnemiesMod.GetLogger.Information("Before serializing TeamSelector.");
             #endif
         }

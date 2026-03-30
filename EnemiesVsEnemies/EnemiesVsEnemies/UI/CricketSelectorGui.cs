@@ -485,6 +485,12 @@ namespace EnemiesVsEnemies.UI
 
         public override void postUpdate()
         {
+            if (textHelper.inputTeamID == null)
+            {
+                GetConfig.Value.General.IslockedController = false;
+                GetConfig.Save();
+            }
+
             Main main = Main.Class.ME;
             Point entryGlobal = main.localToGlobal(this.getEntryAt(curX, curY).f, Ref<double>.Null, Ref<double>.Null);
             Point maskGlobal = main.localToGlobal(this.mask, Ref<double>.Null, Ref<double>.Null);
@@ -595,6 +601,16 @@ namespace EnemiesVsEnemies.UI
             }
 
             return base.controlsUpdate();
+        }
+
+
+        public void LockController(bool lockState)
+        {
+            isLockedController = lockState;
+            Controller bootController = Boot.Class.ME.controller;
+            bootController.isLocked = lockState;
+            GetConfig.Value.General.IslockedController = lockState;
+            GetConfig.Save();
         }
     }
 }

@@ -37,6 +37,8 @@ namespace EnemiesVsEnemies.Configuration
             public bool AutoSetEnemyTeams { get; set; } = false;
             public bool BossCameraTrackingDisabled { get; set; } = false;
             public bool ShowDebugInfo { get; set; } = true;
+
+            public bool IslockedController = false;
         }
     }
 }

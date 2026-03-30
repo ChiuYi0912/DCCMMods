@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using CoreLibrary.Core.Utilities;
+using Hashlink.Virtuals;
 
 namespace CoreLibrary.Core.Extensions
 {
@@ -42,7 +43,6 @@ namespace CoreLibrary.Core.Extensions
                     yield return arrayObj.array[i]!;
             }
         }
-
 
 
 
@@ -126,17 +126,33 @@ namespace CoreLibrary.Core.Extensions
             ValidationHelper.NotNull(valueConverter, nameof(valueConverter));
 
             var dictionary = new Dictionary<int, T>();
-            dynamic keys = intMap.keys();
-            for (int i = 0; i < keys.length; i++)
+            var keys = intMap.keys();
+            while (keys.hasNext())
             {
-                var key = keys.getDyn(i);
+                var key = keys.next();
                 var value = intMap.get(key);
-                if (value != null)
-                {
-                    dictionary[key] = valueConverter(value);
-                }
+                dictionary[key] = valueConverter(value);
             }
             return dictionary;
+        }
+
+        public static IntMapLiveView<T> AsLiveView<T>(this IntMap map, Func<dynamic, T> converter)
+        {
+            return new IntMapLiveView<T>(map, converter);
+        }
+
+        public class IntMapLiveView<T>
+        {
+            private readonly IntMap _map;
+            private readonly Func<dynamic, T> _converter;
+
+            public IntMapLiveView(IntMap map, Func<dynamic, T> converter)
+            {
+                _map = map;
+                _converter = converter;
+            }
+
+            public T this[int key] => _converter(_map.get(key));
         }
 
 

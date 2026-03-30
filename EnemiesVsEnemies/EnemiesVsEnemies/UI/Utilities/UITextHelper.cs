@@ -24,6 +24,8 @@ namespace EnemiesVsEnemies.UI.Utilities
 
         public readonly Dictionary<string, dc.ui.Text> AlluiText = new();
         public readonly Dictionary<string, FlowBox> AllFlowBox = new();
+
+        public NumberInput inputTeamID = null!;
         public UITextHelper(CricketSelectorGui gui)
         {
             SelectorGui = gui;
@@ -157,17 +159,13 @@ namespace EnemiesVsEnemies.UI.Utilities
 
         public void AddOpposingTeamFromGui(TeamManager teamManager)
         {
-            Controller parent = SelectorGui.controller.parent;
-            parent.isLocked = true;
-            SelectorGui.isLockedController = true;
+            SelectorGui.LockController(true);
 
-            var inputTeamID = new NumberInput(SelectorGui);
+            inputTeamID = new NumberInput(SelectorGui);
 
             var action = new Action<string>((value) =>
             {
-                parent.isLocked = false;
-                SelectorGui.isLockedController = false;
-
+                SelectorGui.LockController(false);
                 var teamconfig = SelectorGui.GetConfig.Value.Teams;
                 if (teamconfig.TryGetValue(SelectorGui.UserSelectedteamid, out var team))
                 {
@@ -186,6 +184,7 @@ namespace EnemiesVsEnemies.UI.Utilities
 
             });
             dc.ui.TextInput inpu = inputTeamID.OpenNumberInput("输入", "该仇恨方队伍唯一ID", "Team-", action);
+
         }
     }
 }
