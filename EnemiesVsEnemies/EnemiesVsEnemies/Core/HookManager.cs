@@ -17,23 +17,27 @@ using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.Inter;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
+using ModCore.Events;
 using ModCore.Modules;
 using ModCore.Utilities;
 
 namespace EnemiesVsEnemies.Core
 {
-    public class HookManager:IOnHookInitialize
+    public class HookManager:
+    IOnHookInitialize,
+    IEventReceiver
     {
         private readonly TeamManager GetteamManager;
-        private readonly Configuration.ModConfig GetModconfig;
+        private readonly ModConfig GetModconfig;
 
 
-        public HookManager(TeamManager teamManager, Configuration.ModConfig config)
+        public HookManager(TeamManager teamManager, ModConfig config)
         {
+            EventSystem.AddReceiver(this);
             GetteamManager = teamManager;
             GetModconfig = config;
         }
-        
+
 
         void IOnHookInitialize.HookInitialize()
         {
