@@ -39,6 +39,7 @@ namespace EnemiesVsEnemies
         private static MobGroupHelper mobGroupHelper = null!;
         private static ShowEnemiesOptsions showEnemiesOptsions = null!;
 
+
         private static string Version = string.Empty;
         private static string ModInfoName = string.Empty;
 
@@ -47,18 +48,18 @@ namespace EnemiesVsEnemies
             base.Initialize();
             Version = Info.Version = "0.6.8";
             Info.Name = ModInfoName = "EnemiesVsEnemies (Enhanced)";
+            Info.Dependencies.Add("CoreLibraryMod");
+            Info.Dependencies.Add("DebugConsole");
             GetLogger = Logger;
 
             InitializeManagers();
-            hookManager.InitializeHooks();
+            
 
             config.Value.Teams.Clear();
             config.Save();
+
             LogInfo("EnemiesVsEnemies Mod 已初始化");
         }
-
-
-
 
         void IOnGameEndInit.OnGameEndInit()
         {
@@ -100,8 +101,6 @@ namespace EnemiesVsEnemies
         public static MobGroupHelper GetMobGroupHelper() => mobGroupHelper;
         public static string GetVersion() => Version;
         public static string GetName() => ModInfoName;
-        public static void LogInfo(string message) => GetLogger.LogInformation($"[EnemiesVsEnemies] {message}");
-
-
+        public static void LogInfo(string message) => GetLogger.LogInformation($"[EVEMod] {message}");
     }
 }

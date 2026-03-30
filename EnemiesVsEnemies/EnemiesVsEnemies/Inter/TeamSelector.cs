@@ -1,17 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Utilities;
 using CoreLibrary.Utilities;
 using dc;
 using dc.en;
-using dc.hl.types;
 using dc.libs.heaps.slib;
 using dc.pr;
-using dc.tool;
-using dc.tool.mod;
 using dc.ui;
 using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.UI;
@@ -53,13 +46,16 @@ namespace EnemiesVsEnemies.Inter
             cy = data.SaveCy;
         }
 
-        public CricketSelectorGui gui = null!;
-        public NumberInput input = null!;
+
+
         public static Dictionary<string, TeamSelector> TeamSelectorkeys = new();
-        public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y) { }
+        public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y) { input = new NumberInput(); }
+
         public string Teamid = string.Empty;
         public const int Isdestroyed = 99;
 
+        public CricketSelectorGui gui = null!;
+        public NumberInput input = null!;
 
 
         public override void init()
@@ -71,8 +67,7 @@ namespace EnemiesVsEnemies.Inter
         public override void initGfx()
         {
             base.initGfx();
-            SpriteLib gameElements = Assets.Class.gameElements;
-            base.initSprite(gameElements, "switchBiomeMobs".ToHaxeString(), null, null, null, null, null, null);
+            base.initSprite(Assets.Class.gameElements, "switchBiomeMobs".ToHaxeString(), null, null, null, null, null, null);
             spr.set_visible(false);
         }
 
@@ -83,7 +78,6 @@ namespace EnemiesVsEnemies.Inter
 
             if (Teamid.IsNullOrEmpty())
             {
-                input = new NumberInput();
                 Action<string> action = (userinputid) =>
                 {
                     Teamid = userinputid;
@@ -137,7 +131,6 @@ namespace EnemiesVsEnemies.Inter
         public override void destroy()
         {
             base.destroy();
-
             if (cd.fastCheck.exists(Isdestroyed))
                 return;
 

@@ -26,17 +26,11 @@ namespace EnemiesVsEnemies.Inter
             Selector.init();
             destroy();
         }
+
         public override void initGfx()
         {
             base.initGfx();
-            SpriteLib gameElements = Assets.Class.gameElements;
-            base.initSprite(gameElements, "switchBiomeMobs".ToHaxeString(), null, null, null, null, null, null);
-        }
-        public override void fixedUpdate() { base.fixedUpdate(); }
-
-        public override void destroy()
-        {
-            base.destroy();
+            base.initSprite(Assets.Class.gameElements, "switchBiomeMobs".ToHaxeString(), null, null, null, null, null, null);
         }
     }
 }

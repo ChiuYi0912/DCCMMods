@@ -14,12 +14,7 @@ namespace EnemiesVsEnemies.UI.Utilities
 {
     public class NumberInput
     {
-
         public dc.ui.TextInput Input = null!;
-        public NumberInput()
-        {
- 
-        }
         public dc.ui.TextInput OpenNumberInput(dc.ui.Process process, string title, string subTitle, string initial, Action<string> onValidate, string okLabel = "回车确定", string cancelLabel = "鼠标点击取消", Sound? sfx = null)
         {
             var text = new dc.ui.TextInput(

@@ -20,12 +20,14 @@ namespace EnemiesVsEnemies.UI.Utilities
     public class UITextHelper
     {
 
-        public CricketSelectorGui SelectorGui = null!;
+
 
         public readonly Dictionary<string, dc.ui.Text> AlluiText = new();
         public readonly Dictionary<string, FlowBox> AllFlowBox = new();
 
+        public CricketSelectorGui SelectorGui = null!;
         public NumberInput inputTeamID = null!;
+
         public UITextHelper(CricketSelectorGui gui)
         {
             SelectorGui = gui;
@@ -52,8 +54,6 @@ namespace EnemiesVsEnemies.UI.Utilities
             uiText.scaleX = scale;
             uiText.scaleY = scale;
 
-
-
             AlluiText.Add(dictionaryKey, uiText);
 
             var container = parentContainer ?? SelectorGui.teamFlowBox;
@@ -64,8 +64,6 @@ namespace EnemiesVsEnemies.UI.Utilities
 
             return uiText;
         }
-
-
 
 
         public void AddConfigInfoToRightFlow()
@@ -137,7 +135,7 @@ namespace EnemiesVsEnemies.UI.Utilities
             string opposingKey = team.Id + "opposingText";
             if (AlluiText.TryGetValue(opposingKey, out var opposingText))
             {
-                if (team.OpposingTeamIds != null)
+                if (team.OpposingTeamIds.Count > 0)
                 {
                     string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
                     opposingText.set_text(Lang.Class.t.untranslated(opposingInfo.ToHaxeString()));
@@ -152,10 +150,6 @@ namespace EnemiesVsEnemies.UI.Utilities
             SelectorGui.teamFlowBox.reflow();
             SelectorGui.rightFlow.reflow();
         }
-
-
-
-
 
 
         public void AddOpposingTeamFromGui(TeamManager teamManager)

@@ -62,7 +62,7 @@ namespace EnemiesVsEnemies.UI
 
             options.title.set_text(GetText.Instance.GetString("EnemiesVsEnemies模组设置").ToHaxeString());
 
-            options.addKeyboardWidget(scrollerFlow, options.cbmpScroller, GetText.Instance.GetString("生成触发器暴徒").ToHaxeString(), 42);
+            options.addKeyboardWidget(scrollerFlow, options.cbmpScroller, GetText.Instance.GetString("生成触发器暴徒").ToHaxeString(), SpawnEnemyTriggerAct);
         }
 
         void IOnHeroUpdate.OnHeroUpdate(double dt)
@@ -76,8 +76,8 @@ namespace EnemiesVsEnemies.UI
                 {
                     EnemiesVsEnemiesMod.GetEnemySpawner().SpawnDefaultEnemiesForTeam(mobs.Value.Id);
                 }
-                #if true
-                EnemiesVsEnemiesMod.GetLogger.Information("Test key SpawnEnemyTriggerAct pressed!");
+                #if DEBUG
+                EnemiesVsEnemiesMod.GetLogger.Information($"Press key:{SpawnEnemyTriggerAct},name:SpawnEnemyTriggerAct ");
                 #endif
             }
 

@@ -11,7 +11,7 @@ namespace DebugMod.Commands
 {
     public static class DebugFlagsConsonle
     {
-        [ConsoleMethod("add-flag-area", "近战攻击范围显示")]
+        [ConsoleMethod("show-flag-area", "近战攻击范围显示")]
         public static void Addarea(TextWriter writer) => dc.ui.Console.Class.ME.flags.set("area".ToHaxeString(), null);
 
         [ConsoleMethod("add-flag-nofx", "移除关卡烟雾")]

@@ -1,4 +1,5 @@
 using CoreLibrary.Core.Extensions;
+using CoreLibrary.Core.Interfaces;
 using CoreLibrary.Core.Utilities;
 using dc;
 using dc.cine;
@@ -21,7 +22,7 @@ using ModCore.Utilities;
 
 namespace EnemiesVsEnemies.Core
 {
-    public class HookManager
+    public class HookManager:IOnHookInitialize
     {
         private readonly TeamManager GetteamManager;
         private readonly Configuration.ModConfig GetModconfig;
@@ -32,8 +33,9 @@ namespace EnemiesVsEnemies.Core
             GetteamManager = teamManager;
             GetModconfig = config;
         }
+        
 
-        public void InitializeHooks()
+        void IOnHookInitialize.HookInitialize()
         {
             Hook_Hero.canBeHitBy += Hook_Hero_canBeHitBy;
             dc.en.Hook_Mob.init += Hook_Mob_init;
@@ -44,6 +46,7 @@ namespace EnemiesVsEnemies.Core
             dc.en.Hook_Mob.tpHeroBackToTraining += Hook_Mob_tpHeroBackToTraining;
             Hook__Active.create += Hook__Active_create;
         }
+
 
 
         private Active Hook__Active_create(Hook__Active.orig_create orig, Hero from, Grenade g, InventItem ii)
@@ -141,7 +144,5 @@ namespace EnemiesVsEnemies.Core
             orig(self, t);
             self.nemesisTarget = on;
         }
-
-        public void ReinitializeHooks() => InitializeHooks();
-    }
+  }
 }
