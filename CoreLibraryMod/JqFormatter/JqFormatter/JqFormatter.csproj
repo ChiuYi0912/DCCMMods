@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 
     <ModType>mod</ModType>
-    <ModMain>JqFormatter.Modmain</ModMain>
+    <ModMain>JqFormatter.JQ</ModMain>
     <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
   </PropertyGroup>
 

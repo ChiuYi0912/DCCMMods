@@ -17,8 +17,8 @@ namespace JqFormatter;
 public class JQ(ModInfo info) : ModBase(info)
 {
   public static Config<ModConfig> config = new("JqFormatterConfig");
-  public override void Initialize() { }
-  
+  public override void Initialize(){}
+
   public static string FormatJson(string json)
   {
     string assemblyPath = Assembly.GetExecutingAssembly().Location;

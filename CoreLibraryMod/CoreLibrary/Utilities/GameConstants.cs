@@ -5,19 +5,6 @@ namespace CoreLibrary.Core.Utilities
 
     public static class GameConstants
     {
-        public static class Mod
-        {
-            public const string ModId = "Midjourney";
-
-            public const string ModName = "Midjourney";
-
-            public const string ModMainClass = "Midjourney.EntryPoint.ModInitializer";
-
-            public const string ResourcePack = "Midjourney.pak";
-
-            public const string ConfigDirectory = "Configs/";
-        }
-
         public static class Levels
         {
             public const string BackGarden = "BackGarden";
@@ -136,17 +123,6 @@ namespace CoreLibrary.Core.Utilities
         }
 
 
-        public static class EntityTypes
-        {
-            public const string Boss = "Boss";
-            public const string NPC = "NPC";
-            public const string Item = "Item";
-            public const string Weapon = "Weapon";
-            public const string Critter = "Critter";
-            public const string Mob = "Mob";
-        }
-
-
         public static class MarkerTypes
         {
             public const string Spawn = "Spawn";
@@ -157,24 +133,6 @@ namespace CoreLibrary.Core.Utilities
             public const string Sound = "Sound";
             public const string Event = "Event";
         }
-
-
-        public static class CustomMarkerIds
-        {
-
-        }
-
-
-        public static class CustomEntityIds
-        {
-
-        }
-
-        public static class customRoomIds
-        {
-
-        }
-
 
 
         public static class Colors
@@ -278,11 +236,6 @@ namespace CoreLibrary.Core.Utilities
             Levels.Template,
             Levels.TumulusInt,
         };
-
-        public static bool IsBackGardenLevel(string levelId)
-        {
-            return levelId.Equals(Levels.BackGarden, System.StringComparison.OrdinalIgnoreCase);
-        }
 
         public static bool IsKnownLevel(string levelId)
         {

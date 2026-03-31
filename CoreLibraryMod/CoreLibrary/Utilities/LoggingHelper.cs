@@ -7,8 +7,6 @@ namespace CoreLibrary.Core.Utilities
 {
     public static class LoggingHelper
     {
-        public const string ModName = GameConstants.Mod.ModName;
-
         public static void LogInformation(this ILogger logger, string message, string? module = null)
         {
             ValidationHelper.NotNull(logger, nameof(logger));
