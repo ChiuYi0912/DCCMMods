@@ -4,20 +4,13 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
-    <ModName>CoreLibraryMod</ModName>
-    <ModType>library</ModType>
+
+    <ModType>mod</ModType>
+    <ModMain>JqFormatter.Modmain</ModMain>
     <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
-    <Reference Include="JqFormatter" />
-  </ItemGroup>
-  <ItemGroup>
-    <ModDependency Include="JqFormatter" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\JqFormatter\JqFormatter\JqFormatter.csproj" />
   </ItemGroup>
 </Project>
