@@ -12,8 +12,8 @@ namespace EnemiesVsEnemies.Configuration
 
 
         public string TriggerLevelId { get; set; } = string.Empty;
-        public int TriggerX { get; set; } = -1;
-        public int TriggerY { get; set; } = -1;
+        public int TriggerX { get; set; } = 1;
+        public int TriggerY { get; set; } = 1;
         public bool HasTriggerPosition => !string.IsNullOrEmpty(TriggerLevelId);
 
         public TeamConfig() { }

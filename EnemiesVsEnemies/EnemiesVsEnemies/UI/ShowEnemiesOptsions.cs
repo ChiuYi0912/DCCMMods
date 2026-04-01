@@ -67,19 +67,7 @@ namespace EnemiesVsEnemies.UI
 
         void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
-            if (IsControllerLocked())
-                return;
 
-            if (ControllerHelper.ControlsUpdateFromProcess(Boot.Class.ME.controller, SpawnEnemyTriggerAct))
-            {
-                foreach (var mobs in config.Teams)
-                {
-                    EnemiesVsEnemiesMod.GetEnemySpawner().SpawnDefaultEnemiesForTeam(mobs.Value.Id);
-                }
-                #if DEBUG
-                EnemiesVsEnemiesMod.GetLogger.Information($"Press key:{SpawnEnemyTriggerAct},name:SpawnEnemyTriggerAct ");
-                #endif
-            }
 
         }
 

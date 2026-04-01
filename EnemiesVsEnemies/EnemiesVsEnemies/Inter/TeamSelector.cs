@@ -68,7 +68,7 @@ namespace EnemiesVsEnemies.Inter
         {
             base.initGfx();
             base.initSprite(Assets.Class.gameElements, "switchBiomeMobs".ToHaxeString(), null, null, null, null, null, null);
-            spr.set_visible(false);
+            spr.set_visible(true);
         }
 
         public override void onActivate(Hero by, bool longPress)
@@ -113,6 +113,13 @@ namespace EnemiesVsEnemies.Inter
 
         public override void postUpdate()
         {
+            if (ShowEnemiesOptsions.IsControllerLocked() || Teamid.IsNullOrEmpty())
+                return;
+
+            if (ControllerHelper.ControlsUpdateFromProcess(Boot.Class.ME.controller, ShowEnemiesOptsions.SpawnEnemyTriggerAct))
+            {
+                EnemiesVsEnemiesMod.GetEnemySpawner().SpawnDefaultEnemiesForTeam(Teamid);
+            }
             base.postUpdate();
         }
 

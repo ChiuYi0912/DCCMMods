@@ -42,8 +42,9 @@ namespace EnemiesVsEnemies.UI
         public dc.h2d.Object rightGridContainer = null!;
         private Icon RightIcon = null!;
 
-        private Dictionary<string, Flow> mobFlowMap = new Dictionary<string, Flow>();
-        private Dictionary<string, Text> mobCountLabelMap = new Dictionary<string, Text>();
+        private Dictionary<string, Flow> mobFlowMap = new();
+        private Dictionary<string, Text> mobCountLabelMap = new();
+        private Dictionary<string, Text> mobinfo = new();
         public Config<ModConfig> GetConfig = EnemiesVsEnemiesMod.config;
 
         public bool isLockedController = false;
@@ -251,7 +252,6 @@ namespace EnemiesVsEnemies.UI
                 flow.addChild(label);
                 label.addShader(new dc.shader.HotlineText());
                 label.scaleX = label.scaleY = 1.5;
-                label.textColor = CreateColor.ColorFromHex("#ffffff");
                 label.set_text($"+{count}".ToHaxeString());
                 mobCountLabelMap[mobId] = label;
             }
