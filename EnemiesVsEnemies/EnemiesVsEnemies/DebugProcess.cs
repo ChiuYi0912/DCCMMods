@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreLibrary.Core.Extensions;
+using dc;
 using dc.en;
 using dc.level;
 using dc.pr;
 using dc.tool;
+using dc.ui.icon;
 using dc.ui.pause;
 using dc.ui.sel;
 using EnemiesVsEnemies.Inter;
@@ -24,11 +26,8 @@ namespace EnemiesVsEnemies.Debug
         [ConsoleMethod("ui", "EnemiesVsEnemiesUI Debug")]
         public static void buildprocess(TextWriter writer)
         {
-            //var sel = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager());
-            Hero hero = Game.Class.ME.hero;
-            var gui = new TeamSelector(hero._level, hero.cx, hero.cy);
-            gui.init();
 
+            Hero hero = Game.Class.ME.hero;
         }
 
         [ConsoleMethod("remove-team-list", "移除关卡中的所有队伍触发器")]
@@ -40,7 +39,7 @@ namespace EnemiesVsEnemies.Debug
         [ConsoleMethod("remove-team-id", "移除关卡中指定id队伍触发器")]
         public static void removeTeamSelectorBykey(TextWriter writer, string id)
         {
-            
+
         }
     }
 }

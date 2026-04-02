@@ -41,15 +41,8 @@ namespace EnemiesVsEnemies.Core
 
             foreach (var enemyPresetId in teamConfig.DefaultEnemies)
             {
-                if (GetModconfig.EnemyPresets.TryGetValue(enemyPresetId, out var enemyConfig))
-                {
-                    SpawnEnemy(teamId, enemyConfig);
-                }
-                else
-                {
-                    var defaultConfig = new EnemySpawnConfig(enemyPresetId);
-                    SpawnEnemy(teamId, defaultConfig);
-                }
+                
+                SpawnEnemy(teamId, enemyPresetId.Value);  
             }
         }
 
@@ -98,6 +91,7 @@ namespace EnemiesVsEnemies.Core
                 );
                 mob.init();
                 mob.set_team(team);
+                mob.elite = spawnConfig.IsElite;
                 if (mob is Boss boss)
                 {
                     boss.setReady();

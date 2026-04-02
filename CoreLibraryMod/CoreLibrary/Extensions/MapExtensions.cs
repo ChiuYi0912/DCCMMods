@@ -48,7 +48,7 @@ namespace CoreLibrary.Core.Extensions
 
             for (int i = 0; i < rooms.length; i++)
             {
-                var room = rooms.array[i] as Room;
+                var room = rooms.getDyn(i) as Room;
                 if (room != null)
                 {
                     yield return room;

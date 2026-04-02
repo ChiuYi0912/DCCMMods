@@ -86,6 +86,7 @@ namespace EnemiesVsEnemies.UI.Utilities
             double teamPadV = 5.0;
             SelectorGui.teamFlowBox = FlowBox.Class.createBoxValidation(null, Ref<double>.From(ref teamPadH),
             Ref<double>.From(ref teamPadV), Ref<bool>.Null, null);
+            SelectorGui.teamFlowBox.box.alpha = 0;
             SelectorGui.teamFlowBox.set_isVertical(true);
             SelectorGui.teamFlowBox.set_horizontalAlign(new FlowAlign.Middle());
             SelectorGui.teamFlowBox.set_verticalAlign(new FlowAlign.Middle());

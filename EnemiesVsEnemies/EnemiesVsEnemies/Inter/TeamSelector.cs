@@ -3,6 +3,7 @@ using CoreLibrary.Core.Utilities;
 using CoreLibrary.Utilities;
 using dc;
 using dc.en;
+using dc.en.inter.button;
 using dc.libs.heaps.slib;
 using dc.pr;
 using dc.ui;
@@ -25,6 +26,7 @@ namespace EnemiesVsEnemies.Inter
         public class InterImportant
         {
             public string teamId = string.Empty;
+
             public int SaveCx;
             public int SaveCy;
         }
@@ -49,7 +51,7 @@ namespace EnemiesVsEnemies.Inter
 
 
         public static Dictionary<string, TeamSelector> TeamSelectorkeys = new();
-        public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y) { input = new NumberInput(); }
+        public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y) { }
 
         public string Teamid = string.Empty;
         public const int Isdestroyed = 99;
@@ -75,9 +77,10 @@ namespace EnemiesVsEnemies.Inter
         {
             base.onActivate(by, longPress);
             ShowEnemiesOptsions.LockContoreLible(true);
-
+            _level.fx.activateATSwitch(this, CreateColor.ColorFromHex("#ff0000"));
             if (Teamid.IsNullOrEmpty())
             {
+                input = new NumberInput();
                 Action<string> action = (userinputid) =>
                 {
                     Teamid = userinputid;
@@ -85,7 +88,7 @@ namespace EnemiesVsEnemies.Inter
                     if (config.Teams.ContainsKey(Teamid))
                     {
                         var popup = new ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
-                        popup.text("添加失败：\n 请输入未注册的队伍！\n".ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
+                        popup.text("添加失败：\n 请输入未注册的队伍ID!\n".ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
                         Teamid = string.Empty;
                         return;
                     }
@@ -142,7 +145,7 @@ namespace EnemiesVsEnemies.Inter
                 return;
 
             AudioHelper.LoadAudioFormString("sfx/active/active_depop.wav");
-            Fx fx = base._level.fx;
+            Fx fx = _level.fx;
             double x = (base.cx + base.xr) * 24.0;
             double y = (base.cy + base.yr) * 24.0 - base.hei * 0.5;
             double radiusScale = 1;

@@ -6,8 +6,8 @@ namespace EnemiesVsEnemies.Configuration
     {
         public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
-        public List<string> OpposingTeamIds { get; set; } = new List<string>();
-        public List<string> DefaultEnemies { get; set; } = new List<string>();
+        public List<string> OpposingTeamIds { get; set; } = new();
+        public Dictionary<string, EnemySpawnConfig> DefaultEnemies { get; set; } = new();
         public int TeamColor { get; set; } = 0xFFFFFF;
 
 

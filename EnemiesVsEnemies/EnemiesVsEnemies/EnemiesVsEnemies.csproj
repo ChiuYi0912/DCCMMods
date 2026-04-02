@@ -14,8 +14,7 @@
       <ItemGroup>
           <ModFiles Include="$(OutputPath)output\EnemiesVsEnemies\**\*.*" />
       </ItemGroup>
-      <Copy SourceFiles="@(ModFiles)" 
-            DestinationFolder="D:\steam\steamapps\common\Dead Cells\coremod\mods\EnemiesVsEnemies\%(RecursiveDir)" />
+      <Copy SourceFiles="@(ModFiles)" DestinationFolder="D:\steam\steamapps\common\Dead Cells\coremod\mods\EnemiesVsEnemies\%(RecursiveDir)" />
   </Target>
   
 
@@ -35,9 +34,11 @@
     <ModDependency Include="CoreLibraryMod" />
     <ModDependency Include="DebugConsole" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\CoreLibraryMod\CoreLibrary\CoreLibrary.csproj" />
   </ItemGroup>
 	
 
 </Project>
+

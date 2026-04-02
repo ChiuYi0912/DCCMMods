@@ -22,7 +22,7 @@ namespace EnemiesVsEnemies.Core
         public void Initialize(ModConfig config)
         {
             GetModConfig = config;
-            
+
             teams.Clear();
             originalTeamPointers.Clear();
 
@@ -94,6 +94,16 @@ namespace EnemiesVsEnemies.Core
             #if DEBUG
             EnemiesVsEnemiesMod.GetLogger.Information($"Remove Team:{teamId}");
             #endif
+        }
+
+
+        public void RevoveTeamAllOpposing(string teamId)
+        {
+            var team = teams[teamId];
+            while (team.opposingTeams.length > 0)
+            {
+                team.opposingTeams.pop();
+            }
         }
 
         //来自(HkLab)

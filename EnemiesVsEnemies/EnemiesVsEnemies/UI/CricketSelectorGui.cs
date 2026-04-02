@@ -27,6 +27,10 @@ using Math = System.Math;
 using EnemiesVsEnemies.Inter;
 using dc.en.mob;
 using dc.h3d.shader;
+using dc.en;
+using dc.level.disp;
+using System.Drawing;
+using Point = dc.h2d.col.Point;
 
 namespace EnemiesVsEnemies.UI
 {
@@ -34,6 +38,7 @@ namespace EnemiesVsEnemies.UI
     {
         public TeamManager teamManager = null!;
         public FlowBox teamFlowBox = null!;
+        public FlowBox infomainflow = null!;
         public ScaleGrid selectiononClickMob = null!;
         public UITextHelper textHelper = null!;
         public Mask rightMask = null!;
@@ -45,6 +50,8 @@ namespace EnemiesVsEnemies.UI
         private Dictionary<string, Flow> mobFlowMap = new();
         private Dictionary<string, Text> mobCountLabelMap = new();
         private Dictionary<string, Text> mobinfo = new();
+        private Dictionary<string, FlowBox> infoflow = new();
+        private Dictionary<string, Text> infotext = new();
         public Config<ModConfig> GetConfig = EnemiesVsEnemiesMod.config;
 
         public bool isLockedController = false;
@@ -79,7 +86,17 @@ namespace EnemiesVsEnemies.UI
         public const string Audioclick = "sfx/ui/menu_click1.wav";
         public const string Audiocchestroom1 = "sfx/ps5/prison_chestroom1_SE.wav";
 
+        public TeamConfig GetThisTeamConfig()
+        {
+            if (GetConfig.Value.Teams.TryGetValue(UserSelectedteamid, out var team)) { }
+            return team != null ? team : null!;
+        }
 
+        public EnemySpawnConfig GetThisSpawnConfig(string EnemieID)
+        {
+            if (GetThisTeamConfig().DefaultEnemies.TryGetValue(EnemieID, out var enemySpawn)) { }
+            return enemySpawn!=null ? enemySpawn:null!;
+        }
 
         public static dynamic getmobsbyIndex(int index)
         {
@@ -136,6 +153,7 @@ namespace EnemiesVsEnemies.UI
             rightInter.propagateEvents = true;
             rightInter.onWheel = new HlAction<Event>(OnRightWheel);
             rightInter.onMove = (e) => { };
+            rightInter.onFocus = (e) => { };
 
             Tile tile = Assets.Class.ui.getTile("boxSelect".ToHaxeString(), Ref<int>.Null,
             Ref<double>.Null, Ref<double>.Null, null);
@@ -168,19 +186,60 @@ namespace EnemiesVsEnemies.UI
 
             initRightGrid();
 
+            initRigtInfo(teamFlowBox);
             figthFlowContainer.reflow();
+        }
+
+        public void initRigtInfo(dc.h2d.Object obj)
+        {
+            const double PADH = 5;
+            const double PADV = 7;
+            FlowBox CreateFlowBox(FlowBox? parent = null, int minWidth = 200, int minHeight = 80,
+                                  int hSpacing = 15, int vSpacing = 10)
+            {
+                var box = FlowBox.Class.createBoxValidationWithBiomeParam(parent, Ref<double>.In(PADH), Ref<double>.In(PADV));
+                box.set_minWidth(minWidth);
+                box.set_minHeight(minHeight);
+                box.set_horizontalSpacing(hSpacing);
+                box.set_verticalSpacing(vSpacing);
+                return box;
+            }
+
+            infomainflow = FlowBox.Class.createBoxValidationWithBiomeParam(null, Ref<double>.In(PADH), Ref<double>.In(PADV));
+            obj.addChild(infomainflow);
+
+            var icon = FlowBox.Class.createBoxValidationWithBiomeParam(infomainflow, Ref<double>.In(PADH), Ref<double>.In(PADV));
+
+
+            var panels = new Dictionary<string, FlowBox>
+            {
+                ["LifeTier"] = CreateFlowBox(infomainflow),
+                ["DamageTier"] = CreateFlowBox(infomainflow),
+                ["IsElite"] = CreateFlowBox(infomainflow)
+            };
+
+            infomainflow.reflow();
+
+            foreach (var kv in panels)
+                infoflow.Add(kv.Key, kv.Value);
+            infoflow.Add(nameof(icon), icon);
+
+            var texts = new Dictionary<string, Text>
+            {
+                ["LifeTiertext"] = new Text(panels["LifeTier"], false, null, Ref<double>.Null, null, null),
+                ["DamageTiertext"] = new Text(panels["DamageTier"], false, null, Ref<double>.Null, null, null),
+                ["IsElitetext"] = new Text(panels["IsElite"], false, null, Ref<double>.Null, null, null)
+            };
+
+            foreach (var kv in texts)
+                infotext.Add(kv.Key, kv.Value);
         }
 
 
         public void initRightGrid()
         {
-            if (GetConfig.Value.Teams.TryGetValue(UserSelectedteamid, out var team)) { }
-            if (team == null) return;
             ClearRightGrid();
 
-            var countDict = new Dictionary<string, int>();
-            foreach (var id in team.DefaultEnemies)
-                countDict[id] = countDict.TryGetValue(id, out int c) ? c + 1 : 1;
 
             const int cols = 7;
             double scale = get_pixelScale.Invoke();
@@ -189,10 +248,10 @@ namespace EnemiesVsEnemies.UI
             int cellHeight = (int)(get_entryHei() * scale);
 
             int idx = 0;
-            foreach (var kvp in countDict)
+            foreach (var kvp in GetThisTeamConfig().DefaultEnemies)
             {
                 string mobId = kvp.Key;
-                int count = kvp.Value;
+                int count = kvp.Value.SpawnCount;
 
                 var flow = CreateMonsterFlow(mobId, count);
                 int row = idx / cols;
@@ -225,27 +284,6 @@ namespace EnemiesVsEnemies.UI
             var interactive = new Interactive(icon.tile.width, icon.tile.height, icon, null);
             interactive.propagateEvents = false;
 
-            string onmoveMob = mobId;
-            interactive.onClick = (e) =>
-            {
-                AudioHelper.LoadAudioFormString(Audiocurse);
-
-                var getvirtual = Data.Class.mob.byId.get(onmoveMob.ToHaxeString()).index;
-                var newicon = Icon.Class.createMobIcon(mobId.ToHaxeString(), null);
-                UIAnimHelper.doMovementIcon(this, entries.getDyn(getvirtual).f, flow, newicon, false);
-
-                RemoveMonsterFromTeam(onmoveMob);
-
-                #if DEBUG
-                EnemiesVsEnemiesMod.GetLogger.Information($"RemoveRightMOB:{onmoveMob}");
-                #endif
-            };
-            interactive.onMove = (e) =>
-            {
-                RightIcon = icon;
-            };
-
-
             if (count > 1)
             {
                 var label = new Text(null, false, null, Ref<double>.Null, null, null);
@@ -261,7 +299,67 @@ namespace EnemiesVsEnemies.UI
                     mobCountLabelMap.Remove(mobId);
             }
 
+            var input = new NumberInput();
+            string MobName = Data.Class.mob.byId.get(mobId.ToHaxeString()).name.ToString();
+            var teamconfig = GetThisTeamConfig();
+            var SpawnConfig = GetThisSpawnConfig(mobId);
+
+            interactive.onClick = (e) => RightIconOnClick(mobId, flow);
+            interactive.onMove = (e) => RightIconOnMove(mobId, teamconfig, icon);
+            if (SpawnConfig != null)
+                interactive.onCheck = (e) => RightIconOnCheck(mobId, MobName, icon, input, teamconfig, GetThisSpawnConfig(mobId));
+
             return flow;
+        }
+
+
+        private void RightIconOnClick(string mobId, Flow flow)
+        {
+            AudioHelper.LoadAudioFormString(Audiocurse);
+
+            var getvirtual = Data.Class.mob.byId.get(mobId.ToHaxeString()).index;
+            var newicon = Icon.Class.createMobIcon(mobId.ToHaxeString(), null);
+            UIAnimHelper.doMovementIcon(this, entries.getDyn(getvirtual).f, flow, newicon, false);
+
+            RemoveMonsterFromTeam(mobId);
+
+            #if DEBUG
+            EnemiesVsEnemiesMod.GetLogger.Information($"RemoveRightMOB:{mobId}");
+            #endif
+        }
+        private void RightIconOnMove(string mobId, TeamConfig teamConfig, Icon icon)
+        {
+            RightIcon = icon;
+            var infoicon = Icon.Class.createMobIcon(mobId.ToHaxeString(), null);
+            var isicon = infoflow["icon"];
+            isicon.removeChildren();
+            isicon.addChild(infoicon);
+
+            var spawn = GetThisSpawnConfig(mobId);
+            if (spawn != null)
+            {
+                infotext["LifeTiertext"].set_text($"生命值:{spawn.LifeTier}".ToHaxeString());
+                infotext["DamageTiertext"].set_text($"伤害:{spawn.DamageTier}".ToHaxeString());
+                infotext["IsElitetext"].set_text($"精英:{spawn.IsElite}".ToHaxeString());
+            }
+        }
+        private void RightIconOnCheck(string mobId, string mobIdNameLang, Icon icon, NumberInput number, TeamConfig teamConfig, EnemySpawnConfig enemySpawnConfig)
+        {
+            if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 5))
+            {
+                Action<int> action = (str) => { enemySpawnConfig.LifeTier = str; RightIconOnMove(mobId, teamConfig, icon); };
+                number.OpenNumberInputInt(this, $"{mobIdNameLang}生命值", "请输入整数", $"{enemySpawnConfig.LifeTier}", action);
+            }
+            if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 6))
+            {
+                Action<int> action = (str) => { enemySpawnConfig.DamageTier = str; RightIconOnMove(mobId, teamConfig, icon); };
+                number.OpenNumberInputInt(this, $"{mobIdNameLang}伤害", "请输入整数", $"{enemySpawnConfig.DamageTier}", action);
+            }
+            if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 7))
+            {
+                enemySpawnConfig.IsElite = !enemySpawnConfig.IsElite;
+                RightIconOnMove(mobId, teamConfig, icon);
+            }
         }
 
 
@@ -315,19 +413,24 @@ namespace EnemiesVsEnemies.UI
         public void RemoveMonsterFromTeam(string mobId)
         {
             var team = GetConfig.Value.Teams[UserSelectedteamid];
-            if (team.DefaultEnemies.Remove(mobId))
-            {
-                GetConfig.Save();
-                UpdateRightGridForRemove(mobId);
-            }
+            var spawn = GetThisSpawnConfig(mobId);
+            if (spawn == null)
+                return;
+
+            spawn.SpawnCount--;
+            if (spawn.SpawnCount == 0)
+                team.DefaultEnemies.Remove(mobId);
+            GetConfig.Save();
+            UpdateRightGridForRemove(mobId, spawn.SpawnCount);
+            GetConfig.Save();
+
         }
 
-        private void UpdateRightGridForRemove(string mobId)
+        private void UpdateRightGridForRemove(string mobId, int newCount)
         {
             if (!mobFlowMap.TryGetValue(mobId, out var flow))
                 return;
 
-            int newCount = GetCurrentCount(mobId);
             if (newCount == 0)
             {
                 flow.remove();
@@ -369,7 +472,7 @@ namespace EnemiesVsEnemies.UI
         private int GetCurrentCount(string mobId)
         {
             var team = GetConfig.Value.Teams[UserSelectedteamid];
-            return team.DefaultEnemies.Count(id => id == mobId);
+            return team.DefaultEnemies.TryGetValue(mobId, out var enemy) ? enemy.SpawnCount : 0;
         }
 
         private void ReflowRightGrid()
@@ -448,17 +551,19 @@ namespace EnemiesVsEnemies.UI
             if (EnemiesVsEnemiesMod.GetMobGroupHelper().IsRealBoss(args.MobId))
                 return;
 
-            if (!GetConfig.Value.Teams.TryGetValue(UserSelectedteamid, out var team))
+            var team = GetThisTeamConfig();
+            var spawn = GetThisSpawnConfig(args.MobId);
+            if (spawn!=null)
             {
-                AudioHelper.LoadAudioFormString(AudioError);
-                Log.Logger.Warning($"队伍 {UserSelectedteamid} 不存在");
-                return;
+                spawn.SpawnCount++;
             }
-
-            team.DefaultEnemies.Add(args.MobId);
+            else
+            {
+                var newEnemy = new EnemySpawnConfig(args.MobId);
+                team.DefaultEnemies[args.MobId] = newEnemy;
+            }
             GetConfig.Save();
             textHelper.UpdateTeamDisplay();
-
             AudioHelper.LoadAudioFormString(Audiocchestroom1);
 
             #if DEBUG
@@ -514,7 +619,6 @@ namespace EnemiesVsEnemies.UI
             var alphaOffset = 0.2 * cosValue;
 
             this.selectionSG.alpha = 0.8 + alphaOffset;
-            selectiononClickMob.alpha = 0.8 + alphaOffset;
 
             if (RightIcon == null)
                 return;
@@ -538,7 +642,7 @@ namespace EnemiesVsEnemies.UI
 
             selectiononClickMob.x = localPos.x - offsetX;
             selectiononClickMob.y = localPos.y - offsetY;
-
+            selectiononClickMob.alpha = 0.8 + alphaOffset;
             selectiononClickMob.posChanged = true;
 
         }
@@ -547,6 +651,8 @@ namespace EnemiesVsEnemies.UI
 
         public override void setControlLabel()
         {
+
+
             virtual_acts_cond_label_onAdd_ creataBCreateButton(int actionId, string labelText)
             {
                 ArrayBytes_Int acts = ArrayUtils.CreateInt();
@@ -563,11 +669,25 @@ namespace EnemiesVsEnemies.UI
             ArrayObj btns = (ArrayObj)ArrayUtils.CreateDyn().array;
             btns.push(creataBCreateButton(14, "Valider"));
             btns.push(creataBCreateButton(16, "Retour"));
-
             btns.push(creataBCreateButton(3, "添加仇恨队伍"));
-            btns.push(creataBCreateButton(4, "销毁此队伍"));
+            btns.push(creataBCreateButton(2, "清空仇恨队伍"));
+            btns.push(creataBCreateButton(4, "销毁队伍"));
+            btns.push(creataBCreateButton(5, "设置生命"));
+            btns.push(creataBCreateButton(6, "设置伤害"));
+            btns.push(creataBCreateButton(7, "设置为精英"));
+
 
             createControlLabel(btns);
+
+            Flow flow = fControlLabel;
+            const double SIZE = 0.7;
+            for (int i = 0; i < flow.children.length; i++)
+            {
+                var contor = flow.children.getDyn(i) as dc.ui.ControlLabel;
+                if (contor == null)
+                    continue;
+                contor.scaleX = contor.scaleY = SIZE;
+            }
         }
 
         public override bool controlsUpdate()
@@ -592,9 +712,18 @@ namespace EnemiesVsEnemies.UI
                 }
                 close();
             }
+            if (ControllerHelper.ControlsUpdateFromProcess(parent, 2))
+            {
+                teamManager.RevoveTeamAllOpposing(UserSelectedteamid);
+                GetThisTeamConfig().OpposingTeamIds.Clear();
+                textHelper.UpdateTeamDisplay();
+                GetConfig.Save();
+            }
 
             return base.controlsUpdate();
         }
+
+
 
 
         public override void close()
