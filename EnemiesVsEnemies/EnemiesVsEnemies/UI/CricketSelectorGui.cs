@@ -338,9 +338,9 @@ namespace EnemiesVsEnemies.UI
             var spawn = GetThisSpawnConfig(mobId);
             if (spawn != null)
             {
-                infotext["LifeTiertext"].set_text($"生命值:{spawn.LifeTier}".ToHaxeString());
-                infotext["DamageTiertext"].set_text($"伤害:{spawn.DamageTier}".ToHaxeString());
-                infotext["IsElitetext"].set_text($"精英:{spawn.IsElite}".ToHaxeString());
+                infotext["LifeTiertext"].set_text($"{GetText.Instance.GetString("Health:")}{spawn.LifeTier}".ToHaxeString());
+                infotext["DamageTiertext"].set_text($"{GetText.Instance.GetString("Damage:")}{spawn.DamageTier}".ToHaxeString());
+                infotext["IsElitetext"].set_text($"{GetText.Instance.GetString("Elite:")}{spawn.IsElite}".ToHaxeString());
             }
         }
         private void RightIconOnCheck(string mobId, string mobIdNameLang, Icon icon, NumberInput number, TeamConfig teamConfig, EnemySpawnConfig enemySpawnConfig)
@@ -348,12 +348,12 @@ namespace EnemiesVsEnemies.UI
             if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 5))
             {
                 Action<int> action = (str) => { enemySpawnConfig.LifeTier = str; RightIconOnMove(mobId, teamConfig, icon); };
-                number.OpenNumberInputInt(this, $"{mobIdNameLang}生命值", "请输入整数", $"{enemySpawnConfig.LifeTier}", action);
+                number.OpenNumberInputInt(this, $"{mobIdNameLang}{GetText.Instance.GetString("Health")}", GetText.Instance.GetString("Please enter an integer"), $"{enemySpawnConfig.LifeTier}", action);
             }
             if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 6))
             {
                 Action<int> action = (str) => { enemySpawnConfig.DamageTier = str; RightIconOnMove(mobId, teamConfig, icon); };
-                number.OpenNumberInputInt(this, $"{mobIdNameLang}伤害", "请输入整数", $"{enemySpawnConfig.DamageTier}", action);
+                number.OpenNumberInputInt(this, $"{mobIdNameLang}{GetText.Instance.GetString("Damage")}", GetText.Instance.GetString("Please enter an integer"), $"{enemySpawnConfig.DamageTier}", action);
             }
             if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 7))
             {
@@ -669,12 +669,12 @@ namespace EnemiesVsEnemies.UI
             ArrayObj btns = (ArrayObj)ArrayUtils.CreateDyn().array;
             btns.push(creataBCreateButton(14, "Valider"));
             btns.push(creataBCreateButton(16, "Retour"));
-            btns.push(creataBCreateButton(3, "添加仇恨队伍"));
-            btns.push(creataBCreateButton(2, "清空仇恨队伍"));
-            btns.push(creataBCreateButton(4, "销毁队伍"));
-            btns.push(creataBCreateButton(5, "设置生命"));
-            btns.push(creataBCreateButton(6, "设置伤害"));
-            btns.push(creataBCreateButton(7, "设置为精英"));
+            btns.push(creataBCreateButton(3, GetText.Instance.GetString("Add opposing team")));
+            btns.push(creataBCreateButton(2, GetText.Instance.GetString("Clear opposing teams")));
+            btns.push(creataBCreateButton(4, GetText.Instance.GetString("Destroy team")));
+            btns.push(creataBCreateButton(5, GetText.Instance.GetString("Set life")));
+            btns.push(creataBCreateButton(6, GetText.Instance.GetString("Set damage")));
+            btns.push(creataBCreateButton(7, GetText.Instance.GetString("Set as elite")));
 
 
             createControlLabel(btns);

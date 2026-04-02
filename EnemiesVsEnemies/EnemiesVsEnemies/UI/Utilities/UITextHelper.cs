@@ -12,6 +12,7 @@ using dc.ui;
 using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.Core;
 using HaxeProxy.Runtime;
+using ModCore.Modules;
 using Serilog;
 using Text = dc.ui.Text;
 
@@ -39,6 +40,7 @@ namespace EnemiesVsEnemies.UI.Utilities
                                           double scale = 1.0, FlowBox? parentContainer = null,
                                           bool useTranslation = true)
         {
+            
             dc.String haxeText;
             if (useTranslation)
             {
@@ -80,7 +82,7 @@ namespace EnemiesVsEnemies.UI.Utilities
 
         private void BuildAndAddTeamFlowBox(ModConfig config)
         {
-            SelectorGui.title.set_text($"EnemiesVsEnemiesMod-Virsion:{EnemiesVsEnemiesMod.GetVersion()}".ToHaxeString());
+            SelectorGui.title.set_text($"{GetText.Instance.GetString("EnemiesVsEnemiesMod-Version:")}{EnemiesVsEnemiesMod.GetVersion()}".ToHaxeString());
 
             double teamPadH = 5.0;
             double teamPadV = 5.0;
@@ -103,7 +105,7 @@ namespace EnemiesVsEnemies.UI.Utilities
                     CreateAndAddText(teamInfo, team.Id, "#eeff00", 2);
 
 
-                    string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
+                    string opposingInfo = $"{GetText.Instance.GetString("Opposing teams: ")}{string.Join(", ", team.OpposingTeamIds)}";
                     CreateAndAddText(opposingInfo, team.Id + "opposingText", "#ff0000", 1.1);
                 }
             }
@@ -138,12 +140,12 @@ namespace EnemiesVsEnemies.UI.Utilities
             {
                 if (team.OpposingTeamIds.Count > 0)
                 {
-                    string opposingInfo = $"仇恨队伍: {string.Join(", ", team.OpposingTeamIds)}";
+                    string opposingInfo = $"{GetText.Instance.GetString("Opposing teams: ")}{string.Join(", ", team.OpposingTeamIds)}";
                     opposingText.set_text(Lang.Class.t.untranslated(opposingInfo.ToHaxeString()));
                 }
                 else
                 {
-                    string opposingInfo = $"仇恨队伍: 无";
+                    string opposingInfo = GetText.Instance.GetString("Opposing teams: None");
                     opposingText.set_text(Lang.Class.t.untranslated(opposingInfo.ToHaxeString()));
                 }
             }
@@ -163,7 +165,7 @@ namespace EnemiesVsEnemies.UI.Utilities
                     if (!teamconfig.ContainsKey(value))
                     {
                         var popup = new dc.ui.ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
-                        popup.text("添加失败：\n 请添加已注册的队伍！\n".ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
+                        popup.text(GetText.Instance.GetString("Add failed:Please add registered team!\n").ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
                         return;
                     }
                     team.OpposingTeamIds.Add(value);
@@ -173,7 +175,7 @@ namespace EnemiesVsEnemies.UI.Utilities
                 inputTeamID.Input.close();
                 UpdateTeamDisplay();
             });
-            inputTeamID.OpenNumberInput(SelectorGui, "输入", "该仇恨方队伍唯一ID", "Team-", action);
+            inputTeamID.OpenNumberInput(SelectorGui, GetText.Instance.GetString("Input"), GetText.Instance.GetString("Unique ID of opposing team"), "Team-", action);
         }
     }
 }

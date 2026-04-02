@@ -11,6 +11,7 @@ using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.UI;
 using EnemiesVsEnemies.UI.Utilities;
 using HaxeProxy.Runtime;
+using ModCore.Modules;
 using ModCore.Serialization;
 using ModCore.Storage;
 using ModCore.Utilities;
@@ -88,7 +89,7 @@ namespace EnemiesVsEnemies.Inter
                     if (config.Teams.ContainsKey(Teamid))
                     {
                         var popup = new ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
-                        popup.text("添加失败：\n 请输入未注册的队伍ID!\n".ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
+                        popup.text(GetText.Instance.GetString("Add failed:\n Please enter unregistered team ID!\n").ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
                         Teamid = string.Empty;
                         return;
                     }
@@ -96,7 +97,7 @@ namespace EnemiesVsEnemies.Inter
                     gui = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager(), Teamid);
                     input.Input.close();
                 };
-                input.OpenNumberInput(HUD.Class.ME, "输入", "触发器队伍id", "Team-", action);
+                input.OpenNumberInput(HUD.Class.ME, GetText.Instance.GetString("Input"), GetText.Instance.GetString("Trigger team id"), "Team-", action);
                 return;
             }
             gui = new CricketSelectorGui(EnemiesVsEnemiesMod.GetTeamManager(), Teamid);
@@ -105,7 +106,7 @@ namespace EnemiesVsEnemies.Inter
         private void EnsureTeamConfigWithPosition(string id)
         {
             Hero hero = ModCore.Modules.Game.Instance.HeroInstance!;
-            var teamConfig = new TeamConfig(id, $"触发器队伍 {id}", 0xFFFFFF);
+            var teamConfig = new TeamConfig(id, $"{GetText.Instance.GetString("Trigger team ")}{id}", 0xFFFFFF);
             teamConfig.TriggerLevelId = hero._level.map.id.ToString();
             teamConfig.TriggerX = cx;
             teamConfig.TriggerY = cy;
@@ -130,8 +131,8 @@ namespace EnemiesVsEnemies.Inter
         {
             base.onFocus();
             dc.String str = !Teamid.IsNullOrEmpty()
-            ? "Team id:".Add_TwoHaxeStrings(Teamid)
-            : "设置团队".ToHaxeString();
+            ? GetText.Instance.GetString("Team id:").Add_TwoHaxeStrings(Teamid)
+            : GetText.Instance.GetString("Set team").ToHaxeString();
 
             lightTip = createLightTip(null);
             lightTip.distance = 24.0;

@@ -27,12 +27,16 @@
   <PropertyGroup>
     <GenerateDiffCDB>false</GenerateDiffCDB>
     <GameVersion>35</GameVersion>
-    <GenerateSinglePakFile>false</GenerateSinglePakFile>
+    <GenerateSinglePakFile>true</GenerateSinglePakFile>
   </PropertyGroup>
 
   <ItemGroup>
     <ModDependency Include="CoreLibraryMod" />
     <ModDependency Include="DebugConsole" />
+  </ItemGroup>
+
+   <ItemGroup>
+    <PackAssets Include="Assets\**\*" RootInPak="EVEMODLANG" />
   </ItemGroup>
 
   <ItemGroup>

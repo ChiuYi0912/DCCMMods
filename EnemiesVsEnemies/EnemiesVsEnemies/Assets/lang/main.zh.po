@@ -1,0 +1,104 @@
+# 简体中文翻译文件
+msgid ""
+msgstr ""
+"Project-Id-Version: ChiuYi Mod\n"
+"POT-Creation-Date: 2025-11-29 12:26+0800\n"
+"PO-Revision-Date: 2025-11-29 12:27+0800\n"
+"Last-Translator: Your Name <your@email.com>\n"
+"Language-Team: Chinese\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Poedit-Basepath: ../../../ModCore\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: ChiuYiUI.cs
+msgid "EnemiesVsEnemiesMod"
+msgstr "暴徒对战暴徒模组"
+
+#: UITextHelper.cs:85
+msgid "EnemiesVsEnemiesMod-Version:"
+msgstr "EnemiesVsEnemiesMod-版本："
+
+#: UITextHelper.cs:108
+msgid "Opposing teams: "
+msgstr "仇恨队伍: "
+
+#: UITextHelper.cs:148
+msgid "Opposing teams: None"
+msgstr "仇恨队伍: 无"
+
+#: UITextHelper.cs:168
+msgid "Add failed:\n Please add registered team!\n"
+msgstr "添加失败：\n 请添加已注册的队伍！\n"
+
+#: UITextHelper.cs:178
+msgid "Unique ID of opposing team"
+msgstr "该仇恨方队伍唯一ID"
+
+#: TeamSelector.cs:91
+msgid "Add failed:\n Please enter unregistered team ID!\n"
+msgstr "添加失败：\n 请输入未注册的队伍ID!\n"
+
+#: TeamSelector.cs:99
+msgid "Input"
+msgstr "输入"
+
+#: TeamSelector.cs:99
+msgid "Trigger team id"
+msgstr "触发器队伍id"
+
+#: TeamSelector.cs:108
+msgid "Trigger team "
+msgstr "触发器队伍 "
+
+#: TeamSelector.cs:134
+msgid "Set team"
+msgstr "设置团队"
+
+
+#: CricketSelectorGui.cs:672
+msgid "Add opposing team"
+msgstr "添加仇恨队伍"
+
+#: CricketSelectorGui.cs:673
+msgid "Clear opposing teams"
+msgstr "清空仇恨队伍"
+
+#: CricketSelectorGui.cs:674
+msgid "Destroy team"
+msgstr "销毁队伍"
+
+#: CricketSelectorGui.cs:675
+msgid "Set life"
+msgstr "设置生命"
+
+#: CricketSelectorGui.cs:676
+msgid "Set damage"
+msgstr "设置伤害"
+
+#: CricketSelectorGui.cs:677
+msgid "Set as elite"
+msgstr "设置为精英"
+
+#: CricketSelectorGui.cs:341
+msgid "Health:"
+msgstr "生命值:"
+
+#: CricketSelectorGui.cs:342
+msgid "Damage:"
+msgstr "伤害:"
+
+#: CricketSelectorGui.cs:343
+msgid "Elite:"
+msgstr "精英:"
+
+#: CricketSelectorGui.cs:351
+msgid "Please enter an integer"
+msgstr "请输入整数"
+
+#: NumberInput.cs:20
+msgid "Click mouse to cancel"
+msgstr "鼠标点击取消"

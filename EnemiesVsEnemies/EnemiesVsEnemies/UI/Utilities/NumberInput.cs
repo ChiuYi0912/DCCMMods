@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreLibrary.Core.Extensions;
+using dc;
 using dc.en.active;
 using dc.h2d;
 using dc.hxd.res;
 using dc.ui;
 using HaxeProxy.Runtime;
+using ModCore.Modules;
 using Text = dc.ui.Text;
 
 namespace EnemiesVsEnemies.UI.Utilities
@@ -17,8 +19,11 @@ namespace EnemiesVsEnemies.UI.Utilities
         public dc.ui.TextInput Input = null!;
 
 
-        public dc.ui.TextInput OpenNumberInput(dc.ui.Process process, string title, string subTitle, string initial, Action<string> onValidate, string okLabel = "回车确定", string cancelLabel = "鼠标点击取消", Sound? sfx = null)
+        public dc.ui.TextInput OpenNumberInput(dc.ui.Process process, string title, string subTitle,
+        string initial, Action<string> onValidate, string okLabel = "回车确定", string cancelLabel = "鼠标点击取消", Sound? sfx = null)
         {
+            okLabel = Lang.Class.t.get("Valider".ToHaxeString(),null).ToString();
+            cancelLabel = GetText.Instance.GetString("Click mouse to cancel");
             var text = new dc.ui.TextInput(
                 process,
                 title.ToHaxeString(),
@@ -39,6 +44,8 @@ namespace EnemiesVsEnemies.UI.Utilities
 
         public dc.ui.TextInput OpenNumberInputInt(dc.ui.Process process, string title, string subTitle, string initial, Action<int> onValidate, string okLabel = "回车确定", string cancelLabel = "鼠标点击取消", Sound? sfx = null)
         {
+            okLabel = Lang.Class.t.get("Valider".ToHaxeString(), null).ToString();
+            cancelLabel = GetText.Instance.GetString("Click mouse to cancel");
             return OpenNumberInput(process, title, subTitle, initial, s =>
             {
                 if (int.TryParse(s, out int result))
@@ -55,6 +62,8 @@ namespace EnemiesVsEnemies.UI.Utilities
 
         public dc.ui.TextInput OpenNumberInputFloat(dc.ui.Process process, string title, string subTitle, string initial, Action<float> onValidate, string okLabel = "回车确定", string cancelLabel = "鼠标点击取消", Sound? sfx = null)
         {
+            okLabel = Lang.Class.t.get("Valider".ToHaxeString(), null).ToString();
+            cancelLabel = GetText.Instance.GetString("Click mouse to cancel");
             return OpenNumberInput(process, title, subTitle, initial, s =>
             {
                 if (float.TryParse(s, out float result))

@@ -1,0 +1,110 @@
+# English translation for ChiuYi Mod
+msgid ""
+msgstr ""
+"Project-Id-Version: ChiuYi Mod\n"
+"POT-Creation-Date: 2025-11-29 12:26+0800\n"
+"PO-Revision-Date: 2026-01-07 01:52+0800\n"
+"Last-Translator: Your Name <your@email.com>\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.8\n"
+"X-Poedit-Basepath: ../../../ModCore\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: ChiuYiUI.cs
+msgid "EnemiesVsEnemiesMod"
+msgstr "EnemiesVsEnemiesMod"
+
+
+#: UITextHelper.cs:85
+msgid "EnemiesVsEnemiesMod-Version:"
+msgstr "EnemiesVsEnemiesMod-Version:"
+
+#: UITextHelper.cs:108
+msgid "Opposing teams: "
+msgstr "Opposing teams: "
+
+#: UITextHelper.cs:148
+msgid "Opposing teams: None"
+msgstr "Opposing teams: None"
+
+#: UITextHelper.cs:168
+msgid "Add failed:Please add registered team!"
+msgstr "Add failed:Please add registered team!"
+
+#: CricketSelectorGui.cs:672
+msgid "Add opposing team"
+msgstr "Add opposing team"
+
+#: CricketSelectorGui.cs:673
+msgid "Clear opposing teams"
+msgstr "Clear opposing teams"
+
+#: CricketSelectorGui.cs:674
+msgid "Destroy team"
+msgstr "Destroy team"
+
+#: CricketSelectorGui.cs:675
+msgid "Set life"
+msgstr "Set life"
+
+#: CricketSelectorGui.cs:676
+msgid "Set damage"
+msgstr "Set damage"
+
+#: CricketSelectorGui.cs:677
+msgid "Set as elite"
+msgstr "Set as elite"
+
+#: CricketSelectorGui.cs:341
+msgid "Health:"
+msgstr "Health:"
+
+#: CricketSelectorGui.cs:342
+msgid "Damage:"
+msgstr "Damage:"
+
+#: CricketSelectorGui.cs:343
+msgid "Elite:"
+msgstr "Elite:"
+
+#: CricketSelectorGui.cs:351
+msgid "Please enter an integer"
+msgstr "Please enter an integer"
+
+#: UITextHelper.cs:178
+msgid "Input"
+msgstr "Input"
+
+#: UITextHelper.cs:178
+msgid "Unique ID of opposing team"
+msgstr "Unique ID of opposing team"
+
+
+#: TeamSelector.cs:99
+msgid "Trigger team id"
+msgstr "Trigger team id"
+
+#: TeamSelector.cs:108
+msgid "Trigger team "
+msgstr "Trigger team "
+
+#: TeamSelector.cs:134
+msgid "Set team"
+msgstr "Set team"
+
+#: TeamSelector.cs:134
+msgid "Team id:"
+msgstr "Team id:"
+
+#: NumberInput.cs:20
+msgid "Press Enter to confirm"
+msgstr "Press Enter to confirm"
+
+#: NumberInput.cs:20
+msgid "Click mouse to cancel"
+msgstr "Click mouse to cancel"
+
