@@ -24,6 +24,7 @@ namespace ChiuYiUI.Configuration
         public double ViewportshakesX { get; set; }
         public double ViewportshakesY { get; set; }
         public double ViewportshakesD { get; set; }
+        public double Camerazoom { get; set; }
 
 
         public bool Hitpause { get; set; } = false;

@@ -25,7 +25,6 @@ using HaxeProxy.Runtime;
 using ModCore.Utilities;
 using Serilog;
 using Serilog.Core;
-using SettingsMod.shaders;
 using static dc.hxsl.VarKind;
 
 namespace ChiuYiUI.UI

@@ -38,7 +38,10 @@ namespace ChiuYiUI.UI
             Hook_Viewport.bumpDir += Hook_Viewport_bumpdir;
             Hook_Viewport.shakeS += Hook_Viewport_shakes;
             Hook_Viewport.shakeReversedS += Hook_Viewport_shakeReversedS;
+            Hook_Viewport.update += Hook_Viewport_update;
         }
+
+
 
         public void AddViewportSettings(Options self)
         {
@@ -315,6 +318,38 @@ namespace ChiuYiUI.UI
                new Ref<int>());
 
             #endregion
+
+
+            scrollerFlow = self.scrollerFlow;
+            string4 = Lang.Class.t.get("Camera zoom".AsHaxeString(), null);
+            self.addSeparator(string4, scrollerFlow);
+            string3 = Lang.Class.t.get("zoom".AsHaxeString(), null);
+            num = ChiuYiMain.config.Value.Camerazoom;
+            scrollerFlow = self.scrollerFlow;
+
+            defaultValue = new HlAction<double>((double v) =>
+           {
+               ChiuYiMain.config.Value.Camerazoom = v;
+               dc.pr.Game.Class.ME.curLevel.viewport.zoom = v;
+               ChiuYiMain.config.Save();
+           });
+            b = 0.01;
+            showRawValue = false;
+            showRawValue1 = true;
+            minValue = -5;
+            maxValue = 5;
+            optionWidget = self.addSliderWidget(
+               string3,
+               defaultValue,
+               num,
+               new Ref<double>(ref b),
+               scrollerFlow,
+               new Ref<bool>(ref showRawValue),
+               new Ref<bool>(ref showRawValue1),
+               new Ref<double>(ref minValue),
+               new Ref<double>(ref maxValue),
+               null,
+               new Ref<int>());
         }
 
         private void Hook_Viewport_shakeReversedS(Hook_Viewport.orig_shakeReversedS orig, Viewport self, double yPow, double d, double xPow)
@@ -323,6 +358,12 @@ namespace ChiuYiUI.UI
             d = ChiuYiMain.config.Value.ViewportshakeReversedSY;
             xPow = ChiuYiMain.config.Value.ViewportshakeReversedSD;
             orig(self, yPow, d, xPow);
+        }
+
+        private void Hook_Viewport_update(Hook_Viewport.orig_update orig, Viewport self)
+        {
+            orig(self);
+            self.zoom = ChiuYiMain.config.Value.Camerazoom;
         }
 
         private void Hook_Viewport_shakes(Hook_Viewport.orig_shakeS orig, Viewport self, double yPow, double d, double xPow)
