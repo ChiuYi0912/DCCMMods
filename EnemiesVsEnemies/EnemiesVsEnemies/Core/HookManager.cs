@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Interfaces;
 using CoreLibrary.Core.Utilities;
@@ -9,6 +10,7 @@ using dc.en.mob;
 using dc.en.mob.boss;
 using dc.h2d.col;
 using dc.hl.types;
+using dc.hxbit;
 using dc.hxd.res;
 using dc.tool;
 using dc.tool.bossRush;
@@ -22,6 +24,7 @@ using HaxeProxy.Runtime;
 using ModCore.Events;
 using ModCore.Modules;
 using ModCore.Utilities;
+using Serilog;
 
 namespace EnemiesVsEnemies.Core
 {
@@ -52,7 +55,16 @@ namespace EnemiesVsEnemies.Core
             dc.en.Hook_Mob.tpHeroBackToTraining += Hook_Mob_tpHeroBackToTraining;
             Hook__Active.create += Hook__Active_create;
             Hook_Entity.spriteUpdate += Hook_Entity_sprupdate;
+            Hook_Team.unserialize += Hook_Team_unserialize;
         }
+
+        private void Hook_Team_unserialize(Hook_Team.orig_unserialize orig, Team self, Serializer __ctx)
+        {
+            orig(self,__ctx);
+            if (self.opponentsIterator == null)
+                self.init();
+        }
+
 
         private void Hook_Entity_sprupdate(Hook_Entity.orig_spriteUpdate orig, Entity self)
         {

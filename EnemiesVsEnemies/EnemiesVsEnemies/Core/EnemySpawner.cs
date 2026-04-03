@@ -98,8 +98,9 @@ namespace EnemiesVsEnemies.Core
                 );
                 mob.init();
                 mob.set_team(team);
+                if (spawnConfig.IsElite)
+                    mob.setElite(true);
                 mob.spr.visible = false;
-                mob.elite = spawnConfig.IsElite;
                 if (mob is Boss boss)
                 {
                     boss.setReady();
