@@ -110,6 +110,7 @@ namespace EnemiesVsEnemies.Core
         private void CreateTeam(TeamConfig teamConfig)
         {
             var team = new Team();
+            team.init();
 
             team.opposingTeams = (dc.hl.types.ArrayObj)ArrayUtils.CreateDyn().array;
 

@@ -15,6 +15,8 @@ using dc.tool.bossRush;
 using dc.ui.pause;
 using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.Inter;
+using EnemiesVsEnemies.Interfaces;
+using EnemiesVsEnemies.UI.Utilities;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Events;
@@ -23,7 +25,7 @@ using ModCore.Utilities;
 
 namespace EnemiesVsEnemies.Core
 {
-    public class HookManager:
+    public class HookManager :
     IOnHookInitialize,
     IEventReceiver
     {
@@ -49,9 +51,15 @@ namespace EnemiesVsEnemies.Core
             dc.en.Hook_Mob.setNemesisTarget += Hook_Mob_setNemesisTarget;
             dc.en.Hook_Mob.tpHeroBackToTraining += Hook_Mob_tpHeroBackToTraining;
             Hook__Active.create += Hook__Active_create;
+            Hook_Entity.spriteUpdate += Hook_Entity_sprupdate;
         }
 
-
+        private void Hook_Entity_sprupdate(Hook_Entity.orig_spriteUpdate orig, Entity self)
+        {
+            if (self is Mob)
+                EventSystem.BroadcastEvent<IOnBeforMobSprInit, Mob>((Mob)self);
+            orig(self);
+        }
 
         private Active Hook__Active_create(Hook__Active.orig_create orig, Hero from, Grenade g, InventItem ii)
         {
@@ -148,5 +156,5 @@ namespace EnemiesVsEnemies.Core
             orig(self, t);
             self.nemesisTarget = on;
         }
-  }
+    }
 }

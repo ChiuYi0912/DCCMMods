@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using dc;
+using dc.en;
 using dc.h2d;
 using dc.h2d.col;
 using dc.libs.misc;
@@ -84,6 +85,23 @@ namespace EnemiesVsEnemies.UI.Utilities
             }
             remove.Add(cloneflow);
         }
+
+        public static void doScaleAnimation(Tweenie tw, Mob target,
+                                        double targetScaleX, double targetScaleY,
+                                        double duration = 0.3)
+        {
+            var tweenX = CreateTween(tw,
+                () => target.sprScaleX,
+                value => { target.sprScaleX = value; },
+                targetScaleX, duration);
+
+
+            var tweenY = CreateTween(tw,
+                () => target.sprScaleY,
+                value => { target.sprScaleY = value; },
+                targetScaleY, duration);
+        }
+
 
         private static Tween CreateTween(Tweenie tween, Func<double> getter, Action<double> setterAction, double targetValue, double? duration)
         {

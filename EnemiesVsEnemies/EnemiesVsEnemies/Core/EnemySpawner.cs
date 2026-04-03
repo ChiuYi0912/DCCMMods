@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
@@ -7,11 +8,16 @@ using dc.en;
 using dc.en.inter;
 using dc.en.mob;
 using dc.en.mob.boss;
+using dc.libs.heaps.slib;
 using dc.pr;
 using dc.tool;
+using dc.tool._Cooldown;
 using dc.tool.utils;
 using EnemiesVsEnemies.Configuration;
+using EnemiesVsEnemies.Interfaces;
+using EnemiesVsEnemies.UI.Utilities;
 using HaxeProxy.Runtime;
+using ModCore.Events;
 using ModCore.Modules;
 using ModCore.Utilities;
 using Serilog.Core;
@@ -19,7 +25,7 @@ using Serilog.Core;
 
 namespace EnemiesVsEnemies.Core
 {
-    public class EnemySpawner
+    public class EnemySpawner :IOnBeforMobSprInit, IEventReceiver
     {
         private readonly TeamManager GetteamManager;
         private readonly ModConfig GetModconfig;
@@ -27,6 +33,7 @@ namespace EnemiesVsEnemies.Core
 
         public EnemySpawner(TeamManager teamManager, ModConfig config)
         {
+            EventSystem.AddReceiver(this);
             GetteamManager = teamManager;
             GetModconfig = config;
         }
@@ -41,8 +48,8 @@ namespace EnemiesVsEnemies.Core
 
             foreach (var enemyPresetId in teamConfig.DefaultEnemies)
             {
-                
-                SpawnEnemy(teamId, enemyPresetId.Value);  
+
+                SpawnEnemy(teamId, enemyPresetId.Value);
             }
         }
 
@@ -71,7 +78,7 @@ namespace EnemiesVsEnemies.Core
                     }
                     else
                     {
-                        EnemiesVsEnemiesMod.GetLogger.Debug($"队伍 {teamId} 的触发器在关卡 {teamConfig.TriggerLevelId}，当前在 {currentLevelId}，使用玩家位置");
+                        EnemiesVsEnemiesMod.GetLogger.Error($"队伍 {teamId} 触发器在关卡 {teamConfig.TriggerLevelId}，当前在 {currentLevelId}，使用玩家位置");
                     }
                 }
             }
@@ -91,13 +98,28 @@ namespace EnemiesVsEnemies.Core
                 );
                 mob.init();
                 mob.set_team(team);
+                mob.spr.visible = false;
                 mob.elite = spawnConfig.IsElite;
                 if (mob is Boss boss)
                 {
                     boss.setReady();
                 }
+                mob.cd.fastCheck.set(350312, null);
                 CreatedMobs.Add(mob);
             }
+        }
+
+        void IOnBeforMobSprInit.BeforMobSprScaleUpdate(Mob mob)
+        {
+            if (!mob.cd.fastCheck.exists(350312))
+                return;
+
+            double sprx = mob.sprScaleX;
+            double spry = mob.sprScaleY;
+            mob.sprScaleX = mob.sprScaleY = 0;
+            mob.spr.visible = true;
+            UIAnimHelper.doScaleAnimation(mob.tw, mob, sprx, spry, 500);
+            mob.cd.fastCheck.remove(350312);
         }
 
 
