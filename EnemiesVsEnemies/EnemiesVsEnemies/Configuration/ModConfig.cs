@@ -24,8 +24,20 @@ namespace EnemiesVsEnemies.Configuration
                         Primary =KeyHelper.T,
                         Secondary=KeyHelper.T
                     }
+                },
+                {
+                    43, new ContorlLbleKeyConfig
+                    {
+                        Name = "DestoryMobs",
+                        act = 43,
+                        Third = KeyHelper.P,
+                        Primary =KeyHelper.P,
+                        Secondary=KeyHelper.P
+                    }
                 }
             };
+
+
         }
 
 

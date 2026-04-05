@@ -46,7 +46,7 @@ namespace EnemiesVsEnemies
         public override void Initialize()
         {
             base.Initialize();
-            Version = Info.Version = "0.7.0";
+            Version = Info.Version = "0.7.1";
             Info.Name = ModInfoName = "EnemiesVsEnemies (Enhanced)";
             Info.Dependencies.Add("CoreLibraryMod");
             Info.Dependencies.Add("DebugConsole");

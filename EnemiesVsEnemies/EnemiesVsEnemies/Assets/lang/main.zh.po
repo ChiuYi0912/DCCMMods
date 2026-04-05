@@ -102,3 +102,9 @@ msgstr "请输入整数"
 #: NumberInput.cs:20
 msgid "Click mouse to cancel"
 msgstr "鼠标点击取消"
+
+msgid "Destroy the generated Mobs"
+msgstr "消灭生成的怪物"
+
+msgid "Generate Trigger Mobs"
+msgstr "生成触发器暴徒"

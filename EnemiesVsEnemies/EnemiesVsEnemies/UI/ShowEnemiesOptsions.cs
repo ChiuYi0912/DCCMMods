@@ -30,21 +30,29 @@ namespace EnemiesVsEnemies.UI
         public ModConfig config = EnemiesVsEnemiesMod.GetConfig();
 
         public const int SpawnEnemyTriggerAct = 42;
+        public const int DestroyMob = 43;
 
         public ShowEnemiesOptsions()
         {
             EventSystem.AddReceiver(this);
-            if (!config.ControlKeys.ContainsKey(SpawnEnemyTriggerAct))
-                config.defaultValues();
+            int[] ints = [SpawnEnemyTriggerAct, DestroyMob];
+            for (int i = 0; i < ints.Length; i++)
+            {
+                if (!config.ControlKeys.ContainsKey(ints[i]))
+                {
+                    config.defaultValues();
+                    break;
+                }
+            }
             EnemiesVsEnemiesMod.config.Save();
         }
 
         void IModMenu.BuildMenu(dc.ui.Options options)
         {
-            Graphics graphics = options.createScroller(0.75);
+            Graphics graphics = options.createScroller(1);
             Flow scrollerFlow = options.scrollerFlow;
 
-            options.addSeparator(GetText.Instance.GetString("按键设置").ToHaxeString(), scrollerFlow);
+            options.addSeparator(GetText.Instance.GetString("Button settings").ToHaxeString(), scrollerFlow);
 
 
             int stageWidth = dc.libs.Process.Class.CUSTOM_STAGE_WIDTH > 0
@@ -60,20 +68,33 @@ namespace EnemiesVsEnemies.UI
             scrollerFlow.set_maxWidth(targetWidth);
             scrollerFlow.set_minWidth(targetWidth);
 
-            options.title.set_text(GetText.Instance.GetString("EnemiesVsEnemies模组设置").ToHaxeString());
+            options.title.set_text(GetText.Instance.GetString("EnemiesVsEnemiesMod").ToHaxeString());
 
-            options.addKeyboardWidget(scrollerFlow, options.cbmpScroller, GetText.Instance.GetString("生成触发器暴徒").ToHaxeString(), SpawnEnemyTriggerAct);
+            options.addKeyboardWidget(scrollerFlow, options.cbmpScroller, GetText.Instance.GetString("Generate Trigger Mobs").ToHaxeString(), SpawnEnemyTriggerAct);
+            options.addKeyboardWidget(scrollerFlow, options.cbmpScroller, GetText.Instance.GetString("Destroy the generated Mobs").ToHaxeString(), DestroyMob);
         }
 
         void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
+            if (IsControllerLocked())
+                return;
 
-
+            if (ControllerHelper.ControlsUpdateFromProcess(Boot.Class.ME.controller, DestroyMob))
+            {
+                foreach (var mobs in EnemiesVsEnemiesMod.GetEnemySpawner().CreatedMobs)
+                {
+                    if (!mobs.destroyed)
+                    {
+                        mobs.kill();
+                    }
+                }
+                EnemiesVsEnemiesMod.GetEnemySpawner().CreatedMobs.Clear();
+            }
         }
 
         public static void LockContoreLible(bool lockState) { EnemiesVsEnemiesMod.GetConfig().General.IslockedController = lockState; EnemiesVsEnemiesMod.config.Save(); }
         public static bool IsControllerLocked() => EnemiesVsEnemiesMod.GetConfig().General.IslockedController;
-        public string GetName() { return "EnemiesVsEnemies模组设置"; }
+        public string GetName() { return "EnemiesVsEnemies Settings"; }
         public string? GetSubText() { return $"version: {EnemiesVsEnemiesMod.GetVersion()}"; }
 
 
@@ -119,9 +140,9 @@ namespace EnemiesVsEnemies.UI
 
         private void BuildKeyMappingFormConfig()
         {
-            if (config.ControlKeys.TryGetValue(SpawnEnemyTriggerAct, out var spawnEnemyTriggerKey))
+            foreach (var item in config.ControlKeys)
             {
-                ControllerHelper.SetKeyBindingHeroContorlLble(spawnEnemyTriggerKey);
+                ControllerHelper.SetKeyBindingHeroContorlLble(item.Value);
                 EnemiesVsEnemiesMod.config.Save();
             }
         }

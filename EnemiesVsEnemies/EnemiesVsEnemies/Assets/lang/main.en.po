@@ -108,3 +108,10 @@ msgstr "Press Enter to confirm"
 msgid "Click mouse to cancel"
 msgstr "Click mouse to cancel"
 
+msgid "Destroy the generated Mobs"
+msgstr "Destroy the generated Mobs"
+
+
+msgid "Generate Trigger Mobs"
+msgstr "Generate Trigger Mobs"
+
