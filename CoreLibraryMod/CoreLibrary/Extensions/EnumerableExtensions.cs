@@ -2,12 +2,14 @@ using dc.haxe.ds;
 using dc.hl.types;
 using HaxeProxy.Runtime;
 using ModCore.Utilities;
+using System;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using CoreLibrary.Core.Utilities;
 using Hashlink.Virtuals;
 using CoreLibrary.Extensions.Customs;
+using System.Collections.Concurrent;
 
 namespace CoreLibrary.Core.Extensions
 {
@@ -21,6 +23,41 @@ namespace CoreLibrary.Core.Extensions
             return comparer == null ? new HashSet<T>(source) : new HashSet<T>(source, comparer);
         }
 
+
+        private static readonly ConditionalWeakTable<ArrayObj, ConcurrentDictionary<string, dynamic>> ParallelCacheTable =new();
+
+        public static ConcurrentDictionary<string, dynamic> GetCachedDictionaryParallel(this ArrayObj arrayObj)
+        {
+            ValidationHelper.NotNull(arrayObj, nameof(arrayObj));
+
+            return ParallelCacheTable.GetValue(arrayObj, BuildIdDictionaryParallel);
+        }
+
+        public static dynamic GetByIdParallel(this ArrayObj arrayObj, string id)
+        {
+            ValidationHelper.NotNull(arrayObj, nameof(arrayObj));
+            ValidationHelper.NotNull(id, nameof(id));
+
+            var dict = arrayObj.GetCachedDictionaryParallel();
+            dict.TryGetValue(id, out var result);
+            return result!;
+        }
+
+        private static ConcurrentDictionary<string, dynamic> BuildIdDictionaryParallel(ArrayObj arrayObj)
+        {
+            var dict = new ConcurrentDictionary<string, dynamic>(StringComparer.OrdinalIgnoreCase);
+
+            Parallel.For(0, arrayObj.length, i =>
+            {
+                var item = arrayObj.getDyn(i);
+                if (item != null && item?.id != null)
+                {
+                    string id = item!.id.ToString();
+                    dict.TryAdd(id, item);
+                }
+            });
+            return dict;
+        }
 
 
         public static IEnumerable<dynamic> AsEnumerable(this ArrayObj arrayObj)
