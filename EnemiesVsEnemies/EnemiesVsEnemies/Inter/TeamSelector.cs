@@ -52,7 +52,7 @@ namespace EnemiesVsEnemies.Inter
 
 
         public static Dictionary<string, TeamSelector> TeamSelectorkeys = new();
-        public TeamSelector(Level lvl, int x, int y) : base(lvl, x, y) { }
+        public TeamSelector(dc.pr.Level lvl, int x, int y) : base(lvl, x, y) { }
 
         public string Teamid = string.Empty;
         public const int Isdestroyed = 99;

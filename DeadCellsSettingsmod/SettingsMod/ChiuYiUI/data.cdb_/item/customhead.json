@@ -1,0 +1,29 @@
+{
+  "id": "customhead",
+  "name": "U35_HEAD_FLAWLESS_NAME",
+  "legendAffixes": [],
+  "moneyCost": 0,
+  "cellCost": 0,
+  "droppable": false,
+  "castCD": 0,
+  "tags": [
+    {
+      "tag": "NeedManualUnlock"
+    }
+  ],
+  "synergy": [],
+  "commonProps": {},
+  "props": {},
+  "icon": {
+    "x": 19,
+    "y": 26,
+    "file": "cardIcons.png",
+    "size": 24
+  },
+  "gameplayDesc": "U35_HEAD_FLAWLESS_HINT",
+  "ambiantDesc": "U35_HEAD_FLAWLESS_AMBIANTDESC",
+  "group": 14,
+  "__separator_group_Name": "Head",
+  "__separator_group_ID": 14,
+  "__original_Index": 43
+}

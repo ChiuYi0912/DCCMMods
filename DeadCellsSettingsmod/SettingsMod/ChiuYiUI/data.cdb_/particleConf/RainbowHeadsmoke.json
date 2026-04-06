@@ -1,0 +1,73 @@
+{
+  "id": "RainbowHeadsmoke",
+  "sprName": "fxDiamondWhite",
+  "posProps": {
+    "posMax": {
+      "x": 0,
+      "y": 1
+    },
+    "posMin": {
+      "x": -3,
+      "y": -1
+    }
+  },
+  "physicsProps": {
+    "speedMax": {
+      "x": 0.4,
+      "y": 0.4
+    },
+    "speedMin": {
+      "x": 0,
+      "y": 0
+    },
+    "frictMax": 0.9,
+    "frictMin": 0.9,
+    "gravityMax": {
+      "x": 0,
+      "y": 0
+    },
+    "gravityMin": {
+      "x": 0,
+      "y": -0.4
+    }
+  },
+  "scaleProps": {
+    "scaleMax": {
+      "x": 1.2,
+      "y": 1.2
+    },
+    "scaleMin": {
+      "x": 1,
+      "y": 1
+    },
+    "scaleMulSpeedMin": 0.98,
+    "uniformScale": true
+  },
+  "rotProps": {
+    "rotSpeedMax": 0.1,
+    "rotSpeedMin": -0.1,
+    "rotMax": 6.28,
+    "rotMin": 0
+  },
+  "colorProps": {
+    "colorStart": 16776644,
+    "colorEnd": 16769280,
+    "colorAnimDurationMin": 0.4
+  },
+  "alphaProps": {
+    "fadeInDuration": 0.1,
+    "alphaMax": 0.7,
+    "alphaMin": 0.5,
+    "fadeOutDuration": 0.5
+  },
+  "lifeProps": {
+    "lifeDurationMax": 0.4,
+    "lifeDurationMin": 0.2
+  },
+  "animProps": {
+    "animated": false
+  },
+  "__separator_group_Name": "HeadFx",
+  "__separator_group_ID": 0,
+  "__original_Index": 31
+}

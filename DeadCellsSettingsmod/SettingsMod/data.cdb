@@ -6874,42 +6874,6 @@
 					"cellCost": 0
 				},
 				{
-					"id": "DummyActive",
-					"name": "TeamSelector",
-					"legendAffixes": [],
-					"moneyCost": 1337,
-					"cellCost": 500,
-					"droppable": true,
-					"castCD": 10,
-					"tags": [
-						{
-							"tag": "Deployable"
-						},
-						{
-							"tag": "NegligibleDamage"
-						},
-						{
-							"tag": "Explosive"
-						}
-					],
-					"synergy": [],
-					"commonProps": {
-						"targetable": true
-					},
-					"props": {
-						"power": 1,
-						"life": 100
-					},
-					"icon": {
-						"file": "cardIcons.png",
-						"size": 24,
-						"x": 13,
-						"y": 8
-					},
-					"tier1": "Tactic",
-					"group": 0
-				},
-				{
 					"commonProps": {
 						"explosionRange": 6
 					},
@@ -26273,6 +26237,32 @@
 					"cellCost": 0
 				},
 				{
+					"id": "customhead",
+					"name": "U35_HEAD_FLAWLESS_NAME",
+					"legendAffixes": [],
+					"moneyCost": 0,
+					"cellCost": 0,
+					"droppable": false,
+					"castCD": 0,
+					"tags": [
+						{
+							"tag": "NeedManualUnlock"
+						}
+					],
+					"synergy": [],
+					"commonProps": {},
+					"props": {},
+					"icon": {
+						"x": 19,
+						"y": 26,
+						"file": "cardIcons.png",
+						"size": 24
+					},
+					"gameplayDesc": "U35_HEAD_FLAWLESS_HINT",
+					"ambiantDesc": "U35_HEAD_FLAWLESS_AMBIANTDESC",
+					"group": 14
+				},
+				{
 					"commonProps": {},
 					"synergy": [
 						{
@@ -26802,20 +26792,20 @@
 			],
 			"separators": [
 				0,
-				14,
+				13,
+				25,
 				26,
-				27,
-				79,
-				159,
-				205,
-				220,
-				228,
-				272,
-				313,
-				353,
-				367,
-				428,
-				582,
+				78,
+				158,
+				204,
+				219,
+				227,
+				271,
+				312,
+				352,
+				366,
+				427,
+				581,
 				625,
 				638
 			]
@@ -27010,11 +27000,6 @@
 							"rarity": "Rare",
 							"item": "PrisonerBobby",
 							"minDifficulty": 1
-						},
-						{
-							"rarity": "Always",
-							"minDifficulty": 0,
-							"item": "DummyActive"
 						}
 					],
 					"maxPerRoom": 0,
@@ -71390,60 +71375,6 @@
 					"index": 0
 				},
 				{
-					"id": "Out_Clock",
-					"biome": "PrisonRoofCorrupt",
-					"worldDepth": 0,
-					"mapDepth": 0,
-					"mobs": [],
-					"props": {
-						"doorColor": 16603767,
-						"musicIntro": "music/default/music4_intro.ogg",
-						"viewerColor": 16768303,
-						"musicLoop": "music/default/music4_loop.ogg",
-						"zDoorColor": 2604944,
-						"viewerY": -1.5,
-						"chromaColor": 16760576,
-						"biomeType": 0,
-						"loadingColor": 0
-					},
-					"specificSubBiome": [],
-					"baseLootLevel": 0,
-					"cellBonus": 0,
-					"tripleUps": 0,
-					"doubleUps": 0,
-					"quarterUpsBC3": 0,
-					"quarterUpsBC4": 0,
-					"mobDensity": 0,
-					"eliteWanderChance": 0,
-					"eliteRoomChance": 0,
-					"flagsProps": {
-						"lootFlags": 0,
-						"visualFlags": 0,
-						"metaFlags": 0,
-						"gameplayFlags": 0,
-						"genFlags": 1
-					},
-					"specificLoots": [],
-					"minGold": 0,
-					"parallax": [],
-					"loreDescriptions": [],
-					"nextLevels": [
-						{
-							"level": "T_PrisonCorrupt",
-							"gates": 8
-						}
-					],
-					"group": 0,
-					"icon": {
-						"x": 68,
-						"y": 3,
-						"file": "cardIcons.png",
-						"size": 24
-					},
-					"name": "钟楼外",
-					"index": 1
-				},
-				{
 					"eliteRoomChance": 0,
 					"props": {
 						"doorColor": 2604964,
@@ -71608,7 +71539,7 @@
 					],
 					"parallax": [],
 					"bonusTripleScrollAfterBC": "Hard",
-					"index": 2
+					"index": 1
 				},
 				{
 					"eliteRoomChance": 0.05,
@@ -71786,7 +71717,7 @@
 					],
 					"parallax": [],
 					"bonusTripleScrollAfterBC": "Hard",
-					"index": 3
+					"index": 2
 				},
 				{
 					"eliteRoomChance": 0,
@@ -71946,7 +71877,7 @@
 						}
 					],
 					"parallax": [],
-					"index": 4
+					"index": 3
 				},
 				{
 					"eliteRoomChance": 0,
@@ -72124,7 +72055,7 @@
 						}
 					],
 					"parallax": [],
-					"index": 5
+					"index": 4
 				},
 				{
 					"eliteRoomChance": 0,
@@ -72306,7 +72237,7 @@
 					],
 					"parallax": [],
 					"bonusTripleScrollAfterBC": "VeryHard",
-					"index": 6
+					"index": 5
 				},
 				{
 					"eliteRoomChance": 0.8,
@@ -72469,7 +72400,7 @@
 					],
 					"parallax": [],
 					"bonusTripleScrollAfterBC": "VeryHard",
-					"index": 7
+					"index": 6
 				},
 				{
 					"eliteRoomChance": 1,
@@ -72636,7 +72567,7 @@
 					],
 					"parallax": [],
 					"bonusTripleScrollAfterBC": "VeryHard",
-					"index": 8
+					"index": 7
 				},
 				{
 					"eliteRoomChance": 0,
@@ -72701,7 +72632,7 @@
 						}
 					],
 					"parallax": [],
-					"index": 9
+					"index": 8
 				},
 				{
 					"eliteRoomChance": 0,
@@ -72772,7 +72703,7 @@
 						}
 					],
 					"parallax": [],
-					"index": 10
+					"index": 9
 				},
 				{
 					"eliteRoomChance": 0,
@@ -72942,7 +72873,7 @@
 					],
 					"parallax": [],
 					"bonusTripleScrollAfterBC": "Expert",
-					"index": 11
+					"index": 10
 				},
 				{
 					"eliteRoomChance": 0.8,
@@ -73188,7 +73119,7 @@
 					],
 					"parallax": [],
 					"bonusTripleScrollAfterBC": "Expert",
-					"index": 12
+					"index": 11
 				},
 				{
 					"eliteRoomChance": 0,
@@ -73382,7 +73313,7 @@
 					],
 					"parallax": [],
 					"bonusTripleScrollAfterBC": "Expert",
-					"index": 13
+					"index": 12
 				},
 				{
 					"eliteRoomChance": 0.4,
@@ -73515,7 +73446,7 @@
 					],
 					"parallax": [],
 					"bonusTripleScrollAfterBC": "Nightmare",
-					"index": 14
+					"index": 13
 				},
 				{
 					"eliteRoomChance": 0.5,
@@ -73692,7 +73623,7 @@
 					],
 					"parallax": [],
 					"bonusTripleScrollAfterBC": "Nightmare",
-					"index": 15
+					"index": 14
 				},
 				{
 					"eliteRoomChance": 0,
@@ -73761,7 +73692,7 @@
 						}
 					],
 					"parallax": [],
-					"index": 16
+					"index": 15
 				},
 				{
 					"eliteRoomChance": 0,
@@ -73909,7 +73840,7 @@
 					],
 					"parallax": [],
 					"bonusTripleScrollAfterBC": "Nightmare",
-					"index": 17
+					"index": 16
 				},
 				{
 					"eliteRoomChance": 0,
@@ -73974,7 +73905,7 @@
 						}
 					],
 					"parallax": [],
-					"index": 18
+					"index": 17
 				},
 				{
 					"eliteRoomChance": 0,
@@ -74159,7 +74090,7 @@
 						}
 					],
 					"parallax": [],
-					"index": 19
+					"index": 18
 				},
 				{
 					"eliteRoomChance": 0,
@@ -74338,7 +74269,7 @@
 					],
 					"goldBonus": 0,
 					"parallax": [],
-					"index": 20
+					"index": 19
 				},
 				{
 					"eliteRoomChance": 0,
@@ -74403,7 +74334,7 @@
 						}
 					],
 					"parallax": [],
-					"index": 21
+					"index": 20
 				},
 				{
 					"eliteRoomChance": 0,
@@ -74531,7 +74462,7 @@
 						}
 					],
 					"parallax": [],
-					"index": 22
+					"index": 21
 				},
 				{
 					"eliteRoomChance": 0,
@@ -74591,7 +74522,7 @@
 						}
 					],
 					"parallax": [],
-					"index": 23
+					"index": 22
 				},
 				{
 					"eliteRoomChance": 0,
@@ -74648,7 +74579,7 @@
 					"baseLootLevel": 0,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 24
+					"index": 23
 				},
 				{
 					"eliteRoomChance": 0,
@@ -74701,7 +74632,7 @@
 						}
 					],
 					"parallax": [],
-					"index": 25
+					"index": 24
 				},
 				{
 					"eliteRoomChance": 0,
@@ -75306,7 +75237,7 @@
 						}
 					],
 					"bonusTripleScrollAfterBC": "Hard",
-					"index": 26
+					"index": 25
 				},
 				{
 					"eliteRoomChance": 0,
@@ -75932,7 +75863,7 @@
 						}
 					],
 					"bonusTripleScrollAfterBC": "VeryHard",
-					"index": 27
+					"index": 26
 				},
 				{
 					"eliteRoomChance": 0,
@@ -76461,7 +76392,7 @@
 							"scrollY": 0.25
 						}
 					],
-					"index": 28
+					"index": 27
 				},
 				{
 					"eliteRoomChance": 0,
@@ -77146,7 +77077,7 @@
 						}
 					],
 					"bonusTripleScrollAfterBC": "Expert",
-					"index": 29
+					"index": 28
 				},
 				{
 					"eliteRoomChance": 0,
@@ -78234,7 +78165,7 @@
 						}
 					],
 					"bonusTripleScrollAfterBC": "Nightmare",
-					"index": 30
+					"index": 29
 				},
 				{
 					"eliteRoomChance": 0,
@@ -79015,7 +78946,7 @@
 							"scrollY": 0
 						}
 					],
-					"index": 31
+					"index": 30
 				},
 				{
 					"eliteRoomChance": 0,
@@ -79548,7 +79479,7 @@
 						}
 					],
 					"bonusTripleScrollAfterBC": "Hard",
-					"index": 32
+					"index": 31
 				},
 				{
 					"eliteRoomChance": 0,
@@ -80497,7 +80428,7 @@
 							"scrollY": 0.04
 						}
 					],
-					"index": 33
+					"index": 32
 				},
 				{
 					"eliteRoomChance": 0,
@@ -83181,7 +83112,7 @@
 							"scrollY": 0.01
 						}
 					],
-					"index": 34
+					"index": 33
 				},
 				{
 					"eliteRoomChance": 0,
@@ -84006,7 +83937,7 @@
 							"scrollY": 0
 						}
 					],
-					"index": 35
+					"index": 34
 				},
 				{
 					"eliteRoomChance": 0.1,
@@ -84877,7 +84808,7 @@
 						}
 					],
 					"bonusTripleScrollAfterBC": "Hard",
-					"index": 36
+					"index": 35
 				},
 				{
 					"eliteRoomChance": 0,
@@ -85423,7 +85354,7 @@
 						}
 					],
 					"bonusTripleScrollAfterBC": "VeryHard",
-					"index": 37
+					"index": 36
 				},
 				{
 					"eliteRoomChance": 0,
@@ -85592,7 +85523,7 @@
 					],
 					"parallax": [],
 					"bonusTripleScrollAfterBC": "Hard",
-					"index": 38
+					"index": 37
 				},
 				{
 					"eliteRoomChance": 0,
@@ -86184,7 +86115,7 @@
 							"scrollY": 0
 						}
 					],
-					"index": 39
+					"index": 38
 				},
 				{
 					"eliteRoomChance": 0,
@@ -88475,7 +88406,7 @@
 							"scrollY": 0
 						}
 					],
-					"index": 40
+					"index": 39
 				},
 				{
 					"eliteRoomChance": 0,
@@ -88524,7 +88455,7 @@
 					"baseLootLevel": 2,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 41
+					"index": 40
 				},
 				{
 					"eliteRoomChance": 0,
@@ -88559,10 +88490,6 @@
 						{
 							"gates": 0,
 							"level": "SewerShort"
-						},
-						{
-							"level": "Out_Clock",
-							"gates": 0
 						}
 					],
 					"flagsProps": {
@@ -88575,7 +88502,7 @@
 					"baseLootLevel": 2,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 42
+					"index": 41
 				},
 				{
 					"eliteRoomChance": 0,
@@ -88622,7 +88549,7 @@
 					"baseLootLevel": 2,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 43
+					"index": 42
 				},
 				{
 					"eliteRoomChance": 0,
@@ -88668,7 +88595,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 44
+					"index": 43
 				},
 				{
 					"eliteRoomChance": 0,
@@ -88714,7 +88641,7 @@
 					"baseLootLevel": 3,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 45
+					"index": 44
 				},
 				{
 					"eliteRoomChance": 0,
@@ -88758,7 +88685,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 46
+					"index": 45
 				},
 				{
 					"eliteRoomChance": 0,
@@ -88804,7 +88731,7 @@
 					"baseLootLevel": 3,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 47
+					"index": 46
 				},
 				{
 					"eliteRoomChance": 0,
@@ -88848,7 +88775,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 48
+					"index": 47
 				},
 				{
 					"eliteRoomChance": 0,
@@ -88892,7 +88819,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 49
+					"index": 48
 				},
 				{
 					"eliteRoomChance": 0,
@@ -88937,7 +88864,7 @@
 					"baseLootLevel": 3,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 50
+					"index": 49
 				},
 				{
 					"eliteRoomChance": 0,
@@ -88985,7 +88912,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 51
+					"index": 50
 				},
 				{
 					"eliteRoomChance": 0,
@@ -89032,7 +88959,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 52
+					"index": 51
 				},
 				{
 					"eliteRoomChance": 0,
@@ -89078,7 +89005,7 @@
 					"baseLootLevel": 3,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 53
+					"index": 52
 				},
 				{
 					"eliteRoomChance": 0,
@@ -89124,7 +89051,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 54
+					"index": 53
 				},
 				{
 					"eliteRoomChance": 0,
@@ -89169,7 +89096,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 55
+					"index": 54
 				},
 				{
 					"eliteRoomChance": 0,
@@ -89218,7 +89145,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 56
+					"index": 55
 				},
 				{
 					"eliteRoomChance": 0,
@@ -89274,7 +89201,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 57
+					"index": 56
 				},
 				{
 					"eliteRoomChance": 0,
@@ -89330,7 +89257,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 58
+					"index": 57
 				},
 				{
 					"eliteRoomChance": 0,
@@ -89376,7 +89303,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 59
+					"index": 58
 				},
 				{
 					"eliteRoomChance": 0,
@@ -89423,7 +89350,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 60
+					"index": 59
 				},
 				{
 					"eliteRoomChance": 0,
@@ -89469,7 +89396,7 @@
 					"baseLootLevel": 5,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 61
+					"index": 60
 				},
 				{
 					"eliteRoomChance": 0,
@@ -89514,7 +89441,7 @@
 					"baseLootLevel": 5,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 62
+					"index": 61
 				},
 				{
 					"eliteRoomChance": 0,
@@ -89560,7 +89487,7 @@
 					"baseLootLevel": 5,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 63
+					"index": 62
 				},
 				{
 					"eliteRoomChance": 0,
@@ -89604,7 +89531,7 @@
 					"baseLootLevel": 5,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 64
+					"index": 63
 				},
 				{
 					"eliteRoomChance": 0,
@@ -89650,7 +89577,7 @@
 					"baseLootLevel": 7,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 65
+					"index": 64
 				},
 				{
 					"eliteRoomChance": 0,
@@ -90465,7 +90392,7 @@
 							"scrollY": 0
 						}
 					],
-					"index": 66
+					"index": 65
 				},
 				{
 					"eliteRoomChance": 0,
@@ -90511,7 +90438,7 @@
 					"baseLootLevel": 5,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 67
+					"index": 66
 				},
 				{
 					"eliteRoomChance": 0,
@@ -90556,7 +90483,7 @@
 					"baseLootLevel": 5,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 68
+					"index": 67
 				},
 				{
 					"eliteRoomChance": 0,
@@ -90601,7 +90528,7 @@
 					"baseLootLevel": 5,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 69
+					"index": 68
 				},
 				{
 					"eliteRoomChance": 0,
@@ -90647,7 +90574,7 @@
 					"baseLootLevel": 5,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 70
+					"index": 69
 				},
 				{
 					"eliteRoomChance": 0,
@@ -90694,7 +90621,7 @@
 					"baseLootLevel": 5,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 71
+					"index": 70
 				},
 				{
 					"eliteRoomChance": 0,
@@ -90740,7 +90667,7 @@
 					"baseLootLevel": 5,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 72
+					"index": 71
 				},
 				{
 					"eliteRoomChance": 0,
@@ -90788,7 +90715,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 73
+					"index": 72
 				},
 				{
 					"eliteRoomChance": 0,
@@ -90838,7 +90765,7 @@
 					"baseLootLevel": 5,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 74
+					"index": 73
 				},
 				{
 					"eliteRoomChance": 0,
@@ -90884,7 +90811,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 75
+					"index": 74
 				},
 				{
 					"eliteRoomChance": 0,
@@ -90930,7 +90857,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 76
+					"index": 75
 				},
 				{
 					"eliteRoomChance": 0,
@@ -91855,7 +91782,7 @@
 							"scrollY": 0.04
 						}
 					],
-					"index": 77
+					"index": 76
 				},
 				{
 					"eliteRoomChance": 0,
@@ -91901,7 +91828,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 78
+					"index": 77
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92243,7 +92170,7 @@
 							"scrollY": 0
 						}
 					],
-					"index": 79
+					"index": 78
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92291,7 +92218,7 @@
 					"baseLootLevel": 2,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 80
+					"index": 79
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92339,7 +92266,7 @@
 					"baseLootLevel": 3,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 81
+					"index": 80
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92387,7 +92314,7 @@
 					"baseLootLevel": 5,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 82
+					"index": 81
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92433,7 +92360,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 83
+					"index": 82
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92489,7 +92416,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 84
+					"index": 83
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92535,7 +92462,7 @@
 					"baseLootLevel": 5,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 85
+					"index": 84
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92596,7 +92523,7 @@
 							"scrollY": 0.1
 						}
 					],
-					"index": 86
+					"index": 85
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92698,7 +92625,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 87
+					"index": 86
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92741,7 +92668,7 @@
 					"baseLootLevel": 4,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 88
+					"index": 87
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92776,7 +92703,7 @@
 					"baseLootLevel": 1,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 89
+					"index": 88
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92811,7 +92738,7 @@
 					"baseLootLevel": 1,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 90
+					"index": 89
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92846,7 +92773,7 @@
 					"baseLootLevel": 1,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 91
+					"index": 90
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92910,7 +92837,7 @@
 							"scrollY": 1
 						}
 					],
-					"index": 92
+					"index": 91
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92945,7 +92872,7 @@
 					"baseLootLevel": 1,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 93
+					"index": 92
 				},
 				{
 					"eliteRoomChance": 0,
@@ -92980,14 +92907,14 @@
 					"baseLootLevel": 1,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 94
+					"index": 93
 				},
 				{
 					"eliteRoomChance": 0,
 					"props": {
 						"biomeType": 0
 					},
-					"biome": "TumulusInt",
+					"biome": "Cavern",
 					"doubleUps": 0,
 					"group": 2,
 					"quarterUpsBC3": 0,
@@ -93007,15 +92934,15 @@
 					"nextLevels": [],
 					"flagsProps": {
 						"lootFlags": 16,
-						"visualFlags": 1,
+						"visualFlags": 0,
 						"metaFlags": 0,
 						"gameplayFlags": 0,
-						"genFlags": 131073
+						"genFlags": 0
 					},
 					"baseLootLevel": 7,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 95
+					"index": 94
 				},
 				{
 					"eliteRoomChance": 0,
@@ -93056,7 +92983,7 @@
 					"baseLootLevel": 0,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 96
+					"index": 95
 				},
 				{
 					"eliteRoomChance": 0,
@@ -93145,7 +93072,7 @@
 					"baseLootLevel": 0,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 97
+					"index": 96
 				},
 				{
 					"eliteRoomChance": 0,
@@ -93183,7 +93110,7 @@
 					"baseLootLevel": 5,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 98
+					"index": 97
 				},
 				{
 					"eliteRoomChance": 0,
@@ -93270,7 +93197,7 @@
 					"baseLootLevel": 7,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 99
+					"index": 98
 				},
 				{
 					"eliteRoomChance": 0,
@@ -93305,7 +93232,7 @@
 					"loreDescriptions": [],
 					"goldBonus": 0,
 					"parallax": [],
-					"index": 100
+					"index": 99
 				},
 				{
 					"eliteRoomChance": 0,
@@ -93347,7 +93274,7 @@
 					"baseLootLevel": 0,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 101
+					"index": 100
 				},
 				{
 					"eliteRoomChance": 0.05,
@@ -93447,7 +93374,7 @@
 					"baseLootLevel": 2,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 102
+					"index": 101
 				},
 				{
 					"eliteRoomChance": 0.8,
@@ -93563,7 +93490,7 @@
 					"baseLootLevel": 2,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 103
+					"index": 102
 				},
 				{
 					"eliteRoomChance": 0.8,
@@ -93710,7 +93637,7 @@
 					"baseLootLevel": 2,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 104
+					"index": 103
 				},
 				{
 					"eliteRoomChance": 0.05,
@@ -93818,7 +93745,7 @@
 					"baseLootLevel": 2,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 105
+					"index": 104
 				},
 				{
 					"eliteRoomChance": 1,
@@ -93968,7 +93895,7 @@
 					"baseLootLevel": 2,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 106
+					"index": 105
 				},
 				{
 					"eliteRoomChance": 0.8,
@@ -94079,7 +94006,7 @@
 					"baseLootLevel": 2,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 107
+					"index": 106
 				},
 				{
 					"eliteRoomChance": 0.8,
@@ -94190,7 +94117,7 @@
 					"baseLootLevel": 2,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 108
+					"index": 107
 				},
 				{
 					"eliteRoomChance": 0.2,
@@ -94294,7 +94221,7 @@
 					"baseLootLevel": 2,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 109
+					"index": 108
 				},
 				{
 					"eliteRoomChance": 0,
@@ -94332,7 +94259,7 @@
 					"baseLootLevel": 1,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 110
+					"index": 109
 				},
 				{
 					"eliteRoomChance": 0,
@@ -94369,7 +94296,7 @@
 					"baseLootLevel": 0,
 					"loreDescriptions": [],
 					"parallax": [],
-					"index": 111
+					"index": 110
 				},
 				{
 					"eliteRoomChance": 0,
@@ -94426,16 +94353,16 @@
 						}
 					],
 					"parallax": [],
-					"index": 112
+					"index": 111
 				}
 			],
 			"separators": [
 				0,
-				41,
-				86,
+				40,
+				85,
+				100,
 				101,
-				102,
-				110
+				109
 			]
 		},
 		{
@@ -107630,13 +107557,6 @@
 					"active": true
 				},
 				{
-					"id": "QueenArenaV3",
-					"active": true,
-					"flags": 6,
-					"type": "Corridor",
-					"group": 103
-				},
-				{
 					"group": 104,
 					"id": "Exit_Pulley",
 					"flags": 6,
@@ -110918,33 +110838,33 @@
 				1805,
 				1853,
 				1859,
-				1863,
-				1869,
-				1904,
-				1907,
-				1933,
-				1942,
-				1944,
-				1946,
-				1963,
-				2009,
-				2014,
-				2036,
-				2057,
-				2072,
-				2075,
-				2081,
+				1862,
+				1868,
+				1903,
+				1906,
+				1932,
+				1941,
+				1943,
+				1945,
+				1962,
+				2008,
+				2013,
+				2035,
+				2056,
+				2071,
+				2074,
+				2080,
+				2122,
 				2123,
-				2124,
-				2145,
-				2159,
+				2144,
+				2158,
+				2160,
 				2161,
-				2162,
-				2164,
-				2172,
-				2181,
-				2186,
-				2189
+				2163,
+				2171,
+				2180,
+				2185,
+				2188
 			]
 		},
 		{
@@ -178586,6 +178506,61 @@
 					"atlas": "customHead"
 				},
 				{
+					"item": "customhead",
+					"properties": [
+						{
+							"showBack": false,
+							"offsetX": -2,
+							"offsetY": -1,
+							"alwaysShow": false,
+							"anims": [
+								{
+									"transitions": [],
+									"states": [
+										{
+											"state": 0,
+											"animId": "flawless",
+											"animSpd": 0.3
+										}
+									],
+									"mode": 0
+								}
+							],
+							"part": 1,
+							"baseSpr": "flawless",
+							"scale": 1
+						}
+					],
+					"particleEffects": [
+						{
+							"movingCount": 0,
+							"particleConf": "BaseHeadFlawlessStrass",
+							"tickRate": 0.04,
+							"fxFlags": 2,
+							"blendMode": 0,
+							"staticCount": 1
+						},
+						{
+							"movingCount": 2,
+							"particleConf": "BaseHeadFlawlessStrassRun",
+							"tickRate": 0.04,
+							"fxFlags": 3,
+							"blendMode": 0,
+							"staticCount": 0
+						},
+						{
+							"movingCount": 2,
+							"particleConf": "BaseHeadFlawlessSmoke",
+							"tickRate": 0.04,
+							"fxFlags": 2,
+							"blendMode": 0,
+							"staticCount": 1
+						}
+					],
+					"glowData": [],
+					"atlas": "customHead"
+				},
+				{
 					"glowData": [],
 					"particleEffects": [
 						{
@@ -183969,6 +183944,218 @@
 					}
 				},
 				{
+					"id": "RainbowHeadsmoke",
+					"sprName": "fxDiamondWhite",
+					"posProps": {
+						"posMax": {
+							"x": 0,
+							"y": 1
+						},
+						"posMin": {
+							"x": -3,
+							"y": -1
+						}
+					},
+					"physicsProps": {
+						"speedMax": {
+							"x": 0.4,
+							"y": 0.4
+						},
+						"speedMin": {
+							"x": 0,
+							"y": 0
+						},
+						"frictMax": 0.9,
+						"frictMin": 0.9,
+						"gravityMax": {
+							"x": 0,
+							"y": 0
+						},
+						"gravityMin": {
+							"x": 0,
+							"y": -0.4
+						}
+					},
+					"scaleProps": {
+						"scaleMax": {
+							"x": 1.2,
+							"y": 1.2
+						},
+						"scaleMin": {
+							"x": 1,
+							"y": 1
+						},
+						"scaleMulSpeedMin": 0.98,
+						"uniformScale": true
+					},
+					"rotProps": {
+						"rotSpeedMax": 0.1,
+						"rotSpeedMin": -0.1,
+						"rotMax": 6.28,
+						"rotMin": 0
+					},
+					"colorProps": {
+						"colorStart": 16776644,
+						"colorEnd": 16769280,
+						"colorAnimDurationMin": 0.4
+					},
+					"alphaProps": {
+						"fadeInDuration": 0.1,
+						"alphaMax": 0.7,
+						"alphaMin": 0.5,
+						"fadeOutDuration": 0.5
+					},
+					"lifeProps": {
+						"lifeDurationMax": 0.4,
+						"lifeDurationMin": 0.2
+					},
+					"animProps": {
+						"animated": false
+					}
+				},
+				{
+					"id": "RainbowHeadStrass",
+					"sprName": "fxDotWhite",
+					"posProps": {
+						"posMax": {
+							"x": 9,
+							"y": 9
+						},
+						"posMin": {
+							"x": -11,
+							"y": -26
+						}
+					},
+					"physicsProps": {
+						"speedMax": {
+							"x": 0.4,
+							"y": 0.4
+						},
+						"speedMin": {
+							"x": 0,
+							"y": 0
+						},
+						"frictMax": 0.9,
+						"frictMin": 0.9,
+						"gravityMax": {
+							"x": 0,
+							"y": 0
+						},
+						"gravityMin": {
+							"x": 0,
+							"y": -0.4
+						}
+					},
+					"scaleProps": {
+						"scaleMax": {
+							"x": 3,
+							"y": 3
+						},
+						"scaleMin": {
+							"x": 2,
+							"y": 2
+						},
+						"scaleMulSpeedMin": 0.9,
+						"uniformScale": true
+					},
+					"rotProps": {
+						"rotSpeedMax": 0,
+						"rotSpeedMin": 0,
+						"rotMax": 0,
+						"rotMin": 0
+					},
+					"colorProps": {
+						"colorStart": 16777215,
+						"colorEnd": 16772096,
+						"colorAnimDurationMax": 0.4,
+						"colorAnimDurationMin": 0.38
+					},
+					"alphaProps": {
+						"fadeInDuration": 0,
+						"alphaMax": 1,
+						"alphaMin": 0.9,
+						"fadeOutDuration": 0.05
+					},
+					"lifeProps": {
+						"lifeDurationMax": 0.4,
+						"lifeDurationMin": 0.38
+					},
+					"animProps": {
+						"animated": false
+					}
+				},
+				{
+					"id": "RainbowHeadRun",
+					"sprName": "fxDotWhite",
+					"posProps": {
+						"posMax": {
+							"x": -18,
+							"y": 5
+						},
+						"posMin": {
+							"x": -2,
+							"y": -25
+						}
+					},
+					"physicsProps": {
+						"speedMax": {
+							"x": 0.4,
+							"y": 0.4
+						},
+						"speedMin": {
+							"x": 0,
+							"y": 0
+						},
+						"frictMax": 0.9,
+						"frictMin": 0.9,
+						"gravityMax": {
+							"x": 0,
+							"y": 0
+						},
+						"gravityMin": {
+							"x": 0,
+							"y": -0.4
+						}
+					},
+					"scaleProps": {
+						"scaleMax": {
+							"x": 3,
+							"y": 3
+						},
+						"scaleMin": {
+							"x": 2,
+							"y": 2
+						},
+						"scaleMulSpeedMin": 0.9,
+						"uniformScale": true
+					},
+					"rotProps": {
+						"rotSpeedMax": 0,
+						"rotSpeedMin": 0,
+						"rotMax": 0,
+						"rotMin": 0
+					},
+					"colorProps": {
+						"colorStart": 16777215,
+						"colorEnd": 16764928,
+						"colorAnimDurationMax": 0.6,
+						"colorAnimDurationMin": 0.58
+					},
+					"alphaProps": {
+						"fadeInDuration": 0,
+						"alphaMax": 1,
+						"alphaMin": 0.9,
+						"fadeOutDuration": 0.05
+					},
+					"lifeProps": {
+						"lifeDurationMax": 0.6,
+						"lifeDurationMin": 0.6
+					},
+					"animProps": {
+						"animated": false
+					}
+				},
+				{
 					"animProps": {
 						"animated": false
 					},
@@ -184186,7 +184373,7 @@
 			],
 			"separators": [
 				0,
-				31
+				34
 			]
 		},
 		{

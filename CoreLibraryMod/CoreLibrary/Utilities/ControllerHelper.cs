@@ -20,14 +20,10 @@ namespace CoreLibrary.Utilities
         {
 
             Controller parent = controller;
-            if (CheckBindings(parent, actionCode, parent.get_bindings().padA) ||
-                CheckBindings(parent, actionCode, parent.get_bindings().padB) ||
-                CheckBindings(parent, actionCode, parent.get_bindings().padC) ||
-                CheckBindings(parent, actionCode, parent.get_bindings().primary) ||
+            if (CheckBindings(parent, actionCode, parent.get_bindings().primary) ||
                 CheckBindings(parent, actionCode, parent.get_bindings().secondary) ||
                 CheckBindings(parent, actionCode, parent.get_bindings().third))
                 return true;
-
 
             return false;
         }

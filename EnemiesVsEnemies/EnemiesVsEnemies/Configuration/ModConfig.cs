@@ -34,6 +34,16 @@ namespace EnemiesVsEnemies.Configuration
                         Primary =KeyHelper.P,
                         Secondary=KeyHelper.P
                     }
+                },
+                {
+                    44, new ContorlLbleKeyConfig
+                    {
+                        Name = "GotoLvevl_Queen",
+                        act = 44,
+                        Third = KeyHelper.F5,
+                        Primary =KeyHelper.F5,
+                        Secondary=KeyHelper.F5
+                    }
                 }
             };
 
@@ -44,6 +54,7 @@ namespace EnemiesVsEnemies.Configuration
         public class GeneralSettings
         {
             public int DefaultEnemyCount { get; set; } = 1;
+            public double Camerazoom { get; set; } = 1;
             public bool ForceFieldEnabled { get; set; } = true;
             public bool HeroInvincible { get; set; } = true;
             public bool AutoSetEnemyTeams { get; set; } = false;

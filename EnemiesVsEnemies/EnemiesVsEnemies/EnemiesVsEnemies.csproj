@@ -27,7 +27,7 @@
   <PropertyGroup>
     <GenerateDiffCDB>false</GenerateDiffCDB>
     <GameVersion>35</GameVersion>
-    <GenerateSinglePakFile>true</GenerateSinglePakFile>
+    <GenerateSinglePakFile>false</GenerateSinglePakFile>
   </PropertyGroup>
 
   <ItemGroup>

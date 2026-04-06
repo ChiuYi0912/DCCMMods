@@ -62,7 +62,7 @@ namespace EnemiesVsEnemies.Core
 
             var team = GetteamManager.GetTeam(teamId);
 
-            Level spawnLevel = hero._level;
+            var spawnLevel = hero._level;
             int spawnX = hero.cx;
             int spawnY = hero.cy;
 

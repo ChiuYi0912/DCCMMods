@@ -1,0 +1,74 @@
+{
+  "id": "RainbowHeadRun",
+  "sprName": "fxDotWhite",
+  "posProps": {
+    "posMax": {
+      "x": -18,
+      "y": 5
+    },
+    "posMin": {
+      "x": -2,
+      "y": -25
+    }
+  },
+  "physicsProps": {
+    "speedMax": {
+      "x": 0.4,
+      "y": 0.4
+    },
+    "speedMin": {
+      "x": 0,
+      "y": 0
+    },
+    "frictMax": 0.9,
+    "frictMin": 0.9,
+    "gravityMax": {
+      "x": 0,
+      "y": 0
+    },
+    "gravityMin": {
+      "x": 0,
+      "y": -0.4
+    }
+  },
+  "scaleProps": {
+    "scaleMax": {
+      "x": 3,
+      "y": 3
+    },
+    "scaleMin": {
+      "x": 2,
+      "y": 2
+    },
+    "scaleMulSpeedMin": 0.9,
+    "uniformScale": true
+  },
+  "rotProps": {
+    "rotSpeedMax": 0,
+    "rotSpeedMin": 0,
+    "rotMax": 0,
+    "rotMin": 0
+  },
+  "colorProps": {
+    "colorStart": 16777215,
+    "colorEnd": 16764928,
+    "colorAnimDurationMax": 0.6,
+    "colorAnimDurationMin": 0.58
+  },
+  "alphaProps": {
+    "fadeInDuration": 0,
+    "alphaMax": 1,
+    "alphaMin": 0.9,
+    "fadeOutDuration": 0.05
+  },
+  "lifeProps": {
+    "lifeDurationMax": 0.6,
+    "lifeDurationMin": 0.6
+  },
+  "animProps": {
+    "animated": false
+  },
+  "__separator_group_Name": "HeadFx",
+  "__separator_group_ID": 0,
+  "__original_Index": 33
+}

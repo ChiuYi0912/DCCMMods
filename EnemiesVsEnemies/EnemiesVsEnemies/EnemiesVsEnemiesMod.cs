@@ -64,15 +64,19 @@ namespace EnemiesVsEnemies
 
         void IOnGameEndInit.OnGameEndInit()
         {
-            var res1 = Info.ModRoot.GetFilePath("Item.pak");
-            FsPak.Instance.FileSystem.loadPak(res1.ToHaxeString());
+            // var res1 = Info.ModRoot.GetFilePath("Item.pak");
+            // FsPak.Instance.FileSystem.loadPak(res1.ToHaxeString());
+            // var json = CDBManager.Class.instance.getAlteredCDB();
+            // dc.Data.Class.loadJson(
+            //    json,
+            //    default);
+
+            var res2 = Info.ModRoot.GetFilePath("res.pak");
+            FsPak.Instance.FileSystem.loadPak(res2.ToHaxeString());
             var json = CDBManager.Class.instance.getAlteredCDB();
             dc.Data.Class.loadJson(
                json,
                default);
-
-            var res2 = Info.ModRoot.GetFilePath("res.pak");
-            FsPak.Instance.FileSystem.loadPak(res2.ToHaxeString());
         }
         void IOnHeroUpdate.OnHeroUpdate(double dt) { }
         IModMenu IModMenuProvider.GetModMenu() => showEnemiesOptsions;

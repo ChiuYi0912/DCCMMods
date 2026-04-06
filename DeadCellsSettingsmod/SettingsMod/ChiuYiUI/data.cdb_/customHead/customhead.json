@@ -1,0 +1,58 @@
+{
+  "item": "customhead",
+  "properties": [
+    {
+      "showBack": false,
+      "offsetX": -2,
+      "offsetY": -1,
+      "alwaysShow": false,
+      "anims": [
+        {
+          "transitions": [],
+          "states": [
+            {
+              "state": 0,
+              "animId": "flawless",
+              "animSpd": 0.3
+            }
+          ],
+          "mode": 0
+        }
+      ],
+      "part": 1,
+      "baseSpr": "flawless",
+      "scale": 1
+    }
+  ],
+  "particleEffects": [
+    {
+      "movingCount": 0,
+      "particleConf": "BaseHeadFlawlessStrass",
+      "tickRate": 0.04,
+      "fxFlags": 2,
+      "blendMode": 0,
+      "staticCount": 1
+    },
+    {
+      "movingCount": 2,
+      "particleConf": "BaseHeadFlawlessStrassRun",
+      "tickRate": 0.04,
+      "fxFlags": 3,
+      "blendMode": 0,
+      "staticCount": 0
+    },
+    {
+      "movingCount": 2,
+      "particleConf": "BaseHeadFlawlessSmoke",
+      "tickRate": 0.04,
+      "fxFlags": 2,
+      "blendMode": 0,
+      "staticCount": 1
+    }
+  ],
+  "glowData": [],
+  "atlas": "customHead",
+  "__separator_group_Name": "",
+  "__separator_group_ID": -1,
+  "__original_Index": 42
+}

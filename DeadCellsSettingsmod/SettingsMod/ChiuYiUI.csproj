@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <GenerateDiffCDB>false</GenerateDiffCDB>
+    <GenerateDiffCDB>true</GenerateDiffCDB>
     <GameVersion>35</GameVersion>
   </PropertyGroup>
 
