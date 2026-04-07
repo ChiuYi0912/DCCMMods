@@ -28,6 +28,7 @@
     <GenerateDiffCDB>false</GenerateDiffCDB>
     <GameVersion>35</GameVersion>
     <GenerateSinglePakFile>false</GenerateSinglePakFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

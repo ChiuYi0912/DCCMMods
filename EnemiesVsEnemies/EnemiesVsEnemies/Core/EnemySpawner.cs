@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using CoreLibrary.Core.Utilities;
+using CoreLibrary.NativeLib;
 using dc;
 using dc.en;
 using dc.en.inter;
@@ -16,8 +17,10 @@ using dc.tool.utils;
 using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.Interfaces;
 using EnemiesVsEnemies.UI.Utilities;
+using Hashlink.Marshaling;
 using HaxeProxy.Runtime;
 using ModCore.Events;
+using ModCore.Events.Interfaces.Game.Hero;
 using ModCore.Modules;
 using ModCore.Utilities;
 using Serilog.Core;
@@ -25,10 +28,11 @@ using Serilog.Core;
 
 namespace EnemiesVsEnemies.Core
 {
-    public class EnemySpawner :IOnBeforMobSprInit, IEventReceiver
+    public class EnemySpawner : IOnBeforMobSprInit, IEventReceiver, IOnHeroUpdate
     {
         private readonly TeamManager GetteamManager;
         private readonly ModConfig GetModconfig;
+        public SimpleSinPointer pointer = null!;
         public List<Mob> CreatedMobs = new();
 
         public EnemySpawner(TeamManager teamManager, ModConfig config)
@@ -36,6 +40,9 @@ namespace EnemiesVsEnemies.Core
             EventSystem.AddReceiver(this);
             GetteamManager = teamManager;
             GetModconfig = config;
+
+            pointer = new SimpleSinPointer();
+            pointer.StartSinProcess();
         }
 
         //(配置创建Mob)
@@ -121,6 +128,15 @@ namespace EnemiesVsEnemies.Core
             mob.spr.visible = true;
             UIAnimHelper.doScaleAnimation(mob.tw, mob, sprx, spry, 500);
             mob.cd.fastCheck.remove(350312);
+
+           // mob.sprAlpha = pointer.SinValue;
+            IntPtr mobprt = mob.HashlinkPointer;
+        }
+
+
+        void IOnHeroUpdate.OnHeroUpdate(double dt)
+        {
+            //EnemiesVsEnemiesMod.GetLogger.Debug($"{pointer.SinValue}");
         }
 
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Utilities;
+using CoreLibrary.NativeLib;
 using CoreLibrary.Utilities;
 using dc;
 using dc.en;
@@ -51,10 +52,12 @@ namespace EnemiesVsEnemies.Debug
             hero.cells = 10000;
         }
 
-        [ConsoleMethod("remove-team-id", "移除关卡中指定id队伍触发器")]
-        public static void removeTeamSelectorBykey(TextWriter writer, string id)
-        {
+        public static SimpleSinPointer pointer = null!;
 
+        [ConsoleMethod("sin", "启动正弦值生成器")]
+        public static void StartSinPointer(TextWriter writer)
+        {
+            
         }
     }
 }

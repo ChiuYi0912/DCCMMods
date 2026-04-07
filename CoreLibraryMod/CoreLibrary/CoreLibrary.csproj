@@ -8,16 +8,28 @@
     <ModName>CoreLibraryMod</ModName>
     <ModType>library</ModType>
     <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
-    <Reference Include="JqFormatter" />
-  </ItemGroup>
-  <ItemGroup>
-    <ModDependency Include="JqFormatter" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\JqFormatter\JqFormatter\JqFormatter.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+
+    <Reference Include="JqFormatter" />
+    <ModDependency Include="JqFormatter" />
+
+    <Reference Include="DebugConsole" />
+    <ModDependency Include="DebugConsole" />
+
+    <Reference Include="SinPointer" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="NativeLib\SinPointer.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

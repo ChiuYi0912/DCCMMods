@@ -1,3 +1,4 @@
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Interfaces;
@@ -90,29 +91,22 @@ namespace EnemiesVsEnemies.Core
 
         private void Hook_Boot_loop(Hook_Boot.orig_mainLoop orig, Boot self)
         {
-            int type = 0;
             #if DEBUG
-            type = 1;
-            #endif
-            switch (type)
+            try
             {
-                case 0:
-                    orig(self);
-                    break;
-                case 1:
-                    try
-                    {
-                        orig(self);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        EnemiesVsEnemiesMod.GetLogger.Error("{ex}", ex);
-                        throw;
-                    }
-                    break;
-                default:
-                    break;
+                orig(self);
             }
+            catch (Exception ex)
+            {
+                EnemiesVsEnemiesMod.GetLogger.Error("{ex}", ex);
+                System.Diagnostics.Debugger.Break();
+                ExceptionDispatchInfo.Capture(ex).Throw();
+                throw;
+            }
+            #else
+            orig(self);
+            #endif
+            
 
         }
 
