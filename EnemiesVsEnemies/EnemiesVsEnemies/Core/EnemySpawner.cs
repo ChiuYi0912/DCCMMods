@@ -34,7 +34,6 @@ namespace EnemiesVsEnemies.Core
     {
         private readonly TeamManager GetteamManager;
         private readonly ModConfig GetModconfig;
-        public MathWaveGenerator pointer = null!;
         public List<Mob> CreatedMobs = new();
 
         public EnemySpawner(TeamManager teamManager, ModConfig config)
@@ -42,8 +41,6 @@ namespace EnemiesVsEnemies.Core
             EventSystem.AddReceiver(this);
             GetteamManager = teamManager;
             GetModconfig = config;
-
-            pointer.StartSinProcess();
         }
 
         //(配置创建Mob)

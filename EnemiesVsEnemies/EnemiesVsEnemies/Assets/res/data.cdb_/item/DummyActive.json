@@ -1,0 +1,39 @@
+{
+  "id": "DummyActive",
+  "name": "TeamSelector",
+  "legendAffixes": [],
+  "moneyCost": 1337,
+  "cellCost": 500,
+  "droppable": true,
+  "castCD": 1,
+  "tags": [
+    {
+      "tag": "Deployable"
+    },
+    {
+      "tag": "NegligibleDamage"
+    },
+    {
+      "tag": "Explosive"
+    }
+  ],
+  "synergy": [],
+  "commonProps": {
+    "targetable": true
+  },
+  "props": {
+    "power": 1,
+    "life": 100
+  },
+  "icon": {
+    "file": "cardIcons.png",
+    "size": 24,
+    "x": 13,
+    "y": 8
+  },
+  "tier1": "Tactic",
+  "group": 0,
+  "__separator_group_Name": "DeployedTrap",
+  "__separator_group_ID": 0,
+  "__original_Index": 13
+}

@@ -1,0 +1,38 @@
+{
+  "eliteRoomChance": 0,
+  "props": {
+    "biomeType": 0
+  },
+  "biome": "TumulusInt",
+  "doubleUps": 0,
+  "group": 2,
+  "quarterUpsBC3": 0,
+  "quarterUpsBC4": 0,
+  "eliteWanderChance": 0,
+  "id": "DebugRTC",
+  "worldDepth": 0,
+  "cellBonus": 0,
+  "mobs": [],
+  "name": "For the RTC",
+  "mobDensity": 1,
+  "specificLoots": [],
+  "mapDepth": 0,
+  "specificSubBiome": [],
+  "minGold": 0,
+  "tripleUps": 0,
+  "nextLevels": [],
+  "flagsProps": {
+    "lootFlags": 16,
+    "visualFlags": 1,
+    "metaFlags": 0,
+    "gameplayFlags": 0,
+    "genFlags": 131073
+  },
+  "baseLootLevel": 7,
+  "loreDescriptions": [],
+  "parallax": [],
+  "index": 95,
+  "__separator_group_Name": "Test",
+  "__separator_group_ID": 2,
+  "__original_Index": 9
+}

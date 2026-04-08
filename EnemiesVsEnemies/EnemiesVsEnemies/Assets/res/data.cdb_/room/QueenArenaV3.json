@@ -1,0 +1,10 @@
+{
+  "id": "QueenArenaV3",
+  "active": true,
+  "flags": 6,
+  "type": "Corridor",
+  "group": 103,
+  "__separator_group_Name": "QueenArena",
+  "__separator_group_ID": 103,
+  "__original_Index": 3
+}
