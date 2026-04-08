@@ -4,7 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
+
     <ModName>CoreLibraryMod</ModName>
     <ModType>library</ModType>
     <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
@@ -18,18 +18,15 @@
   </ItemGroup>
 
   <ItemGroup>
-
     <Reference Include="JqFormatter" />
     <ModDependency Include="JqFormatter" />
 
     <Reference Include="DebugConsole" />
     <ModDependency Include="DebugConsole" />
-
-    <Reference Include="SinPointer" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="NativeLib\SinPointer.dll">
+    <None Update="NativeLib\MathWaveGenerator.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
