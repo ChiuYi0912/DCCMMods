@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using CoreLibrary.Core.Utilities;
+using CoreLibrary.Core.Extensions;
 using CoreLibrary.NativeLib;
 using dc;
 using dc.en;
@@ -18,6 +19,7 @@ using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.Interfaces;
 using EnemiesVsEnemies.UI.Utilities;
 using Hashlink.Marshaling;
+using Hashlink;
 using HaxeProxy.Runtime;
 using ModCore.Events;
 using ModCore.Events.Interfaces.Game.Hero;
@@ -32,7 +34,7 @@ namespace EnemiesVsEnemies.Core
     {
         private readonly TeamManager GetteamManager;
         private readonly ModConfig GetModconfig;
-        public SimpleSinPointer pointer = null!;
+        public MathWaveGenerator pointer = null!;
         public List<Mob> CreatedMobs = new();
 
         public EnemySpawner(TeamManager teamManager, ModConfig config)
@@ -41,7 +43,6 @@ namespace EnemiesVsEnemies.Core
             GetteamManager = teamManager;
             GetModconfig = config;
 
-            pointer = new SimpleSinPointer();
             pointer.StartSinProcess();
         }
 
@@ -128,15 +129,11 @@ namespace EnemiesVsEnemies.Core
             mob.spr.visible = true;
             UIAnimHelper.doScaleAnimation(mob.tw, mob, sprx, spry, 500);
             mob.cd.fastCheck.remove(350312);
-
-           // mob.sprAlpha = pointer.SinValue;
-            IntPtr mobprt = mob.HashlinkPointer;
         }
-
 
         void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
-            //EnemiesVsEnemiesMod.GetLogger.Debug($"{pointer.SinValue}");
+
         }
 
 

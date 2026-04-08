@@ -1,8 +1,8 @@
 @echo off
 echo C++ DLL...
-g++ -shared -o SinPointer.dll SinPointer.cpp -DMODCORE_EXPORTS -O2
+g++ -shared -o MathWaveGenerator.dll MathWaveGenerator.cpp -DMODCORE_EXPORTS -O2
 if %errorlevel% equ 0 (
-    echo build  SinPointer.dll
+    echo build  MathWaveGenerator.dll
 ) else (
     echo ???????
     pause

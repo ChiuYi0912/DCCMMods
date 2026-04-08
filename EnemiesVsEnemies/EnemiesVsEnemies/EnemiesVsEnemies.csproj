@@ -42,6 +42,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\CoreLibraryMod\CoreLibrary\CoreLibrary.csproj" />
+    <ProjectReference Include="C:\Users\Michael\core\sources\ModCore.Native\ModCore.Native.csproj"/>
   </ItemGroup>
 	
 

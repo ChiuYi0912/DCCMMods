@@ -52,7 +52,7 @@ namespace EnemiesVsEnemies.Debug
             hero.cells = 10000;
         }
 
-        public static SimpleSinPointer pointer = null!;
+        public static MathWaveGenerator pointer = null!;
 
         [ConsoleMethod("sin", "启动正弦值生成器")]
         public static void StartSinPointer(TextWriter writer)
