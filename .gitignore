@@ -5,3 +5,9 @@
 /DeadCellsSettingsmod/SettingsMod/Properties/launchSettings.json
 *.user
 ./claude
+
+# MemPalace configuration and cache
+mempalace.yaml
+.mempalace/
+*.mempalace.*
+.mempalace_*/
