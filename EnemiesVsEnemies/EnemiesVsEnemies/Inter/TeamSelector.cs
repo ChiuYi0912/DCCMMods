@@ -55,7 +55,7 @@ namespace EnemiesVsEnemies.Inter
         public TeamSelector(dc.pr.Level lvl, int x, int y) : base(lvl, x, y) { }
 
         public string Teamid = string.Empty;
-        public const int Isdestroyed = 99;
+
 
         public CricketSelectorGui gui = null!;
         public NumberInput input = null!;
@@ -141,23 +141,13 @@ namespace EnemiesVsEnemies.Inter
 
         public override void destroy()
         {
-            base.destroy();
-            if (cd.fastCheck.exists(Isdestroyed))
-                return;
-
             AudioHelper.LoadAudioFormString("sfx/active/active_depop.wav");
-            Fx fx = _level.fx;
-            double x = (base.cx + base.xr) * 24.0;
-            double y = (base.cy + base.yr) * 24.0 - base.hei * 0.5;
-            double radiusScale = 1;
-            fx.solidExplosion(x, y, 0x776D3F, 0x334A6C, Ref<double>.In(radiusScale), Ref<double>.Null);
+            base.destroy();
         }
 
         void IHxbitSerializeCallback.OnBeforeSerializing()
         {
-            cd.fastCheck.set(Isdestroyed, null);
             #if DEBUG
-            EnemiesVsEnemiesMod.GetLogger.Information($"存在10086:{cd.fastCheck.exists(Isdestroyed)}");
             EnemiesVsEnemiesMod.GetLogger.Information("Before serializing TeamSelector.");
             #endif
         }
@@ -168,3 +158,5 @@ namespace EnemiesVsEnemies.Inter
         }
     }
 }
+
+
