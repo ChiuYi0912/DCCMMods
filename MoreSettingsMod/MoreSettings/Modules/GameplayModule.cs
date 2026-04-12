@@ -13,6 +13,7 @@ using ModCore.Mods;
 using ModCore.Utilities;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
+using MoreSettings.GameMechanics;
 using MoreSettings.Utilities;
 using Hook_Game = dc.pr.Hook_Game;
 
@@ -53,17 +54,16 @@ namespace MoreSettings.Modules
             );
 
             menuHelper.AddConfigToggle(
-                "启用速递层效果",
-                "启用快速物品拾取动画",
+                "开启竞速卷轴拾取",
+                "竞速模式快速拾取卷轴常驻",
                 () => config.SpeedTier,
                 v => config.SpeedTier = v,
                 scrollerFlow
             );
 
-
             menuHelper.AddConfigToggle(
-                "启用图书馆拟态房间",
-                "在图书馆中生成拟态房间",
+                "预知拟态魔剧情房间常驻",
+                "开启时：预知拟态魔剧情房间生成不会被“关闭剧情房间影响”",
                 () => config.LoreBankMimicRoom,
                 v => config.LoreBankMimicRoom = v,
                 scrollerFlow
@@ -79,7 +79,8 @@ namespace MoreSettings.Modules
         {
             if (config.SpeedTier)
             {
-
+                _ = new SpeedTier(hero, e, item);
+                return;
             }
             orig(arg1, hero, e, item, iconX, iconY, onComplete);
         }

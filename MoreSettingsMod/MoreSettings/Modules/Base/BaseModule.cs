@@ -33,12 +33,8 @@ namespace MoreSettings.Base.Modules
             menuHelper = new(options, SettingsMain.ModConfig);
         }
 
-        public virtual void RegisterHooks()
-        {
-            if (!Enabled)
-                return;
-        }
-
+        public virtual void RegisterHooks() { if (!Enabled) return; }
+        
         public virtual void SaveConfig()
         {
             SettingsMain.ModConfig.Save();

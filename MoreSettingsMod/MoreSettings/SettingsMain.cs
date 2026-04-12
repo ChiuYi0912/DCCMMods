@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Cryptography.X509Certificates;
 using CoreLibrary.Core.Interfaces;
 using CoreLibrary.Core.Utilities;
 using dc;
@@ -63,5 +64,6 @@ IOnAfterLoadingCDB
 
    IModMenu IModMenuProvider.GetModMenu() => modMenu;
    public static ModMenu GetModMenu() => Instance.modMenu;
+   public static void SaveConfig() => modConfig.Save();
 
 }
