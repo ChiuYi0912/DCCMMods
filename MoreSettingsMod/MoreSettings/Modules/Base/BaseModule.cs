@@ -13,7 +13,7 @@ namespace MoreSettings.Base.Modules
     public abstract class BaseModule : IEventReceiver
     {
 
-        public abstract string Name { get; }
+        public virtual string Name => GetType().Name;
         public virtual string Description => string.Empty;
         public bool Enabled { get; private set; }
         protected ModBase MainMod { get; private set; } = null!;

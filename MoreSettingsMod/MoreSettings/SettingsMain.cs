@@ -35,6 +35,10 @@ IOnAfterLoadingCDB
    public static Config<MainConfig> ModConfig => modConfig;
    public static MainConfig ConfigValue => modConfig.Value;
 
+   IModMenu IModMenuProvider.GetModMenu() => modMenu;
+   public static ModMenu GetModMenu() => Instance.modMenu;
+   public static void SaveConfig() => modConfig.Save();
+
 
    public override void Initialize()
    {
@@ -47,23 +51,11 @@ IOnAfterLoadingCDB
       modMenu = new ModMenu(this);
    }
 
-
-
-
    void IOnGameEndInit.OnGameEndInit()
    {
       // var res = Info.ModRoot.GetFilePath("SettingRes.pak");
       // FsPak.Instance.FileSystem.loadPak(res.AsHaxeString());
    }
 
-
-   void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb)
-   {
-
-   }
-
-   IModMenu IModMenuProvider.GetModMenu() => modMenu;
-   public static ModMenu GetModMenu() => Instance.modMenu;
-   public static void SaveConfig() => modConfig.Save();
-
+   void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb){}
 }

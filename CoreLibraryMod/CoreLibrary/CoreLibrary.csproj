@@ -14,13 +14,18 @@
   <ItemGroup>
     <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
     <ProjectReference Include="..\JqFormatter\JqFormatter\JqFormatter.csproj" />
-    <ProjectReference Include="C:\Users\Michael\core\sources\ModCore.Native\ModCore.Native.csproj"/>
+
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="JqFormatter" />
-    <ModDependency Include="JqFormatter" />
+  <Reference Include="ModCore.Native">
+    <HintPath>C:\Users\Michael\core\sources\ModCore.Native\bin\Debug\net10.0\ModCore.Native.dll</HintPath>
+  </Reference>
+  <ProjectReference Include="C:\Users\Michael\core\sources\ModCore.Common\ModCore.Common.csproj" />
+  </ItemGroup>
 
+  <ItemGroup>
+    <ModDependency Include="JqFormatter" />
     <Reference Include="DebugConsole" />
     <ModDependency Include="DebugConsole" />
   </ItemGroup>
