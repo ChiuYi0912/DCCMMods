@@ -21,14 +21,22 @@ namespace MoreSettings.Core
         public void RegisterModule(BaseModule module)
         {
             module.Initialize(mainMod);
-            module.RegisterHooks();
+            module.BaseRegisterHooks();
             modules[module.Name] = module;
         }
 
         public void BuildAllMenus(dc.ui.Options options)
         {
-            foreach (var module in modules.Values)
+            using var enumerator = modules.Values.GetEnumerator();
+            if (!enumerator.MoveNext()) return;
+
+            var first = enumerator.Current;
+            first.BaseBuildMenu(options);
+            first.BuildMenu(options, first.Description);
+
+            while (enumerator.MoveNext())
             {
+                var module = enumerator.Current;
                 module.BuildMenu(options, module.Description);
             }
         }

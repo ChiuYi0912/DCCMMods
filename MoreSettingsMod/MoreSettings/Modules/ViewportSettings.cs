@@ -44,6 +44,9 @@ namespace MoreSettings.Modules
         {
             base.BuildMenu(options, Separator);
 
+            if (!config.Enabled)
+                return;
+
             menuHelper.AddConfigSlider(
                 GetText.Instance.GetString("U35_PLAYER_CAMERA_SPEED"),
                 () => SettingsMain.ConfigValue.UI.PlayerCameraSpeed,

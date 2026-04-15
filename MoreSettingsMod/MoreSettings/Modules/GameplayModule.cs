@@ -12,6 +12,7 @@ using ModCore.Utilities;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics;
+using MoreSettings.Utilities;
 using Hook_Game = dc.pr.Hook_Game;
 
 namespace MoreSettings.Modules
@@ -44,10 +45,11 @@ namespace MoreSettings.Modules
 
         public override void BuildMenu(dc.ui.Options options, string Separator)
         {
-            options.createScroller(1);
-            options.title.set_text(GetText.Instance.GetString("DCCM模组开关(B站ChiuYi.秋)").ToHaxeString());
-
             base.BuildMenu(options, Separator);
+
+            if (!config.Enabled)
+                return;
+
 
             menuHelper.AddConfigToggle(
                 "禁用命中暂停",

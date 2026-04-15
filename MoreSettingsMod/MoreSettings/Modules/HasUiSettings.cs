@@ -51,6 +51,7 @@ namespace MoreSettings.Modules
         {
             dc.pr.Hook_Game.init -= Hook_Game_init;
             Hook__GameCinematic.__constructor__ -= Hook__GameCinematic___constructor__;
+            Hook_Entity.popDamage -= Hook_Entity_popDamage;
 
             dc.ui.hud.Hook_LifeBar.getFullName -= Hook_LifeBar_GetFullName;
             dc.ui.hud.Hook_LifeBar.getStartEndName -= Hook_LifeBar_getStartEndName;
@@ -71,6 +72,9 @@ namespace MoreSettings.Modules
         public override void BuildMenu(dc.ui.Options options, string Separator)
         {
             base.BuildMenu(options, Separator);
+
+            if (!config.Enabled)
+                return;
 
             menuHelper.AddConfigToggle(
                 GetText.Instance.GetString("删除主页新闻steam面板"),
@@ -169,6 +173,8 @@ namespace MoreSettings.Modules
         private void Hook_HUD_PostUpdate(Hook_HUD.orig_postUpdate orig, HUD self)
         {
             orig(self);
+            if (NowTimeFlow == null)
+                return;
             if (this.NowTimeFlow.visible != config.NowTimeVisible)
                 this.NowTimeFlow.set_visible(config.NowTimeVisible);
 

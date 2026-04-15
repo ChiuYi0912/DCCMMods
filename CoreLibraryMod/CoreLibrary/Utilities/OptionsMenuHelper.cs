@@ -20,14 +20,14 @@ namespace CoreLibrary.Core.Utilities
             this.config = config;
         }
 
-        public void AddConfigToggle(
+        public OptionWidget AddConfigToggle(
             string title,
             string description,
             Func<bool> getter,
             Action<bool> setter,
             dc.h2d.Flow scrollerFlow)
         {
-            opt.addToggleWidget(
+           var widget = opt.addToggleWidget(
                 title.ToHaxeString(),
                 description.ToHaxeString(),
                 () =>
@@ -40,6 +40,8 @@ namespace CoreLibrary.Core.Utilities
                 Ref<bool>.In(getter()),
                 scrollerFlow
             );
+
+            return widget;
         }
 
 

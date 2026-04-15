@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.ExceptionServices;
 using System.Security.Cryptography.X509Certificates;
 using CoreLibrary.Core.Interfaces;
 using CoreLibrary.Core.Utilities;
@@ -52,6 +53,29 @@ IOnAfterLoadingCDB
       moduleManager.RegisterModule(new ViewportSettings());
 
       modMenu = new ModMenu(this);
+
+      Hook_Boot.mainLoop += Hook_Boot_loop;
+   }
+
+   private void Hook_Boot_loop(Hook_Boot.orig_mainLoop orig, Boot self)
+   {
+      #if DEBUG
+      try
+      {
+         orig(self);
+      }
+      catch (Exception ex)
+      {
+         Logger.Error("{ex}", ex);
+         System.Diagnostics.Debugger.Break();
+         ExceptionDispatchInfo.Capture(ex).Throw();
+         throw;
+      }
+      #else
+            orig(self);
+      #endif
+
+
    }
 
    void IOnGameEndInit.OnGameEndInit()
