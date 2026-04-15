@@ -29,7 +29,7 @@ namespace MoreSettings.Core
         {
             foreach (var module in modules.Values)
             {
-                module.BuildMenu(options);
+                module.BuildMenu(options, module.Description);
             }
         }
     }

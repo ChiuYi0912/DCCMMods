@@ -1,6 +1,7 @@
 using System;
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Utilities;
+using dc.h2d;
 using ModCore.Events;
 using ModCore.Mods;
 using ModCore.Modules;
@@ -15,9 +16,10 @@ namespace MoreSettings.Base.Modules
 
         public virtual string Name => GetType().Name;
         public virtual string Description => string.Empty;
-        public bool Enabled { get; private set; }
+        public bool Enabled { get; private set; } = true;
         protected ModBase MainMod { get; private set; } = null!;
         public virtual OptionsMenuHelper<MainConfig> menuHelper { get; set; } = default!;
+        public virtual Flow scrollerFlow { get; private set; } = default!;
         public virtual object config { get; set; } = null!;
 
         public virtual void Initialize(ModBase mainMod)
@@ -26,15 +28,46 @@ namespace MoreSettings.Base.Modules
             EventSystem.AddReceiver(this);
         }
 
-        public virtual void BuildMenu(dc.ui.Options options)
+        public virtual void BuildMenu(dc.ui.Options options, string Separator)
         {
-            options.createScroller(1);
-            options.title.set_text(GetText.Instance.GetString("DCCM模组开关(B站ChiuYi.秋)").ToHaxeString());
             menuHelper = new(options, SettingsMain.ModConfig);
+            scrollerFlow = options.scrollerFlow;
+
+            options.addSeparator(GetText.Instance.GetString(Separator).ToHaxeString(), scrollerFlow);
+
+            // menuHelper.AddConfigToggle(
+            //     "启用此设置模块",
+            //     "",
+            //     () => Enabled,
+            //     v =>
+            //     {
+            //         bool oldValue = Enabled;
+            //         Enabled = v;
+            //         if (v && !oldValue)
+            //         {
+            //             RegisterHooks();
+            //         }
+            //         else if (!v && oldValue)
+            //         {
+            //             UnregisterHooks();
+            //         }
+
+            //         SaveConfig();
+            //     },
+            //     scrollerFlow
+            // );
+
+
+            // if (!Enabled)
+            // {
+            //     return;
+            // }
         }
 
         public virtual void RegisterHooks() { if (!Enabled) return; }
-        
+        public virtual void UnregisterHooks() { }
+
+
         public virtual void SaveConfig()
         {
             SettingsMain.ModConfig.Save();

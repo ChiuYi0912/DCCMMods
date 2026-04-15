@@ -44,17 +44,20 @@ IOnAfterLoadingCDB
    {
       instance = this;
       Utilities.Logger.Initialize(Logger);
+      GetText.Instance.RegisterMod("SettingsLang");
 
       moduleManager = new ModuleManager(this);
       moduleManager.RegisterModule(new GameplayModule());
+      moduleManager.RegisterModule(new HasUiSettings());
+      moduleManager.RegisterModule(new ViewportSettings());
 
       modMenu = new ModMenu(this);
    }
 
    void IOnGameEndInit.OnGameEndInit()
    {
-      // var res = Info.ModRoot.GetFilePath("SettingRes.pak");
-      // FsPak.Instance.FileSystem.loadPak(res.AsHaxeString());
+      var res = Info.ModRoot.GetFilePath("SettingRes.pak");
+      FsPak.Instance.FileSystem.loadPak(res.AsHaxeString());
    }
 
    void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb){}

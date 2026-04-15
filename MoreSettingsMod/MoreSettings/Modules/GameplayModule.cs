@@ -1,28 +1,24 @@
-using System;
 using CoreLibrary.Core.Extensions;
 using dc;
 using dc.cine;
 using dc.en;
 using dc.level;
 using dc.tool;
-using dc.ui;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
-using ModCore.Events;
 using ModCore.Mods;
+using ModCore.Modules;
 using ModCore.Utilities;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics;
-using MoreSettings.Utilities;
 using Hook_Game = dc.pr.Hook_Game;
 
 namespace MoreSettings.Modules
 {
     public class GameplayModule : BaseModule
     {
-        public override string Name => "Gameplay";
-        public override string Description => "游戏玩法设置";
+        public override string Description => "特殊设置";
         public override GameplayConfig config => (GameplayConfig)base.config;
 
         public override void Initialize(ModBase mainMod)
@@ -39,11 +35,19 @@ namespace MoreSettings.Modules
             Hook__TierItemFound.__constructor__ += Hook__TierItemFound__constructor__;
         }
 
-        public override void BuildMenu(dc.ui.Options options)
+        public override void UnregisterHooks()
         {
-            base.BuildMenu(options);
-            options.addSeparator(Description.AsHaxeString(), options.scrollerFlow);
-            var scrollerFlow = options.scrollerFlow;
+            Hook_Game.decreasingSlowMo -= Hook_Game_decreasingSlowMo;
+            Hook_LevelStruct.applyDifficulty -= Hook__LevelStruct_applyDifficulty;
+            Hook__TierItemFound.__constructor__ -= Hook__TierItemFound__constructor__;
+        }
+
+        public override void BuildMenu(dc.ui.Options options, string Separator)
+        {
+            options.createScroller(1);
+            options.title.set_text(GetText.Instance.GetString("DCCM模组开关(B站ChiuYi.秋)").ToHaxeString());
+
+            base.BuildMenu(options, Separator);
 
             menuHelper.AddConfigToggle(
                 "禁用命中暂停",
@@ -119,6 +123,17 @@ namespace MoreSettings.Modules
                 {
                     Struct.tryAddLoreRoom(((HaxeProxyBase)lore).ToVirtual<virtual_arc_examinables_fxEmitters_Intention_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>());
                 }
+            }
+        }
+
+        public void TestRoom(LevelStruct Struct)
+        {
+            for (int i = 169; i <= 169; i++)
+            {
+                dynamic lore = Data.Class.loreRoom.all.array.getDyn(i);
+                if (lore == null) return;
+                lore.levels.push("PrisonStart".AsHaxeString());
+                Struct.tryAddLoreRoom(((HaxeProxyBase)lore).ToVirtual<virtual_arc_examinables_fxEmitters_Intention_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>());
             }
         }
         #endregion

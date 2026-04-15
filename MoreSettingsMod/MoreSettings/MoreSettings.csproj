@@ -17,6 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackAssets Include="ChiuYiUI\**\*" RootInPak="SettingsLang" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\CoreLibraryMod\CoreLibrary\CoreLibrary.csproj" />
   </ItemGroup>
 

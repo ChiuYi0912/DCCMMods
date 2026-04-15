@@ -20,6 +20,7 @@ namespace MoreSettings.Configuration
         public SkinConfig Skin { get; set; } = new();
         public TeleportConfig Teleport { get; set; } = new();
         public AudioConfig Audio { get; set; } = new();
+        public ViewportConfig Viewport { get; set; } = new();
     }
 
 
@@ -97,5 +98,19 @@ namespace MoreSettings.Configuration
     {
         public bool Pop { get; set; } = false;
         public bool Rsty { get; set; } = false;
+    }
+
+    [Serializable]
+    public class ViewportConfig : SettingConfigBase
+    {
+        public double ViewportbumAng { get; set; } = 0;
+        public double Viewportbumdir { get; set; } = 0;
+        public double ViewportshakesX { get; set; } = 0;
+        public double ViewportshakesY { get; set; } = 0;
+        public double ViewportshakesD { get; set; } = 0;
+        public double ViewportshakeReversedSX { get; set; } = 0;
+        public double ViewportshakeReversedSY { get; set; } = 0;
+        public double ViewportshakeReversedSD { get; set; } = 0;
+        public double Camerazoom { get; set; } = 1;
     }
 }
