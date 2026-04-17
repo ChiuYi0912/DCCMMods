@@ -29,18 +29,25 @@ namespace CoreLibrary.Utilities.CustomPopDamage
         public static PopConfig popconfig =null!;
         public static IPopDamageHandler handler = null!;
 
+        private readonly ThreadSafePopDamageHandlerProvider _handlerProvider;
+
 
         public EntityPopDamage(ModBase modBase)
         {
             popconfig = Config.Value;
-            
+
             PopDamageHandlerRegistry.Register(new HotlinePopDamageHandler());
             PopDamageHandlerRegistry.Register(new StsPopDamageHandler());
             PopDamageHandlerRegistry.Register(new DefaultPopDamageHandler());
 
+            _handlerProvider = new ThreadSafePopDamageHandlerProvider();
             Hook_Entity.popDamage += Hook_Entity_PopDamage;
-            var basePop = new BasePopDamage(new StaticPopDamageHandlerProvider());
+            var basePop = new BasePopDamage(_handlerProvider);
+
+            Hook_Entity.destroy += Hook_Entity_Destroy;
         }
+
+
 
         private void Hook_Entity_PopDamage(Hook_Entity.orig_popDamage orig, Entity self, AttackData a)
         {
@@ -49,9 +56,19 @@ namespace CoreLibrary.Utilities.CustomPopDamage
                 return;
 
             handler = PopDamageHandlerRegistry.GetHandler(a, self);
-            handler?.CreatePopDamage(a, self);
+            if (handler != null)
+            {
+                _handlerProvider.CacheHandler(self, handler);
+                handler.CreatePopDamage(a, self);
+            }
 
             UpdateCooldownsAndIndex(self);
+        }
+
+        private void Hook_Entity_Destroy(Hook_Entity.orig_destroy orig, Entity self)
+        {
+            orig(self);
+            _handlerProvider.ClearCache(self);
         }
 
 

@@ -62,7 +62,6 @@ namespace CoreLibrary.Utilities.CustomPopDamage
             dc.ui.Hook__PopDamage.__constructor__ += Hook_PopDamage_initalize;
         }
 
-
         public static void ui_ProcessInit(dc.ui.Process ui_process, dc.libs.Process parent)
         {
             if (ui_process.get_pixelScale == null)
@@ -163,6 +162,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
 
             if (e._level.isBlur)
                 popDamage.blur(Ref<double>.Null, Ref<double>.Null);
+
         }
 
         private void CreateOriginalStyleFadeAnimation(dc.ui.PopDamage popDamage, Entity e, AttackData ad)
@@ -178,7 +178,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
             }
             else
             {
-                double duration = speedMultiplier * _handlerProvider.Current.SpeedMultiplier;
+                double duration = speedMultiplier * _handlerProvider.GetHandler(e).SpeedMultiplier;
                 double delay = speedMultiplier * ((ad.dmgBonusMul > 1.33 || ad.dmgScaledAdd > 0.0) ? 700.0 : 350.0);
                 CreateFadeTween(popDamage, duration, delay);
             }
