@@ -8,7 +8,7 @@ using ModCore.Storage;
 
 namespace CoreLibrary.Utilities.CustomPopDamage
 {
-    public abstract class IPopDamageHandler
+    public abstract class IPopDamage
     {
         /// <summary>
         /// 配置项，决定是否启用此伤害显示处理器

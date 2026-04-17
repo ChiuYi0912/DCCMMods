@@ -11,7 +11,7 @@ using ModCore.Storage;
 
 namespace CoreLibrary.Utilities.CustomPopDamage.PopDamages
 {
-    internal class StsPopDamageHandler : IPopDamageHandler
+    internal class StsPopDamageHandler : IPopDamage
     {
         private static readonly HashSet<string> StsItems = new()
         {

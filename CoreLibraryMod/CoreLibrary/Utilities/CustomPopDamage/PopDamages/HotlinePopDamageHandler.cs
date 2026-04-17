@@ -13,7 +13,7 @@ using ModCore.Storage;
 
 namespace CoreLibrary.Utilities.CustomPopDamage.PopDamages
 {
-    internal class HotlinePopDamageHandler : IPopDamageHandler
+    internal class HotlinePopDamageHandler : IPopDamage
     {
         private static readonly HashSet<string> HotlineSkins = new()
         {

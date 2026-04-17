@@ -9,20 +9,20 @@ namespace CoreLibrary.Utilities.CustomPopDamage
     public interface IPopDamageHandlerProvider
     {
 
-        IPopDamageHandler GetHandler(Entity entity);
+        IPopDamage GetHandler(Entity entity);
     }
 
     public class StaticPopDamageHandlerProvider : IPopDamageHandlerProvider
     {
-        public IPopDamageHandler GetHandler(Entity entity) => EntityPopDamage.handler;
+        public IPopDamage GetHandler(Entity entity) => EntityPopDamage.handler;
     }
 
 
     public class ThreadSafePopDamageHandlerProvider : IPopDamageHandlerProvider
     {
-        private readonly ConcurrentDictionary<Entity, IPopDamageHandler> _handlerCache = new();
+        private readonly ConcurrentDictionary<Entity, IPopDamage> _handlerCache = new();
 
-        public IPopDamageHandler GetHandler(Entity entity)
+        public IPopDamage GetHandler(Entity entity)
         {
             if (_handlerCache.TryGetValue(entity, out var handler))
             {
@@ -34,7 +34,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
         }
 
 
-        public void CacheHandler(Entity entity, IPopDamageHandler handler)
+        public void CacheHandler(Entity entity, IPopDamage handler)
         {
             _handlerCache[entity] = handler;
         }

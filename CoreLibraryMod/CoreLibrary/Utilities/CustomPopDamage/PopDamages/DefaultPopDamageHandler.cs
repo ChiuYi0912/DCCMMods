@@ -9,7 +9,7 @@ using ModCore.Storage;
 
 namespace CoreLibrary.Utilities.CustomPopDamage.PopDamages
 {
-    internal class DefaultPopDamageHandler : IPopDamageHandler
+    internal class DefaultPopDamageHandler : IPopDamage
     {
 
         public override int Priority => int.MaxValue;

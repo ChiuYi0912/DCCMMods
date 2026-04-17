@@ -27,7 +27,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
 
         public Config<PopConfig> Config = new("CustomPopDamage");
         public static PopConfig popconfig =null!;
-        public static IPopDamageHandler handler = null!;
+        public static IPopDamage handler = null!;
 
         private readonly ThreadSafePopDamageHandlerProvider _handlerProvider;
 

@@ -9,12 +9,12 @@ namespace CoreLibrary.Utilities.CustomPopDamage
 {
     public class PopDamageHandlerRegistry
     {
-        private static readonly List<IPopDamageHandler> Handlers = new List<IPopDamageHandler>();
+        private static readonly List<IPopDamage> Handlers = new List<IPopDamage>();
 
         /// <summary>
         /// 注册自定义处理器。
         /// </summary>
-        public static void Register(IPopDamageHandler handler)
+        public static void Register(IPopDamage handler)
         {
             if (!Handlers.Contains(handler))
             {
@@ -24,13 +24,13 @@ namespace CoreLibrary.Utilities.CustomPopDamage
         }
 
 
-        public static void Unregister(IPopDamageHandler handler)
+        public static void Unregister(IPopDamage handler)
         {
             Handlers.Remove(handler);
         }
 
 
-        public static IPopDamageHandler GetHandler(AttackData a, Entity entity)
+        public static IPopDamage GetHandler(AttackData a, Entity entity)
         {
             return Handlers.FirstOrDefault(h => h.CanHandle(a, entity))!;
         }
