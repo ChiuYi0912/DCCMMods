@@ -10,6 +10,7 @@ using dc.h2d;
 using ModCore.Modules;
 using ModCore.Events;
 using PopDamage.Main.lnterface;
+using CoreLibrary.Utilities.CustomPopDamage;
 
 namespace PopDamage;
 
@@ -21,10 +22,13 @@ public class PopDamageEntry(ModInfo info) : ModBase(info),
     public override void Initialize()
     {
         base.Initialize();
-        _ = new EntityPopDaamage();
-        _ = new BasePopDamage();
+        // _ = new EntityPopDaamage();
+        // _ = new Override.BasePopDamage();
         Logger.Information("Hello DCCM!");
         EventSystem.BroadcastEvent<IOnHookInitalize, PopDamageEntry>(this);
+
+        _ = new EntityPopDamage(this);
+        PopDamageHandlerRegistry.Register(new OtherPop.GradientPop());
     }
 
 

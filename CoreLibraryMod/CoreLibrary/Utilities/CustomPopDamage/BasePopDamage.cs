@@ -89,9 +89,10 @@ namespace CoreLibrary.Utilities.CustomPopDamage
 
         private void Hook_PopDamage_initalize(Hook__PopDamage.orig___constructor__ orig, dc.ui.PopDamage popDamage, Entity e, AttackData ad, int dmgIdx, Ref<bool> big, virtual_chars_font_ customFont)
         {
-            bool originalBig = big.value;
+            if (dc.ui.Console.Class.ME.flags.exists(dc.ui.Console.Class.HIDE_UI) &&
+                !dc.ui.Console.Class.ME.flags.exists("forcePopDmg".AsHaxeString()))
+                return;
             bool isCriticalOrBleedExplosion = ad.hitResult is HitResult.Critical || ad.dmgType is DamageType.BleedExplosion;
-
 
             if (!big.IsNull)
             {
