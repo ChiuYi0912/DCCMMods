@@ -3,6 +3,7 @@ using System.Runtime.ExceptionServices;
 using System.Security.Cryptography.X509Certificates;
 using CoreLibrary.Core.Interfaces;
 using CoreLibrary.Core.Utilities;
+using CoreLibrary.Utilities.CustomPopDamage;
 using dc;
 using dc.tool.mod;
 using ModCore.Events;
@@ -28,11 +29,12 @@ IOnAfterLoadingCDB
    private static SettingsMain instance = default!;
    private static ModuleManager moduleManager = default!;
    private static Config<MainConfig> modConfig = new Config<MainConfig>("MoreSettingsConfig");
-   
+
    private ModMenu modMenu = default!;
 
    public static SettingsMain Instance => instance;
    public static ModuleManager ModuleManager => moduleManager;
+   public static EntityPopDamage entityPop = default!;
    public static Config<MainConfig> ModConfig => modConfig;
    public static MainConfig ConfigValue => modConfig.Value;
 
@@ -49,10 +51,12 @@ IOnAfterLoadingCDB
 
       moduleManager = new ModuleManager(this);
       moduleManager.RegisterModule(new GameplayModule());
-      moduleManager.RegisterModule(new HasUiSettings());
-      moduleManager.RegisterModule(new ViewportSettings());
+      moduleManager.RegisterModule(new HasUiSettingsModule());
+      moduleManager.RegisterModule(new ViewportSettingsModule());
+      moduleManager.RegisterModule(new SkinSettingsModule());
 
       modMenu = new ModMenu(this);
+      entityPop = new EntityPopDamage(this);
 
       Hook_Boot.mainLoop += Hook_Boot_loop;
    }
@@ -84,5 +88,5 @@ IOnAfterLoadingCDB
       FsPak.Instance.FileSystem.loadPak(res.AsHaxeString());
    }
 
-   void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb){}
+   void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb) { }
 }

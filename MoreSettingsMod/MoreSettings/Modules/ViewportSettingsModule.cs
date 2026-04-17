@@ -9,7 +9,7 @@ using MoreSettings.Utilities;
 
 namespace MoreSettings.Modules
 {
-    public class ViewportSettings : BaseModule
+    public class ViewportSettingsModule : BaseModule
     {
         public override string Description => "视角设置";
         public override ViewportConfig config => (ViewportConfig)base.config;

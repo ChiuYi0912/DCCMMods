@@ -82,6 +82,8 @@ namespace MoreSettings.Configuration
     {
         public bool SkinEnabled { get; set; } = false;
         public bool Skinkatana { get; set; } = false;
+        public bool HotlineSkin { get; set; } = false;
+        public bool StsSkin { get; set; } = false;
     }
 
 

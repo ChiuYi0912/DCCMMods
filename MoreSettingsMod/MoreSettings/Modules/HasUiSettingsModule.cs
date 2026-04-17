@@ -12,7 +12,7 @@ using MoreSettings.Configuration;
 
 namespace MoreSettings.Modules
 {
-    public class HasUiSettings : BaseModule
+    public class HasUiSettingsModule : BaseModule
     {
         public override string Description => "UI界面修改";
 
