@@ -1,14 +1,20 @@
+using System.Reflection;
 using CoreLibrary.Core.Extensions;
 using dc;
+using dc.cine;
+using dc.en;
+using dc.en.inter;
 using dc.h2d;
 using dc.pr;
 using dc.tool.atk;
 using dc.ui;
+using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Mods;
 using ModCore.Modules;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
+using Serilog;
 
 namespace MoreSettings.Modules
 {
@@ -31,6 +37,7 @@ namespace MoreSettings.Modules
             Hook__GameCinematic.__constructor__ += Hook__GameCinematic___constructor__;
             Hook_Entity.popDamage += Hook_Entity_popDamage;
 
+
             dc.ui.hud.Hook_LifeBar.getFullName += Hook_LifeBar_GetFullName;
             dc.ui.hud.Hook_LifeBar.getStartEndName += Hook_LifeBar_getStartEndName;
 
@@ -43,6 +50,9 @@ namespace MoreSettings.Modules
             Hook_NewsPanel.updateVisible += Hook_NewsPanel_updateVisible;
             Hook_NewsPanel.focusIn += Hook_NewsPanel_focusIn;
             Hook_NewsPanel.update += Hook_NewsPanel_update;
+
+            Hook_TitleScreen.update += Hook_TitleScreen_update;
+            Hook_TitleScreen.addMenu += Hook_TitleScreen_addMenu;
         }
 
 
@@ -65,6 +75,9 @@ namespace MoreSettings.Modules
             Hook_NewsPanel.updateVisible -= Hook_NewsPanel_updateVisible;
             Hook_NewsPanel.focusIn -= Hook_NewsPanel_focusIn;
             Hook_NewsPanel.update -= Hook_NewsPanel_update;
+
+            Hook_TitleScreen.update -= Hook_TitleScreen_update;
+            Hook_TitleScreen.addMenu -= Hook_TitleScreen_addMenu;
         }
 
 
@@ -83,6 +96,13 @@ namespace MoreSettings.Modules
                 v => config.NewsPanel = v,
                 scrollerFlow);
 
+            menuHelper.AddConfigToggle(
+                GetText.Instance.GetString("移除菜单更新说明"),
+                GetText.Instance.GetString(""),
+                () => config.RemovalUpdateNotes,
+                v => config.RemovalUpdateNotes   = v,
+                scrollerFlow
+            );
 
             menuHelper.AddConfigToggle(
                 GetText.Instance.GetString("移除电影黑边"),
@@ -139,6 +159,14 @@ namespace MoreSettings.Modules
                 scrollerFlow
             );
 
+            menuHelper.AddConfigToggle(
+                GetText.Instance.GetString("BOSS血条文字"),
+                GetText.Instance.GetString(""),
+                () => config.ShowBossHealthBar,
+                v => config.ShowBossHealthBar = v,
+                scrollerFlow
+            );
+
             options.addSeparator(GetText.Instance.GetString("血条颜色").ToHaxeString(), scrollerFlow);
             menuHelper.AddConfigSlider(
                 GetText.Instance.GetString("血条颜色描述"),
@@ -150,6 +178,29 @@ namespace MoreSettings.Modules
         }
 
         #region 钩子实现
+        private virtual_cb_help_inter_isEnable_t_<bool> Hook_TitleScreen_addMenu(Hook_TitleScreen.orig_addMenu orig, TitleScreen self, dc.String str, HlAction cb, dc.String help, bool? isEnable, Ref<int> color)
+        {
+            if (config.RemovalUpdateNotes)
+            {
+                string updateNotesText = Lang.Class.t.get("Notes de mise à jour".ToHaxeString(), null).ToString();
+                if (str.ToString().EqualsIgnoreCase(updateNotesText))
+                    return null!;
+            }
+            
+            return orig(self, str, cb, help, isEnable, color);
+        }
+
+
+        private void Hook_TitleScreen_update(Hook_TitleScreen.orig_update orig, TitleScreen self)
+        {
+            if (config.NewsPanel)
+                self.newsSelected = false;
+            orig(self);
+            if (config.NewsPanel)
+                self.newsSelected = false;
+
+        }
+
         private void Hook_Game_init(Hook_Game.orig_init orig, dc.pr.Game self)
         {
             orig(self);
@@ -212,7 +263,7 @@ namespace MoreSettings.Modules
         }
 
         private Flow NowTimeFlow = null!;
-        public dc.ui.Text TimeText = null!;
+        private dc.ui.Text TimeText = null!;
         private void Hook_HUD___constructor__(Hook__HUD.orig___constructor__ orig, HUD arg1, dc.pr.Game game)
         {
             orig(arg1, game);
@@ -227,6 +278,9 @@ namespace MoreSettings.Modules
             DateTime currentTime = DateTime.Now;
             this.TimeText.set_text($"{currentTime}".ToHaxeString());
             arg1.rightFlowR.addChild(this.NowTimeFlow);
+
+            if (config.ShowBossHealthBar)
+                arg1.bossLifebar.enableText();
         }
 
 
@@ -289,6 +343,8 @@ namespace MoreSettings.Modules
             if (dc.ui.Console.Class.ME.flags.exists("NoPopText".ToHaxeString())) return;
             orig(self, a);
         }
+
+
         #endregion
 
 
@@ -323,5 +379,6 @@ namespace MoreSettings.Modules
             else
                 dc.ui.Console.Class.ME.flags.remove(flagName.ToHaxeString());
         }
+
     }
 }

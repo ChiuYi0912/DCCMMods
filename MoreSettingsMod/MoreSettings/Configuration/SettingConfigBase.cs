@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MoreSettings.Configuration
 {
@@ -45,6 +46,8 @@ namespace MoreSettings.Configuration
         public bool NowTimeVisible { get; set; } = false;
         public double LifeBarcolor { get; set; } = 0;
         public double PlayerCameraSpeed { get; set; }
+        public bool ShowBossHealthBar { get; set; } = false;
+        public bool RemovalUpdateNotes { get; set; } = false;
     }
 
 
@@ -84,6 +87,9 @@ namespace MoreSettings.Configuration
         public bool Skinkatana { get; set; } = false;
         public bool HotlineSkin { get; set; } = false;
         public bool StsSkin { get; set; } = false;
+        public bool RiskOfRainSkin { get; set; } = false;
+        public bool KatanaSkin { get; set; } = false;
+
     }
 
 

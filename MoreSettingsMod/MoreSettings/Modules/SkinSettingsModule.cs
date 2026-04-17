@@ -2,8 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoreLibrary.Core.Extensions;
 using CoreLibrary.Utilities.CustomPopDamage;
 using dc;
+using dc.cine;
+using dc.en;
+using dc.en.inter;
+using dc.libs.misc;
 using dc.tool.atk;
 using dc.ui;
 using ModCore.Mods;
@@ -11,6 +16,7 @@ using ModCore.Modules;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics;
+using MoreSettings.Utilities;
 
 namespace MoreSettings.Modules
 {
@@ -88,20 +94,56 @@ namespace MoreSettings.Modules
                   scrollerFlow: scrollerFlow
               );
             }
+
+            menuHelper.AddConfigToggle(
+                GetText.Instance.GetString("雨中冒险传送功能"),
+                GetText.Instance.GetString("启用/禁用传送功能"),
+                () => config.RiskOfRainSkin,
+                v => config.RiskOfRainSkin = v,
+                scrollerFlow: scrollerFlow
+                );
+
+            menuHelper.AddConfigToggle(
+                GetText.Instance.GetString("武士零装束效果"),
+                GetText.Instance.GetString("启用/禁用武士零装束效果"),
+                () => config.KatanaSkin,
+                v => config.KatanaSkin = v,
+                scrollerFlow: scrollerFlow
+                );
         }
+
+
 
         public override void RegisterHooks()
         {
             base.RegisterHooks();
-
+            Hook_Teleport.startTeleport += Hook_Teleport_startTeleport;
+            Hook_Hero.hasSkin += Hook_Hero_hasSkin;
         }
+
+
 
         public override void UnregisterHooks()
         {
             base.UnregisterHooks();
-
+            Hook_Teleport.startTeleport -= Hook_Teleport_startTeleport;
+            Hook_Hero.hasSkin -= Hook_Hero_hasSkin;
         }
 
+        private bool Hook_Hero_hasSkin(Hook_Hero.orig_hasSkin orig, Hero self, dc.String model, dc.String itemId)
+        {
+            if (itemId != null)
+                if (config.KatanaSkin && itemId.ToString() == "KatanaZero") return true;
+            return orig(self, model, itemId);
+        }
+
+        private void Hook_Teleport_startTeleport(Hook_Teleport.orig_startTeleport orig, Teleport self, Hero hero, Entity to)
+        {
+            if (to == null) return;
+            if (hero.hasSkin(null, "RiskOfRain".ToHaxeString()) || config.RiskOfRainSkin)
+            { _ = new TeleportationRoR(hero, self, to); return; }
+            _ = new Teleportation(hero, self, to);
+        }
 
     }
 }
