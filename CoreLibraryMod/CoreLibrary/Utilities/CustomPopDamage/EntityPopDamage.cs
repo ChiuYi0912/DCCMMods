@@ -39,7 +39,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
             PopDamageHandlerRegistry.Register(new DefaultPopDamageHandler());
 
             Hook_Entity.popDamage += Hook_Entity_PopDamage;
-            var basePop = new BasePopDamage();
+            var basePop = new BasePopDamage(new StaticPopDamageHandlerProvider());
         }
 
         private void Hook_Entity_PopDamage(Hook_Entity.orig_popDamage orig, Entity self, AttackData a)

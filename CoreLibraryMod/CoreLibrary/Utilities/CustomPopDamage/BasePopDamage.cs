@@ -40,17 +40,6 @@ namespace CoreLibrary.Utilities.CustomPopDamage
         private const int StunDamageColor = 14373706;                // Pink color for stun damage
         private const int DefaultDamageColor = 16711680;             // Default red color
 
-        // Time constants (in milliseconds)
-        private const double HeroFadeDurationBase = 600.0;
-        private const double EnemyFadeDurationBase = 450.0;
-        private const double RevalFadeDurationBase = 600.0;
-        private const double LongDelayThreshold = 1000.0;
-        private const double ShortDelayThreshold = 600.0;
-        private const double EnemyLongDelayThreshold = 700.0;
-        private const double EnemyShortDelayThreshold = 350.0;
-
-        // Threshold constants
-        private const double DamageBonusMultiplierThreshold = 1.33;
         private const double PixelScaleBase = 9.0;
 
         // Speed multiplier constants
@@ -63,11 +52,15 @@ namespace CoreLibrary.Utilities.CustomPopDamage
 
         private const int DamageIndexBaseMultiplier = 2;
 
-        public BasePopDamage()
+        private readonly IPopDamageHandlerProvider _handlerProvider;
+
+        public BasePopDamage() : this(new StaticPopDamageHandlerProvider()) { }
+
+        public BasePopDamage(IPopDamageHandlerProvider handlerProvider)
         {
+            _handlerProvider = handlerProvider ?? throw new ArgumentNullException(nameof(handlerProvider));
             dc.ui.Hook__PopDamage.__constructor__ += Hook_PopDamage_initalize;
         }
-
 
 
         public static void ui_ProcessInit(dc.ui.Process ui_process, dc.libs.Process parent)
@@ -172,7 +165,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
                 popDamage.blur(Ref<double>.Null, Ref<double>.Null);
         }
 
-        private static void CreateOriginalStyleFadeAnimation(dc.ui.PopDamage popDamage, Entity e, AttackData ad)
+        private void CreateOriginalStyleFadeAnimation(dc.ui.PopDamage popDamage, Entity e, AttackData ad)
         {
             double speedMultiplier = GetSpeedMultiplier(e);
             bool isHero = Std.Class.@is(e, Hero.Class);
@@ -185,7 +178,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
             }
             else
             {
-                double duration = speedMultiplier * EntityPopDamage.handler.SpeedMultiplier;
+                double duration = speedMultiplier * _handlerProvider.Current.SpeedMultiplier;
                 double delay = speedMultiplier * ((ad.dmgBonusMul > 1.33 || ad.dmgScaledAdd > 0.0) ? 700.0 : 350.0);
                 CreateFadeTween(popDamage, duration, delay);
             }
