@@ -2,6 +2,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using CoreLibrary.Core.Extensions;
 using dc;
 using dc.en;
 using dc.h2d;
@@ -62,30 +63,6 @@ namespace CoreLibrary.Utilities.CustomPopDamage
             dc.ui.Hook__PopDamage.__constructor__ += Hook_PopDamage_initalize;
         }
 
-        public static void ui_ProcessInit(dc.ui.Process ui_process, dc.libs.Process parent)
-        {
-            if (ui_process.get_pixelScale == null)
-                ui_process.get_pixelScale = new HlFunc<double>(ui_process.get_pixelScale!);
-
-            libs_ProcessInit(ui_process, parent);
-            dc.ui.Process.Class.ALL.push(ui_process);
-        }
-
-        public static void libs_ProcessInit(dc.libs.Process arg1, dc.libs.Process parent)
-        {
-            if (arg1.onUpdateCb == null)
-                arg1.onUpdateCb = new HlAction(arg1.onUpdateCb!);
-            if (arg1.onDisposeCb == null)
-                arg1.onDisposeCb = new HlAction(arg1.onDisposeCb!);
-
-            arg1.init();
-
-            if (parent == null)
-                dc.libs.Process.Class.ROOTS.push(arg1);
-            else
-                parent.addChild(arg1);
-
-        }
 
         private void Hook_PopDamage_initalize(Hook__PopDamage.orig___constructor__ orig, dc.ui.PopDamage popDamage, Entity e, AttackData ad, int dmgIdx, Ref<bool> big, virtual_chars_font_ customFont)
         {
@@ -100,9 +77,8 @@ namespace CoreLibrary.Utilities.CustomPopDamage
             }
 
             var level = e._level;
-            ui_ProcessInit(popDamage, level);
-
-
+            HlAction<dc.ui.Process, dc.libs.Process> hl = (HlAction<dc.ui.Process, dc.libs.Process>)dc.ui.Process.Class.__constructor__;
+            hl.Invoke(popDamage, level);
 
             var popDamageClass = dc.ui.PopDamage.Class;
             popDamageClass.popDamageCount = popDamageClass.popDamageCount + 1;
@@ -132,26 +108,20 @@ namespace CoreLibrary.Utilities.CustomPopDamage
             popDamage.text.set_textAlign(new Align.Center());
             popDamage.text.posChanged = true;
 
-            var damageText = Std.Class.@string(ad.finalDmg);
+            string damageText = ad.finalDmg.ToString();
             if (ad.dmgBonusMul > 1.0 || ad.dmgScaledAdd > 0.0)
-                damageText = dc.String.Class.__add__(damageText, "+".AsHaxeString());
+                damageText = damageText + "+";
 
-            popDamage.text.set_text(damageText);
+            popDamage.text.set_text(damageText.ToHaxeString());
             popDamage.text.set_textColor(color);
             popDamage.text.canHaveBackground = false;
-
-
-            popDamage.text.posChanged = true;
-            popDamage.text.x = 0.0;
-            popDamage.text.posChanged = true;
-            popDamage.text.y = 0.0;
-
 
             popDamage.flow.posChanged = true;
             popDamage.flow.x = 0.0;
             popDamage.flow.posChanged = true;
-            double pixelScale = popDamage.get_pixelScale.Invoke();
-            int baseOffset = (int)(pixelScale * PixelScaleBase);
+
+            var pixelScale = popDamage.get_pixelScale.Invoke();
+            var baseOffset = pixelScale * PixelScaleBase;
             double yOffset = GetYOffsetForDamageIndex(dmgIdx, baseOffset);
             popDamage.flow.y = yOffset;
 
@@ -163,6 +133,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
 
             if (e._level.isBlur)
                 popDamage.blur(Ref<double>.Null, Ref<double>.Null);
+
 
         }
 
@@ -222,7 +193,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
             }
         }
 
-        private static double GetYOffsetForDamageIndex(int dmgIdx, int baseOffset)
+        private static double GetYOffsetForDamageIndex(int dmgIdx, double baseOffset)
         {
             switch (dmgIdx)
             {
