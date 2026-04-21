@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreLibrary.Core.Extensions;
+using dc.h2d;
+using dc.libs.heaps.slib;
 using dc.ui;
 using HaxeProxy.Runtime;
 using ModCore.Storage;
@@ -27,19 +29,19 @@ namespace CoreLibrary.Core.Utilities
             Action<bool> setter,
             dc.h2d.Flow scrollerFlow)
         {
-           var widget = opt.addToggleWidget(
-                title.ToHaxeString(),
-                description.ToHaxeString(),
-                () =>
-                {
-                    bool newValue = !getter();
-                    setter(newValue);
-                    config.Save();
-                    return newValue;
-                },
-                Ref<bool>.In(getter()),
-                scrollerFlow
-            );
+            var widget = opt.addToggleWidget(
+                 title.ToHaxeString(),
+                 description.ToHaxeString(),
+                 () =>
+                 {
+                     bool newValue = !getter();
+                     setter(newValue);
+                     config.Save();
+                     return newValue;
+                 },
+                 Ref<bool>.In(getter()),
+                 scrollerFlow
+             );
 
             return widget;
         }
@@ -77,6 +79,39 @@ namespace CoreLibrary.Core.Utilities
                 buttonText?.ToHaxeString(),
                 Ref<int>.In(paddingLeft)
             );
+        }
+
+
+
+        public void CenterToggleWidget(Flow widget, Options options, Flow scrollerFlow)
+        {
+            var props = scrollerFlow.getProperties(widget);
+            props.horizontalAlign = new FlowAlign.Middle();
+
+
+            widget.maxWidth = scrollerFlow.get_innerWidth();
+            widget.horizontalAlign = new FlowAlign.Middle();
+
+
+            widget.paddingTop = widget.get_innerHeight() / 5;
+
+            var pixel = options.get_pixelScale.Invoke();
+
+            foreach (var child in widget.children.AsEnumerable())
+            {
+                if (child is HSprite icon)
+                {
+                    icon.scaleX = icon.scaleY = icon.scaleY / 2;
+                }
+                else if (child is Flow textFlow)
+                {
+                    textFlow.maxWidth = widget.maxWidth;
+                    textFlow.horizontalAlign = new FlowAlign.Middle();
+                    textFlow.verticalAlign = new FlowAlign.Middle();
+
+                    textFlow.scaleX = textFlow.scaleY = textFlow.scaleY / 2;
+                }
+            }
         }
     }
 }

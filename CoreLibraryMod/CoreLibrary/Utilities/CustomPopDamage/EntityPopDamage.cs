@@ -16,7 +16,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
     public class EntityPopDamage
     {
         private const int CRITICAL_HIT_TAG = 2;
-        private const int MAX_DAMAGE_INDEX = 3;
+        private const int MAX_DAMAGE_INDEX = 4;
         private const int COOLDOWN_KEY_1 = 356515840;
         private const int COOLDOWN_KEY_2 = 272629760;
         private const double COOLDOWN_MULTIPLIER_1 = 0.3;
@@ -26,7 +26,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
         private const double ZERO_FRAMES = 0.0;
 
         public Config<PopConfig> Config = new("CustomPopDamage");
-        public static PopConfig popconfig =null!;
+        public static PopConfig popconfig = null!;
         public static IPopDamage handler = null!;
 
         private readonly ThreadSafePopDamageHandlerProvider _handlerProvider;
@@ -56,11 +56,8 @@ namespace CoreLibrary.Utilities.CustomPopDamage
                 return;
 
             handler = PopDamageHandlerRegistry.GetHandler(a, self);
-            if (handler != null)
-            {
-                _handlerProvider.CacheHandler(self, handler);
-                handler.CreatePopDamage(a, self);
-            }
+            _handlerProvider.CacheHandler(self, handler);
+            handler.CreatePopDamage(a, self);
 
             UpdateCooldownsAndIndex(self);
         }

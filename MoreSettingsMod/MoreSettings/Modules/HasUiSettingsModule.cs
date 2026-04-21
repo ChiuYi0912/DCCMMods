@@ -100,7 +100,7 @@ namespace MoreSettings.Modules
                 GetText.Instance.GetString("移除菜单更新说明"),
                 GetText.Instance.GetString(""),
                 () => config.RemovalUpdateNotes,
-                v => config.RemovalUpdateNotes   = v,
+                v => config.RemovalUpdateNotes = v,
                 scrollerFlow
             );
 
@@ -186,7 +186,7 @@ namespace MoreSettings.Modules
                 if (str.ToString().EqualsIgnoreCase(updateNotesText))
                     return null!;
             }
-            
+
             return orig(self, str, cb, help, isEnable, color);
         }
 
@@ -218,21 +218,21 @@ namespace MoreSettings.Modules
 
         private DateTime _lastUpdateTime = DateTime.MinValue;
         private readonly TimeSpan _updateInterval = TimeSpan.FromSeconds(1);
-
-
-
         private void Hook_HUD_PostUpdate(Hook_HUD.orig_postUpdate orig, HUD self)
         {
             orig(self);
-            if (NowTimeFlow == null)
-                return;
+            UpdateNowTime();
+            if (self.bossLifebar == null) return;
+            AdjustBossLifebarLabel(self.bossLifebar);
+        }
+
+        private void UpdateNowTime()
+        {
+            if (NowTimeFlow == null) return;
             if (this.NowTimeFlow.visible != config.NowTimeVisible)
                 this.NowTimeFlow.set_visible(config.NowTimeVisible);
 
-
-
-            if (!this.NowTimeFlow.visible)
-                return;
+            if (!this.NowTimeFlow.visible) return;
 
             DateTime now = DateTime.Now;
             if (now - _lastUpdateTime >= _updateInterval)
@@ -241,8 +241,26 @@ namespace MoreSettings.Modules
 
                 _lastUpdateTime = now;
             }
+
         }
 
+        private void AdjustBossLifebarLabel(dc.ui.hud.LifeBar lifeBar)
+        {
+            if (lifeBar.label == null) return;
+
+            var label = lifeBar.label;
+            double basePixelScale = lifeBar.get_pixelScale.Invoke();
+
+            label.scaleX = label.scaleY /= 1.5;
+            double finalScale = label.scaleX;
+
+            double padding = 3.0 * basePixelScale;
+            double sbX = lifeBar.sb.x;
+            double sbY = lifeBar.sb.y;
+
+            label.x = (lifeBar.curState.outerWid - 2 * padding - label.textWidth * finalScale) * 0.5 + sbX;
+            label.y = (lifeBar.curState.outerHei - 2 * padding - label.textHeight * finalScale) * 0.5 + sbY;
+        }
 
 
         private void Hook_HUD_onResize(Hook_HUD.orig_onResize orig, HUD self)
@@ -253,8 +271,8 @@ namespace MoreSettings.Modules
             {
                 this.TimeText.set_textAlign(new Align.Right());
                 this.TimeText.get_pixelScale = new HlFunc<double>(self.get_pixelScale);
-                double iconWidth = (double)self.bossCellCount.widTile * self.bossCellCount.icon.scaleX;
-                double textWidth = (int)((double)self.bossCellCount.text.get_textWidth() * self.bossCellCount.text.scaleX);
+                double iconWidth = self.bossCellCount.widTile * self.bossCellCount.icon.scaleX;
+                double textWidth = self.bossCellCount.text.get_textWidth() * self.bossCellCount.text.scaleX;
                 double spacing = 3.0 * self.bossCellCount.get_pixelScale.Invoke();
                 double bossCellWidth = iconWidth + textWidth + spacing;
                 this.TimeText.maxWidthWanted = self.gameTime.maxWidthWanted;
@@ -281,6 +299,8 @@ namespace MoreSettings.Modules
 
             if (config.ShowBossHealthBar)
                 arg1.bossLifebar.enableText();
+
+            AdjustBossLifebarLabel(arg1.bossLifebar);
         }
 
 
@@ -341,7 +361,6 @@ namespace MoreSettings.Modules
         private void Hook_Entity_popDamage(Hook_Entity.orig_popDamage orig, Entity self, AttackData a)
         {
             if (dc.ui.Console.Class.ME.flags.exists("NoPopText".ToHaxeString())) return;
-            orig(self, a);
         }
 
 

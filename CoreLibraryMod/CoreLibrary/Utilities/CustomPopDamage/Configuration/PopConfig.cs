@@ -11,5 +11,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
         public double HotlineSpeedMultiplier { get; set; } = 450.0;
         public bool StsPopDamage { get; set; } = false;
         public double StsSpeedMultiplier { get; set; } = 600.0;
+
+        public bool GenuinePopDamage { get; set; } = false;
     }
 }

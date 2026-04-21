@@ -61,34 +61,7 @@ namespace MoreSettings.Base.Modules
                 },
                 scrollerFlow
             );
-            var props = scrollerFlow.getProperties(widget);
-            props.horizontalAlign = new FlowAlign.Middle();
-            const int aligned = 6;
-            double scale = options.get_pixelScale.Invoke();
-            int dynamicOffset = (int)(scale * 15);
-
-            foreach (var child in widget.children.AsEnumerable())
-            {
-                if (child is HSprite icon)
-                {
-                    icon.scaleX = icon.scaleY = icon.scaleY / 1.5;
-                    icon.y = widget.get_innerHeight() / (aligned + 1);
-                    icon.x += dynamicOffset * 1.5;
-                }
-                else if (child is Flow textFlow)
-                {
-                    textFlow.verticalAlign = new FlowAlign.Middle();
-                    foreach (var sub in textFlow.children.AsEnumerable())
-                    {
-                        if (sub is dc.ui.Text txt)
-                        {
-                            txt.scaleX = txt.scaleY = 1;
-                            txt.y = textFlow.get_innerHeight() / (aligned - 1);
-                            txt.x += dynamicOffset;
-                        }
-                    }
-                }
-            }
+            menuHelper.CenterToggleWidget(widget,options,scrollerFlow);
         }
 
         public void BaseRegisterHooks() { if (!config.Enabled) return; RegisterHooks(); Logger.Information("registerHook"); }

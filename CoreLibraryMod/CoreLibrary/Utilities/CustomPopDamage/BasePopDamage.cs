@@ -10,6 +10,7 @@ using dc.hl;
 using dc.libs;
 using dc.libs.misc;
 using dc.pr;
+using dc.shader;
 using dc.tool.atk;
 using dc.ui;
 using dc.ui.popd;
@@ -61,8 +62,65 @@ namespace CoreLibrary.Utilities.CustomPopDamage
         {
             _handlerProvider = handlerProvider ?? throw new ArgumentNullException(nameof(handlerProvider));
             dc.ui.Hook__PopDamage.__constructor__ += Hook_PopDamage_initalize;
+            Hook__PopDamageHotline.__constructor__ += Hook_PopDamageHotline_initalize;
         }
 
+        private void Hook_PopDamageHotline_initalize(Hook__PopDamageHotline.orig___constructor__ orig, PopDamageHotline popDamage, Entity e, AttackData attackData, int dmgIdx, Ref<bool> big, virtual_chars_font_ customFont)
+        {
+            bool? originalBig = big.value;
+
+            popDamage.jiggle = 1.0;
+            popDamage.textLayer = (dc.hl.types.ArrayObj)ArrayUtils.CreateDyn().array;
+
+            HlAction<PopDamageHotline, Entity, AttackData, int, Ref<bool>, virtual_chars_font_> hl = (HlAction<PopDamageHotline, Entity, AttackData, int, Ref<bool>, virtual_chars_font_>)PopDamage.Class.__constructor__;
+            hl.Invoke(popDamage, e, attackData, dmgIdx, big, customFont);
+
+            popDamage.text.addShader(new HotlineText());
+            popDamage.text.posChanged = true;
+            popDamage.text.x = 0.0;
+            popDamage.text.posChanged = true;
+            popDamage.text.y = 0.0;
+
+            for (int i = 0; i < 5; i++)
+            {
+
+                bool showPlus = attackData.dmgBonusMul > 1.0 || attackData.dmgScaledAdd > 0.0;
+
+
+                string damageText = showPlus ? $"{attackData.finalDmg}+" : attackData.finalDmg.ToString();
+                if (EntityPopDamage.popconfig.GenuinePopDamage)
+                    damageText = showPlus ? $"{attackData.inflictedDmg}+" : attackData.inflictedDmg.ToString();
+
+                bool isMedieval = attackData.hitResult is HitResult.Critical ||
+                              attackData.dmgType is DamageType.BleedExplosion;
+
+                var text = new dc.ui.Text(
+                    null,
+                    big: originalBig,
+                    isMedieval: isMedieval,
+                    Ref<double>.Null,
+                    null,
+                    customFont: customFont
+                );
+
+
+                text.set_textAlign(new Align.Center());
+                text.set_text(damageText.ToHaxeString());
+
+
+                dynamic hotline = text.addShader(new HotlineText());
+                hotline.depth__ = i;
+
+                text.canHaveBackground = false;
+
+                popDamage.textLayer.push(text);
+                popDamage.flow.addChildAt(text, 0);
+            }
+
+            
+
+            popDamage.flow.set_needReflow(false);
+        }
 
         private void Hook_PopDamage_initalize(Hook__PopDamage.orig___constructor__ orig, dc.ui.PopDamage popDamage, Entity e, AttackData ad, int dmgIdx, Ref<bool> big, virtual_chars_font_ customFont)
         {
@@ -101,14 +159,15 @@ namespace CoreLibrary.Utilities.CustomPopDamage
 
             bool? isBig = isCriticalOrBleedExplosion;
 
-            if (popDamage is PopDamageHotline)
-                popDamage.text = new dc.ui.Text(null, isBig, null, Ref<double>.Null, null, customFont);
-            else
-                popDamage.text = new dc.ui.Text(popDamage.flow, isBig, null, Ref<double>.Null, null, customFont);
+
+            popDamage.text = new dc.ui.Text(popDamage.flow, isBig, null, Ref<double>.Null, null, customFont);
             popDamage.text.set_textAlign(new Align.Center());
             popDamage.text.posChanged = true;
 
             string damageText = ad.finalDmg.ToString();
+            if (EntityPopDamage.popconfig.GenuinePopDamage)
+                damageText = ad.inflictedDmg.ToString();
+
             if (ad.dmgBonusMul > 1.0 || ad.dmgScaledAdd > 0.0)
                 damageText = damageText + "+";
 

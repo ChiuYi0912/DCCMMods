@@ -22,7 +22,7 @@ namespace MoreSettings.Modules
 {
     public class SkinSettingsModule : BaseModule
     {
-        public override string Description => "UI界面修改";
+        public override string Description => "联动设置";
 
         public override SkinConfig config => (SkinConfig)base.config;
 
@@ -38,6 +38,15 @@ namespace MoreSettings.Modules
             base.BuildMenu(options, Separator);
             if (!config.Enabled)
                 return;
+
+            var widget = PopmenuHelper.AddConfigToggle(
+                 GetText.Instance.GetString("显示正确的伤害数值(Boss实际受到的伤害是经过软上限,此选项启用后将显示正确的伤害数值)"),
+                 "",
+                 () => SettingsMain.entityPop.Config.Value.GenuinePopDamage,
+                 v => SettingsMain.entityPop.Config.Value.GenuinePopDamage = v,
+                 scrollerFlow
+             );
+            PopmenuHelper.CenterToggleWidget(widget, options, scrollerFlow);
 
 
             PopmenuHelper.AddConfigToggle(
