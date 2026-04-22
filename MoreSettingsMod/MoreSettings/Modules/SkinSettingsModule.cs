@@ -126,16 +126,18 @@ namespace MoreSettings.Modules
         public override void RegisterHooks()
         {
             base.RegisterHooks();
-            Hook_Teleport.startTeleport += Hook_Teleport_startTeleport;
             Hook_Hero.hasSkin += Hook_Hero_hasSkin;
         }
 
+        public override void PermanentlyRegisterHooks()
+        {
+            Hook_Teleport.startTeleport += Hook_Teleport_startTeleport;
+        }
 
 
         public override void UnregisterHooks()
         {
             base.UnregisterHooks();
-            Hook_Teleport.startTeleport -= Hook_Teleport_startTeleport;
             Hook_Hero.hasSkin -= Hook_Hero_hasSkin;
         }
 
@@ -150,8 +152,8 @@ namespace MoreSettings.Modules
         {
             if (to == null) return;
             if (hero.hasSkin(null, "RiskOfRain".ToHaxeString()) || config.RiskOfRainSkin)
-            { _ = new TeleportationRoR(hero, self, to); return; }
-            _ = new Teleportation(hero, self, to);
+            { _ = new CoreLibrary.Basedc.Cine.FlashTeleport(hero, self, to, !SettingsMain.ConfigValue.Viewport.TeleportImmediate); return; }
+            _ = new CoreLibrary.Basedc.Cine.Teleportation(hero, self, to, !SettingsMain.ConfigValue.Viewport.TeleportImmediate);
         }
 
     }

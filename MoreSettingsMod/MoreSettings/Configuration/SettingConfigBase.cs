@@ -120,5 +120,7 @@ namespace MoreSettings.Configuration
         public double ViewportshakeReversedSY { get; set; } = 0;
         public double ViewportshakeReversedSD { get; set; } = 0;
         public double Camerazoom { get; set; } = 1;
+
+        public bool TeleportImmediate { get; set; } = false;
     }
 }

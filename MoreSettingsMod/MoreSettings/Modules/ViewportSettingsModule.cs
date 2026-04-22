@@ -1,6 +1,7 @@
 using CoreLibrary.Core.Extensions;
 using dc;
 using dc.en;
+using dc.pr;
 using ModCore.Mods;
 using ModCore.Modules;
 using MoreSettings.Base.Modules;
@@ -27,8 +28,8 @@ namespace MoreSettings.Modules
             Hook_Viewport.bumpDir += Hook_Viewport_bumpdir;
             Hook_Viewport.shakeS += Hook_Viewport_shakes;
             Hook_Viewport.shakeReversedS += Hook_Viewport_shakeReversedS;
-        }
 
+        }
 
 
         public override void UnregisterHooks()
@@ -43,6 +44,15 @@ namespace MoreSettings.Modules
         public override void BuildMenu(dc.ui.Options options, string Separator)
         {
             base.BuildMenu(options, Separator);
+
+            var widget = menuHelper.AddConfigToggle(
+                GetText.Instance.GetString("平滑传送"),
+                 GetText.Instance.GetString(""),
+                () => config.TeleportImmediate,
+                v => config.TeleportImmediate = v,
+                scrollerFlow: options.scrollerFlow
+                );
+            menuHelper.CenterToggleWidget(widget, options, options.scrollerFlow);
 
             if (!config.Enabled)
                 return;

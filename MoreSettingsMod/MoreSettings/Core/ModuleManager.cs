@@ -22,6 +22,7 @@ namespace MoreSettings.Core
         {
             module.Initialize(mainMod);
             module.BaseRegisterHooks();
+            module.PermanentlyRegisterHooks();
             modules[module.Name] = module;
         }
 

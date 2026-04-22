@@ -66,6 +66,7 @@ namespace MoreSettings.Base.Modules
 
         public void BaseRegisterHooks() { if (!config.Enabled) return; RegisterHooks(); Logger.Information("registerHook"); }
         public virtual void RegisterHooks() { }
+        public virtual void PermanentlyRegisterHooks() { }
         public virtual void UnregisterHooks() { Logger.Information("UnregisterHooks"); }
 
 
