@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CoreLibrary.Core.Extensions;
+using CoreLibrary.Utilities;
 using dc;
 using dc.en.mob;
 using dc.h2d;
@@ -12,8 +13,10 @@ using dc.libs._Cooldown;
 using dc.pr;
 using dc.tool;
 using dc.ui;
+using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Modules;
+using ModCore.Utilities;
 using ScarfData = Hashlink.Virtuals.virtual_attachOffX_attachOffY_color_cosOffset_count_extraSprLength_friction_gravity_maxLength_minLength_onFront_props_sprId_thickness_;
 
 
@@ -30,10 +33,13 @@ namespace MoreSettings.GameMechanics.Scarf
 
         private List<FlowBox> leftItems = new();
         private List<FlowBox> rightItems = new();
+        private List<FlowBox> bottomItems = new();
+        private int bottomIndex = 0;
 
 
-        private enum Side { Left, Right }
+        private enum Side { Left, Right, Bottom }
         private Side currentSide = Side.Left;
+        private Side lastSide = Side.Left;
         private int currentIndex = 0;
 
         private ScaleGrid selectionHighlight = default!;
@@ -42,13 +48,13 @@ namespace MoreSettings.GameMechanics.Scarf
 
         private Page NowPage = Page.NULL;
 
-        public enum FlowEnum { MainFlow, RightFlow, LeftFlow }
+        public enum FlowEnum { MainFlow, RightFlow, LeftFlow, BottomFlow }
         public enum Page { NULL, First, Scraf }
 
         public CustomScarfUI(dc.libs.Process parent) : base(parent)
         {
             controller = Boot.Class.ME.controller.createAccess("CustomScarfUI".ToHaxeString(), true);
-            createRootInLayers(parent.root, Const.Class.ROOT_DP_MENU);
+            createRootInLayers(parent.root, Const.Class.ROOT_DP_MENU); setControlLabel();
 
             title = new dc.ui.Text(null, false, true, Ref<double>.Null, null, null);
             title.set_text(getText.GetString("裁缝的爱人").ToHaxeString());
@@ -56,15 +62,10 @@ namespace MoreSettings.GameMechanics.Scarf
 
             HUD.Class.ME.hide(null);
 
-
-
             InitFlows(); OpenPageFirst(); CreateHighlight(); setMainFlowPos(); UpdateHighlightPosition();
-
-
         }
 
         #region UI 初始化
-
         private void InitFlows()
         {
             var main = flows[FlowEnum.MainFlow] = new Flow(root);
@@ -83,6 +84,11 @@ namespace MoreSettings.GameMechanics.Scarf
             left.set_verticalAlign(new FlowAlign.Middle());
             left.isVertical = true;
             left.verticalSpacing = 50;
+
+            var bottom = flows[FlowEnum.BottomFlow] = new Flow(main);
+            bottom.set_horizontalAlign(new FlowAlign.Middle());
+            bottom.set_verticalAlign(new FlowAlign.Bottom());
+            bottom.horizontalSpacing = 50;
         }
 
         private void OpenPageFirst()
@@ -104,12 +110,12 @@ namespace MoreSettings.GameMechanics.Scarf
 
             var leftbox = CreateFlowBox(leftFlow);
             var lefttext = new dc.ui.Text(leftbox, null, null, Ref<double>.Null, null, null);
-            lefttext.set_text(GetText.Instance.GetString("创建新自定义飘带").ToHaxeString());
+            lefttext.set_text(GetText.Instance.GetString("修改当前自定义飘带").ToHaxeString());
             leftItems.Add(leftbox);
             leftbox.interactive = new Interactive(leftbox.get_outerWidth(), leftbox.get_outerHeight(), null, null);
             leftbox.interactive.onClick = new HlAction<Event>(e =>
             {
-                Clearpage(); OpenPageScraf(); onResize();
+                
             });
             leftbox.interactive.onMove = new HlAction<Event>(e =>
             {
@@ -118,12 +124,12 @@ namespace MoreSettings.GameMechanics.Scarf
 
             var rightbox = CreateFlowBox(rightFlow);
             var righttext = new dc.ui.Text(rightbox, null, null, Ref<double>.Null, null, null);
-            righttext.set_text(getText.GetString("修改当前自定飘带").ToHaxeString());
+            righttext.set_text(getText.GetString("创建新自定义飘带").ToHaxeString());
             rightItems.Add(rightbox);
             rightbox.interactive = new Interactive(rightbox.get_outerWidth(), rightbox.get_outerHeight(), null, null);
             rightbox.interactive.onClick = new HlAction<Event>(e =>
             {
-
+                Clearpage(); OpenPageScraf(); onResize();
             });
             rightbox.interactive.onMove = new HlAction<Event>(e =>
             {
@@ -139,6 +145,7 @@ namespace MoreSettings.GameMechanics.Scarf
             NowPage = Page.Scraf;
             var leftFlow = flows[FlowEnum.LeftFlow];
             var rightFlow = flows[FlowEnum.RightFlow];
+            var bottom = flows[FlowEnum.BottomFlow];
 
             const double PADH = 20;
             const double PADV = 5;
@@ -173,6 +180,17 @@ namespace MoreSettings.GameMechanics.Scarf
 
                 AddInteractiveToItem(text, Side.Right, i);
             }
+
+
+            for (int i = 0; i < 2; i++)
+            {
+                var box = CreateFlowBox(bottom);
+                var text = new dc.ui.Text(box, null, null, Ref<double>.Null, null, null);
+                text.set_text($"Right Item {i + 1}".ToHaxeString());
+                bottomItems.Add(box);
+
+                AddInteractiveToItem(text, Side.Bottom, i);
+            }
         }
 
 
@@ -206,6 +224,17 @@ namespace MoreSettings.GameMechanics.Scarf
 
         private void MoveFocusTo(Side side, int index)
         {
+            if (side == Side.Bottom)
+            {
+                if (index < 0) index = 0;
+                if (index >= bottomItems.Count) index = bottomItems.Count - 1;
+                if (bottomItems.Count == 0) return;
+                currentSide = Side.Bottom;
+                bottomIndex = index;
+                UpdateHighlightPosition();
+                AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
+                return;
+            }
 
             var list = (side == Side.Left) ? leftItems : rightItems;
             if (index < 0) index = 0;
@@ -215,44 +244,68 @@ namespace MoreSettings.GameMechanics.Scarf
             currentSide = side;
             currentIndex = index;
             UpdateHighlightPosition();
-            CoreLibrary.Utilities.AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
+            AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
         }
 
         private void MoveSelection(int dx, int dy)
         {
-            if (dy != 0)
+            if (currentSide == Side.Bottom)
             {
-                int newIndex = currentIndex + dy;
-                var list = (currentSide == Side.Left) ? leftItems : rightItems;
-                if (newIndex >= 0 && newIndex < list.Count)
+                if (dx != 0)
                 {
-                    currentIndex = newIndex;
+                    int newIndex = bottomIndex + dx;
+                    if (newIndex >= 0 && newIndex < bottomItems.Count)
+                    {
+                        bottomIndex = newIndex;
+                        UpdateHighlightPosition();
+                        AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
+                    }
+                }
+                else if (dy < 0)
+                {
+                    currentSide = lastSide;
+                    var list = (currentSide == Side.Left) ? leftItems : rightItems;
+                    if (currentIndex >= list.Count) currentIndex = list.Count - 1;
+                    if (currentIndex < 0) currentIndex = 0;
                     UpdateHighlightPosition();
-                    CoreLibrary.Utilities.AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
-                }
-                else if (newIndex < 0 && currentSide == Side.Left && leftItems.Count > 0)
-                {
-
-                }
-                else if (newIndex >= list.Count && currentSide == Side.Right && rightItems.Count > 0)
-                {
-
+                    AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
                 }
             }
-            else if (dx != 0)
+            else
             {
-
-                Side newSide = (dx > 0) ? Side.Right : Side.Left;
-                if (newSide != currentSide)
+                if (dy != 0)
                 {
-                    var newList = (newSide == Side.Left) ? leftItems : rightItems;
-                    if (newList.Count > 0)
+                    int newIndex = currentIndex + dy;
+                    var list = (currentSide == Side.Left) ? leftItems : rightItems;
+                    if (newIndex >= 0 && newIndex < list.Count)
                     {
-                        currentSide = newSide;
-                        if (currentIndex >= newList.Count)
-                            currentIndex = newList.Count - 1;
+                        currentIndex = newIndex;
                         UpdateHighlightPosition();
-                        CoreLibrary.Utilities.AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
+                        AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
+                    }
+                    else if (dy > 0 && newIndex >= list.Count && bottomItems.Count > 0)
+                    {
+                        lastSide = currentSide;
+                        currentSide = Side.Bottom;
+                        bottomIndex = 0;
+                        UpdateHighlightPosition();
+                        AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
+                    }
+                }
+                else if (dx != 0)
+                {
+                    Side newSide = (dx > 0) ? Side.Right : Side.Left;
+                    if (newSide != currentSide)
+                    {
+                        var newList = (newSide == Side.Left) ? leftItems : rightItems;
+                        if (newList.Count > 0)
+                        {
+                            currentSide = newSide;
+                            if (currentIndex >= newList.Count)
+                                currentIndex = newList.Count - 1;
+                            UpdateHighlightPosition();
+                            AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
+                        }
                     }
                 }
             }
@@ -261,10 +314,13 @@ namespace MoreSettings.GameMechanics.Scarf
         private void UpdateHighlightPosition()
         {
             if (selectionHighlight == null) return;
+            FlowBox target = null!;
+            if (currentSide == Side.Bottom && bottomIndex < bottomItems.Count)
+                target = bottomItems[bottomIndex];
+            else
+                target = GetCurrentSelectedItem();
 
-            var target = GetCurrentSelectedItem();
-
-            if (target == null) return;
+            if (target == null) { selectionHighlight.alpha = 0; return; }
 
             var main = flows[FlowEnum.MainFlow];
             main.reflow();
@@ -274,21 +330,26 @@ namespace MoreSettings.GameMechanics.Scarf
             double targetW = target.get_outerWidth();
             double targetH = target.get_outerHeight();
 
-
-            selectionHighlight?.set_width((int)(targetW + padding));
-            selectionHighlight?.set_height((int)(targetH + padding));
+            selectionHighlight.set_width((int)(targetW + padding));
+            selectionHighlight.set_height((int)(targetH + padding));
 
             var bounds = target.getBounds(main, null);
-            selectionHighlight?.x = bounds.xMin - padding / 2;
-            selectionHighlight?.y = bounds.yMin - padding / 2;
-
-            selectionHighlight?.posChanged = true;
+            selectionHighlight.x = bounds.xMin - padding / 2;
+            selectionHighlight.y = bounds.yMin - padding / 2;
+            selectionHighlight.posChanged = true;
         }
         private FlowBox GetCurrentSelectedItem()
         {
             var list = (currentSide == Side.Left) ? leftItems : rightItems;
             if (currentIndex >= 0 && currentIndex < list.Count)
                 return list[currentIndex];
+            return null!;
+        }
+
+        private FlowBox GetCurrentBottomItem()
+        {
+            if (bottomIndex >= 0 && bottomIndex < bottomItems.Count)
+                return bottomItems[bottomIndex];
             return null!;
         }
 
@@ -317,35 +378,67 @@ namespace MoreSettings.GameMechanics.Scarf
             base.postUpdate();
         }
 
+        public void setControlLabel()
+        {
+            virtual_acts_cond_label_onAdd_ creataBCreateButton(int actionId, string labelText)
+            {
+                ArrayBytes_Int acts = ArrayUtils.CreateInt();
+                acts.push(actionId);
+                var buttonConfig = new virtual_acts_cond_label_
+                {
+                    acts = acts,
+                    label = Lang.Class.t.get(labelText.ToHaxeString(), null),
+                    cond = null
+                };
+                return buttonConfig.ToVirtual<virtual_acts_cond_label_onAdd_>();
+            }
+
+            ArrayObj btns = (ArrayObj)ArrayUtils.CreateDyn().array;
+            btns.push(creataBCreateButton(14, "Valider"));
+            btns.push(creataBCreateButton(16, "Retour"));
+
+            base.createControlLabel(btns);
+        }
+
+
         public bool controlsUpdate()
         {
-            if (CoreLibrary.Utilities.ControllerHelper.ControlsUpdateFromProcess(controller.parent, 13)) // 右
+            if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 13)) // 右
             {
                 MoveSelection(1, 0);
             }
-            if (CoreLibrary.Utilities.ControllerHelper.ControlsUpdateFromProcess(controller.parent, 11)) // 左
+            if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 11)) // 左
             {
                 MoveSelection(-1, 0);
             }
-            if (CoreLibrary.Utilities.ControllerHelper.ControlsUpdateFromProcess(controller.parent, 10)) // 上
+            if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 10)) // 上
             {
                 MoveSelection(0, -1);
             }
-            if (CoreLibrary.Utilities.ControllerHelper.ControlsUpdateFromProcess(controller.parent, 12)) // 下
+            if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 12)) // 下
             {
                 MoveSelection(0, 1);
             }
-            if (CoreLibrary.Utilities.ControllerHelper.ControlsUpdateFromProcess(controller.parent, 14))
+            if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 14))
             {
-                var item = GetCurrentSelectedItem();
-                if (item?.interactive != null)
+                var bottomItem = GetCurrentBottomItem();
+                if (bottomItem != null)
                 {
                     var evt = new Event(new EventKind.EPush(), Ref<double>.In(0), Ref<double>.In(0));
-                    item.interactive.onClick.Invoke(evt);
+                    bottomItem.interactive?.onClick.Invoke(evt);
+                }
+                else
+                {
+                    var item = GetCurrentSelectedItem();
+                    if (item?.interactive != null)
+                    {
+                        var evt = new Event(new EventKind.EPush(), Ref<double>.In(0), Ref<double>.In(0));
+                        item.interactive.onClick.Invoke(evt);
+                    }
                 }
                 return true;
             }
-            if (CoreLibrary.Utilities.ControllerHelper.ControlsUpdateFromProcess(controller.parent, 16))
+            if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 16))
             {
                 if (NowPage == Page.Scraf)
                 {
@@ -374,7 +467,7 @@ namespace MoreSettings.GameMechanics.Scarf
         {
             var item = GetCurrentSelectedItem();
             if (item == null) return;
-            CoreLibrary.Utilities.AudioHelper.LoadAudioFormString("sfx/ui/menu_select.wav");
+            AudioHelper.LoadAudioFormString("sfx/ui/menu_select.wav");
             onItemSelected?.Invoke(currentIndex, currentSide);
             if (closeOnValidate)
                 Close();
@@ -431,15 +524,20 @@ namespace MoreSettings.GameMechanics.Scarf
 
             var left = flows[FlowEnum.LeftFlow];
             var right = flows[FlowEnum.RightFlow];
+            var bottom = flows[FlowEnum.BottomFlow];
 
             left.reflow();
             right.reflow();
+            bottom.reflow();
 
             FlowProperties leftProps = main.getProperties(left);
             leftProps.set_isAbsolute(true);
 
             FlowProperties rightProps = main.getProperties(right);
             rightProps.set_isAbsolute(true);
+
+            FlowProperties bottomProps = main.getProperties(bottom);
+            bottomProps.set_isAbsolute(true);
 
             double margin = 100 * get_pixelScale.Invoke();
 
@@ -449,12 +547,16 @@ namespace MoreSettings.GameMechanics.Scarf
             right.x = effectiveWidth - right.get_outerWidth() - margin;
             right.y = (effectiveHeight - right.get_outerHeight()) / 2.0;
 
+            bottom.x = (effectiveWidth - bottom.get_outerWidth()) / 2.0;
+            bottom.y = effectiveHeight - bottom.get_outerHeight() - (margin / 2);
+
             double textwidth = title.textWidth * get_pixelScale.Invoke();
             title.x = (effectiveWidth - textwidth / 2) / 2.0;
             title.y = effectiveHeight * 0.05;
 
             left.posChanged = true;
             right.posChanged = true;
+            bottom.posChanged = true;
             title.posChanged = true;
 
             main.reflow();
@@ -468,37 +570,24 @@ namespace MoreSettings.GameMechanics.Scarf
         {
             var leftFlow = flows[FlowEnum.LeftFlow];
             var rightFlow = flows[FlowEnum.RightFlow];
-
-
-
-            foreach (var item in rightItems)
-            {
-                item.remove();
-            }
-
-            foreach (var item in leftItems)
-            {
-                item.remove();
-            }
+            var bottom = flows[FlowEnum.BottomFlow];
 
             leftFlow.removeChildren();
             rightFlow.removeChildren();
+            bottom.removeChildren();
 
             leftItems.Clear();
             rightItems.Clear();
+            bottomItems.Clear();
 
             leftFlow.posChanged = true;
             rightFlow.posChanged = true;
+            bottom.posChanged = true;
 
-            // foreach (FlowBox left in leftFlow.children.AsEnumerable())
-            // {
-            //     left.remove();
-            // }
-
-            // foreach (FlowBox rigth in rightFlow.children.AsEnumerable())
-            // {
-            //     rigth.remove();
-            // }
+            currentSide = Side.Left;
+            lastSide = Side.Left;
+            currentIndex = 0;
+            bottomIndex = 0;
         }
 
         public override void onDispose()
