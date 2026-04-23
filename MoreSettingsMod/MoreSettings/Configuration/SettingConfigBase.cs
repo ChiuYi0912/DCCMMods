@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using dc.h2d;
+using ScarfData = Hashlink.Virtuals.virtual_attachOffX_attachOffY_color_cosOffset_count_extraSprLength_friction_gravity_maxLength_minLength_onFront_props_sprId_thickness_;
 
 namespace MoreSettings.Configuration
 {
@@ -58,7 +60,9 @@ namespace MoreSettings.Configuration
         public bool Allscarf { get; set; } = false;
 
         public Dictionary<int, SingleScarfConfig> ScarfConfigs { get; set; } = new();
+        public Dictionary<int, ScarfData> Datakey = new();
     }
+
 
 
     [Serializable]
