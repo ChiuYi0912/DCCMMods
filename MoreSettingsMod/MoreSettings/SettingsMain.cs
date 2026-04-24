@@ -101,5 +101,10 @@ IOnAfterLoadingCDB
          default);
    }
 
-   void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb) { }
+   void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb)
+   {
+      var data = cdb.skin.all.array;
+
+      Logger.Debug($"{data.getDyn(2)}");
+   }
 }

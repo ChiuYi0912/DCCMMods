@@ -68,9 +68,9 @@ namespace MoreSettings.Modules
                 GetText.Instance.GetString("暴击特效持续显示时间"),
                 () => SettingsMain.entityPop.Config.Value.StsSpeedMultiplier,
                 v => SettingsMain.entityPop.Config.Value.StsSpeedMultiplier = v,
-                step: 10,
+                step: 0.1,
                 minValue: 0,
-                maxValue: 5000,
+                maxValue: 10,
                 scrollerFlow: scrollerFlow
                 );
             }
@@ -97,9 +97,9 @@ namespace MoreSettings.Modules
                   GetText.Instance.GetString("暴击特效持续显示时间"),
                   () => SettingsMain.entityPop.Config.Value.HotlineSpeedMultiplier,
                   v => SettingsMain.entityPop.Config.Value.HotlineSpeedMultiplier = v,
-                  step: 10,
+                  step: 0.1,
                   minValue: 0,
-                  maxValue: 5000,
+                  maxValue: 10,
                   scrollerFlow: scrollerFlow
               );
             }

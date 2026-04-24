@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json.Serialization;
+using CoreLibrary.Core.Extensions;
 using dc.h2d;
+using dc.hxsl._Dce;
+using Hashlink.Virtuals;
 using ScarfData = Hashlink.Virtuals.virtual_attachOffX_attachOffY_color_cosOffset_count_extraSprLength_friction_gravity_maxLength_minLength_onFront_props_sprId_thickness_;
 
 namespace MoreSettings.Configuration
@@ -59,28 +63,123 @@ namespace MoreSettings.Configuration
         public bool UseScarfGray { get; set; } = true;
         public bool Allscarf { get; set; } = false;
 
-        public Dictionary<int, SingleScarfConfig> ScarfConfigs { get; set; } = new();
-        public Dictionary<int, ScarfData> Datakey = new();
+
+        public Dictionary<int, SerializableScarfData> SerializableScarfData { get; set; } = new();
+
+
+        [JsonIgnore]
+        public Dictionary<int, ScarfData> RuntimeScarfData = new();
+
+
+        public void UpdateFromRuntime()
+        {
+            SerializableScarfData.Clear();
+            foreach (var kv in RuntimeScarfData)
+            {
+                SerializableScarfData[kv.Key] = ConvertToSerializable(kv.Value);
+            }
+        }
+
+
+        public void LoadToRuntime()
+        {
+            RuntimeScarfData.Clear();
+            foreach (var kv in SerializableScarfData)
+            {
+                RuntimeScarfData[kv.Key] = ConvertToScarfData(kv.Value);
+            }
+        }
+
+        private ScarfData ConvertToScarfData(SerializableScarfData dto)
+        {
+            var data = new ScarfData();
+            data.attachOffX = dto.attachOffX;
+            data.attachOffY = dto.attachOffY;
+            data.color = dto.color;
+            data.cosOffset = dto.cosOffset;
+            data.count = dto.count;
+            data.extraSprLength = dto.extraSprLength;
+            data.friction = dto.friction;
+            data.gravity = dto.gravity;
+            data.maxLength = dto.maxLength;
+            data.minLength = dto.minLength;
+            data.onFront = dto.onFront;
+            data.sprId = dto.sprId.ToHaxeString();
+            data.thickness = dto.thickness;
+
+            data.props = new virtual_backColor_customAttach_depthScaleFactor_isCape_linkTo_lockBehind_oscilFactor_rotScale_();
+            data.props.backColor = dto.backColor;
+            data.props.customAttach = dto.customAttach.ToHaxeString() ?? "".ToHaxeString();
+            data.props.depthScaleFactor = dto.depthScaleFactor ?? 1.0;
+            data.props.isCape = dto.isCape ?? false;
+            data.props.linkTo = dto.linkTo;
+            data.props.lockBehind = dto.lockBehind ?? false;
+            data.props.oscilFactor = dto.oscilFactor ?? 0.0;
+            data.props.rotScale = dto.rotScale ?? 1.0;
+
+            return data;
+        }
+
+        private SerializableScarfData ConvertToSerializable(ScarfData data)
+        {
+            var dto = new SerializableScarfData();
+            dto.attachOffX = data.attachOffX;
+            dto.attachOffY = data.attachOffY;
+            dto.color = data.color;
+            dto.cosOffset = data.cosOffset;
+            dto.count = data.count;
+            dto.extraSprLength = data.extraSprLength;
+            dto.friction = data.friction;
+            dto.gravity = data.gravity;
+            dto.maxLength = data.maxLength;
+            dto.minLength = data.minLength;
+            dto.onFront = data.onFront;
+            dto.sprId = data.sprId?.ToString() ?? "scarfGray";
+            dto.thickness = data.thickness;
+
+            if (data.props == null)
+            {
+                data.props = new virtual_backColor_customAttach_depthScaleFactor_isCape_linkTo_lockBehind_oscilFactor_rotScale_();
+                dto.backColor = data.props.backColor;
+                dto.customAttach = data.props.customAttach?.ToString() ?? "";
+                dto.depthScaleFactor = data.props.depthScaleFactor;
+                dto.isCape = data.props.isCape;
+                dto.linkTo = data.props.linkTo;
+                dto.lockBehind = data.props.lockBehind;
+                dto.oscilFactor = data.props.oscilFactor;
+                dto.rotScale = data.props.rotScale;
+            }
+
+            return dto;
+        }
     }
 
-
-
     [Serializable]
-    public class SingleScarfConfig
+    public class SerializableScarfData
     {
-        public string SprId { get; set; } = "scarfGlow";
-        public double CosOffset { get; set; } = 3;
-        public double AttachOffX { get; set; } = -4;
-        public double AttachOffY { get; set; } = 2;
-        public double MaxLength { get; set; } = 2;
-        public double Friction { get; set; } = 0.6;
-        public double MinLength { get; set; } = 2;
-        public bool OnFront { get; set; } = false;
-        public int Color { get; set; } = 8724512;
-        public int Count { get; set; } = 6;
-        public double Gravity { get; set; } = 1.5;
-        public double Thickness { get; set; } = 2;
-        public Dictionary<string, object> Props { get; set; } = [];
+        public double attachOffX { get; set; }
+        public double attachOffY { get; set; }
+        public int? color { get; set; }
+        public double cosOffset { get; set; }
+        public int count { get; set; }
+        public int? extraSprLength { get; set; }
+        public double friction { get; set; }
+        public double gravity { get; set; }
+        public double maxLength { get; set; }
+        public double minLength { get; set; }
+        public bool onFront { get; set; }
+        public string sprId { get; set; } = "scarfGray";
+        public double thickness { get; set; }
+
+
+        public int? backColor { get; set; }
+        public string customAttach { get; set; } = "";
+        public double? depthScaleFactor { get; set; }
+        public bool? isCape { get; set; }
+        public int? linkTo { get; set; }
+        public bool? lockBehind { get; set; }
+        public double? oscilFactor { get; set; }
+        public double? rotScale { get; set; }
     }
 
 

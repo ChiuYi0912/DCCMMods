@@ -1,5 +1,7 @@
 using System;
+using CoreLibrary.Core.Extensions;
 using dc;
+using dc.en;
 using dc.h2d;
 using dc.hl.types;
 using dc.tool;
@@ -9,6 +11,7 @@ using ModCore.Modules;
 using ModCore.Storage;
 using ModCore.Utilities;
 using MoreSettings.Configuration;
+using MoreSettings.Utilities;
 using ScarfData = Hashlink.Virtuals.virtual_attachOffX_attachOffY_color_cosOffset_count_extraSprLength_friction_gravity_maxLength_minLength_onFront_props_sprId_thickness_;
 
 namespace MoreSettings.GameMechanics.Scarf
@@ -16,28 +19,78 @@ namespace MoreSettings.GameMechanics.Scarf
     public class CustomScarfBase
     {
         public static Config<MainConfig> modConfig = SettingsMain.ModConfig;
-        public Dictionary<int, ScarfData> Datakey = modConfig.Value.Scarf.Datakey;
+        public Dictionary<int, ScarfData> Datakey = new();
         public BlendMode mode = default!;
 
         public CustomScarfBase()
         {
-
+            Load();
         }
 
+        private void Load()
+        {
+            var config = modConfig.Value.Scarf;
+            if (config.SerializableScarfData.Count > 0)
+            {
+                config.LoadToRuntime();
+                Datakey = config.RuntimeScarfData;
+            }
+            else
+            {
+                var defaultData = new ScarfData();
+                InitDefaultValues(defaultData);
+                Datakey[0] = defaultData;
+                Save();
+            }
+        }
+
+        private void InitDefaultValues(ScarfData scarfData)
+        {
+            scarfData.attachOffX = 0.0;
+            scarfData.attachOffY = 0.0;
+            scarfData.color = 0x801234;
+            scarfData.cosOffset = 0;
+            scarfData.count = 11;
+            scarfData.extraSprLength = null;
+            scarfData.friction = 0.6;
+            scarfData.gravity = 0.9;
+            scarfData.maxLength = 4.0;
+            scarfData.minLength = 3.0;
+            scarfData.onFront = false;
+            scarfData.sprId = "scarfGray".ToHaxeString();
+            scarfData.thickness = 1.0;
+
+            scarfData.props.backColor = null;
+            scarfData.props.customAttach = "".ToHaxeString();
+            scarfData.props.depthScaleFactor = 1.0;
+            scarfData.props.isCape = false;
+            scarfData.props.linkTo = null;
+            scarfData.props.lockBehind = false;
+            scarfData.props.oscilFactor = 0.0;
+            scarfData.props.rotScale = 1.0;
+        }
 
         public ScarfData CreateScarf(int id)
         {
             var data = new ScarfData();
             Datakey[id] = data;
-
+            Save();
             return data;
         }
 
         public void RemoveScarf(int id)
         {
             Datakey.Remove(id);
+            Save();
         }
 
+        public void Save()
+        {
+            var config = modConfig.Value.Scarf;
+            config.RuntimeScarfData = Datakey;
+            config.UpdateFromRuntime();
+            modConfig.Save();
+        }
 
         public ScarfManager CreateScarfManagerBase(Entity entity, dc.String skinId)
         {
@@ -84,9 +137,7 @@ namespace MoreSettings.GameMechanics.Scarf
         {
             var scarfManager = new ScarfManager(entity);
 
-            var hero = Game.Instance.HeroInstance!;
-            if (Datakey.Count < 0 || !modConfig.Value.Scarf.Enabled)
-                return CreateScarfManagerBase(hero, hero.getSkinInfo().item);
+            mode = new BlendMode.Alpha();
 
             scarfManager.blendMode = mode;
             scarfManager.sbFront.blendMode = mode;
@@ -108,6 +159,30 @@ namespace MoreSettings.GameMechanics.Scarf
             }
 
             return scarfManager;
+        }
+
+        public void UpdateSarfs()
+        {
+            var hero = Game.Instance.HeroInstance!;
+            var scmanager = hero.scarf;
+            foreach (dc.tool.Scarf item in scmanager.scarfs.AsEnumerable())
+            {
+                item.dispose();
+                scmanager.scarfs.removeDyn(item);
+            }
+
+            foreach (var item in Datakey)
+            {
+                var scarf = new dc.tool.Scarf(scmanager, item.Value);
+                scmanager.scarfs.push(scarf);
+            }
+
+            var allScarfs = hero.scarf.scarfs;
+            for (int i = 0; i < allScarfs.length; i++)
+            {
+                var scarf = allScarfs.getDyn(i);
+                scarf.init();
+            }
         }
     }
 

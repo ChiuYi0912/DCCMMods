@@ -117,7 +117,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
                 popDamage.flow.addChildAt(text, 0);
             }
 
-            
+
 
             popDamage.flow.set_needReflow(false);
         }
@@ -209,9 +209,18 @@ namespace CoreLibrary.Utilities.CustomPopDamage
             }
             else
             {
-                double duration = speedMultiplier * _handlerProvider.GetHandler(e).SpeedMultiplier;
+                if (Std.Class.@is(popDamage, dc.ui.PopDamage.Class) || Std.Class.@is(popDamage, dc.ui.popd.PopDamageHotline.Class) && !EntityPopDamage.popconfig.HotlinePopDamage || Std.Class.@is(popDamage, dc.ui.popd.PopDamageSts.Class) && !EntityPopDamage.popconfig.StsPopDamage)
+                {
+                    double dduration = speedMultiplier * 450;
+                    double ddelay = speedMultiplier * ((ad.dmgBonusMul > 1.33 || ad.dmgScaledAdd > 0.0) ? 700.0 : 350.0);
+                    CreateFadeTween(popDamage, dduration, ddelay);
+                    return;
+                }
+                double duration = speedMultiplier * 600;
+                double duration1 = _handlerProvider.GetHandler(e).SpeedMultiplier;
+                double ms = duration1 * 1000.0;
                 double delay = speedMultiplier * ((ad.dmgBonusMul > 1.33 || ad.dmgScaledAdd > 0.0) ? 700.0 : 350.0);
-                CreateFadeTween(popDamage, duration, delay);
+                CreateFadeTween(popDamage, ms, ms);
             }
         }
 

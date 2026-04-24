@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Utilities;
 using dc;
+using dc.en;
 using dc.en.mob;
 using dc.h2d;
 using dc.h2d.col;
@@ -31,25 +32,33 @@ namespace MoreSettings.GameMechanics.Scarf
         public Dictionary<FlowEnum, Flow> flows = new();
         public CustomScarfBase customScarf = new();
 
+
         private List<FlowBox> leftItems = new();
         private List<FlowBox> rightItems = new();
         private List<FlowBox> bottomItems = new();
-        private int bottomIndex = 0;
-
-
-        private enum Side { Left, Right, Bottom }
-        private Side currentSide = Side.Left;
-        private Side lastSide = Side.Left;
-        private int currentIndex = 0;
 
         private ScaleGrid selectionHighlight = default!;
-        public bool closeOnValidate = true;
+        public bool closeOnValidate = false;
         private Action<int, Side>? onItemSelected = default!;
 
-        private Page NowPage = Page.NULL;
 
         public enum FlowEnum { MainFlow, RightFlow, LeftFlow, BottomFlow }
-        public enum Page { NULL, First, Scraf }
+        public enum Page { NULL, First, Scraf, Props }
+        private enum Side { Left, Right, Bottom }
+
+        private Page NowPage = Page.NULL;
+        private Side currentSide = Side.Left;
+        private Side lastSide = Side.Left;
+
+        private int currentIndex = 0;
+        private int bottomIndex = 0;
+        private int CurrentScarf = 0;
+
+        private Dictionary<string, (Action<ScarfData, object> setter, Func<ScarfData, object> getter)> propertyAccessors = new();
+        private Dictionary<int, ScarfListInitialisation> Attributes = new();
+
+
+
 
         public CustomScarfUI(dc.libs.Process parent) : base(parent)
         {
@@ -61,8 +70,17 @@ namespace MoreSettings.GameMechanics.Scarf
             root.addChild(title);
 
             HUD.Class.ME.hide(null);
+            CeateScarfToKey(CurrentScarf);
 
             InitFlows(); OpenPageFirst(); CreateHighlight(); setMainFlowPos(); UpdateHighlightPosition();
+            Hook_Hero.initScarf += Hook_Hero_initScarf;
+        }
+
+        private void Hook_Hero_initScarf(Hook_Hero.orig_initScarf orig, Hero self)
+        {
+            if (self.scarf != null)
+                self.scarf.dispose();
+            self.scarf = customScarf.CreateCustomScarfManager(self);
         }
 
         #region UI 初始化
@@ -112,10 +130,10 @@ namespace MoreSettings.GameMechanics.Scarf
             var lefttext = new dc.ui.Text(leftbox, null, null, Ref<double>.Null, null, null);
             lefttext.set_text(GetText.Instance.GetString("修改当前自定义飘带").ToHaxeString());
             leftItems.Add(leftbox);
-            leftbox.interactive = new Interactive(leftbox.get_outerWidth(), leftbox.get_outerHeight(), null, null);
+            leftbox.interactive = new dc.h2d.Interactive(leftbox.get_outerWidth(), leftbox.get_outerHeight(), null, null);
             leftbox.interactive.onClick = new HlAction<Event>(e =>
             {
-                
+
             });
             leftbox.interactive.onMove = new HlAction<Event>(e =>
             {
@@ -126,9 +144,15 @@ namespace MoreSettings.GameMechanics.Scarf
             var righttext = new dc.ui.Text(rightbox, null, null, Ref<double>.Null, null, null);
             righttext.set_text(getText.GetString("创建新自定义飘带").ToHaxeString());
             rightItems.Add(rightbox);
-            rightbox.interactive = new Interactive(rightbox.get_outerWidth(), rightbox.get_outerHeight(), null, null);
+            rightbox.interactive = new dc.h2d.Interactive(rightbox.get_outerWidth(), rightbox.get_outerHeight(), null, null);
             rightbox.interactive.onClick = new HlAction<Event>(e =>
             {
+                if (!Attributes.ContainsKey(0))
+                {
+                    var newData = new ScarfListInitialisation();
+                    newData.InitAttributes();
+                    Attributes[CurrentScarf] = newData;
+                }
                 Clearpage(); OpenPageScraf(); onResize();
             });
             rightbox.interactive.onMove = new HlAction<Event>(e =>
@@ -141,68 +165,153 @@ namespace MoreSettings.GameMechanics.Scarf
 
         private void OpenPageScraf()
         {
-            currentIndex = 0;
             NowPage = Page.Scraf;
+
+            //int newId = GetNextScarfId();
+            var currentEditingData = Attributes[CurrentScarf];
+
             var leftFlow = flows[FlowEnum.LeftFlow];
             var rightFlow = flows[FlowEnum.RightFlow];
-            var bottom = flows[FlowEnum.BottomFlow];
+            var bottomFlow = flows[FlowEnum.BottomFlow];
 
-            const double PADH = 20;
-            const double PADV = 5;
-            FlowBox CreateFlowBox(dc.h2d.Object? parent = null)
+
+            for (int i = 0; i < Attributes[CurrentScarf].baseAttributes.left.Count; i++)
             {
-                var box = FlowBox.Class.createBoxValidationWithBiomeParam(parent, Ref<double>.In(PADH), Ref<double>.In(PADV));
-                box.set_paddingLeft(50);
-                box.set_paddingRight(50);
-                box.set_horizontalSpacing(20);
-                box.set_verticalSpacing(20);
-
-                return box;
-            }
-
-            for (int i = 0; i < 7; i++)
-            {
+                var attr = Attributes[CurrentScarf].baseAttributes.left[i];
                 var box = CreateFlowBox(leftFlow);
                 var text = new dc.ui.Text(box, null, null, Ref<double>.Null, null, null);
-                text.set_text($"Left Item {i + 1}".ToHaxeString());
+                object val = attr.Getter(currentEditingData.scarfData);
+                text.set_text($"{attr.Name}: {val}".ToHaxeString());
                 leftItems.Add(box);
-
-                AddInteractiveToItem(text, Side.Left, i);
+                attr.Box = box;
+                attr.Text = text;
+                AddInteractiveToItem(box, Side.Left, i);
             }
 
 
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < Attributes[CurrentScarf].baseAttributes.right.Count - 1; i++)
             {
+                var attr = Attributes[CurrentScarf].baseAttributes.right[i];
                 var box = CreateFlowBox(rightFlow);
                 var text = new dc.ui.Text(box, null, null, Ref<double>.Null, null, null);
-                text.set_text($"Right Item {i + 1}".ToHaxeString());
+                object val = attr.Getter(currentEditingData.scarfData);
+                text.set_text($"{attr.Name}: {val}".ToHaxeString());
                 rightItems.Add(box);
-
-                AddInteractiveToItem(text, Side.Right, i);
+                attr.Box = box;
+                attr.Text = text;
+                AddInteractiveToItem(box, Side.Right, i);
             }
 
-
-            for (int i = 0; i < 2; i++)
+            int idx = Attributes[CurrentScarf].baseAttributes.right.Count - 1;
+            var propsattr = Attributes[CurrentScarf].baseAttributes.right[idx];
+            var propsbox = CreateFlowBox(rightFlow);
+            var propstext = new dc.ui.Text(propsbox, null, null, Ref<double>.Null, null, null);
+            object propsval = propsattr.Getter(currentEditingData.scarfData);
+            propstext.set_text($"{propsattr.Name}: {propsval}".ToHaxeString());
+            rightItems.Add(propsbox);
+            propsattr.Box = propsbox;
+            propsattr.Text = propstext;
+            propsbox.interactive = new dc.h2d.Interactive(propsbox.get_outerWidth(), propsbox.get_outerHeight(), null, null);
+            propsbox.interactive.onClick = new HlAction<Event>(e =>
             {
-                var box = CreateFlowBox(bottom);
-                var text = new dc.ui.Text(box, null, null, Ref<double>.Null, null, null);
-                text.set_text($"Right Item {i + 1}".ToHaxeString());
-                bottomItems.Add(box);
+                MoveFocusTo(Side.Right, idx);
+                AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
+                Clearpage();
+                OpenPropsSubMenu();
+                onResize();
+            });
+            propsbox.interactive.onMove = new HlAction<Event>(e =>
+            {
+                MoveFocusTo(Side.Right, idx);
+            });
 
-                AddInteractiveToItem(text, Side.Bottom, i);
-            }
+
+
+            var saveBox = CreateFlowBox(bottomFlow);
+            var saveText = new dc.ui.Text(saveBox, null, null, Ref<double>.Null, null, null);
+            saveText.set_text("保存".ToHaxeString());
+            bottomItems.Add(saveBox);
+            saveBox.interactive = new dc.h2d.Interactive(saveBox.get_outerWidth(), saveBox.get_outerHeight(), null, null);
+            saveBox.interactive.onClick = new HlAction<Event>(e => { });
+            saveBox.interactive.onMove = new HlAction<Event>(e => { });
         }
 
 
-        private void AddInteractiveToItem(dc.ui.Text text, Side side, int idx)
+        private void OpenPropsSubMenu()
         {
-            var inter = new Interactive(text.textWidth, text.textHeight, text, null);
-            inter.onClick = new HlAction<Event>(e =>
+            NowPage = Page.Props;
+
+            //int newId = GetNextScarfId();
+
+            var leftFlow = flows[FlowEnum.LeftFlow];
+            var rightFlow = flows[FlowEnum.RightFlow];
+            var bottomFlow = flows[FlowEnum.BottomFlow];
+
+            var currentEditingData = Attributes[CurrentScarf];
+
+
+            for (int i = 0; i < Attributes[CurrentScarf].propsAttributes.left.Count; i++)
+            {
+                var attr = Attributes[CurrentScarf].propsAttributes.left[i];
+                var box = CreateFlowBox(leftFlow);
+                var text = new dc.ui.Text(box, null, null, Ref<double>.Null, null, null);
+                object val = attr.Getter(currentEditingData.scarfData);
+                text.set_text($"{attr.Name}: {val}".ToHaxeString());
+                leftItems.Add(box);
+                attr.Box = box;
+                attr.Text = text;
+                AddInteractiveToItem(box, Side.Left, i);
+            }
+
+
+            for (int i = 0; i < Attributes[CurrentScarf].propsAttributes.right.Count; i++)
+            {
+                var attr = Attributes[CurrentScarf].propsAttributes.right[i];
+                var box = CreateFlowBox(rightFlow);
+                var text = new dc.ui.Text(box, null, null, Ref<double>.Null, null, null);
+                object val = attr.Getter(currentEditingData.scarfData);
+                text.set_text($"{attr.Name}: {val}".ToHaxeString());
+                rightItems.Add(box);
+                attr.Box = box;
+                attr.Text = text;
+                AddInteractiveToItem(box, Side.Right, i);
+            }
+
+
+            var saveBox = CreateFlowBox(bottomFlow);
+            var saveText = new dc.ui.Text(saveBox, null, null, Ref<double>.Null, null, null);
+            saveText.set_text("保存".ToHaxeString());
+            bottomItems.Add(saveBox);
+            saveBox.interactive = new dc.h2d.Interactive(saveBox.get_outerWidth(), saveBox.get_outerHeight(), null, null);
+            saveBox.interactive.onClick = new HlAction<Event>(e => { });
+            saveBox.interactive.onMove = new HlAction<Event>(e => { });
+        }
+
+
+        private FlowBox CreateFlowBox(dc.h2d.Object parent)
+        {
+            const double PADH = 20;
+            const double PADV = 5;
+            var box = FlowBox.Class.createBoxValidationWithBiomeParam(parent, Ref<double>.In(PADH), Ref<double>.In(PADV));
+            box.set_paddingLeft(50);
+            box.set_paddingRight(50);
+            box.set_horizontalSpacing(20);
+            box.set_verticalSpacing(20);
+
+            return box;
+        }
+
+
+
+        private void AddInteractiveToItem(FlowBox box, Side side, int idx)
+        {
+            box.interactive = new dc.h2d.Interactive(box.get_outerWidth(), box.get_outerHeight(), null, null);
+            box.interactive.onClick = new HlAction<Event>(e =>
             {
                 MoveFocusTo(side, idx);
                 OnValidate();
             });
-            inter.onMove = new HlAction<Event>(e =>
+            box.interactive.onMove = new HlAction<Event>(e =>
             {
                 MoveFocusTo(side, idx);
             });
@@ -218,6 +327,46 @@ namespace MoreSettings.GameMechanics.Scarf
             UpdateHighlightPosition();
         }
 
+        #endregion
+
+        #region 飘带配置
+        private ScarfListInitialisation CeateScarfToKey(int key)
+        {
+            if (Attributes.TryGetValue(key, out var existing))
+            {
+                return existing;
+            }
+
+            var newData = new ScarfListInitialisation();
+            if (customScarf.Datakey.TryGetValue(key, out var existingData))
+            {
+                newData.scarfData = existingData;
+                newData.InitAttributes();
+            }
+            else
+            {
+                newData.InitAttributes();
+                customScarf.Datakey[key] = newData.scarfData;
+                customScarf.Save();
+            }
+
+            Attributes[key] = newData;
+            return newData;
+        }
+
+        private ScarfListInitialisation SafeGetScarf(int key)
+        {
+            if (Attributes.TryGetValue(key, out var scarf))
+            {
+                return scarf;
+            }
+            return null!;
+        }
+
+        private void RemoveScarf(int key)
+        {
+            Attributes.Remove(key);
+        }
         #endregion
 
         #region 焦点与高亮控制
@@ -396,13 +545,18 @@ namespace MoreSettings.GameMechanics.Scarf
             ArrayObj btns = (ArrayObj)ArrayUtils.CreateDyn().array;
             btns.push(creataBCreateButton(14, "Valider"));
             btns.push(creataBCreateButton(16, "Retour"));
+            btns.push(creataBCreateButton(17, "+"));
+            btns.push(creataBCreateButton(18, "-"));
 
             base.createControlLabel(btns);
         }
 
 
-        public bool controlsUpdate()
+        public void controlsUpdate()
         {
+            if (controller.manualLock)
+                return;
+
             if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 13)) // 右
             {
                 MoveSelection(1, 0);
@@ -421,11 +575,14 @@ namespace MoreSettings.GameMechanics.Scarf
             }
             if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 14))
             {
-                var bottomItem = GetCurrentBottomItem();
-                if (bottomItem != null)
+                if (currentSide == Side.Bottom)
                 {
-                    var evt = new Event(new EventKind.EPush(), Ref<double>.In(0), Ref<double>.In(0));
-                    bottomItem.interactive?.onClick.Invoke(evt);
+                    var bottomItem = GetCurrentBottomItem();
+                    if (bottomItem?.interactive != null)
+                    {
+                        var evt = new Event(new EventKind.EPush(), Ref<double>.In(0), Ref<double>.In(0));
+                        bottomItem.interactive.onClick.Invoke(evt);
+                    }
                 }
                 else
                 {
@@ -436,26 +593,144 @@ namespace MoreSettings.GameMechanics.Scarf
                         item.interactive.onClick.Invoke(evt);
                     }
                 }
-                return true;
+                return;
             }
+
+            if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 17))
+            {
+                ModifyCurrentAttributeValue(1);
+                return;
+            }
+            if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 18))
+            {
+                ModifyCurrentAttributeValue(-1);
+                return;
+            }
+
             if (ControllerHelper.ControlsUpdateFromProcess(controller.parent, 16))
             {
                 if (NowPage == Page.Scraf)
                 {
                     Clearpage(); OpenPageFirst(); onResize();
-                    return true;
+                    return;
+                }
+                if (NowPage == Page.Props)
+                {
+                    Clearpage(); OpenPageScraf(); onResize();
+                    return;
                 }
 
                 Close();
-                return true;
+                return;
             }
 
+            return;
+        }
 
-            return true;
+        private void ModifyCurrentAttributeValue(int delta)
+        {
+            if (currentSide == Side.Bottom) return;
+
+            List<AttributeEntry> attrList;
+            ScarfData currentData;
+
+            if (NowPage == Page.Scraf)
+            {
+                attrList = (currentSide == Side.Left)
+                    ? Attributes[CurrentScarf].baseAttributes.left
+                    : Attributes[CurrentScarf].baseAttributes.right;
+                currentData = Attributes[CurrentScarf].scarfData;
+            }
+            else if (NowPage == Page.Props)
+            {
+                attrList = (currentSide == Side.Left)
+                    ? Attributes[CurrentScarf].propsAttributes.left
+                    : Attributes[CurrentScarf].propsAttributes.right;
+                currentData = Attributes[CurrentScarf].scarfData;
+            }
+            else
+            {
+                return;
+            }
+
+            if (currentIndex < 0 || currentIndex >= attrList.Count) return;
+            var attr = attrList[currentIndex];
+
+            object oldVal = attr.Getter(currentData);
+            object newVal;
+
+            if (attr.ValueType == typeof(double))
+            {
+                double step = (delta > 0) ? 0.5 : -0.5;
+                newVal = (double)oldVal + step;
+            }
+            else if (attr.ValueType == typeof(int))
+            {
+                newVal = (int)oldVal + delta;
+            }
+            else if (attr.ValueType == typeof(int?))
+            {
+                if (attr.Name.ToLowerInvariant().Contains("color") || attr.Name.ToLowerInvariant().Contains("backColor"))
+                {
+                    controller.manualLock = true;
+                    Hideandshow(false);
+
+                    var picker = new ColorGridSelector((selectedColor) =>
+                    {
+                        attr.Setter(currentData, selectedColor);
+                        attr.Text.set_text($"{attr.Name}: {selectedColor:X8}".ToHaxeString());
+                        setMainFlowPos();
+                        UpdateHighlightPosition();
+                        AudioHelper.LoadAudioFormString("sfx/ui/menu_select.wav");
+                    });
+                    picker.onClose = new HlAction(() =>
+                    {
+                        delayer.addF(null, new HlAction(() =>
+                        {
+                            controller.manualLock = false;
+                            Hideandshow(true);
+                            setMainFlowPos();
+                            UpdateHighlightPosition();
+                        }), 1.0);
+                    });
+                    return;
+                }
+                else
+                {
+                    int? val = (int?)oldVal;
+                    if (val == null) val = 0;
+                    newVal = val + delta;
+                }
+            }
+            else if (attr.ValueType == typeof(bool))
+            {
+                newVal = !(bool)oldVal;
+            }
+            else if (attr.ValueType == typeof(dc.String))
+            {
+                return;
+            }
+            else
+            {
+                return;
+            }
+
+            attr.Setter(currentData, newVal);
+            attr.Text.set_text($"{attr.Name}: {newVal}".ToHaxeString());
+            setMainFlowPos();
+            UpdateHighlightPosition();
+            AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
+            customScarf.Save();
+            customScarf.UpdateSarfs();
+            
         }
 
 
-
+        private void Hideandshow(bool isshow)
+        {
+            root.visible = isshow;
+            root.posChanged = true;
+        }
 
 
 
@@ -494,10 +769,6 @@ namespace MoreSettings.GameMechanics.Scarf
             base.onResize();
             setMainFlowPos();
             UpdateHighlightPosition();
-
-
-
-            title.posChanged = true;
         }
 
         public override void blur(Ref<double> radius, Ref<double> gain) { }
