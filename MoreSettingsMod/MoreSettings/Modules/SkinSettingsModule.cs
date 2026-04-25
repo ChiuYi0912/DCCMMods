@@ -62,7 +62,7 @@ namespace MoreSettings.Modules
                 scrollerFlow
             );
 
-            if (config.StsSkin)
+            if (SettingsMain.entityPop.Config.Value.StsPopDamage)
             {
                 PopmenuHelper.AddConfigSlider(
                 GetText.Instance.GetString("暴击特效持续显示时间"),
@@ -91,7 +91,7 @@ namespace MoreSettings.Modules
                 scrollerFlow
             );
 
-            if (config.HotlineSkin)
+            if (SettingsMain.entityPop.Config.Value.HotlinePopDamage)
             {
                 PopmenuHelper.AddConfigSlider(
                   GetText.Instance.GetString("暴击特效持续显示时间"),

@@ -22,12 +22,9 @@ namespace MoreSettings.GameMechanics.Scarf
         public Dictionary<int, ScarfData> Datakey = new();
         public BlendMode mode = default!;
 
-        public CustomScarfBase()
-        {
-            Load();
-        }
+        public CustomScarfBase() { }
 
-        private void Load()
+        public void Load()
         {
             var config = modConfig.Value.Scarf;
             if (config.SerializableScarfData.Count > 0)
@@ -37,12 +34,10 @@ namespace MoreSettings.GameMechanics.Scarf
             }
             else
             {
-                var defaultData = new ScarfData();
-                InitDefaultValues(defaultData);
-                Datakey[0] = defaultData;
-                Save();
+                CustomScarfUI.CeateScarfToKey(0);
             }
         }
+
 
         private void InitDefaultValues(ScarfData scarfData)
         {

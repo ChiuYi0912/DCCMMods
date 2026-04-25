@@ -196,7 +196,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
 
         }
 
-        private void CreateOriginalStyleFadeAnimation(dc.ui.PopDamage popDamage, Entity e, AttackData ad)
+        private void CreateOriginalStyleFadeAnimation(dc.ui.Process popDamage, Entity e, AttackData ad)
         {
             double speedMultiplier = GetSpeedMultiplier(e);
             bool isHero = Std.Class.@is(e, Hero.Class);
@@ -205,22 +205,22 @@ namespace CoreLibrary.Utilities.CustomPopDamage
             {
                 double duration = speedMultiplier * 450.0;
                 double delay = speedMultiplier * ((ad.dmgBonusMul > 1.33 || ad.dmgScaledAdd > 0.0) ? 1000.0 : 600.0);
-                CreateFadeTween(popDamage, duration, delay);
+                CreateFadeTween((dc.ui.PopDamage)popDamage, duration, delay);
             }
             else
             {
-                if (Std.Class.@is(popDamage, dc.ui.PopDamage.Class) || Std.Class.@is(popDamage, dc.ui.popd.PopDamageHotline.Class) && !EntityPopDamage.popconfig.HotlinePopDamage || Std.Class.@is(popDamage, dc.ui.popd.PopDamageSts.Class) && !EntityPopDamage.popconfig.StsPopDamage)
+                if (!EntityPopDamage.popconfig.StsPopDamage && !EntityPopDamage.popconfig.HotlinePopDamage || _handlerProvider.GetHandler(e).Priority == int.MaxValue)
                 {
-                    double dduration = speedMultiplier * 450;
+                    double dduration = speedMultiplier * 600;
                     double ddelay = speedMultiplier * ((ad.dmgBonusMul > 1.33 || ad.dmgScaledAdd > 0.0) ? 700.0 : 350.0);
-                    CreateFadeTween(popDamage, dduration, ddelay);
+                    CreateFadeTween((dc.ui.PopDamage)popDamage, dduration, ddelay);
                     return;
                 }
                 double duration = speedMultiplier * 600;
                 double duration1 = _handlerProvider.GetHandler(e).SpeedMultiplier;
                 double ms = duration1 * 1000.0;
                 double delay = speedMultiplier * ((ad.dmgBonusMul > 1.33 || ad.dmgScaledAdd > 0.0) ? 700.0 : 350.0);
-                CreateFadeTween(popDamage, ms, ms);
+                CreateFadeTween((dc.ui.PopDamage)popDamage, ms, ms + 100);
             }
         }
 

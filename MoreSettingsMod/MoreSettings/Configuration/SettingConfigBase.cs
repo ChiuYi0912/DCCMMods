@@ -90,6 +90,13 @@ namespace MoreSettings.Configuration
             }
         }
 
+        public void Remove(int key)
+        {
+            SerializableScarfData.Remove(key);
+            RuntimeScarfData.Remove(key);
+            UpdateFromRuntime();
+        }
+
         private ScarfData ConvertToScarfData(SerializableScarfData dto)
         {
             var data = new ScarfData();
@@ -108,11 +115,11 @@ namespace MoreSettings.Configuration
             data.thickness = dto.thickness;
 
             data.props = new virtual_backColor_customAttach_depthScaleFactor_isCape_linkTo_lockBehind_oscilFactor_rotScale_();
-            data.props.backColor = dto.backColor;
-            data.props.customAttach = dto.customAttach.ToHaxeString() ?? "".ToHaxeString();
+            data.props.backColor = dto.backColor ?? null;
+            data.props.customAttach = dto.customAttach!.ToHaxeString() ?? "".ToHaxeString();
             data.props.depthScaleFactor = dto.depthScaleFactor ?? 1.0;
             data.props.isCape = dto.isCape ?? false;
-            data.props.linkTo = dto.linkTo;
+            data.props.linkTo = dto.linkTo ?? null;
             data.props.lockBehind = dto.lockBehind ?? false;
             data.props.oscilFactor = dto.oscilFactor ?? 0.0;
             data.props.rotScale = dto.rotScale ?? 1.0;
@@ -173,7 +180,7 @@ namespace MoreSettings.Configuration
 
 
         public int? backColor { get; set; }
-        public string customAttach { get; set; } = "";
+        public string? customAttach { get; set; } = "";
         public double? depthScaleFactor { get; set; }
         public bool? isCape { get; set; }
         public int? linkTo { get; set; }

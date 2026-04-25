@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Utilities;
 using dc;
@@ -30,7 +31,7 @@ namespace MoreSettings.GameMechanics.Scarf
         public dc.ui.Text title = null!;
 
         public Dictionary<FlowEnum, Flow> flows = new();
-        public CustomScarfBase customScarf = new();
+        public static CustomScarfBase customScarf = new();
 
 
         private List<FlowBox> leftItems = new();
@@ -55,7 +56,7 @@ namespace MoreSettings.GameMechanics.Scarf
         private int CurrentScarf = 0;
 
         private Dictionary<string, (Action<ScarfData, object> setter, Func<ScarfData, object> getter)> propertyAccessors = new();
-        private Dictionary<int, ScarfListInitialisation> Attributes = new();
+        private static Dictionary<int, ScarfListInitialisation> Attributes = new();
 
 
 
@@ -69,10 +70,56 @@ namespace MoreSettings.GameMechanics.Scarf
             title.set_text(getText.GetString("裁缝的爱人").ToHaxeString());
             root.addChild(title);
 
-            HUD.Class.ME.hide(null);
-            CeateScarfToKey(CurrentScarf);
+            customScarf.Load();
 
-            InitFlows(); OpenPageFirst(); CreateHighlight(); setMainFlowPos(); UpdateHighlightPosition();
+            HUD.Class.ME.hide(null);
+
+            Flow CreateBottomFlow(Flow parent, FlowAlign horizontal, FlowAlign vertical, bool Vertical = false)
+            {
+                var flow = new Flow(parent);
+                flow.set_horizontalAlign(horizontal);
+                flow.set_verticalAlign(vertical);
+                flow.isVertical = Vertical;
+                return flow;
+            }
+
+
+            Attributes.Clear();
+
+            foreach (var kv in customScarf.Datakey)
+            {
+                int key = kv.Key;
+                var data = new ScarfListInitialisation();
+                data.scarfData = kv.Value;
+                data.InitAttributes();
+                Attributes[key] = data;
+            }
+
+            if (Attributes.Count > 0 && !Attributes.ContainsKey(CurrentScarf))
+            {
+                CurrentScarf = Attributes.Keys.Min();
+            }
+
+            var main = flows[FlowEnum.MainFlow] = new Flow(root);
+            main.set_verticalAlign(new FlowAlign.Middle());
+            main.set_horizontalAlign(new FlowAlign.Middle());
+
+            var left = flows[FlowEnum.LeftFlow] = CreateBottomFlow(main, new FlowAlign.Left(), new FlowAlign.Middle(), true);
+            var right = flows[FlowEnum.RightFlow] = CreateBottomFlow(main, new FlowAlign.Right(), new FlowAlign.Middle(), true);
+            var bottom = flows[FlowEnum.BottomFlow] = CreateBottomFlow(main, new FlowAlign.Middle(), new FlowAlign.Bottom());
+
+            const int Spacing = 30;
+            left.verticalSpacing = Spacing;
+            right.verticalSpacing = Spacing;
+            bottom.horizontalSpacing = Spacing;
+
+            OpenPageFirst();
+
+            var tile = Assets.Class.ui.getTile("boxSelect".ToHaxeString(), Ref<int>.Null, Ref<double>.Null, Ref<double>.Null, null);
+            selectionHighlight = new ScaleGrid(tile, 8, 8, null);
+            flows[FlowEnum.MainFlow].addChild(selectionHighlight);
+
+            setMainFlowPos(); UpdateHighlightPosition();
             Hook_Hero.initScarf += Hook_Hero_initScarf;
         }
 
@@ -84,207 +131,170 @@ namespace MoreSettings.GameMechanics.Scarf
         }
 
         #region UI 初始化
-        private void InitFlows()
-        {
-            var main = flows[FlowEnum.MainFlow] = new Flow(root);
-            main.set_verticalAlign(new FlowAlign.Middle());
-            main.set_horizontalAlign(new FlowAlign.Middle());
-
-
-            var right = flows[FlowEnum.RightFlow] = new Flow(main);
-            right.set_horizontalAlign(new FlowAlign.Right());
-            right.set_verticalAlign(new FlowAlign.Middle());
-            right.isVertical = true;
-            right.verticalSpacing = 50;
-
-            var left = flows[FlowEnum.LeftFlow] = new Flow(main);
-            left.set_horizontalAlign(new FlowAlign.Left());
-            left.set_verticalAlign(new FlowAlign.Middle());
-            left.isVertical = true;
-            left.verticalSpacing = 50;
-
-            var bottom = flows[FlowEnum.BottomFlow] = new Flow(main);
-            bottom.set_horizontalAlign(new FlowAlign.Middle());
-            bottom.set_verticalAlign(new FlowAlign.Bottom());
-            bottom.horizontalSpacing = 50;
-        }
 
         private void OpenPageFirst()
         {
-            currentIndex = 0;
+            Clearpage();
             NowPage = Page.First;
-            var leftFlow = flows[FlowEnum.LeftFlow];
-            var rightFlow = flows[FlowEnum.RightFlow];
 
-            const double PADH = 20;
-            const double PADV = 20;
-            FlowBox CreateFlowBox(dc.h2d.Object? parent = null)
-            {
-                var box = FlowBox.Class.createBoxValidationWithBiomeParam(parent, Ref<double>.In(PADH), Ref<double>.In(PADV));
-                box.set_paddingLeft(50); box.set_paddingRight(50); box.set_horizontalSpacing(20); box.set_verticalSpacing(20);
-
-                return box;
-            }
-
-            var leftbox = CreateFlowBox(leftFlow);
-            var lefttext = new dc.ui.Text(leftbox, null, null, Ref<double>.Null, null, null);
-            lefttext.set_text(GetText.Instance.GetString("修改当前自定义飘带").ToHaxeString());
-            leftItems.Add(leftbox);
-            leftbox.interactive = new dc.h2d.Interactive(leftbox.get_outerWidth(), leftbox.get_outerHeight(), null, null);
-            leftbox.interactive.onClick = new HlAction<Event>(e =>
-            {
-
-            });
-            leftbox.interactive.onMove = new HlAction<Event>(e =>
+            CreateButton(FlowEnum.LeftFlow, "修改当前自定义飘带", (e) =>
             {
 
             });
 
-            var rightbox = CreateFlowBox(rightFlow);
-            var righttext = new dc.ui.Text(rightbox, null, null, Ref<double>.Null, null, null);
-            righttext.set_text(getText.GetString("创建新自定义飘带").ToHaxeString());
-            rightItems.Add(rightbox);
-            rightbox.interactive = new dc.h2d.Interactive(rightbox.get_outerWidth(), rightbox.get_outerHeight(), null, null);
-            rightbox.interactive.onClick = new HlAction<Event>(e =>
+            CreateButton(FlowEnum.RightFlow, "创建新自定义飘带", (e) =>
             {
-                if (!Attributes.ContainsKey(0))
-                {
-                    var newData = new ScarfListInitialisation();
-                    newData.InitAttributes();
-                    Attributes[CurrentScarf] = newData;
-                }
-                Clearpage(); OpenPageScraf(); onResize();
-            });
-            rightbox.interactive.onMove = new HlAction<Event>(e =>
-            {
-
+                if (Attributes.Count < 0)
+                    CeateScarfToKey(0);
+            
+                OpenPageScraf();
             });
 
+            onResize();
         }
 
 
         private void OpenPageScraf()
         {
+            Clearpage();
             NowPage = Page.Scraf;
 
-            //int newId = GetNextScarfId();
             var currentEditingData = Attributes[CurrentScarf];
 
             var leftFlow = flows[FlowEnum.LeftFlow];
             var rightFlow = flows[FlowEnum.RightFlow];
             var bottomFlow = flows[FlowEnum.BottomFlow];
 
+            leftItems.AddRange(CreateAttributeEntries(Attributes[CurrentScarf].baseAttributes.left, leftFlow, Side.Left));
+            rightItems.AddRange(CreateAttributeEntries(Attributes[CurrentScarf].baseAttributes.right, rightFlow, Side.Right));
 
-            for (int i = 0; i < Attributes[CurrentScarf].baseAttributes.left.Count; i++)
+
+            Bottomchild();
+            onResize();
+        }
+
+        private List<FlowBox> CreateAttributeEntries(List<AttributeEntry> attributes, Flow parentFlow, Side side, int startIndex = 0)
+        {
+            var boxes = new List<FlowBox>();
+            for (int i = 0; i < attributes.Count; i++)
             {
-                var attr = Attributes[CurrentScarf].baseAttributes.left[i];
-                var box = CreateFlowBox(leftFlow);
+                var attr = attributes[i];
+                var box = CreateFlowBox(parentFlow);
                 var text = new dc.ui.Text(box, null, null, Ref<double>.Null, null, null);
-                object val = attr.Getter(currentEditingData.scarfData);
+                object val = attr.Getter(Attributes[CurrentScarf].scarfData);
                 text.set_text($"{attr.Name}: {val}".ToHaxeString());
-                leftItems.Add(box);
+
+                boxes.Add(box);
                 attr.Box = box;
                 attr.Text = text;
-                AddInteractiveToItem(box, Side.Left, i);
+
+                if (attr.Name == "props")
+                {
+                    box.interactive = new dc.h2d.Interactive(box.get_outerWidth(), box.get_outerHeight(), null, null);
+                    box.interactive.onClick = new HlAction<Event>(e =>
+                    {
+                        MoveFocusTo(Side.Right, i);
+                        AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
+                        OpenPropsSubMenu();
+                    });
+                    box.interactive.onMove = new HlAction<Event>(e =>
+                    {
+                        MoveFocusTo(Side.Right, i);
+                    });
+                }
+                else
+                {
+                    AddInteractiveToItem(box, side, startIndex + i);
+                }
+            }
+            return boxes;
+        }
+
+        public void Bottomchild()
+        {
+            var sortedKeys = Attributes.Keys.OrderBy(k => k).ToList();
+            int currentIndex = sortedKeys.IndexOf(CurrentScarf);
+
+            if (currentIndex > 0)
+            {
+                int prevKey = sortedKeys[currentIndex - 1];
+                CreateButton(FlowEnum.BottomFlow, "切换至上一个飘带", (e) =>
+                {
+                    CurrentScarf = prevKey;
+                    OpenPageScraf();
+                });
             }
 
-
-            for (int i = 0; i < Attributes[CurrentScarf].baseAttributes.right.Count - 1; i++)
+            CreateButton(FlowEnum.BottomFlow, "删除当前飘带", (e) =>
             {
-                var attr = Attributes[CurrentScarf].baseAttributes.right[i];
-                var box = CreateFlowBox(rightFlow);
-                var text = new dc.ui.Text(box, null, null, Ref<double>.Null, null, null);
-                object val = attr.Getter(currentEditingData.scarfData);
-                text.set_text($"{attr.Name}: {val}".ToHaxeString());
-                rightItems.Add(box);
-                attr.Box = box;
-                attr.Text = text;
-                AddInteractiveToItem(box, Side.Right, i);
+                RemoveScarf(CurrentScarf);
+                customScarf.UpdateSarfs();
+                OpenPageFirst();
+            });
+
+            CreateButton(FlowEnum.BottomFlow, "创建新飘带(默认配置)", (e) =>
+            {
+                int newKey = Attributes.Keys.Count == 0 ? 0 : Attributes.Keys.Max() + 1;
+                CeateScarfToKey(newKey);
+                CurrentScarf = newKey;
+                OpenPageScraf();
+            });
+
+            if (currentIndex >= 0 && currentIndex < sortedKeys.Count - 1)
+            {
+                int nextKey = sortedKeys[currentIndex + 1];
+                CreateButton(FlowEnum.BottomFlow, "切换至下一个飘带", (e) =>
+                {
+                    CurrentScarf = nextKey;
+                    OpenPageScraf();
+                });
+            }
+        }
+
+        private FlowBox CreateButton(FlowEnum parent, string text, HlAction<Event> onClick)
+        {
+            var bottomFlow = flows[parent];
+            var box = CreateFlowBox(bottomFlow);
+            var txt = new dc.ui.Text(box, null, null, Ref<double>.Null, null, null);
+            txt.set_text(text.ToHaxeString());
+            box.reflow();
+            box.interactive = new dc.h2d.Interactive(box.get_outerWidth(), box.get_outerHeight(), null, null);
+            box.interactive.onClick = onClick;
+            box.interactive.onMove = new HlAction<Event>(e => { });
+
+            switch (parent)
+            {
+                case FlowEnum.MainFlow:
+                    break;
+                case FlowEnum.RightFlow:
+                    rightItems.Add(box);
+                    break;
+                case FlowEnum.LeftFlow:
+                    leftItems.Add(box);
+                    break;
+                case FlowEnum.BottomFlow:
+                    bottomItems.Add(box);
+                    break;
+                default:
+                    return null!;
             }
 
-            int idx = Attributes[CurrentScarf].baseAttributes.right.Count - 1;
-            var propsattr = Attributes[CurrentScarf].baseAttributes.right[idx];
-            var propsbox = CreateFlowBox(rightFlow);
-            var propstext = new dc.ui.Text(propsbox, null, null, Ref<double>.Null, null, null);
-            object propsval = propsattr.Getter(currentEditingData.scarfData);
-            propstext.set_text($"{propsattr.Name}: {propsval}".ToHaxeString());
-            rightItems.Add(propsbox);
-            propsattr.Box = propsbox;
-            propsattr.Text = propstext;
-            propsbox.interactive = new dc.h2d.Interactive(propsbox.get_outerWidth(), propsbox.get_outerHeight(), null, null);
-            propsbox.interactive.onClick = new HlAction<Event>(e =>
-            {
-                MoveFocusTo(Side.Right, idx);
-                AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
-                Clearpage();
-                OpenPropsSubMenu();
-                onResize();
-            });
-            propsbox.interactive.onMove = new HlAction<Event>(e =>
-            {
-                MoveFocusTo(Side.Right, idx);
-            });
-
-
-
-            var saveBox = CreateFlowBox(bottomFlow);
-            var saveText = new dc.ui.Text(saveBox, null, null, Ref<double>.Null, null, null);
-            saveText.set_text("保存".ToHaxeString());
-            bottomItems.Add(saveBox);
-            saveBox.interactive = new dc.h2d.Interactive(saveBox.get_outerWidth(), saveBox.get_outerHeight(), null, null);
-            saveBox.interactive.onClick = new HlAction<Event>(e => { });
-            saveBox.interactive.onMove = new HlAction<Event>(e => { });
+            return box;
         }
 
 
         private void OpenPropsSubMenu()
         {
+            Clearpage();
             NowPage = Page.Props;
-
-            //int newId = GetNextScarfId();
-
             var leftFlow = flows[FlowEnum.LeftFlow];
             var rightFlow = flows[FlowEnum.RightFlow];
-            var bottomFlow = flows[FlowEnum.BottomFlow];
 
-            var currentEditingData = Attributes[CurrentScarf];
+            leftItems.AddRange(CreateAttributeEntries(Attributes[CurrentScarf].propsAttributes.left, leftFlow, Side.Left));
+            rightItems.AddRange(CreateAttributeEntries(Attributes[CurrentScarf].propsAttributes.right, rightFlow, Side.Right));
 
-
-            for (int i = 0; i < Attributes[CurrentScarf].propsAttributes.left.Count; i++)
-            {
-                var attr = Attributes[CurrentScarf].propsAttributes.left[i];
-                var box = CreateFlowBox(leftFlow);
-                var text = new dc.ui.Text(box, null, null, Ref<double>.Null, null, null);
-                object val = attr.Getter(currentEditingData.scarfData);
-                text.set_text($"{attr.Name}: {val}".ToHaxeString());
-                leftItems.Add(box);
-                attr.Box = box;
-                attr.Text = text;
-                AddInteractiveToItem(box, Side.Left, i);
-            }
-
-
-            for (int i = 0; i < Attributes[CurrentScarf].propsAttributes.right.Count; i++)
-            {
-                var attr = Attributes[CurrentScarf].propsAttributes.right[i];
-                var box = CreateFlowBox(rightFlow);
-                var text = new dc.ui.Text(box, null, null, Ref<double>.Null, null, null);
-                object val = attr.Getter(currentEditingData.scarfData);
-                text.set_text($"{attr.Name}: {val}".ToHaxeString());
-                rightItems.Add(box);
-                attr.Box = box;
-                attr.Text = text;
-                AddInteractiveToItem(box, Side.Right, i);
-            }
-
-
-            var saveBox = CreateFlowBox(bottomFlow);
-            var saveText = new dc.ui.Text(saveBox, null, null, Ref<double>.Null, null, null);
-            saveText.set_text("保存".ToHaxeString());
-            bottomItems.Add(saveBox);
-            saveBox.interactive = new dc.h2d.Interactive(saveBox.get_outerWidth(), saveBox.get_outerHeight(), null, null);
-            saveBox.interactive.onClick = new HlAction<Event>(e => { });
-            saveBox.interactive.onMove = new HlAction<Event>(e => { });
+            Bottomchild();
+            onResize();
         }
 
 
@@ -317,20 +327,10 @@ namespace MoreSettings.GameMechanics.Scarf
             });
         }
 
-        private void CreateHighlight()
-        {
-            var tile = Assets.Class.ui.getTile("boxSelect".ToHaxeString(), Ref<int>.Null, Ref<double>.Null, Ref<double>.Null, null);
-
-            selectionHighlight = new ScaleGrid(tile, 8, 8, null);
-            flows[FlowEnum.MainFlow].addChild(selectionHighlight);
-            selectionHighlight.alpha = 0;
-            UpdateHighlightPosition();
-        }
-
         #endregion
 
         #region 飘带配置
-        private ScarfListInitialisation CeateScarfToKey(int key)
+        public static ScarfListInitialisation CeateScarfToKey(int key)
         {
             if (Attributes.TryGetValue(key, out var existing))
             {
@@ -366,6 +366,24 @@ namespace MoreSettings.GameMechanics.Scarf
         private void RemoveScarf(int key)
         {
             Attributes.Remove(key);
+            customScarf.RemoveScarf(key);
+
+            if (Attributes.Count == 0)
+            {
+                CeateScarfToKey(0);
+                CurrentScarf = 0;
+            }
+            else
+            {
+                if (key == CurrentScarf)
+                {
+                    CurrentScarf = Attributes.Keys.Min();
+                }
+                else if (!Attributes.ContainsKey(CurrentScarf))
+                {
+                    CurrentScarf = Attributes.Keys.Min();
+                }
+            }
         }
         #endregion
 
@@ -611,12 +629,12 @@ namespace MoreSettings.GameMechanics.Scarf
             {
                 if (NowPage == Page.Scraf)
                 {
-                    Clearpage(); OpenPageFirst(); onResize();
+                    OpenPageFirst();
                     return;
                 }
                 if (NowPage == Page.Props)
                 {
-                    Clearpage(); OpenPageScraf(); onResize();
+                    OpenPageScraf();
                     return;
                 }
 
@@ -691,7 +709,7 @@ namespace MoreSettings.GameMechanics.Scarf
                             Hideandshow(true);
                             setMainFlowPos();
                             UpdateHighlightPosition();
-                        }), 1.0);
+                        }), 2.0);
                     });
                     return;
                 }
@@ -722,7 +740,7 @@ namespace MoreSettings.GameMechanics.Scarf
             AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
             customScarf.Save();
             customScarf.UpdateSarfs();
-            
+
         }
 
 

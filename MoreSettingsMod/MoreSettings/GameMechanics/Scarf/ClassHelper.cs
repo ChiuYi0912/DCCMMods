@@ -20,16 +20,6 @@ namespace MoreSettings.GameMechanics.Scarf
         public dc.ui.Text Text = default!;
     }
 
-    public class PropEntry
-    {
-        public string Name = default!;
-        public Func<object> Getter = default!;
-        public Action<object> Setter = default!;
-        public Type ValueType = default!;
-        public FlowBox Box = default!;
-        public dc.ui.Text Text = default!;
-    }
-
 
     public class ScarfList
     {
