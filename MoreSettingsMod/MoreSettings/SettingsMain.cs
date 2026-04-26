@@ -103,8 +103,8 @@ IOnAfterLoadingCDB
 
    void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb)
    {
-      var data = cdb.skin.all.array;
+      // var data = cdb.skin.all.array;
 
-      Logger.Debug($"{data.getDyn(2)}");
+      // Logger.Debug($"{data.getDyn(2)}");
    }
 }

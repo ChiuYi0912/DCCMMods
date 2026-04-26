@@ -18,6 +18,8 @@ namespace MoreSettings.GameMechanics.Scarf
         public System.Type ValueType = default!;
         public FlowBox Box = default!;
         public dc.ui.Text Text = default!;
+
+        public Func<object, int, object> CustomValueChanger = null!;
     }
 
 
@@ -82,7 +84,24 @@ namespace MoreSettings.GameMechanics.Scarf
                 new AttributeEntry { Name = "maxLength", ValueType = typeof(double), Getter = (d) => d.maxLength, Setter = (d, v) => d.maxLength = (double)v },
                 new AttributeEntry { Name = "minLength", ValueType = typeof(double), Getter = (d) => d.minLength, Setter = (d, v) => d.minLength = (double)v },
                 new AttributeEntry { Name = "onFront", ValueType = typeof(bool), Getter = (d) => d.onFront, Setter = (d, v) => d.onFront = (bool)v },
-                new AttributeEntry { Name = "sprId", ValueType = typeof(dc.String), Getter = (d) => d.sprId, Setter = (d, v) => d.sprId = (dc.String)v },
+                new AttributeEntry
+                {
+                    Name = "sprId",
+                    ValueType = typeof(dc.String),
+                    Getter = (d) => d.sprId,
+                    Setter = (d, v) => d.sprId = (dc.String)v,
+                    CustomValueChanger = (oldVal, delta) =>
+                    {
+                        string[] ids = { "scarfGray", "capeGrayUni", "capeGray" };
+                        string current = oldVal?.ToString() ?? ids[0];
+                        int idx = Array.IndexOf(ids, current);
+                        if (idx == -1) idx = 0;
+                        idx += delta;
+                        if (idx < 0) idx = ids.Length - 1;
+                        if (idx >= ids.Length) idx = 0;
+                        return ids[idx].ToHaxeString();
+                    }
+                },
                 new AttributeEntry { Name = "thickness", ValueType = typeof(double), Getter = (d) => d.thickness, Setter = (d, v) => d.thickness = (double)v },
                 new AttributeEntry
                 {

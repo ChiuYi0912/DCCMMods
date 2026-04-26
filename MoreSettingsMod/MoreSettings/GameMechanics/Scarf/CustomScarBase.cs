@@ -21,6 +21,7 @@ namespace MoreSettings.GameMechanics.Scarf
         public static Config<MainConfig> modConfig = SettingsMain.ModConfig;
         public Dictionary<int, ScarfData> Datakey = new();
         public BlendMode mode = default!;
+        public CustomScarfUI scarfUI = null!;
 
         public CustomScarfBase() { }
 
@@ -143,15 +144,20 @@ namespace MoreSettings.GameMechanics.Scarf
             {
                 var scarf = new dc.tool.Scarf(scarfManager, item.Value);
                 scarfManager.scarfs.push(scarf);
+                scarf.Meta.key = item.Key;
             }
 
 
             var allScarfs = scarfManager.scarfs;
             for (int i = 0; i < allScarfs.length; i++)
             {
-                var scarf = allScarfs.getDyn(i);
+                dc.tool.Scarf scarf = allScarfs.getDyn(i);
                 scarf.init();
+
+                Logger.Information($"{scarf.Meta.key}");
             }
+
+
 
             return scarfManager;
         }
@@ -163,6 +169,7 @@ namespace MoreSettings.GameMechanics.Scarf
             foreach (dc.tool.Scarf item in scmanager.scarfs.AsEnumerable())
             {
                 item.dispose();
+
                 scmanager.scarfs.removeDyn(item);
             }
 
@@ -178,6 +185,29 @@ namespace MoreSettings.GameMechanics.Scarf
                 var scarf = allScarfs.getDyn(i);
                 scarf.init();
             }
+        }
+
+        public void UpdateSarf(int key)
+        {
+            var hero = Game.Instance.HeroInstance!;
+            var scmanager = hero.scarf;
+
+            int? scarfkay = null;
+            foreach (dc.tool.Scarf item in scmanager.scarfs.AsEnumerable())
+            {
+                if (item.Meta.key == key)
+                {
+                    scarfkay = key;
+                    item.dispose();
+                    scmanager.scarfs.removeDyn(item);
+                }
+            }
+
+            if (scarfkay == null)
+                return;
+            var scarf = new dc.tool.Scarf(scmanager, Datakey[key]);
+            scmanager.scarfs.push(scarf);
+            scarf.init();
         }
     }
 

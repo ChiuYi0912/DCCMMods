@@ -51,8 +51,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
 
         private void Hook_Entity_PopDamage(Hook_Entity.orig_popDamage orig, Entity self, AttackData a)
         {
-            if (dc.ui.Console.Class.ME.flags.exists(dc.ui.Console.Class.HIDE_UI) &&
-                !dc.ui.Console.Class.ME.flags.exists("forcePopDmg".ToHaxeString()))
+            if (dc.ui.Console.Class.ME.flags.exists("NoPopText".ToHaxeString()))
                 return;
 
             handler = PopDamageHandlerRegistry.GetHandler(a, self);
