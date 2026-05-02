@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 using CoreLibrary.Core.Extensions;
+using CoreLibrary.Core.Utilities;
 using dc.h2d;
 using dc.hxsl._Dce;
 using Hashlink.Virtuals;
@@ -50,10 +51,12 @@ namespace MoreSettings.Configuration
         public bool HasNoPopText { get; set; } = false;
         public bool HasNoStatusIcon { get; set; } = false;
         public bool NowTimeVisible { get; set; } = false;
-        public double LifeBarcolor { get; set; } = 0;
         public double PlayerCameraSpeed { get; set; }
         public bool ShowBossHealthBar { get; set; } = false;
         public bool RemovalUpdateNotes { get; set; } = false;
+        public bool isLifeBarcolor { get; set; } = false;
+        public int LifeBarcolor { get; set; } = CreateColor.ColorFromHex("#03E07A");
+        public double LifeBarAlpha { get; set; } = 1;
     }
 
 

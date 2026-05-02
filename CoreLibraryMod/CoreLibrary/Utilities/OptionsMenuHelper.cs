@@ -22,6 +22,23 @@ namespace CoreLibrary.Core.Utilities
             this.config = config;
         }
 
+        public OptionWidget addSimpleWidget(
+            string title,
+            string description,
+            Action action,
+            dc.h2d.Flow parentFlow,
+            int offsetX = 5)
+        {
+            var widget = opt.addSimpleWidget(
+                title.ToHaxeString(),
+                description.ToHaxeString(),
+                new HlAction(action),
+                Ref<int>.In(offsetX),
+                parentFlow
+            );
+            return widget;
+        }
+
         public OptionWidget AddConfigToggle(
             string title,
             string description,
@@ -47,7 +64,7 @@ namespace CoreLibrary.Core.Utilities
         }
 
 
-        public void AddConfigSlider(
+        public OptionWidget AddConfigSlider(
             string title,
             Func<double> getter,
             Action<double> setter,
@@ -66,19 +83,51 @@ namespace CoreLibrary.Core.Utilities
             });
             bool showRawValue = true;
 
-            opt.addSliderWidget(
+            var Slider = opt.addSliderWidget(
+                 title.ToHaxeString(),
+                 onUpdate,
+                 getter(),
+                 Ref<double>.In(step),
+                 scrollerFlow,
+                 Ref<bool>.In(showPercent),
+                 Ref<bool>.In(showRawValue),
+                 Ref<double>.In(minValue),
+                 Ref<double>.In(maxValue),
+                 buttonText?.ToHaxeString(),
+                 Ref<int>.In(paddingLeft)
+             );
+
+            return Slider;
+        }
+
+
+        public OptionWidget AddHSVColorWidget(
+            string title,
+            string subtitle,
+            Func<bool> onVal,
+            bool enabled,
+            Action<int> onUpdate,
+            int defaultValue,
+            dc.h2d.Flow scrollerFlow)
+        {
+
+            HlAction<int> onUpdateWithSave = new(v =>
+            {
+                onUpdate(v);
+                config.Save();
+            });
+
+            var widget = opt.addHSVColorWidget(
                 title.ToHaxeString(),
-                onUpdate,
-                getter(),
-                Ref<double>.In(step),
-                scrollerFlow,
-                Ref<bool>.In(showPercent),
-                Ref<bool>.In(showRawValue),
-                Ref<double>.In(minValue),
-                Ref<double>.In(maxValue),
-                buttonText?.ToHaxeString(),
-                Ref<int>.In(paddingLeft)
+                subtitle?.ToHaxeString(),
+                new HlFunc<bool>(onVal),
+                enabled,
+                onUpdateWithSave,
+                defaultValue,
+                scrollerFlow
             );
+
+            return widget;
         }
 
 

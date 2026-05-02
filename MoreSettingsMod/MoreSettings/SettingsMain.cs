@@ -1,10 +1,16 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.ExceptionServices;
 using System.Security.Cryptography.X509Certificates;
+using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Interfaces;
 using CoreLibrary.Core.Utilities;
+using CoreLibrary.Utilities.CustomNPC;
 using CoreLibrary.Utilities.CustomPopDamage;
 using dc;
+using dc.en;
+using dc.h3d;
+using dc.h3d.mat;
+using dc.libs.heaps.slib;
 using dc.tool;
 using dc.tool.mod;
 using ModCore.Events;
@@ -56,18 +62,41 @@ IOnAfterLoadingCDB
       moduleManager.RegisterModule(new HasUiSettingsModule());
       moduleManager.RegisterModule(new ViewportSettingsModule());
       moduleManager.RegisterModule(new SkinSettingsModule());
+      moduleManager.RegisterModule(new ScarfSettingModule());
 
       modMenu = new ModMenu(this);
       entityPop = new EntityPopDamage(this);
 
       Hook_Boot.mainLoop += Hook_Boot_loop;
-      //Hook__ScarfManager.create += Hook__ScarfManager_create;
+      Hook_Entity.spriteUpdate += Hook_Entity_sprupdate;
    }
 
-   // private ScarfManager Hook__ScarfManager_create(Hook__ScarfManager.orig_create orig, Entity e, dc.String id)
-   // {
-   //    return CustomScarfBase.CreateScarfManagerBase(e, id);
-   // }
+
+
+   private void Hook_Entity_sprupdate(Hook_Entity.orig_spriteUpdate orig, Entity self)
+   {
+      orig(self);
+
+      // if (self.nrmShader != null)
+      // {
+      //    Vector scale__ = self.nrmShader.scale__;
+      //    if (self.dir < 0)
+      //    {
+      //       scale__.x = -3.0;
+      //       scale__.y = 3.0;
+      //       scale__.z = 3.0;
+      //       scale__.w = 1.0;
+      //    }
+      //    else
+      //    {
+      //       scale__.x = 3.0;
+      //       scale__.y = 3.0;
+      //       scale__.z = 3.0;
+      //       scale__.w = 1.0;
+      //    }
+      // }
+   }
+
 
 
    private void Hook_Boot_loop(Hook_Boot.orig_mainLoop orig, Boot self)
@@ -80,7 +109,7 @@ IOnAfterLoadingCDB
       catch (Exception ex)
       {
          Logger.Error("{ex}", ex);
-         System.Diagnostics.Debugger.Break();
+         //System.Diagnostics.Debugger.Break();
          ExceptionDispatchInfo.Capture(ex).Throw();
          throw;
       }

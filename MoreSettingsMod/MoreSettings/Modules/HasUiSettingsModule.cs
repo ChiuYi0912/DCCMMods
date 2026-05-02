@@ -1,19 +1,27 @@
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using CoreLibrary.Core.Extensions;
+using CoreLibrary.Utilities;
 using dc;
 using dc.cine;
 using dc.en;
 using dc.en.inter;
 using dc.h2d;
+using dc.libs.heaps.slib;
 using dc.pr;
 using dc.tool.atk;
 using dc.ui;
+using dc.ui.hud;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Mods;
 using ModCore.Modules;
+using ModCore.Utilities;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
+using MoreSettings.GameMechanics;
+using MoreSettings.shaders;
+using MoreSettings.Utilities;
 using Serilog;
 
 namespace MoreSettings.Modules
@@ -22,12 +30,15 @@ namespace MoreSettings.Modules
     {
         public override string Description => "UI界面修改";
 
+        public ShaderUtilities shaderUtilities = null!;
+
         public override UIConfig config => (UIConfig)base.config;
 
         public override void Initialize(ModBase mainMod)
         {
             base.Initialize(mainMod);
             config = SettingsMain.ConfigValue.UI;
+            shaderUtilities = new ShaderUtilities();
         }
 
         public override void RegisterHooks()
@@ -36,10 +47,6 @@ namespace MoreSettings.Modules
             dc.pr.Hook_Game.init += Hook_Game_init;
             Hook__GameCinematic.__constructor__ += Hook__GameCinematic___constructor__;
             Hook_Entity.popDamage += Hook_Entity_popDamage;
-
-
-            dc.ui.hud.Hook_LifeBar.getFullName += Hook_LifeBar_GetFullName;
-            dc.ui.hud.Hook_LifeBar.getStartEndName += Hook_LifeBar_getStartEndName;
 
 
             Hook__HUD.__constructor__ += Hook_HUD___constructor__;
@@ -53,6 +60,12 @@ namespace MoreSettings.Modules
 
             Hook_TitleScreen.update += Hook_TitleScreen_update;
             Hook_TitleScreen.addMenu += Hook_TitleScreen_addMenu;
+
+            Hook_HUD.initLeftFlowT += Hook_HUD_initLeftFlowT;
+            Hook_HUD.hide += Hook_HUD_hide;
+            Hook_HUD.show += Hook_HUD_show;
+
+            dc.ui.hud.Hook_LifeBar.updateSize += Hook_LifeBar_updateSize;
         }
 
 
@@ -62,9 +75,6 @@ namespace MoreSettings.Modules
             dc.pr.Hook_Game.init -= Hook_Game_init;
             Hook__GameCinematic.__constructor__ -= Hook__GameCinematic___constructor__;
             Hook_Entity.popDamage -= Hook_Entity_popDamage;
-
-            dc.ui.hud.Hook_LifeBar.getFullName -= Hook_LifeBar_GetFullName;
-            dc.ui.hud.Hook_LifeBar.getStartEndName -= Hook_LifeBar_getStartEndName;
 
 
             Hook__HUD.__constructor__ -= Hook_HUD___constructor__;
@@ -78,6 +88,10 @@ namespace MoreSettings.Modules
 
             Hook_TitleScreen.update -= Hook_TitleScreen_update;
             Hook_TitleScreen.addMenu -= Hook_TitleScreen_addMenu;
+
+            Hook_HUD.initLeftFlowT -= Hook_HUD_initLeftFlowT;
+            Hook_HUD.hide -= Hook_HUD_hide;
+            Hook_HUD.show -= Hook_HUD_show;
         }
 
 
@@ -167,14 +181,72 @@ namespace MoreSettings.Modules
                 scrollerFlow
             );
 
-            options.addSeparator(GetText.Instance.GetString("血条颜色").ToHaxeString(), scrollerFlow);
-            menuHelper.AddConfigSlider(
-                GetText.Instance.GetString("血条颜色描述"),
-                () => config.LifeBarcolor,
-                v => config.LifeBarcolor = v,
-                maxValue: 6,
-                scrollerFlow: scrollerFlow
+            // options.addSeparator(GetText.Instance.GetString("血条颜色").ToHaxeString(), scrollerFlow);
+            // menuHelper.AddConfigSlider(
+            //     GetText.Instance.GetString("血条颜色描述"),
+            //     () => config.LifeBarcolor,
+            //     v => config.LifeBarcolor = v,
+            //     maxValue: 6,
+            //     scrollerFlow: scrollerFlow
+            // );
+
+            menuHelper.AddHSVColorWidget(
+                "血条颜色",
+                "",
+                () =>
+                {
+                    bool v = !config.isLifeBarcolor;
+                    config.isLifeBarcolor = v;
+                    SettingsMain.SaveConfig();
+                    return v;
+                },
+                config.isLifeBarcolor,
+                newColor =>
+                {
+                    config.LifeBarcolor = newColor;
+                    var hud = HUD.Class.ME;
+                    if (hud != null)
+                    {
+                        float r = ((newColor >> 16) & 0xFF) / 255.0f;
+                        float g = ((newColor >> 8) & 0xFF) / 255.0f;
+                        float b = (newColor & 0xFF) / 255.0f;
+                        float a = ((newColor >> 24) & 0xFF) / 255.0f;
+                        GradientColor gradient = (GradientColor)customHeroLife.fullBatch.getShader(GradientColor.Class);
+                        if (gradient == null) return;
+                        gradient.tint__ = new dc.h3d.Vector(Ref<double>.In(r), Ref<double>.In(g), Ref<double>.In(b), Ref<double>.In(1));
+                        SettingsMain.SaveConfig();
+                        return;
+                    }
+                },
+                config.LifeBarcolor,
+                scrollerFlow
             );
+            if (config.isLifeBarcolor)
+            {
+                var alpha = menuHelper.AddConfigSlider(
+                 "alpha",
+                 () => config.LifeBarAlpha,
+                 (v) =>
+                 {
+                     config.LifeBarAlpha = v;
+                     var hud = HUD.Class.ME;
+                     if (hud != null)
+                     {
+                         GradientColor gradient = (GradientColor)customHeroLife.fullBatch.getShader(GradientColor.Class);
+                         if (gradient != null)
+                         {
+                             gradient.alpha__ = v;
+                             return;
+                         }
+                     }
+                 },
+                 scrollerFlow: scrollerFlow,
+                 maxValue: 1,
+                 step: 0.01,
+                 paddingLeft: 155
+                );
+
+            }
         }
 
         #region 钩子实现
@@ -348,7 +420,6 @@ namespace MoreSettings.Modules
         private void Hook_NewsPanel_focusIn(Hook_NewsPanel.orig_focusIn orig, NewsPanel self)
         {
             if (config.NewsPanel) return;
-
             orig(self);
         }
 
@@ -363,6 +434,36 @@ namespace MoreSettings.Modules
             if (dc.ui.Console.Class.ME.flags.exists("NoPopText".ToHaxeString())) return;
         }
 
+        public CustomHeroLifeBar customHeroLife = null!;
+        private void Hook_HUD_initLeftFlowT(Hook_HUD.orig_initLeftFlowT orig, HUD self)
+        {
+            orig(self);
+            self.heroLifeBar.remove();
+            customHeroLife = (CustomHeroLifeBar)(self.heroLifeBar = new CustomHeroLifeBar(new LifeBarColorMode.Normal(), self.leftFlowB));
+            self.heroLifeBar.get_pixelScale = self.get_pixelScale;
+            self.heroLifeBar.enableText();
+        }
+
+
+
+        private void Hook_LifeBar_updateSize(dc.ui.hud.Hook_LifeBar.orig_updateSize orig, dc.ui.hud.LifeBar self)
+        {
+            orig(self);
+            if (customHeroLife != null)
+                customHeroLife.updatesbSize();
+        }
+
+        private void Hook_HUD_show(Hook_HUD.orig_show orig, HUD self, bool? instant)
+        {
+            orig(self, instant);
+            self.heroLifeBar.visible = true;
+        }
+
+        private void Hook_HUD_hide(Hook_HUD.orig_hide orig, HUD self, bool? instant)
+        {
+            orig(self, instant);
+            self.heroLifeBar.visible = false;
+        }
 
         #endregion
 
@@ -398,6 +499,5 @@ namespace MoreSettings.Modules
             else
                 dc.ui.Console.Class.ME.flags.remove(flagName.ToHaxeString());
         }
-
     }
 }

@@ -8,6 +8,7 @@
     <ModType>mod</ModType>
     <ModMain>MoreSettings.SettingsMain</ModMain>
     <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

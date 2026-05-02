@@ -11,12 +11,20 @@ namespace CoreLibrary.Core.Extensions
             }
         }
 
-        public static double* GetHshlinkDoublePointer(nint HashlinkPtr,string fieldName)
+        public static double* GetHshlinkDoublePointer(nint HashlinkPtr, string fieldName)
         {
             var hash = HashFieldName(fieldName);
             Hashlink.HL_type* fieldType = null;
             var ptr = Hashlink.HashlinkNative.hl_obj_lookup((Hashlink.HL_vdynamic*)HashlinkPtr, hash, out fieldType);
             return (double*)ptr;
+        }
+
+        public static bool* GetHshlinkBoolPointer(nint HashlinkPtr, string fieldName)
+        {
+            var hash = HashFieldName(fieldName);
+            Hashlink.HL_type* fieldType = null;
+            var ptr = Hashlink.HashlinkNative.hl_obj_lookup((Hashlink.HL_vdynamic*)HashlinkPtr, hash, out fieldType);
+            return (bool*)ptr;
         }
     }
 }

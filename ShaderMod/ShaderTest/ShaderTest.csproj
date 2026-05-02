@@ -18,5 +18,8 @@
   <ItemGroup>
     <ModDependency Include="DebugConsole" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CoreLibraryMod\CoreLibrary\CoreLibrary.csproj" />
+  </ItemGroup>
 
 </Project>

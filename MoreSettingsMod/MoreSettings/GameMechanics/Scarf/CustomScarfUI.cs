@@ -50,7 +50,7 @@ namespace MoreSettings.GameMechanics.Scarf
         private Action Superaction = default!;
 
 
-        public enum FlowEnum { MainFlow, RightFlow, LeftFlow, BottomFlow }
+        public enum FlowEnum { MainFlow, RightFlow, LeftFlow, BottomFlow,InfoFlow }
         public enum Page { NULL, First, Scraf, Props }
         private enum Side { Left, Right, Bottom }
 
@@ -130,14 +130,14 @@ namespace MoreSettings.GameMechanics.Scarf
 
             OpenPageFirst();
 
-            UpdateHighlightPosition();
-            Hook_Hero.initScarf += Hook_Hero_initScarf;
-
-
             var v = dc.pr.Game.Class.ME.curLevel.viewport;
             double zoom = v.zoom;
             double tozoom = zoom * 1.3;
             v.zoomFromTo(zoom, tozoom, 1, new TType.TEaseOut());
+
+            Hero hero = ModCore.Modules.Game.Instance.HeroInstance!;
+
+
             Superaction = new Action(() =>
             {
                 v.zoomFromTo(tozoom, zoom, 1, new TType.TEaseOut());
@@ -147,14 +147,9 @@ namespace MoreSettings.GameMechanics.Scarf
                     v.updateSizes();
                 }, delayer.fps * 2.0);
             });
+            customScarf.UpdateSarfs();
         }
 
-        private void Hook_Hero_initScarf(Hook_Hero.orig_initScarf orig, Hero self)
-        {
-            if (self.scarf != null)
-                self.scarf.dispose();
-            self.scarf = customScarf.CreateCustomScarfManager(self);
-        }
 
         #region UI 初始化
 
@@ -248,11 +243,18 @@ namespace MoreSettings.GameMechanics.Scarf
                 });
             }
 
+
+
             CreateButton(FlowEnum.BottomFlow, "删除当前飘带", (e) =>
             {
                 RemoveScarf(CurrentScarf);
                 customScarf.UpdateSarfs();
                 OpenPageFirst();
+            });
+
+            CreateButton(FlowEnum.BottomFlow, $"当前飘带id:{CurrentScarf}", (e) =>
+            {
+
             });
 
             CreateButton(FlowEnum.BottomFlow, "创建新飘带(默认配置)", (e) =>
