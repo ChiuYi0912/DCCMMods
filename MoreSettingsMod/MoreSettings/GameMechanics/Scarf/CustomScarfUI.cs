@@ -32,9 +32,10 @@ namespace MoreSettings.GameMechanics.Scarf
         public ControllerAccess controller = default!;
         public GetText getText = GetText.Instance;
         public dc.ui.Text title = null!;
+        public Hero hero = null!;
 
         public Dictionary<FlowEnum, Flow> flows = new();
-        public static CustomScarfBase customScarf = new();
+        public static CustomScarfBase customScarf = default!;
 
 
         private List<FlowBox> leftItems = new();
@@ -45,12 +46,22 @@ namespace MoreSettings.GameMechanics.Scarf
         private Graphics persistentHighlight = default!;
         public bool closeOnValidate = false;
         private bool isAnimating = false;
+        private bool heroIntengible = false;
+        public bool IsIntengible
+        {
+            get => heroIntengible;
+            set
+            {
+                heroIntengible = value;
+                hero.setIntengible(value, null);
+            }
+        }
 
         private Action<int, Side>? onItemSelected = default!;
         private Action Superaction = default!;
+        public Action EnableAndDisable = default!;
 
-
-        public enum FlowEnum { MainFlow, RightFlow, LeftFlow, BottomFlow,InfoFlow }
+        public enum FlowEnum { MainFlow, RightFlow, LeftFlow, BottomFlow, InfoFlow }
         public enum Page { NULL, First, Scraf, Props }
         private enum Side { Left, Right, Bottom }
 
@@ -64,25 +75,27 @@ namespace MoreSettings.GameMechanics.Scarf
 
         private Dictionary<string, (Action<ScarfData, object> setter, Func<ScarfData, object> getter)> propertyAccessors = new();
         private static Dictionary<int, ScarfListInitialisation> Attributes = new();
+        private Dictionary<string, dc.h2d.Graphics> colorbox = new();
 
 
 
-
-        public CustomScarfUI(dc.libs.Process parent) : base(parent)
+        public CustomScarfUI(dc.libs.Process parent, CustomScarfBase scarfBase) : base(parent)
         {
+            hero = ModCore.Modules.Game.Instance.HeroInstance!;
             controller = Boot.Class.ME.controller.createAccess("CustomScarfUI".ToHaxeString(), true);
             createRootInLayers(parent.root, Const.Class.ROOT_DP_MENU); setControlLabel();
 
             title = new dc.ui.Text(null, false, true, Ref<double>.Null, null, null);
-            title.set_text(getText.GetString("裁缝的爱人").ToHaxeString());
+            title.set_text(getText.GetString("飘带管理器").ToHaxeString());
             root.addChild(title);
 
+            customScarf = scarfBase;
             customScarf.Load();
             customScarf.scarfUI = this;
 
-            HUD.Class.ME.hide(null);
+            delayer.addF(null, () => HUD.Class.ME.hide(null), 2);
 
-            Flow CreateBottomFlow(Flow parent, FlowAlign horizontal, FlowAlign vertical, bool Vertical = false)
+            Flow CreateFlow(Flow parent, FlowAlign horizontal, FlowAlign vertical, bool Vertical = false)
             {
                 var flow = new Flow(parent);
                 flow.set_horizontalAlign(horizontal);
@@ -112,9 +125,10 @@ namespace MoreSettings.GameMechanics.Scarf
             main.set_verticalAlign(new FlowAlign.Middle());
             main.set_horizontalAlign(new FlowAlign.Middle());
 
-            var left = flows[FlowEnum.LeftFlow] = CreateBottomFlow(main, new FlowAlign.Left(), new FlowAlign.Middle(), true);
-            var right = flows[FlowEnum.RightFlow] = CreateBottomFlow(main, new FlowAlign.Right(), new FlowAlign.Middle(), true);
-            var bottom = flows[FlowEnum.BottomFlow] = CreateBottomFlow(main, new FlowAlign.Middle(), new FlowAlign.Bottom());
+            var left = flows[FlowEnum.LeftFlow] = CreateFlow(main, new FlowAlign.Left(), new FlowAlign.Middle(), true);
+            var right = flows[FlowEnum.RightFlow] = CreateFlow(main, new FlowAlign.Right(), new FlowAlign.Middle(), true);
+            var bottom = flows[FlowEnum.BottomFlow] = CreateFlow(main, new FlowAlign.Middle(), new FlowAlign.Bottom());
+            var info = flows[FlowEnum.InfoFlow] = CreateFlow(main, new FlowAlign.Left(), new FlowAlign.Top(), true);
 
             const int Spacing = 30;
             left.verticalSpacing = Spacing;
@@ -134,8 +148,7 @@ namespace MoreSettings.GameMechanics.Scarf
             double zoom = v.zoom;
             double tozoom = zoom * 1.3;
             v.zoomFromTo(zoom, tozoom, 1, new TType.TEaseOut());
-
-            Hero hero = ModCore.Modules.Game.Instance.HeroInstance!;
+            v.track(dc.pr.Game.Class.ME.hero, false);
 
 
             Superaction = new Action(() =>
@@ -145,8 +158,11 @@ namespace MoreSettings.GameMechanics.Scarf
                 {
                     v.updateRealPos();
                     v.updateSizes();
+
                 }, delayer.fps * 2.0);
             });
+
+
             customScarf.UpdateSarfs();
         }
 
@@ -155,14 +171,30 @@ namespace MoreSettings.GameMechanics.Scarf
 
         private void OpenPageFirst()
         {
+            RefreshInfoPanel();
             AnimateOutItems(() =>
             {
                 Clearpage();
 
                 NowPage = Page.First;
 
-                CreateButton(FlowEnum.LeftFlow, "修改当前自定义飘带", (e) => { });
-                CreateButton(FlowEnum.RightFlow, "创建新自定义飘带", (e) =>
+                var flow = CreateButton(FlowEnum.LeftFlow, $"开启/禁用({SettingsMain.ConfigValue.Scarf.Enabled})", (e) => { });
+                flow.interactive.onClick = (e) =>
+                {
+                    SettingsMain.ConfigValue.Scarf.Enabled = !SettingsMain.ConfigValue.Scarf.Enabled;
+                    SettingsMain.SaveConfig();
+                    EnableAndDisable();
+                    ArrayObj obj = flow.children;
+                    for (int i = 0; i < obj.length; i++)
+                    {
+                        var t = obj.getDyn(i);
+                        if (t is dc.ui.Text)
+                            t.set_text($"开启/禁用({SettingsMain.ConfigValue.Scarf.Enabled})".ToHaxeString());
+                    }
+                    UpdateHighlightPosition();
+                };
+
+                CreateButton(FlowEnum.RightFlow, "自定义飘带", (e) =>
                 {
                     if (Attributes.Count < 0) CeateScarfToKey(0);
                     OpenPageScraf();
@@ -173,7 +205,7 @@ namespace MoreSettings.GameMechanics.Scarf
 
         private void OpenPageScraf()
         {
-
+            RefreshInfoPanel();
             AnimateOutItems(() =>
             {
 
@@ -206,6 +238,7 @@ namespace MoreSettings.GameMechanics.Scarf
                 var text = new dc.ui.Text(box, null, null, Ref<double>.Null, null, null);
                 object val = attr.Getter(Attributes[CurrentScarf].scarfData);
                 text.set_text($"{attr.Name}: {val}".ToHaxeString());
+                box.set_horizontalSpacing(text.text.length * 2);
                 boxes.Add(box);
                 attr.Box = box;
                 attr.Text = text;
@@ -223,6 +256,16 @@ namespace MoreSettings.GameMechanics.Scarf
                 else
                 {
                     AddInteractiveToItem(box, side, startIndex + i);
+                }
+
+                if (attr.Name == "color" || attr.Name == "backColor")
+                {
+                    colorbox.Clear();
+                    var color = new dc.h2d.Graphics(box);
+                    color.beginFill(Ref<int>.In((int)val), Ref<double>.In(1.0));
+                    color.drawCircle(0, -10, 20, Ref<int>.In(0));
+                    color.endFill();
+                    colorbox.Add(attr.Name + $"{CurrentScarf}", color);
                 }
             }
             return boxes;
@@ -247,6 +290,7 @@ namespace MoreSettings.GameMechanics.Scarf
 
             CreateButton(FlowEnum.BottomFlow, "删除当前飘带", (e) =>
             {
+                colorbox.Clear();
                 RemoveScarf(CurrentScarf);
                 customScarf.UpdateSarfs();
                 OpenPageFirst();
@@ -255,6 +299,11 @@ namespace MoreSettings.GameMechanics.Scarf
             CreateButton(FlowEnum.BottomFlow, $"当前飘带id:{CurrentScarf}", (e) =>
             {
 
+            });
+
+            CreateButton(FlowEnum.BottomFlow, $"英雄隐藏/显示", (e) =>
+            {
+                IsIntengible = !IsIntengible;
             });
 
             CreateButton(FlowEnum.BottomFlow, "创建新飘带(默认配置)", (e) =>
@@ -274,6 +323,8 @@ namespace MoreSettings.GameMechanics.Scarf
                     OpenPageScraf();
                 });
             }
+
+
         }
 
         private FlowBox CreateButton(FlowEnum parent, string text, HlAction<Event> onClick)
@@ -697,6 +748,18 @@ namespace MoreSettings.GameMechanics.Scarf
         private void ModifyCurrentAttributeValue(int delta)
         {
             if (currentSide == Side.Bottom) return;
+            Action<AttributeEntry, ScarfData, object> recalled = new((attr, currentData, newVal) =>
+            {
+                attr.Setter(currentData, newVal);
+                attr.Text.set_text($"{attr.Name}: {newVal}".ToHaxeString());
+                setMainFlowPos();
+                AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
+                customScarf.Save();
+                customScarf.UpdateSarfs();
+
+                RefreshInfoPanel();
+                UpdateHighlightPosition();
+            });
 
             List<AttributeEntry> attrList;
             ScarfData currentData;
@@ -739,9 +802,8 @@ namespace MoreSettings.GameMechanics.Scarf
                 var picker = new ColorGridSelector(selectedColor =>
                 {
                     attr.Setter(currentData, selectedColor);
-                    attr.Text.set_text($"{attr.Name}: {selectedColor:X8}".ToHaxeString());
-                    setMainFlowPos();
-                    UpdateHighlightPosition();
+                    recalled.Invoke(attr, currentData, selectedColor);
+                    UpdateColorBox(attr.Name,selectedColor);
                     AudioHelper.LoadAudioFormString("sfx/ui/menu_select.wav");
                 });
                 picker.onClose = new HlAction(() =>
@@ -756,7 +818,6 @@ namespace MoreSettings.GameMechanics.Scarf
                 });
                 return;
             }
-
             else if (attr.ValueType == typeof(double))
             {
                 double step = (delta > 0) ? 0.5 : -0.5;
@@ -781,14 +842,7 @@ namespace MoreSettings.GameMechanics.Scarf
 
                 return;
             }
-
-            attr.Setter(currentData, newVal);
-            attr.Text.set_text($"{attr.Name}: {newVal}".ToHaxeString());
-            setMainFlowPos();
-            UpdateHighlightPosition();
-            AudioHelper.LoadAudioFormString("sfx/ui/menu_click1.wav");
-            customScarf.Save();
-            customScarf.UpdateSarfs();
+            recalled.Invoke(attr, currentData, newVal);
         }
 
 
@@ -816,6 +870,7 @@ namespace MoreSettings.GameMechanics.Scarf
 
         private void Close()
         {
+            IsIntengible = false;
             if (controller != null)
                 controller.dispose(Ref<bool>.Null);
             controller = null!;
@@ -862,10 +917,12 @@ namespace MoreSettings.GameMechanics.Scarf
             var left = flows[FlowEnum.LeftFlow];
             var right = flows[FlowEnum.RightFlow];
             var bottom = flows[FlowEnum.BottomFlow];
+            var info = flows[FlowEnum.InfoFlow];
 
             left.reflow();
             right.reflow();
             bottom.reflow();
+            info.reflow();
 
             FlowProperties leftProps = main.getProperties(left);
             leftProps.set_isAbsolute(true);
@@ -875,6 +932,9 @@ namespace MoreSettings.GameMechanics.Scarf
 
             FlowProperties bottomProps = main.getProperties(bottom);
             bottomProps.set_isAbsolute(true);
+
+            FlowProperties infoProps = main.getProperties(info);
+            infoProps.set_isAbsolute(true);
 
             double margin = 100 * get_pixelScale.Invoke();
 
@@ -887,6 +947,10 @@ namespace MoreSettings.GameMechanics.Scarf
             bottom.x = (effectiveWidth - bottom.get_outerWidth()) / 2.0;
             bottom.y = effectiveHeight - bottom.get_outerHeight() - (margin / 2);
 
+            double infoMargin = 20 * get_pixelScale.Invoke();
+            info.x = 0;
+            info.y = 0;
+
             double textwidth = title.textWidth * get_pixelScale.Invoke();
             title.x = (effectiveWidth - textwidth / 2) / 2.0;
             title.y = effectiveHeight * 0.05;
@@ -894,9 +958,92 @@ namespace MoreSettings.GameMechanics.Scarf
             left.posChanged = true;
             right.posChanged = true;
             bottom.posChanged = true;
+            info.posChanged = true;
             title.posChanged = true;
 
             main.reflow();
+        }
+
+        private void RefreshInfoPanel()
+        {
+            var info = flows[FlowEnum.InfoFlow];
+            foreach (Flow item in info.children.AsEnumerable())
+                item.remove();
+
+
+            var infoFlow = CreateFlowBox(info);
+            infoFlow.isVertical = true;
+            infoFlow.scaleX = infoFlow.scaleY = 0.8;
+
+            if (Attributes.Count == 0)
+            {
+                var emptyText = new dc.ui.Text(infoFlow, false, false, Ref<double>.Null, null, null);
+                emptyText.set_text("无飘带数据".ToHaxeString());
+                infoFlow.reflow();
+                setMainFlowPos();
+                return;
+            }
+
+
+            var titleText = new dc.ui.Text(infoFlow, true, true, Ref<double>.Null, new ImageVerticalAlign.Middle(), null);
+            titleText.set_text("所有飘带".ToHaxeString());
+            titleText.set_textColor(0xFFDD88);
+            infoFlow.getProperties(titleText);
+            infoFlow.set_paddingBottom(5);
+
+            foreach (var kv in Attributes.OrderBy(k => k.Key))
+            {
+                int key = kv.Key;
+                var scarfData = kv.Value.scarfData;
+
+                var entryFlow = new Flow(infoFlow);
+                entryFlow.set_horizontalAlign(new FlowAlign.Left());
+                entryFlow.isVertical = false;
+                entryFlow.horizontalSpacing = (int)(8 * get_pixelScale.Invoke());
+
+                if (scarfData.color != null)
+                {
+                    var colorBox = new dc.h2d.Graphics(entryFlow);
+                    colorBox.beginFill(Ref<int>.In((int)scarfData.color), Ref<double>.In(1.0));
+                    colorBox.drawCircle(0, -10, 20, Ref<int>.In(0));
+                    colorBox.endFill();
+                }
+
+                var idText = new dc.ui.Text(entryFlow, false, false, Ref<double>.Null, null, null);
+                idText.set_text($"#{key}".ToHaxeString());
+
+                string brief = $"L:{scarfData.maxLength:F1} T:{scarfData.thickness:F1} F:{scarfData.friction:F2}";
+                var briefText = new dc.ui.Text(entryFlow, false, false, Ref<double>.Null, null, null);
+                briefText.set_text(brief.ToHaxeString());
+
+                if (key == CurrentScarf)
+                {
+                    idText.set_textColor(0xFFAA66);
+                    briefText.set_textColor(0xFFAA66);
+                }
+                else
+                {
+                    idText.set_textColor(0xCCCCCC);
+                    briefText.set_textColor(0xCCCCCC);
+                }
+
+                entryFlow.reflow();
+            }
+
+            infoFlow.reflow();
+            info.reflow();
+            setMainFlowPos();
+        }
+
+        private void UpdateColorBox(string id,int color)
+        {
+            if (colorbox.TryGetValue(id + $"{CurrentScarf}", out var graphics))
+            {
+                graphics.clear();
+                graphics.beginFill(Ref<int>.In((int)color), Ref<double>.In(1.0));
+                graphics.drawCircle(0, -10, 20, Ref<int>.In(0));
+                graphics.endFill();
+            }
         }
 
         #endregion

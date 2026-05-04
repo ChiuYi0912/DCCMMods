@@ -153,10 +153,7 @@ namespace MoreSettings.GameMechanics.Scarf
             {
                 dc.tool.Scarf scarf = allScarfs.getDyn(i);
                 scarf.init();
-
-                Logger.Information($"{scarf.Meta.key}");
             }
-
 
 
             return scarfManager;
@@ -164,6 +161,12 @@ namespace MoreSettings.GameMechanics.Scarf
 
         public void UpdateSarfs()
         {
+            if (!SettingsMain.ConfigValue.Scarf.Enabled)
+            {
+                scarfUI.hero.initScarf(); 
+                return;
+            }
+
             var hero = Game.Instance.HeroInstance!;
             var scmanager = hero.scarf;
             foreach (dc.tool.Scarf item in scmanager.scarfs.AsEnumerable())

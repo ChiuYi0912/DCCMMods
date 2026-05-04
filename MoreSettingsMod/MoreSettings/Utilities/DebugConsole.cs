@@ -13,7 +13,7 @@ namespace MoreSettings.Utilities
         [ConsoleMethod("ui", "")]
         public static void debugprocess(TextWriter writer)
         {
-            var ui = new CustomScarfUI(Main.Class.ME);
+            
         }
     }
 }

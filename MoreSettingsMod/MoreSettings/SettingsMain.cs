@@ -58,11 +58,11 @@ IOnAfterLoadingCDB
       GetText.Instance.RegisterMod("SettingsLang");
 
       moduleManager = new ModuleManager(this);
+      moduleManager.RegisterModule(new ScarfSettingModule());
       moduleManager.RegisterModule(new GameplayModule());
       moduleManager.RegisterModule(new HasUiSettingsModule());
       moduleManager.RegisterModule(new ViewportSettingsModule());
       moduleManager.RegisterModule(new SkinSettingsModule());
-      moduleManager.RegisterModule(new ScarfSettingModule());
 
       modMenu = new ModMenu(this);
       entityPop = new EntityPopDamage(this);

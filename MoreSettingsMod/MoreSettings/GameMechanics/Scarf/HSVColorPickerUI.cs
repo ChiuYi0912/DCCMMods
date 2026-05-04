@@ -19,42 +19,81 @@ namespace MoreSettings.GameMechanics.Scarf
     {
         private List<uint> colorList = default!;
         private Action<int> onColorSelected;
-        private const int COLOR_LEVELS = 8;
+        private const int GRID_COLS = 8;
+        private const int GRID_ROWS = 4;
 
         public ColorGridSelector(Action<int> onColorSelectedCallback)
         {
             onColorSelected = onColorSelectedCallback;
         }
 
-
-
-        private void GenerateFullColorPalette()
+        private void GenerateCommonColorPalette()
         {
-            colorList = new List<uint>(COLOR_LEVELS * COLOR_LEVELS * COLOR_LEVELS);
-            for (int r = 0; r < COLOR_LEVELS; r++)
+            colorList = new List<uint>
             {
-                byte red = (byte)((r * 255) / (COLOR_LEVELS - 1));
-                for (int g = 0; g < COLOR_LEVELS; g++)
-                {
-                    byte green = (byte)((g * 255) / (COLOR_LEVELS - 1));
-                    for (int b = 0; b < COLOR_LEVELS; b++)
-                    {
-                        byte blue = (byte)((b * 255) / (COLOR_LEVELS - 1));
-                        uint color = 0xFF000000u | ((uint)red << 16) | ((uint)green << 8) | blue;
-                        colorList.Add(color);
-                    }
-                }
+                // 红色系
+                0xFFFF0000u, // 纯红
+                0xFFDC143Cu, // 深红
+                0xFFC71585u, // 胭脂红
+                // 橙色/黄色系
+                0xFFFFA500u, // 橙色
+                0xFFFFD700u, // 金色
+                0xFFFFFF00u, // 纯黄
+                // 绿色系
+                0xFFADFF2Fu, // 黄绿
+                0xFF00FF00u, // 纯绿
+                0xFF008000u, // 深绿
+                0xFF3CB371u, // 海洋绿
+                // 青色/蓝色系
+                0xFF00FFFFu, // 青色
+                0xFF00BFFFu, // 深天蓝
+                0xFF0000FFu, // 纯蓝
+                0xFF000080u, // 海军蓝
+                0xFF4B0082u, // 靛蓝
+                // 紫色/粉色系
+                0xFF8A2BE2u, // 蓝紫色
+                0xFF800080u, // 紫色
+                0xFFEE82EEu, // 紫罗兰
+                0xFFFF00FFu, // 品红
+                0xFFFFC0CBu, // 粉色
+                0xFFFF69B4u, // 亮粉
+                // 棕色/土色系
+                0xFFA0522Du, // 赭色
+                0xFF8B4513u, // 棕色
+                0xFFD2691Eu, // 巧克力色
+                // 灰色/无彩色系
+                0xFF000000u, // 黑色
+                0xFF2F4F4Fu, // 暗瓦灰
+                0xFF808080u, // 灰色
+                0xFFA9A9A9u, // 深灰色
+                0xFFC0C0C0u, // 银色
+                0xFFE0E0E0u, // 浅灰色
+                0xFFF5F5F5u, // 烟熏白
+                0xFFFFFFFFu  // 白色
+            };
+
+            int expectedCount = GRID_COLS * GRID_ROWS;
+            if (colorList.Count < expectedCount)
+            {
+                uint white = 0xFFFFFFFFu;
+                while (colorList.Count < expectedCount)
+                    colorList.Add(white);
+            }
+            else if (colorList.Count > expectedCount)
+            {
+                colorList.RemoveRange(expectedCount, colorList.Count - expectedCount);
             }
         }
 
         public override void initGrid()
         {
-            GenerateFullColorPalette();
+            GenerateCommonColorPalette();
             curX = curY = 0;
             base.initEntries(colorList.Count);
         }
 
-        public override int get_wid() => COLOR_LEVELS;
+        public override int get_wid() => GRID_COLS;
+
         public override int get_entryWid() => 24;
         public override int get_entryHei() => 24;
 
