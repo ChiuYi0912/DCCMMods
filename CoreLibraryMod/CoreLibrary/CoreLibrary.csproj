@@ -12,17 +12,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
     <ProjectReference Include="..\JqFormatter\JqFormatter\JqFormatter.csproj" />
-
   </ItemGroup>
 
+  
   <ItemGroup>
   <Reference Include="ModCore.Native">
     <HintPath>C:\Users\Michael\core\sources\ModCore.Native\bin\Debug\net10.0\ModCore.Native.dll</HintPath>
   </Reference>
   <ProjectReference Include="C:\Users\Michael\core\sources\ModCore.Common\ModCore.Common.csproj" />
   </ItemGroup>
+
+    <Target Name="RemoveDuplicateModCoreCommon" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+        <Reference Remove="ModCore.Common" />
+    </ItemGroup>
+    </Target>
 
   <ItemGroup>
     <ModDependency Include="JqFormatter" />
@@ -34,5 +39,9 @@
     <None Update="NativeLib\MathWaveGenerator.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
   </ItemGroup>
 </Project>

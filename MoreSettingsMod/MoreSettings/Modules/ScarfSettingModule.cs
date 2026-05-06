@@ -105,7 +105,7 @@ namespace MoreSettings.Modules
         private void Hook_DefaultPause_init(Hook__DefaultPause.orig___constructor__ orig, DefaultPause arg1)
         {
             orig(arg1);
-            AddCustomButtonToPause("飘带管理", () => { openScarfui(); }, arg1);
+            ModMenu.AddCustomButtonToPause("Scarf", () => { openScarfui(); }, arg1, 2);
         }
 
         private void Hook_Hero_initScarf(Hook_Hero.orig_initScarf orig, Hero self)
@@ -178,45 +178,6 @@ namespace MoreSettings.Modules
         erro:
             var popup = new dc.ui.ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
             popup.text(GetText.Instance.GetString("请在游戏内打开!\n").ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
-        }
-
-        public void AddCustomButtonToPause(string buttonText, Action onClick, DefaultPause pause)
-        {
-            dc.ui.Text text = Assets.Class.makeText("".ToHaxeString(), null, true, pause.botMenu);
-            text.set_textAlign(new Align.Center());
-
-            Flow flow = new(text);
-            flow.set_horizontalAlign(new FlowAlign.Middle());
-            dc.ui.Text text1 = Assets.Class.makeText(buttonText.ToHaxeString(), null, true, flow);
-            text1.scaleX = text1.scaleY = text1.scaleY / 2;
-            text1.posChanged = true;
-
-            double width = text.get_textWidth();
-            double height = text.get_textHeight();
-            dc.h2d.Interactive interactive = new(width, height, text, null);
-            interactive.onClick = new HlAction<Event>((e) => { });
-            interactive.onOver = new HlAction<Event>((e) => { });
-
-            var entry = new virtual_cb_inter_t_();
-            entry.t = text;
-            entry.inter = interactive;
-            entry.cb = new HlAction(onClick);
-
-            pause.botMenu.addChildAt(text, 2);
-            ArrayObj obj = pause.options;
-            pause.options.insertDyn(1, entry);
-
-
-            FlowProperties properties = flow.getProperties(text1);
-            properties.offsetX += 30;
-
-            flow.reflow();
-            pause.onResize();
-        }
-
-        public void ScarfOption()
-        {
-            Logger.Information("hello");
         }
     }
 }

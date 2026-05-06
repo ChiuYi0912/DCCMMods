@@ -56,6 +56,7 @@ IOnAfterLoadingCDB
       instance = this;
       Utilities.Logger.Initialize(Logger);
       GetText.Instance.RegisterMod("SettingsLang");
+      
 
       moduleManager = new ModuleManager(this);
       moduleManager.RegisterModule(new ScarfSettingModule());
@@ -67,35 +68,12 @@ IOnAfterLoadingCDB
       modMenu = new ModMenu(this);
       entityPop = new EntityPopDamage(this);
 
+      EventSystem.BroadcastEvent<IOnHookInitialize>();
+
       Hook_Boot.mainLoop += Hook_Boot_loop;
-      Hook_Entity.spriteUpdate += Hook_Entity_sprupdate;
    }
 
 
-
-   private void Hook_Entity_sprupdate(Hook_Entity.orig_spriteUpdate orig, Entity self)
-   {
-      orig(self);
-
-      // if (self.nrmShader != null)
-      // {
-      //    Vector scale__ = self.nrmShader.scale__;
-      //    if (self.dir < 0)
-      //    {
-      //       scale__.x = -3.0;
-      //       scale__.y = 3.0;
-      //       scale__.z = 3.0;
-      //       scale__.w = 1.0;
-      //    }
-      //    else
-      //    {
-      //       scale__.x = 3.0;
-      //       scale__.y = 3.0;
-      //       scale__.z = 3.0;
-      //       scale__.w = 1.0;
-      //    }
-      // }
-   }
 
 
 
@@ -132,8 +110,6 @@ IOnAfterLoadingCDB
 
    void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb)
    {
-      // var data = cdb.skin.all.array;
 
-      // Logger.Debug($"{data.getDyn(2)}");
    }
 }
