@@ -196,7 +196,7 @@ namespace MoreSettings.GameMechanics.Scarf
 
                 CreateButton(FlowEnum.RightFlow, "自定义飘带", (e) =>
                 {
-                    if (Attributes.Count < 0) CeateScarfToKey(0);
+                    if (Attributes.Count == 0) CeateScarfToKey(0);
                     OpenPageScraf();
                 });
                 AnimateInItems();

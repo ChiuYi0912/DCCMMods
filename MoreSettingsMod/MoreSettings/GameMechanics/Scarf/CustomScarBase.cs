@@ -33,10 +33,6 @@ namespace MoreSettings.GameMechanics.Scarf
                 config.LoadToRuntime();
                 Datakey = config.RuntimeScarfData;
             }
-            else
-            {
-                CustomScarfUI.CeateScarfToKey(0);
-            }
         }
 
 
