@@ -35,16 +35,15 @@ namespace CoreLibrary.Utilities.CustomPopDamage
         public EntityPopDamage(ModBase modBase)
         {
             popconfig = Config.Value;
+            _handlerProvider = new ThreadSafePopDamageHandlerProvider();
 
             PopDamageHandlerRegistry.Register(new HotlinePopDamageHandler());
             PopDamageHandlerRegistry.Register(new StsPopDamageHandler());
             PopDamageHandlerRegistry.Register(new DefaultPopDamageHandler());
 
-            _handlerProvider = new ThreadSafePopDamageHandlerProvider();
             Hook_Entity.popDamage += Hook_Entity_PopDamage;
-            var basePop = new BasePopDamage(_handlerProvider);
-
-            Hook_Entity.destroy += Hook_Entity_Destroy;
+            
+            _ = new BasePopDamage(_handlerProvider, _handlerProvider);
         }
 
 
@@ -59,12 +58,6 @@ namespace CoreLibrary.Utilities.CustomPopDamage
             handler.CreatePopDamage(a, self);
 
             UpdateCooldownsAndIndex(self);
-        }
-
-        private void Hook_Entity_Destroy(Hook_Entity.orig_destroy orig, Entity self)
-        {
-            orig(self);
-            _handlerProvider.ClearCache(self);
         }
 
 

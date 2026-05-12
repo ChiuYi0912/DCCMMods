@@ -20,7 +20,7 @@ msgstr "ChiuYi Mod Settings"
 
 #: Main title
 msgid "DCCM模组开关(B站ChiuYi.秋)"
-msgstr "DCCM Mod Settings (Bilibili ChiuYi.秋)"
+msgstr "DCCM Mod Settings (Bilibili ChiuYi)"
 
 #: More accessibility settings
 msgid "更多易用性设置"

@@ -25,7 +25,7 @@ using Serilog.Core;
 
 namespace CoreLibrary.Utilities.CustomPopDamage
 {
-    public class BasePopDamage :
+    internal class BasePopDamage :
     IEventReceiver
     {
         // Color constants
@@ -55,12 +55,14 @@ namespace CoreLibrary.Utilities.CustomPopDamage
         private const int DamageIndexBaseMultiplier = 2;
 
         private readonly IPopDamageHandlerProvider _handlerProvider;
+        private readonly ThreadSafePopDamageHandlerProvider threadSafePop;
 
-        public BasePopDamage() : this(new StaticPopDamageHandlerProvider()) { }
-
-        public BasePopDamage(IPopDamageHandlerProvider handlerProvider)
+        public BasePopDamage(IPopDamageHandlerProvider handlerProvider, ThreadSafePopDamageHandlerProvider threadSafe)
         {
+            threadSafePop = threadSafe;
             _handlerProvider = handlerProvider ?? throw new ArgumentNullException(nameof(handlerProvider));
+
+
             dc.ui.Hook__PopDamage.__constructor__ += Hook_PopDamage_initalize;
             Hook__PopDamageHotline.__constructor__ += Hook_PopDamageHotline_initalize;
         }
@@ -205,7 +207,7 @@ namespace CoreLibrary.Utilities.CustomPopDamage
             {
                 double duration = speedMultiplier * 450.0;
                 double delay = speedMultiplier * ((ad.dmgBonusMul > 1.33 || ad.dmgScaledAdd > 0.0) ? 1000.0 : 600.0);
-                CreateFadeTween((dc.ui.PopDamage)popDamage, duration, delay);
+                CreateFadeTween((dc.ui.PopDamage)popDamage, duration, delay, e);
             }
             else
             {
@@ -213,18 +215,18 @@ namespace CoreLibrary.Utilities.CustomPopDamage
                 {
                     double dduration = speedMultiplier * 600;
                     double ddelay = speedMultiplier * ((ad.dmgBonusMul > 1.33 || ad.dmgScaledAdd > 0.0) ? 700.0 : 350.0);
-                    CreateFadeTween((dc.ui.PopDamage)popDamage, dduration, ddelay);
+                    CreateFadeTween((dc.ui.PopDamage)popDamage, dduration, ddelay, e);
                     return;
                 }
                 double duration = speedMultiplier * 600;
                 double duration1 = _handlerProvider.GetHandler(e).SpeedMultiplier;
                 double ms = duration1 * 1000.0;
                 double delay = speedMultiplier * ((ad.dmgBonusMul > 1.33 || ad.dmgScaledAdd > 0.0) ? 700.0 : 350.0);
-                CreateFadeTween((dc.ui.PopDamage)popDamage, ms, ms + 100);
+                CreateFadeTween((dc.ui.PopDamage)popDamage, ms, ms + 100, e);
             }
         }
 
-        private static void CreateFadeTween(dc.ui.PopDamage popDamage, double duration, double delay)
+        private void CreateFadeTween(dc.ui.PopDamage popDamage, double duration, double delay, Entity e)
         {
             var hlGetter = new HlFunc<double>(() => popDamage.flow.alpha);
             var hlSetter = new HlAction<double>((value) =>
@@ -235,7 +237,11 @@ namespace CoreLibrary.Utilities.CustomPopDamage
 
             var tween = popDamage.tw.create_(hlGetter, hlSetter, 1.0, 0.0, null, duration, Ref<bool>.Null);
             tween.delayMs(delay);
-            tween.end(new HlAction(() => popDamage.destroy()));
+            tween.end(new HlAction(() =>
+            {
+                threadSafePop.ClearCache(e);
+                popDamage.destroy();
+            }));
         }
 
         private static int GetDamageColor(AttackData ad, Entity e)

@@ -26,6 +26,7 @@ namespace ShaderTest
         {
             cache = Cache.Class.get() as CacheFile;
             //globals = Boot.Class.ME.s2d.ctx.manager.globals;
+            globals = new Globals();
             DisableCompileLogs();
         }
         public void DisableCompileLogs()
@@ -78,6 +79,9 @@ namespace ShaderTest
                 }
             }
             if (list != null) CompileShaderList(list);
+
+            CacheFile cache = (CacheFile)Cache.Class.get();
+            cache.addToCache(cache.runtimeShaders.getDyn(0), list);
         }
 
 

@@ -22,7 +22,7 @@ namespace MoreSettings.Modules
 {
     public class SkinSettingsModule : BaseModule
     {
-        public override string Description => "联动设置";
+        public override string Description => GetText.Instance.GetString("ModuleDesc_Skin");
 
         public override SkinConfig config => (SkinConfig)base.config;
 
@@ -40,7 +40,7 @@ namespace MoreSettings.Modules
                 return;
 
             var widget = PopmenuHelper.AddConfigToggle(
-                 GetText.Instance.GetString("显示正确的伤害数值(Boss实际受到的伤害是经过软上限,此选项启用后将显示正确的伤害数值)"),
+                 GetText.Instance.GetString("GenuinePopDamage"),
                  "",
                  () => SettingsMain.entityPop.Config.Value.GenuinePopDamage,
                  v => SettingsMain.entityPop.Config.Value.GenuinePopDamage = v,
@@ -50,8 +50,8 @@ namespace MoreSettings.Modules
 
 
             PopmenuHelper.AddConfigToggle(
-                GetText.Instance.GetString("杀戮尖塔暴击特效"),
-                GetText.Instance.GetString("启用/禁用杀戮尖塔暴击特效"),
+                GetText.Instance.GetString("StsCritEffect"),
+                GetText.Instance.GetString("StsCritEffectDesc"),
                 () => SettingsMain.entityPop.Config.Value.StsPopDamage,
                 v =>
                 {
@@ -65,7 +65,7 @@ namespace MoreSettings.Modules
             if (SettingsMain.entityPop.Config.Value.StsPopDamage)
             {
                 PopmenuHelper.AddConfigSlider(
-                GetText.Instance.GetString("暴击特效持续显示时间"),
+                GetText.Instance.GetString("CritEffectDuration"),
                 () => SettingsMain.entityPop.Config.Value.StsSpeedMultiplier,
                 v => SettingsMain.entityPop.Config.Value.StsSpeedMultiplier = v,
                 step: 0.1,
@@ -79,8 +79,8 @@ namespace MoreSettings.Modules
 
 
             PopmenuHelper.AddConfigToggle(
-                GetText.Instance.GetString("迈阿密热线暴击特效"),
-                GetText.Instance.GetString("启用/禁用迈阿密热线暴击特效"),
+                GetText.Instance.GetString("HotlineCritEffect"),
+                GetText.Instance.GetString("HotlineCritEffectDesc"),
                 () => SettingsMain.entityPop.Config.Value.HotlinePopDamage,
                 v =>
                 {
@@ -94,7 +94,7 @@ namespace MoreSettings.Modules
             if (SettingsMain.entityPop.Config.Value.HotlinePopDamage)
             {
                 PopmenuHelper.AddConfigSlider(
-                  GetText.Instance.GetString("暴击特效持续显示时间"),
+                  GetText.Instance.GetString("CritEffectDuration"),
                   () => SettingsMain.entityPop.Config.Value.HotlineSpeedMultiplier,
                   v => SettingsMain.entityPop.Config.Value.HotlineSpeedMultiplier = v,
                   step: 0.1,
@@ -105,16 +105,16 @@ namespace MoreSettings.Modules
             }
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("雨中冒险传送功能"),
-                GetText.Instance.GetString("启用/禁用传送功能"),
+                GetText.Instance.GetString("RiskOfRainTeleport"),
+                GetText.Instance.GetString("RiskOfRainTeleportDesc"),
                 () => config.RiskOfRainSkin,
                 v => config.RiskOfRainSkin = v,
                 scrollerFlow: scrollerFlow
                 );
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("武士零装束效果"),
-                GetText.Instance.GetString("启用/禁用武士零装束效果"),
+                GetText.Instance.GetString("KatanaZeroOutfit"),
+                GetText.Instance.GetString("KatanaZeroOutfitDesc"),
                 () => config.KatanaSkin,
                 v => config.KatanaSkin = v,
                 scrollerFlow: scrollerFlow

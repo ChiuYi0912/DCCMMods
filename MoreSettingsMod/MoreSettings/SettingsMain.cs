@@ -56,6 +56,8 @@ IOnAfterLoadingCDB
       instance = this;
       Utilities.Logger.Initialize(Logger);
       GetText.Instance.RegisterMod("SettingsLang");
+      Info.Version = "1.0.1";
+      Info.RepositoryUrl = "https://github.com/ChiuYi0912/DCCMMods/tree/main";
       
 
       moduleManager = new ModuleManager(this);
@@ -70,7 +72,7 @@ IOnAfterLoadingCDB
 
       EventSystem.BroadcastEvent<IOnHookInitialize>();
 
-      Hook_Boot.mainLoop += Hook_Boot_loop;
+      //Hook_Boot.mainLoop += Hook_Boot_loop;
    }
 
 

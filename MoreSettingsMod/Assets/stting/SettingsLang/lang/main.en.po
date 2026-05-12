@@ -1,0 +1,179 @@
+# English translation for ChiuYi Mod
+msgid ""
+msgstr ""
+"Project-Id-Version: ChiuYi Mod\n"
+"POT-Creation-Date: 2025-11-29 12:26+0800\n"
+"PO-Revision-Date: 2026-01-07 01:52+0800\n"
+"Last-Translator: Your Name <your@email.com>\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.8\n"
+"X-Poedit-Basepath: ../../../ModCore\n"
+"X-Poedit-SearchPath-0: .\n"
+
+
+msgid "ModName"
+msgstr "Dead Cells Enhanced Settings"
+
+msgid "Settings"
+msgstr "Mod Settings"
+
+msgid "EnableModule"
+msgstr "Enable this settings module."
+
+# Module Descriptions
+msgid "ModuleDesc_UI"
+msgstr "UI Settings"
+
+msgid "ModuleDesc_Gameplay"
+msgstr "Special Settings"
+
+msgid "ModuleDesc_Viewport"
+msgstr "Camera Settings"
+
+msgid "ModuleDesc_Skin"
+msgstr "Crossover Settings"
+
+# GameplayModule
+msgid "HitPause"
+msgstr "Disable Hit Stop."
+
+msgid "HitPauseDesc"
+msgstr "Disable Hit Stop (a.k.a. \"meat-grinding\" hit lag) when hitting enemies."
+
+msgid "SpeedTier"
+msgstr "Enable racing scroll pickup"
+
+msgid "SpeedTierDesc"
+msgstr ""
+
+msgid "MimicLoreRoom"
+msgstr "The Prescient Mimic that permanently resides in the Lore Room"
+
+msgid "MimicLoreRoomDesc"
+msgstr ""
+
+# BaseModule
+msgid "ModTitle"
+msgstr "DCCM More Settings Mod(Bilibili: ChiuYi)"
+
+# HasUiSettingsModule
+msgid "RemoveNewsPanel"
+msgstr "Remove Homepage News/Steam Panel"
+
+msgid "TakeEffectNextLaunch"
+msgstr "Takes effect next time the game is launched"
+
+msgid "RemoveUpdateNotes"
+msgstr "Remove Menu Update Notes"
+
+msgid "RemoveCinematicBars"
+msgstr "Remove Cinematic Black Bars"
+
+msgid "RemoveCinematicBarsDesc"
+msgstr "Remove cutscene cinematic black bars"
+
+msgid "DisableVignette"
+msgstr "Disable Vignette Effect"
+
+msgid "DisableVignetteDesc"
+msgstr "e.g. vignette effect when taking damage"
+
+msgid "LightweightDisplay"
+msgstr "Lightweight Display"
+
+msgid "LightweightDisplayDesc"
+msgstr "Disable interaction icons and more"
+
+msgid "NoPopText"
+msgstr "No Pop-up Text"
+
+msgid "NoPopTextDesc"
+msgstr "Disable damage pop-up text"
+
+msgid "ClockDisplay"
+msgstr "Clock"
+
+msgid "BossHealthBarText"
+msgstr "Boss Health Bar Text"
+
+msgid "HealthBarColor"
+msgstr "Health Bar Color"
+
+msgid "Alpha"
+msgstr "Alpha"
+
+# ViewportSettingsModule
+msgid "SmoothTeleport"
+msgstr "Smooth Teleport"
+
+msgid "PlayerCameraSpeed"
+msgstr "Player Camera Speed"
+
+msgid "AngleShakeIntensity"
+msgstr "Angle Shake Intensity"
+
+msgid "DirShakeIntensity"
+msgstr "Direction Shake Intensity"
+
+msgid "SustainedShakeStart"
+msgstr "Sustained Shake Start Intensity"
+
+msgid "HorizontalShakeTarget"
+msgstr "Horizontal Shake Target Intensity"
+
+msgid "VerticalShakeTarget"
+msgstr "Vertical Shake Target Intensity"
+
+msgid "ShakeDuration"
+msgstr "Shake Duration"
+
+msgid "SustainedShakeDecay"
+msgstr "Sustained Shake Decay Intensity"
+
+msgid "DecayDuration"
+msgstr "Decay Duration"
+
+# SkinSettingsModule
+msgid "GenuinePopDamage"
+msgstr "Show Correct Damage Values (Boss damage is subject to soft cap; enabling this shows actual damage values)"
+
+msgid "StsCritEffect"
+msgstr "Slay the Spire Critical Hit Effect"
+
+msgid "StsCritEffectDesc"
+msgstr "Enable/Disable Slay the Spire critical hit effect"
+
+msgid "CritEffectDuration"
+msgstr "Critical Hit Effect Display Duration"
+
+msgid "HotlineCritEffect"
+msgstr "Hotline Miami Critical Hit Effect"
+
+msgid "HotlineCritEffectDesc"
+msgstr "Enable/Disable Hotline Miami critical hit effect"
+
+msgid "RiskOfRainTeleport"
+msgstr "Risk of Rain Teleport Feature"
+
+msgid "RiskOfRainTeleportDesc"
+msgstr "Enable/Disable teleport feature"
+
+msgid "KatanaZeroOutfit"
+msgstr "Katana Zero Outfit Effect"
+
+msgid "KatanaZeroOutfitDesc"
+msgstr "Enable/Disable Katana Zero outfit effect"
+
+# ScarfSettingModule
+msgid "ScarfManager"
+msgstr "Scarf Manager"
+
+msgid "Scarf"
+msgstr "Scarf"
+
+msgid "OpenInGame"
+msgstr "Please open in-game!"

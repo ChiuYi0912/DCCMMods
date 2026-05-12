@@ -1,8 +1,43 @@
 <Solution>
+  <Folder Name="/CoreLibraryMod/">
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/CoreLibraryMod/CoreLibrary/CoreLibrary.csproj" />
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/CoreLibraryMod/JqFormatter/JqFormatter/JqFormatter.csproj" />
+  </Folder>
+  <Folder Name="/cppSharpDemo/">
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/cppSharpDemo/CppSharpDemoMod/CppSharpDemoMod.csproj" />
+  </Folder>
   <Folder Name="/DebugMod/">
     <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/DebugMod/DebugMod/DebugMod.csproj" />
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/DebugMod/DCDebug.Tests/DCDebug.Tests.csproj" />
+  </Folder>
+  <Folder Name="/EnemiesVsEnemies/">
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/EnemiesVsEnemies/EnemiesVsEnemies/EnemiesVsEnemies.csproj" />
+  </Folder>
+  <Folder Name="/EquipWeapons/">
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/EquipWeapons/EquipWeapons/EquipWeapons.csproj" />
+  </Folder>
+  <Folder Name="/LightOptMod/">
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/LightOptMod/LightOpt/LightOpt.csproj" />
+  </Folder>
+  <Folder Name="/MoreHeadsandskins/">
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/MoreHeadsandskins/MoreHeadsandskins/MoreHeadsandskins.csproj" />
+  </Folder>
+  <Folder Name="/MoreSettingsMod/">
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/MoreSettingsMod/MoreSettings/MoreSettings.csproj" />
+  </Folder>
+  <Folder Name="/Out_sideClock/">
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/Out_sideClock/Outside_Clock/Outside_Clock.csproj" />
+  </Folder>
+  <Folder Name="/PopDamage/">
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/PopDamage/PopDamage/PopDamage.csproj" />
   </Folder>
   <Folder Name="/RandomLevelMod/">
     <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/RandomLevelMod/RandomLevelMod/RandomLevelMod.csproj" />
+  </Folder>
+  <Folder Name="/ShaderMod/">
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/ShaderMod/ShaderTest/ShaderTest.csproj" />
+  </Folder>
+  <Folder Name="/WeaponEnhancementMod/">
+    <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/WeaponEnhancementMod/WeaponEnhancementMod/WeaponEnhancementMod.csproj" />
   </Folder>
 </Solution>

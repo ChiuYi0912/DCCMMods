@@ -12,7 +12,7 @@ namespace MoreSettings.Modules
 {
     public class ViewportSettingsModule : BaseModule
     {
-        public override string Description => "视角设置";
+        public override string Description => GetText.Instance.GetString("ModuleDesc_Viewport");
         public override ViewportConfig config => (ViewportConfig)base.config;
 
         public override void Initialize(ModBase mainMod)
@@ -46,7 +46,7 @@ namespace MoreSettings.Modules
             base.BuildMenu(options, Separator);
 
             var widget = menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("平滑传送"),
+                GetText.Instance.GetString("SmoothTeleport"),
                  GetText.Instance.GetString(""),
                 () => config.TeleportImmediate,
                 v => config.TeleportImmediate = v,
@@ -58,7 +58,7 @@ namespace MoreSettings.Modules
                 return;
 
             menuHelper.AddConfigSlider(
-                GetText.Instance.GetString("U35_PLAYER_CAMERA_SPEED"),
+                GetText.Instance.GetString("PlayerCameraSpeed"),
                 () => SettingsMain.ConfigValue.UI.PlayerCameraSpeed,
                 v => SettingsMain.ConfigValue.UI.PlayerCameraSpeed = v,
                 step: 0.1,
@@ -68,7 +68,7 @@ namespace MoreSettings.Modules
             );
 
             menuHelper.AddConfigSlider(
-                GetText.Instance.GetString("角度震动强度"),
+                GetText.Instance.GetString("AngleShakeIntensity"),
                 () => config.ViewportbumAng,
                 v => config.ViewportbumAng = v,
                 step: 0.1,
@@ -78,7 +78,7 @@ namespace MoreSettings.Modules
             );
 
             menuHelper.AddConfigSlider(
-                GetText.Instance.GetString("方向震动强度 "),
+                GetText.Instance.GetString("DirShakeIntensity"),
                 () => config.Viewportbumdir,
                 v => config.Viewportbumdir = v,
                 step: 0.1,
@@ -87,10 +87,10 @@ namespace MoreSettings.Modules
                 scrollerFlow: scrollerFlow
             );
 
-            options.addSeparator(GetText.Instance.GetString("持续震动起始强度").ToHaxeString(), scrollerFlow);
+            options.addSeparator(GetText.Instance.GetString("SustainedShakeStart").ToHaxeString(), scrollerFlow);
 
             menuHelper.AddConfigSlider(
-                GetText.Instance.GetString("水平震动目标强度"),
+                GetText.Instance.GetString("HorizontalShakeTarget"),
                 () => config.ViewportshakesX,
                 v => config.ViewportshakesX = v,
                 step: 0.1,
@@ -100,7 +100,7 @@ namespace MoreSettings.Modules
             );
 
             menuHelper.AddConfigSlider(
-                GetText.Instance.GetString("垂直震动目标强度"),
+                GetText.Instance.GetString("VerticalShakeTarget"),
                 () => config.ViewportshakesY,
                 v => config.ViewportshakesY = v,
                 step: 0.1,
@@ -110,7 +110,7 @@ namespace MoreSettings.Modules
             );
 
             menuHelper.AddConfigSlider(
-                GetText.Instance.GetString("震动持续时间"),
+                GetText.Instance.GetString("ShakeDuration"),
                 () => config.ViewportshakesD,
                 v => config.ViewportshakesD = v,
                 step: 0.1,
@@ -119,10 +119,10 @@ namespace MoreSettings.Modules
                 scrollerFlow: scrollerFlow
             );
 
-            options.addSeparator(GetText.Instance.GetString("持续震动衰减强度").ToHaxeString(), scrollerFlow);
+            options.addSeparator(GetText.Instance.GetString("SustainedShakeDecay").ToHaxeString(), scrollerFlow);
 
             menuHelper.AddConfigSlider(
-                GetText.Instance.GetString("水平震动目标强度"),
+                GetText.Instance.GetString("HorizontalShakeTarget"),
                 () => config.ViewportshakeReversedSX,
                 v => config.ViewportshakeReversedSX = v,
                 step: 0.1,
@@ -132,7 +132,7 @@ namespace MoreSettings.Modules
             );
 
             menuHelper.AddConfigSlider(
-                GetText.Instance.GetString("垂直震动目标强度"),
+                GetText.Instance.GetString("VerticalShakeTarget"),
                 () => config.ViewportshakeReversedSY,
                 v => config.ViewportshakeReversedSY = v,
                 step: 0.1,
@@ -142,7 +142,7 @@ namespace MoreSettings.Modules
             );
 
             menuHelper.AddConfigSlider(
-                GetText.Instance.GetString("衰减持续时间"),
+                GetText.Instance.GetString("DecayDuration"),
                 () => config.ViewportshakeReversedSD,
                 v => config.ViewportshakeReversedSD = v,
                 step: 0.1,

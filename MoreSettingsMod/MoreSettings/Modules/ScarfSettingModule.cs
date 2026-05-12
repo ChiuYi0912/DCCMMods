@@ -19,6 +19,8 @@ using Hashlink.Proxy.Values;
 using Hashlink.UnsafeUtilities;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
+using ModCore.Events;
+using ModCore.Events.Interfaces.Game.Menu;
 using ModCore.Mods;
 using ModCore.Modules;
 using MonoMod.Utils;
@@ -30,15 +32,18 @@ using static dc.ui.pause._DefaultPause;
 
 namespace MoreSettings.Modules
 {
-    public class ScarfSettingModule : BaseModule
+    public class ScarfSettingModule : BaseModule,
+    IEventReceiver,
+    IOnAfterPauseMenuBuild
     {
-        public override string Description => base.Description;
+        public override string Description => GetText.Instance.GetString("ScarfManager");
 
         public override ScarfConfig config => (ScarfConfig)base.config;
         public CustomScarfBase scarfBase = default!;
 
         public override void Initialize(ModBase mainMod)
         {
+            EventSystem.AddReceiver(this);
             config = SettingsMain.ConfigValue.Scarf;
             scarfBase = new CustomScarfBase();
             scarfBase.Load();
@@ -50,7 +55,7 @@ namespace MoreSettings.Modules
             if (!config.Enabled)
                 return;
             menuHelper.addSimpleWidget(
-                "飘带管理器",
+                GetText.Instance.GetString("ScarfManager"),
                 "",
                 new Action(openScarfui),
                 scrollerFlow
@@ -70,42 +75,6 @@ namespace MoreSettings.Modules
 
         public override void PermanentlyRegisterHooks()
         {
-            Hook__DefaultPause.__constructor__ += Hook_DefaultPause_init;
-        }
-
-        internal static virtual_cb_inter_t_ GetEntryFromPause(DefaultPause pause)
-        {
-            ArrayObj obj = pause.options;
-            if (obj == null) throw new ArgumentNullException(nameof(pause.options));
-            virtual_cb_inter_t_ virtual_ = obj.getDyn(pause.curOptionId);
-            //if (virtual_.cb == null) throw new ArgumentNullException(nameof(virtual_.cb));
-            if (pause.curOptionId != 1) return virtual_;
-            try
-            {
-                HlAction cb = virtual_.cb;
-                cb.Invoke();
-            }
-            catch (IndexOutOfRangeException ex)
-            {
-                Logger.Information($"无法调用 entry.cb（可能是零参数闭包）: {ex.Message}");
-            }
-            catch (NullReferenceException ex)
-            {
-                Logger.Information($"entry.cb 调用失败: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"entry.cb 调用时发生未预期错误: {ex}");
-            }
-            return virtual_;
-
-        }
-
-
-        private void Hook_DefaultPause_init(Hook__DefaultPause.orig___constructor__ orig, DefaultPause arg1)
-        {
-            orig(arg1);
-            ModMenu.AddCustomButtonToPause("Scarf", () => { openScarfui(); }, arg1, 2);
         }
 
         private void Hook_Hero_initScarf(Hook_Hero.orig_initScarf orig, Hero self)
@@ -120,9 +89,6 @@ namespace MoreSettings.Modules
                 self.scarf.dispose();
             self.scarf = scarfBase.CreateCustomScarfManager(self);
         }
-
-
-
 
         public void CloseAllUI()
         {
@@ -177,7 +143,9 @@ namespace MoreSettings.Modules
             return;
         erro:
             var popup = new dc.ui.ModalPopUp(Ref<bool>.In(true), CreateColor.ColorFromHex("#000000"));
-            popup.text(GetText.Instance.GetString("请在游戏内打开!\n").ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
+            popup.text(GetText.Instance.GetString("OpenInGame").ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
         }
+
+        void IOnAfterPauseMenuBuild.OnAfterPauseMenuBuild(Pause pause) => MenuModule.Instance.AddCustomButtonToPause("Scarf", (e) => openScarfui(), pause, 2);
     }
 }

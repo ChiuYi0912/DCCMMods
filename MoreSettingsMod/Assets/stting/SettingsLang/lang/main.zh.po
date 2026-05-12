@@ -1,0 +1,179 @@
+# 简体中文翻译文件
+msgid ""
+msgstr ""
+"Project-Id-Version: ChiuYi Mod\n"
+"POT-Creation-Date: 2025-11-29 12:26+0800\n"
+"PO-Revision-Date: 2025-11-29 12:27+0800\n"
+"Last-Translator: Your Name <your@email.com>\n"
+"Language-Team: Chinese\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4.2\n"
+"X-Poedit-Basepath: ../../../ModCore\n"
+"X-Poedit-SearchPath-0: .\n"
+
+
+msgid "ModName"
+msgstr "Dead Cells 增强设置"
+
+msgid "Settings"
+msgstr "模组设置"
+
+msgid "EnableModule"
+msgstr "启用此设置模块"
+
+# Module Descriptions
+msgid "ModuleDesc_UI"
+msgstr "UI界面修改"
+
+msgid "ModuleDesc_Gameplay"
+msgstr "特殊设置"
+
+msgid "ModuleDesc_Viewport"
+msgstr "视角设置"
+
+msgid "ModuleDesc_Skin"
+msgstr "联动设置"
+
+# GameplayModule
+msgid "HitPause"
+msgstr "禁用命中停顿"
+
+msgid "HitPauseDesc"
+msgstr "禁用命中敌人时的(卡肉)停顿效果"
+
+msgid "SpeedTier"
+msgstr "启用卷轴快速拾取"
+
+msgid "SpeedTierDesc"
+msgstr ""
+
+msgid "MimicLoreRoom"
+msgstr "预知拟态魔剧情房间常驻"
+
+msgid "MimicLoreRoomDesc"
+msgstr ""
+
+# BaseModule
+msgid "ModTitle"
+msgstr "DCCM 更多设置模组(B站ChiuYi.秋)"
+
+# HasUiSettingsModule
+msgid "RemoveNewsPanel"
+msgstr "删除主页新闻steam面板"
+
+msgid "TakeEffectNextLaunch"
+msgstr "下一次打开游戏时生效"
+
+msgid "RemoveUpdateNotes"
+msgstr "移除菜单更新说明"
+
+msgid "RemoveCinematicBars"
+msgstr "移除电影黑边"
+
+msgid "RemoveCinematicBarsDesc"
+msgstr "移除过场动画电影黑边"
+
+msgid "DisableVignette"
+msgstr "禁用暗角效果"
+
+msgid "DisableVignetteDesc"
+msgstr "例如：受伤时的暗角效果"
+
+msgid "LightweightDisplay"
+msgstr "轻量显示"
+
+msgid "LightweightDisplayDesc"
+msgstr "禁用交互图标等等"
+
+msgid "NoPopText"
+msgstr "无弹出文字"
+
+msgid "NoPopTextDesc"
+msgstr "禁用伤害弹出文字"
+
+msgid "ClockDisplay"
+msgstr "现实时间显示"
+
+msgid "BossHealthBarText"
+msgstr "BOSS血条文字"
+
+msgid "HealthBarColor"
+msgstr "血条颜色"
+
+msgid "Alpha"
+msgstr "透明度"
+
+# ViewportSettingsModule
+msgid "SmoothTeleport"
+msgstr "平滑传送"
+
+msgid "PlayerCameraSpeed"
+msgstr "玩家镜头速度"
+
+msgid "AngleShakeIntensity"
+msgstr "角度震动强度"
+
+msgid "DirShakeIntensity"
+msgstr "方向震动强度"
+
+msgid "SustainedShakeStart"
+msgstr "持续震动起始强度"
+
+msgid "HorizontalShakeTarget"
+msgstr "水平震动目标强度"
+
+msgid "VerticalShakeTarget"
+msgstr "垂直震动目标强度"
+
+msgid "ShakeDuration"
+msgstr "震动持续时间"
+
+msgid "SustainedShakeDecay"
+msgstr "持续震动衰减强度"
+
+msgid "DecayDuration"
+msgstr "衰减持续时间"
+
+# SkinSettingsModule
+msgid "GenuinePopDamage"
+msgstr "显示正确的伤害数值(Boss实际受到的伤害是经过软上限,此选项启用后将显示正确的伤害数值)"
+
+msgid "StsCritEffect"
+msgstr "杀戮尖塔暴击特效"
+
+msgid "StsCritEffectDesc"
+msgstr "启用/禁用杀戮尖塔暴击特效"
+
+msgid "CritEffectDuration"
+msgstr "暴击特效持续显示时间"
+
+msgid "HotlineCritEffect"
+msgstr "迈阿密热线暴击特效"
+
+msgid "HotlineCritEffectDesc"
+msgstr "启用/禁用迈阿密热线暴击特效"
+
+msgid "RiskOfRainTeleport"
+msgstr "雨中冒险传送功能"
+
+msgid "RiskOfRainTeleportDesc"
+msgstr "启用/禁用传送功能"
+
+msgid "KatanaZeroOutfit"
+msgstr "武士零装束效果"
+
+msgid "KatanaZeroOutfitDesc"
+msgstr "启用/禁用武士零装束效果"
+
+# ScarfSettingModule
+msgid "ScarfManager"
+msgstr "飘带管理器"
+
+msgid "Scarf"
+msgstr "飘带"
+
+msgid "OpenInGame"
+msgstr "请在游戏内打开!"

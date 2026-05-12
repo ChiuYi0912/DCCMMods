@@ -28,7 +28,7 @@ namespace MoreSettings.Modules
 {
     public class HasUiSettingsModule : BaseModule
     {
-        public override string Description => "UI界面修改";
+        public override string Description => GetText.Instance.GetString("ModuleDesc_UI");
 
         public ShaderUtilities shaderUtilities = null!;
 
@@ -104,14 +104,14 @@ namespace MoreSettings.Modules
                 return;
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("删除主页新闻steam面板"),
-                GetText.Instance.GetString("下一次打开游戏时生效"),
+                GetText.Instance.GetString("RemoveNewsPanel"),
+                GetText.Instance.GetString("TakeEffectNextLaunch"),
                 () => config.NewsPanel,
                 v => config.NewsPanel = v,
                 scrollerFlow);
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("移除菜单更新说明"),
+                GetText.Instance.GetString("RemoveUpdateNotes"),
                 GetText.Instance.GetString(""),
                 () => config.RemovalUpdateNotes,
                 v => config.RemovalUpdateNotes = v,
@@ -119,8 +119,8 @@ namespace MoreSettings.Modules
             );
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("移除电影黑边"),
-                GetText.Instance.GetString("移除过场动画电影黑边"),
+                GetText.Instance.GetString("RemoveCinematicBars"),
+                GetText.Instance.GetString("RemoveCinematicBarsDesc"),
                 () => config.HasBottomBar,
                 v => config.HasBottomBar = v,
                 scrollerFlow
@@ -128,8 +128,8 @@ namespace MoreSettings.Modules
 
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("禁用暗角效果"),
-                GetText.Instance.GetString("例如：受伤时的暗角效果"),
+                GetText.Instance.GetString("DisableVignette"),
+                GetText.Instance.GetString("DisableVignetteDesc"),
                 () => config.NoVignette,
                 v =>
                 {
@@ -140,8 +140,8 @@ namespace MoreSettings.Modules
             );
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("轻量显示"),
-                GetText.Instance.GetString("禁用交互图标等等"),
+                GetText.Instance.GetString("LightweightDisplay"),
+                GetText.Instance.GetString("LightweightDisplayDesc"),
                 () => config.HaslightTip,
                 v =>
                 {
@@ -153,8 +153,8 @@ namespace MoreSettings.Modules
 
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("无弹出文字"),
-                GetText.Instance.GetString("禁用伤害弹出文字"),
+                GetText.Instance.GetString("NoPopText"),
+                GetText.Instance.GetString("NoPopTextDesc"),
                 () => config.HasNoPopText,
                 v =>
                 {
@@ -166,7 +166,7 @@ namespace MoreSettings.Modules
 
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("Time"),
+                GetText.Instance.GetString("ClockDisplay"),
                 GetText.Instance.GetString(""),
                 () => config.NowTimeVisible,
                 v => config.NowTimeVisible = v,
@@ -174,24 +174,16 @@ namespace MoreSettings.Modules
             );
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("BOSS血条文字"),
+                GetText.Instance.GetString("BossHealthBarText"),
                 GetText.Instance.GetString(""),
                 () => config.ShowBossHealthBar,
                 v => config.ShowBossHealthBar = v,
                 scrollerFlow
             );
 
-            // options.addSeparator(GetText.Instance.GetString("血条颜色").ToHaxeString(), scrollerFlow);
-            // menuHelper.AddConfigSlider(
-            //     GetText.Instance.GetString("血条颜色描述"),
-            //     () => config.LifeBarcolor,
-            //     v => config.LifeBarcolor = v,
-            //     maxValue: 6,
-            //     scrollerFlow: scrollerFlow
-            // );
 
             menuHelper.AddHSVColorWidget(
-                "血条颜色",
+                GetText.Instance.GetString("HealthBarColor"),
                 "",
                 () =>
                 {
@@ -224,7 +216,7 @@ namespace MoreSettings.Modules
             if (config.isLifeBarcolor)
             {
                 var alpha = menuHelper.AddConfigSlider(
-                 "alpha",
+                 GetText.Instance.GetString("Alpha"),
                  () => config.LifeBarAlpha,
                  (v) =>
                  {

@@ -19,7 +19,7 @@ namespace MoreSettings.Modules
 {
     public class GameplayModule : BaseModule
     {
-        public override string Description => "特殊设置";
+        public override string Description => GetText.Instance.GetString("ModuleDesc_Gameplay");
         public override GameplayConfig config => (GameplayConfig)base.config;
 
         public override void Initialize(ModBase mainMod)
@@ -52,24 +52,24 @@ namespace MoreSettings.Modules
 
 
             menuHelper.AddConfigToggle(
-                "禁用命中暂停",
-                "禁用击中敌人时的慢动作效果",
+                GetText.Instance.GetString("HitPause"),
+                GetText.Instance.GetString("HitPauseDesc"),
                 () => config.Hitpause,
                 v => config.Hitpause = v,
                 scrollerFlow
             );
 
             menuHelper.AddConfigToggle(
-                "开启竞速卷轴拾取",
-                "竞速模式快速拾取卷轴常驻",
+                GetText.Instance.GetString("SpeedTier"),
+                GetText.Instance.GetString(""),
                 () => config.SpeedTier,
                 v => config.SpeedTier = v,
                 scrollerFlow
             );
 
             menuHelper.AddConfigToggle(
-                "预知拟态魔剧情房间常驻",
-                "开启时：预知拟态魔剧情房间生成不会被“关闭剧情房间影响”",
+                GetText.Instance.GetString("MimicLoreRoom"),
+                GetText.Instance.GetString(""),
                 () => config.LoreBankMimicRoom,
                 v => config.LoreBankMimicRoom = v,
                 scrollerFlow

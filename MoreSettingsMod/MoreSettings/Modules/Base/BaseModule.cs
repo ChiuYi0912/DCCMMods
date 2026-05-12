@@ -34,7 +34,7 @@ namespace MoreSettings.Base.Modules
         public void BaseBuildMenu(dc.ui.Options options)
         {
             Graphics = options.createScroller(1);
-            options.title.set_text(GetText.Instance.GetString("DCCM模组开关(B站ChiuYi.秋)").ToHaxeString());
+            options.title.set_text(GetText.Instance.GetString("ModTitle").ToHaxeString());
         }
 
         public virtual void BuildMenu(dc.ui.Options options, string Separator)
@@ -42,11 +42,11 @@ namespace MoreSettings.Base.Modules
             menuHelper = new(options, SettingsMain.ModConfig);
             scrollerFlow = options.scrollerFlow;
 
-            options.addSeparator(GetText.Instance.GetString(Separator).ToHaxeString(), scrollerFlow);
+            options.addSeparator(GetText.Instance.GetString(Description).ToHaxeString(), scrollerFlow);
             Enabled = config.Enabled;
 
             var widget = menuHelper.AddConfigToggle(
-                "启用此设置模块",
+                GetText.Instance.GetString("EnableModule"),
                 "",
                 () => Enabled,
                 v =>
@@ -67,13 +67,16 @@ namespace MoreSettings.Base.Modules
         public void BaseRegisterHooks() { if (!config.Enabled) return; RegisterHooks(); Logger.Information("registerHook"); }
         public virtual void RegisterHooks() { }
         public virtual void PermanentlyRegisterHooks() { }
-        public virtual void UnregisterHooks() { Logger.Information("UnregisterHooks"); }
+        public virtual void UnregisterHooks() {  }
 
 
+        public dc.String GetString(string str) => GetText.Instance.GetString(str).ToHaxeString();
         public virtual void SaveConfig()
         {
             SettingsMain.ModConfig.Save();
             Logger.Information("配置已保存");
         }
+
+
     }
 }

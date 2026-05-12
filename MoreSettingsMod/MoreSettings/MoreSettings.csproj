@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
 
     <ModType>mod</ModType>
+    <ModName>Dead Cells Enhanced Settings</ModName>
     <ModMain>MoreSettings.SettingsMain</ModMain>
     <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
