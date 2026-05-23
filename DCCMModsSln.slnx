@@ -6,6 +6,9 @@
   <Folder Name="/cppSharpDemo/">
     <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/cppSharpDemo/CppSharpDemoMod/CppSharpDemoMod.csproj" />
   </Folder>
+  <Folder Name="/DCShaderCoreMod/">
+    <Project Path="DCShaderCoreMod/DCShaderCoreMod/DCShaderCoreMod.csproj" />
+  </Folder>
   <Folder Name="/DebugMod/">
     <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/DebugMod/DebugMod/DebugMod.csproj" />
     <Project Path="d:/Adeadcellsmod/ModTool/DCCMMods/DebugMod/DCDebug.Tests/DCDebug.Tests.csproj" />

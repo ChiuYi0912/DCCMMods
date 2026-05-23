@@ -1,6 +1,10 @@
-﻿using dc.en;
+﻿using CoreLibrary.Core.Extensions;
+using dc.en;
+using dc.level;
+using dc.pr;
 using IngameDebugConsole;
 using ModCore.Utilities;
+using Serilog;
 using System.Collections.Generic;
 using System.IO;
 
@@ -60,6 +64,23 @@ namespace DebugMod.Commands.activateDebug
                 allLevels.Add(levelid.ToString());
             }
 
+        }
+
+        [ConsoleMethod("show-rooms", "显示关卡id对应的房间")]
+        public static void ShowAllLevelsStruct(TextWriter writer)
+        {
+            Game game = Game.Class.ME;
+            Hero hero = game.hero;
+            if (hero == null)
+            {
+                Log.Warning($"请保证细胞人实例存在！");
+                return;
+            }
+            LevelMap map = game.curLevel.map;
+            foreach (Room item in map.rooms)
+            {
+                writer.Write($"{item.toString()}\n");
+            }
         }
     }
 }

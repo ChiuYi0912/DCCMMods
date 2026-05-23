@@ -56,6 +56,12 @@ msgstr "预知拟态魔剧情房间常驻"
 msgid "MimicLoreRoomDesc"
 msgstr ""
 
+msgid "NoFadeIn"
+msgstr "无淡入效果"
+
+msgid "NofadeInDesc"
+msgstr "在关卡之间切换时禁用淡入效果."
+
 # BaseModule
 msgid "ModTitle"
 msgstr "DCCM 更多设置模组(B站ChiuYi.秋)"

@@ -56,6 +56,12 @@ msgstr "The Prescient Mimic that permanently resides in the Lore Room"
 msgid "MimicLoreRoomDesc"
 msgstr ""
 
+msgid "NoFadeIn"
+msgstr "No Fade-in Effect"
+
+msgid "NofadeInDesc"
+msgstr "Disable the fade-in effect when transitioning between levels."
+
 # BaseModule
 msgid "ModTitle"
 msgstr "DCCM More Settings Mod(Bilibili: ChiuYi)"
