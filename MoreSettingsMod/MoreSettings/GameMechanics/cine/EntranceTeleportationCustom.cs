@@ -13,7 +13,7 @@ using dc.pr;
 using dc.tool;
 using HaxeProxy.Runtime;
 
-namespace MoreSettings.GameMechanics
+namespace MoreSettings.GameMechanics.cine
 {
     public class EntranceTeleportationCustom : GameCinematic
     {

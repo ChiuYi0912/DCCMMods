@@ -2,16 +2,12 @@
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Utilities;
 using dc;
-using dc.haxe;
-using dc.ui;
-using ModCore.Events;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Events.Interfaces.Game.Hero;
 using ModCore.Mods;
 using ModCore.Modules;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
-using MoreSettings.Utilities;
 using static MoreSettings.Configuration.Enums;
 
 namespace MoreSettings.Modules
@@ -23,10 +19,7 @@ namespace MoreSettings.Modules
         public override string Description => GetText.Instance.GetString("KeyBinding");
         public override string Name => "KeyBinding";
         public override KeyConfig config => (KeyConfig)base.config;
-
         public override MenuCategory Type => MenuCategory.KeyBinding;
-
-        private bool controllerInitialized;
         public ControllerHelperSuper<MainConfig> controller = null!;
 
 
@@ -39,9 +32,7 @@ namespace MoreSettings.Modules
         public override void BuildMenu(dc.ui.Options options, string Separator)
         {
             if (SettingsMain.ModMenu().menu != MenuCategory.KeyBinding) return;
-
-            menuHelper = new(options, SettingsMain.ModConfig);
-            scrollerFlow = options.scrollerFlow;
+            base.BuildMenu(options, Separator);
 
             int stageWidth = dc.libs.Process.Class.CUSTOM_STAGE_WIDTH > 0
                     ? dc.libs.Process.Class.CUSTOM_STAGE_WIDTH
@@ -52,14 +43,21 @@ namespace MoreSettings.Modules
             int paddingLeft = (int)(stageWidth * 0.1) + (int)(pixelScale * 40.0);
             scrollerFlow.set_paddingLeft(paddingLeft);
 
+            TopWidget.set_paddingRight((int)(paddingLeft * 1.75));
+            TopWidget.set_paddingLeft(0);
+            TopWidget.reflow();
+
             int? targetWidth = (int)(stageWidth * 0.8);
             scrollerFlow.set_maxWidth(targetWidth);
             scrollerFlow.set_minWidth(targetWidth);
 
+            if (!config.Enabled)
+                return;
+
             options.addKeyboardWidget(
                  scrollerFlow,
                  options.cbmpScroller,
-                 GetText.Instance.GetString("test").ToHaxeString(),
+                 GetText.Instance.GetString("Summon the Tailor").ToHaxeString(),
                  config.TheCurrentKey[KeyName.Tailor]
              );
         }
@@ -69,21 +67,16 @@ namespace MoreSettings.Modules
             return controller?.GetAction(name.ToString()) ?? int.MaxValue;
         }
 
-
-
         void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
             if (controller.IsPressed(GetAct(KeyName.Tailor)))
             {
-                
+
             }
         }
 
         void IOnGameEndInit.OnGameEndInit()
         {
-            if (controllerInitialized) return;
-            controllerInitialized = true;
-
             controller = new ControllerHelperSuper<MainConfig>(SettingsMain.ModConfig, config.ControlKeys, Boot.Class.ME.controller);
             var act = controller.GetAction("Tailor") ?? controller.AddKey("Tailor", KeyHelper.T, KeyHelper.T, KeyHelper.T);
             config.TheCurrentKey[KeyName.Tailor] = act;

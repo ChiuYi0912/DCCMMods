@@ -15,6 +15,7 @@ using ModCore.Utilities;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics;
+using MoreSettings.GameMechanics.cine;
 using static MoreSettings.Configuration.Enums;
 using Hook_Game = dc.pr.Hook_Game;
 
@@ -66,7 +67,6 @@ namespace MoreSettings.Modules
                    var menu = SettingsMain.ModMenu();
                    menu.menu = MenuCategory.KeyBinding;
                    MenuModule.Instance.SetSection(menu);
-                   menu.menu = MenuCategory.All;
                }),
                scrollerFlow
             );

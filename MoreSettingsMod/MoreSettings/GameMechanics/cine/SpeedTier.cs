@@ -5,7 +5,7 @@ using dc.tool;
 using dc.ui;
 using HaxeProxy.Runtime;
 
-namespace MoreSettings.GameMechanics
+namespace MoreSettings.GameMechanics.cine
 {
     public class SpeedTier : GameCinematic
     {

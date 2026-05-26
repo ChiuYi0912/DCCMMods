@@ -16,7 +16,7 @@ using dc.ui.icon;
 using HaxeProxy.Runtime;
 using ModCore.Utilities;
 
-namespace MoreSettings.GameMechanics
+namespace MoreSettings.GameMechanics.cine
 {
     public class OnDIYTire : GameCinematic
     {

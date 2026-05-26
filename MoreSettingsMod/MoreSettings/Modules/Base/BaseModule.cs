@@ -25,6 +25,7 @@ namespace MoreSettings.Base.Modules
         protected ModBase MainMod { get; private set; } = null!;
         public virtual OptionsMenuHelper<MainConfig> menuHelper { get; set; } = default!;
         public virtual Flow scrollerFlow { get; set; } = default!;
+        public virtual OptionWidget TopWidget { get; private set; } = null!;
         public virtual Graphics Graphics { get; private set; } = default!;
         public virtual dynamic config { get; set; } = null!;
 
@@ -45,10 +46,16 @@ namespace MoreSettings.Base.Modules
             menuHelper = new(options, SettingsMain.ModConfig);
             scrollerFlow = options.scrollerFlow;
 
+            // #if DEBUG
+            // scrollerFlow.debugGraphics = new Graphics(scrollerFlow);
+            // scrollerFlow.debug = true;
+            // scrollerFlow.getProperties(scrollerFlow.debugGraphics).isAbsolute = true;
+            // #endif
+
             options.addSeparator(GetText.Instance.GetString(Description).ToHaxeString(), scrollerFlow);
             Enabled = config.Enabled;
 
-            var widget = menuHelper.AddConfigToggle(
+            TopWidget = menuHelper.AddConfigToggle(
                 GetText.Instance.GetString("EnableModule"),
                 "",
                 () => Enabled,
@@ -64,7 +71,7 @@ namespace MoreSettings.Base.Modules
                 },
                 scrollerFlow
             );
-            menuHelper.CenterToggleWidget(widget, options, scrollerFlow);
+            menuHelper.CenterToggleWidget(TopWidget, options, scrollerFlow);
         }
 
         public void BaseRegisterHooks() { if (!config.Enabled) return; RegisterHooks(); Logger.Information("registerHook"); }
