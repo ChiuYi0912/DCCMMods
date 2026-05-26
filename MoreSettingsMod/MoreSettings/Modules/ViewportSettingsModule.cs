@@ -1,12 +1,9 @@
 using CoreLibrary.Core.Extensions;
 using dc;
-using dc.en;
-using dc.pr;
 using ModCore.Mods;
 using ModCore.Modules;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
-using MoreSettings.Utilities;
 
 namespace MoreSettings.Modules
 {
@@ -14,6 +11,9 @@ namespace MoreSettings.Modules
     {
         public override string Description => GetText.Instance.GetString("ModuleDesc_Viewport");
         public override ViewportConfig config => (ViewportConfig)base.config;
+
+        public override Enums.MenuCategory Type => Enums.MenuCategory.Viewport;
+
 
         public override void Initialize(ModBase mainMod)
         {

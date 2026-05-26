@@ -1,34 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Utilities;
 using dc;
 using dc.en;
-using dc.h2d;
-using dc.h3d.pass;
 using dc.hl.types;
-using dc.hxd;
-using dc.pr;
 using dc.ui;
-using dc.ui.hud;
-using dc.ui.pause;
-using Hashlink.Proxy.Values;
-using Hashlink.UnsafeUtilities;
-using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Events;
 using ModCore.Events.Interfaces.Game.Menu;
 using ModCore.Mods;
 using ModCore.Modules;
-using MonoMod.Utils;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics.Scarf;
-using MoreSettings.Utilities;
-using static dc.ui.pause._DefaultPause;
 
 namespace MoreSettings.Modules
 {
@@ -39,6 +22,9 @@ namespace MoreSettings.Modules
         public override string Description => GetText.Instance.GetString("ScarfManager");
 
         public override ScarfConfig config => (ScarfConfig)base.config;
+
+        public override Enums.MenuCategory Type => Enums.MenuCategory.Scarf;
+
         public CustomScarfBase scarfBase = default!;
 
         public override void Initialize(ModBase mainMod)

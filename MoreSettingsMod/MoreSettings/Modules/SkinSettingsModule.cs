@@ -1,22 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Utilities.CustomPopDamage;
 using dc;
-using dc.cine;
 using dc.en;
 using dc.en.inter;
-using dc.libs.misc;
-using dc.tool.atk;
-using dc.ui;
 using ModCore.Mods;
 using ModCore.Modules;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
-using MoreSettings.GameMechanics;
-using MoreSettings.Utilities;
 
 namespace MoreSettings.Modules
 {
@@ -25,6 +15,8 @@ namespace MoreSettings.Modules
         public override string Description => GetText.Instance.GetString("ModuleDesc_Skin");
 
         public override SkinConfig config => (SkinConfig)base.config;
+
+        public override Enums.MenuCategory Type => Enums.MenuCategory.Skin;
 
         public override void Initialize(ModBase mainMod)
         {

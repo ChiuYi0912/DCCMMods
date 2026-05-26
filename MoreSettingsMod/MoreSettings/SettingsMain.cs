@@ -47,7 +47,7 @@ IOnAfterLoadingCDB
    public static MainConfig ConfigValue => modConfig.Value;
 
    IModMenu IModMenuProvider.GetModMenu() => modMenu;
-   public static ModMenu GetModMenu() => Instance.modMenu;
+   public static ModMenu ModMenu() => Instance.modMenu;
    public static void SaveConfig() => modConfig.Save();
 
 
@@ -56,16 +56,18 @@ IOnAfterLoadingCDB
       instance = this;
       Utilities.Logger.Initialize(Logger);
       GetText.Instance.RegisterMod("SettingsLang");
-      Info.Version = "1.1.0";
+      Info.Version = "1.1.3";
       Info.RepositoryUrl = "https://github.com/ChiuYi0912/DCCMMods/tree/main";
-      
 
       moduleManager = new ModuleManager(this);
-      moduleManager.RegisterModule(new ScarfSettingModule());
       moduleManager.RegisterModule(new GameplayModule());
+      moduleManager.RegisterModule(new WeaponSettingModule());
       moduleManager.RegisterModule(new HasUiSettingsModule());
-      moduleManager.RegisterModule(new ViewportSettingsModule());
       moduleManager.RegisterModule(new SkinSettingsModule());
+      moduleManager.RegisterModule(new ScarfSettingModule());
+      moduleManager.RegisterModule(new ViewportSettingsModule());
+
+      moduleManager.RegisterModule(new KeyBindingModule());
 
       modMenu = new ModMenu(this);
       entityPop = new EntityPopDamage(this);

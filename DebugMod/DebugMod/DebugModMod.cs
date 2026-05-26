@@ -27,12 +27,11 @@ namespace DebugMod
         IOnGameExit
     {
         public static ModCore.Storage.Config<DebugMod.Configuration.CoreCfig> GetConfig = new("DebugMODCfig");
-        public DebugGraphic GetGraphic = null!;
         public override void Initialize()
         {
             base.Initialize();
             _ = new DebugHUD();
-            GetGraphic = new DebugGraphic();
+            _ = new DebugGraphic();
 
             Info.Version = "1.3.1";
         }

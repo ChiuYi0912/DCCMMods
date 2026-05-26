@@ -57,10 +57,16 @@ msgid "MimicLoreRoomDesc"
 msgstr ""
 
 msgid "NoFadeIn"
-msgstr "无淡入效果"
+msgstr "ZDoor无淡入效果"
 
 msgid "NofadeInDesc"
-msgstr "在关卡之间切换时禁用淡入效果."
+msgstr "在ZDoor之间切换时禁用淡入效果.(ZDoor是指关卡内的小房间)"
+
+msgid "NoKatanaHold"
+msgstr "武士刀无长按攻击效果"
+
+msgid "NoKatanaHoldDesc"
+msgstr "武士刀不会受长按攻击设置影响"
 
 # BaseModule
 msgid "ModTitle"
@@ -183,3 +189,7 @@ msgstr "飘带"
 
 msgid "OpenInGame"
 msgstr "请在游戏内打开!"
+
+# WeaponSettingsModule
+msgid "WeaponSettingModule"
+msgstr "武器易用性设置模块"

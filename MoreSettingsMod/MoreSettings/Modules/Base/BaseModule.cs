@@ -4,11 +4,13 @@ using CoreLibrary.Core.Utilities;
 using dc.h2d;
 using dc.libs.heaps.slib;
 using dc.ui;
+using HaxeProxy.Runtime;
 using ModCore.Events;
 using ModCore.Mods;
 using ModCore.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.Utilities;
+using static MoreSettings.Configuration.Enums;
 
 namespace MoreSettings.Base.Modules
 {
@@ -19,9 +21,10 @@ namespace MoreSettings.Base.Modules
         public virtual string Name => GetType().Name;
         public virtual string Description => string.Empty;
         public virtual bool Enabled { get; set; }
+        public abstract MenuCategory Type { get; }
         protected ModBase MainMod { get; private set; } = null!;
         public virtual OptionsMenuHelper<MainConfig> menuHelper { get; set; } = default!;
-        public virtual Flow scrollerFlow { get; private set; } = default!;
+        public virtual Flow scrollerFlow { get; set; } = default!;
         public virtual Graphics Graphics { get; private set; } = default!;
         public virtual dynamic config { get; set; } = null!;
 
@@ -61,13 +64,13 @@ namespace MoreSettings.Base.Modules
                 },
                 scrollerFlow
             );
-            menuHelper.CenterToggleWidget(widget,options,scrollerFlow);
+            menuHelper.CenterToggleWidget(widget, options, scrollerFlow);
         }
 
         public void BaseRegisterHooks() { if (!config.Enabled) return; RegisterHooks(); Logger.Information("registerHook"); }
         public virtual void RegisterHooks() { }
         public virtual void PermanentlyRegisterHooks() { }
-        public virtual void UnregisterHooks() {  }
+        public virtual void UnregisterHooks() { }
 
 
         public dc.String GetString(string str) => GetText.Instance.GetString(str).ToHaxeString();

@@ -4,9 +4,11 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Utilities;
+using CoreLibrary.Utilities;
 using dc.h2d;
 using dc.hxsl._Dce;
 using Hashlink.Virtuals;
+using MoreSettings.Modules;
 using ScarfData = Hashlink.Virtuals.virtual_attachOffX_attachOffY_color_cosOffset_count_extraSprLength_friction_gravity_maxLength_minLength_onFront_props_sprId_thickness_;
 
 namespace MoreSettings.Configuration
@@ -15,7 +17,7 @@ namespace MoreSettings.Configuration
     [Serializable]
     public abstract class SettingConfigBase
     {
-        public bool Enabled { get; set; } = true;
+        public bool Enabled { get; set; } = false;
         public int ConfigVersion { get; set; } = 1;
     }
 
@@ -29,6 +31,8 @@ namespace MoreSettings.Configuration
         public TeleportConfig Teleport { get; set; } = new();
         public AudioConfig Audio { get; set; } = new();
         public ViewportConfig Viewport { get; set; } = new();
+        public WeaponConfig Weapon { get; set; } = new();
+        public KeyConfig Key { get; set; } = new();
     }
 
 
@@ -39,6 +43,7 @@ namespace MoreSettings.Configuration
         public bool LoreBankMimicRoom { get; set; } = false;
         public bool SpeedTier { get; set; } = false;
         public bool NofadeIn { get; set; } = false;
+        public bool DisableKatanaByHoldingDown { get; set; } = false;
     }
 
 
@@ -236,5 +241,20 @@ namespace MoreSettings.Configuration
         public double Camerazoom { get; set; } = 1;
 
         public bool TeleportImmediate { get; set; } = false;
+    }
+
+    public class WeaponConfig : SettingConfigBase
+    {
+        public bool DisableKatanaByHoldingDown { get; set; } = false;
+    }
+
+    public class KeyConfig : SettingConfigBase
+    {
+        public Dictionary<int, ContorlLbleKeyConfig> ControlKeys { get; set; } = new();
+        public Dictionary<KeyName, int> TheCurrentKey { get; set; } = new();
+        public void defaultValues()
+        {
+            ControlKeys = new Dictionary<int, ContorlLbleKeyConfig>();
+        }
     }
 }

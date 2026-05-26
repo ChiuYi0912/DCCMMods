@@ -2,6 +2,7 @@ using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Utilities;
 using dc;
 using dc.en;
+using dc.en.inter;
 using dc.h2d;
 using dc.hl.types;
 using dc.level;
@@ -13,6 +14,7 @@ using HaxeProxy.Runtime;
 using IngameDebugConsole;
 using ModCore.Utilities;
 using Serilog;
+using Serilog.Core;
 
 namespace DebugMod.Commands.activateDebug
 {
@@ -87,14 +89,38 @@ namespace DebugMod.Commands.activateDebug
         public static void ChangeHeroShaderColor(TextWriter writer)
         {
             Hero hero = Game.Class.ME.hero;
-            var debug = hero._level.GetLevelDisplaySafe().debug;
-            debug.lineStyle(Ref<double>.In(1),Ref<int>.In(CreateColor.ColorFromHex("#ffffff")),Ref<double>.In(1));
+            // var p = new Portal(hero._level, hero.cx, hero.cy, hero._level.map, Ref<bool>.In(false));
+            // p.init();
+            // new SecretLever(hero._level, hero.cx, hero.cy, p).init();
 
-            var x1 = (hero.cx - hero.xr) * 24;
-            var y1 = (hero.cy - hero.yr) * 24;
-            var x2 = (hero.cx + hero.xr) * 24;
-            var y2 = (hero.cy + hero.yr) * 24;
-            debug.drawRect(x1, y1, x2 - x1, y2 - y1);
+            GetAllSecretChallenges(hero);
+            //foreach (SecretChallengeInfo item in list)
+            //{
+            //Log.Debug($"room:{item.room.toString()},item:{item.requiredItem.GetType().Name}");
+            //
+        }
+
+        public class SecretChallengeInfo
+        {
+            public Room room = null!;
+            public InventItem requiredItem = null!;
+        }
+
+        public static void GetAllSecretChallenges(Hero hero)
+        {
+            ArrayObj rooms = hero._level.map.rooms;
+            for (int i = 0; i < rooms.length; i++)
+            {
+                Room room = rooms.getDyn(i);
+                if (room == null) continue;
+                if (room.secretLevels == null) continue;
+                for (int j = 0; j < room.secretLevels.length; j++)
+                {
+                    InventItem item = room.secretLevels.getDyn(j);
+                    if (item == null) continue;
+                    Log.Debug($"{room.toString()}\n");
+                }
+            }
         }
     }
 }

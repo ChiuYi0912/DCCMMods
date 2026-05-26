@@ -11,6 +11,7 @@ using CoreLibrary.Core.Interfaces;
 using ModCore.Modules;
 using ModCore.Events.Interfaces.Game.Menu;
 using dc.ui;
+using static MoreSettings.Configuration.Enums;
 
 namespace MoreSettings
 {
@@ -21,16 +22,24 @@ namespace MoreSettings
     IOnAfterPauseMenuBuild
     {
         public SettingsMain SettingsMain = null!;
+        public MenuCategory menu = MenuCategory.All;
         public ModMenu(SettingsMain main)
         {
             SettingsMain = main;
             EventSystem.AddReceiver(this);
         }
 
-
         void IModMenu.BuildMenu(dc.ui.Options options)
         {
-            SettingsMain.ModuleManager.BuildAllMenus(options);
+            switch (menu)
+            {
+                case MenuCategory.All:
+                    SettingsMain.ModuleManager.BuildAllMenus(options);
+                    return;
+                default:
+                    SettingsMain.ModuleManager.BuildKeyMenus(options, menu);
+                    return;
+            }
         }
 
         string IModMenu.GetName() => SettingsMain.Info.Name;

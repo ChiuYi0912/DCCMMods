@@ -57,10 +57,16 @@ msgid "MimicLoreRoomDesc"
 msgstr ""
 
 msgid "NoFadeIn"
-msgstr "No Fade-in Effect"
+msgstr "ZDoor No Fade-in Effect"
 
 msgid "NofadeInDesc"
-msgstr "Disable the fade-in effect when transitioning between levels."
+msgstr "Disable the ZDoor fade-in effect when transitioning between levels.(ZDoor refers to the small rooms within a level)"
+
+msgid "NoKatanaHold"
+msgstr "No Katana Hold Effect"
+
+msgid "NoKatanaHoldDesc"
+msgstr "The katana will not be affected by the Hold down to attack setting"
 
 # BaseModule
 msgid "ModTitle"
@@ -183,3 +189,7 @@ msgstr "Scarf"
 
 msgid "OpenInGame"
 msgstr "Please open in-game!"
+
+# WeaponSettingsModule
+msgid "WeaponSettingModule"
+msgstr "Weapon Usability Settings Module"

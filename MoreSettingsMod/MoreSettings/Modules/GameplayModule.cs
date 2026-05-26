@@ -4,10 +4,8 @@ using dc;
 using dc.cine;
 using dc.en;
 using dc.en.inter;
-using dc.h2d;
 using dc.hl.types;
 using dc.level;
-using dc.libs.heaps.slib;
 using dc.tool;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
@@ -17,7 +15,7 @@ using ModCore.Utilities;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics;
-using MoreSettings.Utilities;
+using static MoreSettings.Configuration.Enums;
 using Hook_Game = dc.pr.Hook_Game;
 
 namespace MoreSettings.Modules
@@ -26,6 +24,8 @@ namespace MoreSettings.Modules
     {
         public override string Description => GetText.Instance.GetString("ModuleDesc_Gameplay");
         public override GameplayConfig config => (GameplayConfig)base.config;
+
+        public override MenuCategory Type => MenuCategory.Gameplay;
 
         public override void Initialize(ModBase mainMod)
         {
@@ -40,6 +40,7 @@ namespace MoreSettings.Modules
             Hook_LevelStruct.applyDifficulty += Hook__LevelStruct_applyDifficulty;
             Hook__TierItemFound.__constructor__ += Hook__TierItemFound__constructor__;
             Hook__LevelTransition.__constructor__ += Hook__LevelTransition__constructor__;
+            Hook__EntranceTeleportation.__constructor__ += Hook__EntranceTeleportation__constructor__;
         }
 
 
@@ -49,11 +50,26 @@ namespace MoreSettings.Modules
             Hook_Game.decreasingSlowMo -= Hook_Game_decreasingSlowMo;
             Hook_LevelStruct.applyDifficulty -= Hook__LevelStruct_applyDifficulty;
             Hook__TierItemFound.__constructor__ -= Hook__TierItemFound__constructor__;
+            Hook__LevelTransition.__constructor__ -= Hook__LevelTransition__constructor__;
+            Hook__EntranceTeleportation.__constructor__ -= Hook__EntranceTeleportation__constructor__;
         }
 
         public override void BuildMenu(dc.ui.Options options, string Separator)
         {
             base.BuildMenu(options, Separator);
+
+            menuHelper.addSimpleWidget(
+              GetText.Instance.GetString("KeyBinding"),
+               "",
+               new Action(() =>
+               {
+                   var menu = SettingsMain.ModMenu();
+                   menu.menu = MenuCategory.KeyBinding;
+                   MenuModule.Instance.SetSection(menu);
+                   menu.menu = MenuCategory.All;
+               }),
+               scrollerFlow
+            );
 
             if (!config.Enabled)
                 return;
@@ -92,7 +108,7 @@ namespace MoreSettings.Modules
             );
         }
 
-        #region 钩子实现
+        #region Hooks
 
         private void Hook__TierItemFound__constructor__(
             Hook__TierItemFound.orig___constructor__ orig,
@@ -136,7 +152,7 @@ namespace MoreSettings.Modules
             CPoint heroPosAfterBossRuneReload,
             Ref<bool> noLoadingData)
         {
-            bool skipLoadingData = noLoadingData.IsNull == false && noLoadingData.value;
+            bool skipLoadingData = !noLoadingData.IsNull && noLoadingData.value;
             arg1.playAfterZDoorCine = true;
 
             HlAction<GameCinematic> hl = (HlAction<GameCinematic>)GameCinematic.Class.__constructor__;
@@ -192,15 +208,15 @@ namespace MoreSettings.Modules
                 }
                 arg1.giveGentlemanAchievement = giveGentleman;
 
-                if (config.NofadeIn)
-                    multFade = 0;
-
-                Main.Class.ME.fadeIn(
-                    null,
-                    transitionData,
-                    Ref<double>.In(multFade) ,
-                    onEnd: new HlAction(() => arg1.loadNewLevel())
-                );
+                if (!config.NofadeIn || linkId == null)
+                    Main.Class.ME.fadeIn(
+                        null,
+                        transitionData,
+                        Ref<double>.In(multFade),
+                        onEnd: new HlAction(() => arg1.loadNewLevel())
+                    );
+                else
+                    arg1.loadNewLevel();
 
                 arg1.disableBars();
             }
@@ -210,9 +226,17 @@ namespace MoreSettings.Modules
                 arg1.disableBars();
             }
         }
+
+        private void Hook__EntranceTeleportation__constructor__(Hook__EntranceTeleportation.orig___constructor__ orig,
+           EntranceTeleportation arg1, Hero hero, Entity teleporter, CPoint t, LevelMap map, int? linkId)
+           => _ = new EntranceTeleportationCustom(hero, teleporter, t, map, linkId);
+
+
+
         #endregion
 
         #region 辅助方法
+
         public void AddMimicRoom(LevelStruct Struct)
         {
             for (int i = 0; i < Data.Class.loreRoom.all.get_length(); i++)
@@ -237,6 +261,9 @@ namespace MoreSettings.Modules
                 Struct.tryAddLoreRoom(((HaxeProxyBase)lore).ToVirtual<virtual_arc_examinables_fxEmitters_Intention_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>());
             }
         }
+
+
+
         #endregion
     }
 }

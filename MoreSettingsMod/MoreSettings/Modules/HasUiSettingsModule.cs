@@ -1,13 +1,7 @@
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Utilities;
 using dc;
-using dc.cine;
-using dc.en;
-using dc.en.inter;
 using dc.h2d;
-using dc.libs.heaps.slib;
 using dc.pr;
 using dc.tool.atk;
 using dc.ui;
@@ -16,13 +10,11 @@ using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Mods;
 using ModCore.Modules;
-using ModCore.Utilities;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics;
 using MoreSettings.shaders;
 using MoreSettings.Utilities;
-using Serilog;
 
 namespace MoreSettings.Modules
 {
@@ -31,8 +23,10 @@ namespace MoreSettings.Modules
         public override string Description => GetText.Instance.GetString("ModuleDesc_UI");
 
         public ShaderUtilities shaderUtilities = null!;
-
+        private dc.ui.Text TimeText = null!;
         public override UIConfig config => (UIConfig)base.config;
+
+        public override Enums.MenuCategory Type => Enums.MenuCategory.UI;
 
         public override void Initialize(ModBase mainMod)
         {
@@ -64,11 +58,7 @@ namespace MoreSettings.Modules
             Hook_HUD.initLeftFlowT += Hook_HUD_initLeftFlowT;
             Hook_HUD.hide += Hook_HUD_hide;
             Hook_HUD.show += Hook_HUD_show;
-
-            dc.ui.hud.Hook_LifeBar.updateSize += Hook_LifeBar_updateSize;
         }
-
-
 
         public override void UnregisterHooks()
         {
@@ -92,6 +82,11 @@ namespace MoreSettings.Modules
             Hook_HUD.initLeftFlowT -= Hook_HUD_initLeftFlowT;
             Hook_HUD.hide -= Hook_HUD_hide;
             Hook_HUD.show -= Hook_HUD_show;
+        }
+
+        public override void PermanentlyRegisterHooks()
+        {
+            dc.ui.hud.Hook_LifeBar.updateSize += Hook_LifeBar_updateSize;
         }
 
 
@@ -241,7 +236,7 @@ namespace MoreSettings.Modules
             }
         }
 
-        #region 钩子实现
+        #region Hooks
         private virtual_cb_help_inter_isEnable_t_<bool> Hook_TitleScreen_addMenu(Hook_TitleScreen.orig_addMenu orig, TitleScreen self, dc.String str, HlAction cb, dc.String help, bool? isEnable, Ref<int> color)
         {
             if (config.RemovalUpdateNotes)
@@ -292,22 +287,18 @@ namespace MoreSettings.Modules
 
         private void UpdateNowTime()
         {
-            if (NowTimeFlow == null) return;
-            if (this.NowTimeFlow.visible != config.NowTimeVisible)
-                this.NowTimeFlow.set_visible(config.NowTimeVisible);
+            if (!TimeText.visible != config.NowTimeVisible)
+                TimeText.set_visible(config.NowTimeVisible);
 
-            if (!this.NowTimeFlow.visible) return;
-
-            DateTime now = DateTime.Now;
+            var now = DateTime.Now;
             if (now - _lastUpdateTime >= _updateInterval)
             {
-                this.TimeText.set_text($"{now}".ToHaxeString());
+                TimeText.set_text($"{now}".ToHaxeString());
 
                 _lastUpdateTime = now;
             }
 
         }
-
         private void AdjustBossLifebarLabel(dc.ui.hud.LifeBar lifeBar)
         {
             if (lifeBar.label == null) return;
@@ -331,43 +322,34 @@ namespace MoreSettings.Modules
         {
             orig(self);
 
-            if (this.TimeText != null)
+            if (TimeText != null)
             {
-                this.TimeText.set_textAlign(new Align.Right());
-                this.TimeText.get_pixelScale = new HlFunc<double>(self.get_pixelScale);
-                double iconWidth = self.bossCellCount.widTile * self.bossCellCount.icon.scaleX;
-                double textWidth = self.bossCellCount.text.get_textWidth() * self.bossCellCount.text.scaleX;
-                double spacing = 3.0 * self.bossCellCount.get_pixelScale.Invoke();
-                double bossCellWidth = iconWidth + textWidth + spacing;
-                this.TimeText.maxWidthWanted = self.gameTime.maxWidthWanted;
-                this.TimeText.onResize();
+                TimeText.set_textAlign(new Align.Right());
+                TimeText.get_pixelScale = new HlFunc<double>(self.get_pixelScale);
+                TimeText.maxWidthWanted = self.curSeed.maxWidthWanted;
+                TimeText.onResize();
             }
         }
 
-        private Flow NowTimeFlow = null!;
-        private dc.ui.Text TimeText = null!;
+
+
         private void Hook_HUD___constructor__(Hook__HUD.orig___constructor__ orig, HUD arg1, dc.pr.Game game)
         {
             orig(arg1, game);
-            this.NowTimeFlow = new Flow(null);
-            this.NowTimeFlow.set_maxWidth(arg1.aboveMapFlow.maxWidth);
-            this.NowTimeFlow.set_maxHeight(1);
-            this.NowTimeFlow.set_verticalAlign(new FlowAlign.Top());
-            this.NowTimeFlow.set_horizontalAlign(new FlowAlign.Middle());
 
-            this.TimeText = new dc.ui.Text(this.NowTimeFlow, true, null, Ref<double>.Null, null, null);
-
-            DateTime currentTime = DateTime.Now;
-            this.TimeText.set_text($"{currentTime}".ToHaxeString());
-            arg1.rightFlowR.addChild(this.NowTimeFlow);
+            TimeText = new dc.ui.Text(null, null, null, Ref<double>.Null, null, null);
+            TimeText.scaleY = TimeText.scaleX = 1;
+            TimeText.set_textAlign(new Align.Right());
+            TimeText.set_text($"{DateTime.Now}".ToHaxeString());
+            arg1.rightFlowR.addChildAt(TimeText, 3);
 
             if (config.ShowBossHealthBar)
                 arg1.bossLifebar.enableText();
 
             AdjustBossLifebarLabel(arg1.bossLifebar);
+
+            arg1.onResize();
         }
-
-
 
         private dc.String Hook_LifeBar_getStartEndName(dc.ui.hud.Hook_LifeBar.orig_getStartEndName orig, dc.ui.hud.LifeBar self)
         {
@@ -458,7 +440,7 @@ namespace MoreSettings.Modules
         }
 
         #endregion
-
+        #region Helper
 
         public List<string> LifeBarFullColors = new()
         {
@@ -491,5 +473,6 @@ namespace MoreSettings.Modules
             else
                 dc.ui.Console.Class.ME.flags.remove(flagName.ToHaxeString());
         }
+        #endregion
     }
 }
