@@ -56,12 +56,13 @@ IOnAfterLoadingCDB
       instance = this;
       Utilities.Logger.Initialize(Logger);
       GetText.Instance.RegisterMod("SettingsLang");
-      Info.Version = "1.1.3";
+      Info.Version = "1.2.0";
       Info.RepositoryUrl = "https://github.com/ChiuYi0912/DCCMMods/tree/main";
 
       moduleManager = new ModuleManager(this);
       moduleManager.RegisterModule(new GameplayModule());
       moduleManager.RegisterModule(new WeaponSettingModule());
+      moduleManager.RegisterModule(new LevelModule());
       moduleManager.RegisterModule(new HasUiSettingsModule());
       moduleManager.RegisterModule(new SkinSettingsModule());
       moduleManager.RegisterModule(new ScarfSettingModule());
@@ -74,7 +75,7 @@ IOnAfterLoadingCDB
 
       EventSystem.BroadcastEvent<IOnHookInitialize>();
 
-      //Hook_Boot.mainLoop += Hook_Boot_loop;
+      Hook_Boot.mainLoop += Hook_Boot_loop;
    }
 
 

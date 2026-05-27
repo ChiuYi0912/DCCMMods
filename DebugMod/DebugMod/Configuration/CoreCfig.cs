@@ -12,5 +12,6 @@ namespace DebugMod.Configuration
         public string LogTextColor = "#11ff00";
         public double LogTextSize = 0.8;
         public bool IsQuadTreeDrawingEnabled = false;
+        public List<int> SuperSeed = new ();
     }
 }

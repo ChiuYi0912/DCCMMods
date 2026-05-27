@@ -10,8 +10,11 @@ using dc.libs;
 using dc.pr;
 using dc.tool;
 using dc.ui;
+using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using IngameDebugConsole;
+using JqFormatter.Config;
+using ModCore.Storage;
 using ModCore.Utilities;
 using Serilog;
 using Serilog.Core;
@@ -85,42 +88,5 @@ namespace DebugMod.Commands.activateDebug
 
 
 
-        [ConsoleMethod("test", "作者测试用的")]
-        public static void ChangeHeroShaderColor(TextWriter writer)
-        {
-            Hero hero = Game.Class.ME.hero;
-            // var p = new Portal(hero._level, hero.cx, hero.cy, hero._level.map, Ref<bool>.In(false));
-            // p.init();
-            // new SecretLever(hero._level, hero.cx, hero.cy, p).init();
-
-            GetAllSecretChallenges(hero);
-            //foreach (SecretChallengeInfo item in list)
-            //{
-            //Log.Debug($"room:{item.room.toString()},item:{item.requiredItem.GetType().Name}");
-            //
-        }
-
-        public class SecretChallengeInfo
-        {
-            public Room room = null!;
-            public InventItem requiredItem = null!;
-        }
-
-        public static void GetAllSecretChallenges(Hero hero)
-        {
-            ArrayObj rooms = hero._level.map.rooms;
-            for (int i = 0; i < rooms.length; i++)
-            {
-                Room room = rooms.getDyn(i);
-                if (room == null) continue;
-                if (room.secretLevels == null) continue;
-                for (int j = 0; j < room.secretLevels.length; j++)
-                {
-                    InventItem item = room.secretLevels.getDyn(j);
-                    if (item == null) continue;
-                    Log.Debug($"{room.toString()}\n");
-                }
-            }
-        }
     }
 }

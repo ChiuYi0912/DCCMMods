@@ -33,6 +33,7 @@ namespace MoreSettings.Configuration
         public ViewportConfig Viewport { get; set; } = new();
         public WeaponConfig Weapon { get; set; } = new();
         public KeyConfig Key { get; set; } = new();
+        public LevelConfig level { get; set; } = new();
     }
 
 
@@ -256,5 +257,10 @@ namespace MoreSettings.Configuration
         {
             ControlKeys = new Dictionary<int, ContorlLbleKeyConfig>();
         }
+    }
+
+    public class LevelConfig : SettingConfigBase
+    {
+
     }
 }

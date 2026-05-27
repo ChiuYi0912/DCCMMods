@@ -2,12 +2,14 @@
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Utilities;
 using dc;
+using dc.en;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Events.Interfaces.Game.Hero;
 using ModCore.Mods;
 using ModCore.Modules;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
+using MoreSettings.GameMechanics.cine;
 using static MoreSettings.Configuration.Enums;
 
 namespace MoreSettings.Modules
@@ -71,7 +73,8 @@ namespace MoreSettings.Modules
         {
             if (controller.IsPressed(GetAct(KeyName.Tailor)))
             {
-
+                Hero hero = Game.Instance.HeroInstance!;
+                var tailor = new SummonTailor(hero, hero.cx, hero.cy);
             }
         }
 

@@ -11,7 +11,8 @@ namespace MoreSettings.Configuration
             Weapon,
             Skin,
             Scarf,
-            Viewport
+            Viewport,
+            Level
         }
 
         public enum KeyBindingSetting
