@@ -3,6 +3,9 @@ using CoreLibrary.Core.Extensions;
 using CoreLibrary.Utilities;
 using dc;
 using dc.en;
+using dc.ui;
+using dc.ui.icon;
+using HaxeProxy.Runtime;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Events.Interfaces.Game.Hero;
 using ModCore.Mods;
@@ -10,6 +13,7 @@ using ModCore.Modules;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics.cine;
+using Serilog;
 using static MoreSettings.Configuration.Enums;
 
 namespace MoreSettings.Modules
@@ -74,6 +78,15 @@ namespace MoreSettings.Modules
             if (controller.IsPressed(GetAct(KeyName.Tailor)))
             {
                 Hero hero = Game.Instance.HeroInstance!;
+                if (hero.cd.fastCheck.exists(1145140))
+                {
+                    LogManager log = dc.pr.Game.Class.ME.log;
+                    dc.String str = $"时守还有{hero.cd.fastCheck.get(1145140).frames / hero.cd.baseFps}秒冷却".ToHaxeString();
+                    log.textBmp(str, null, Icon.Class.createMobIcon("TimeKeeper".ToHaxeString(), null), null);
+                    AudioHelper.LoadAudioFormString("sfx/inter/pick_book.wav");
+                    return;
+                }
+
                 var tailor = new SummonTailor(hero, hero.cx, hero.cy);
             }
         }
