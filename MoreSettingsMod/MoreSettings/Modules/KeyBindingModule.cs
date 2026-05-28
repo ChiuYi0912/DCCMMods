@@ -78,16 +78,8 @@ namespace MoreSettings.Modules
             if (controller.IsPressed(GetAct(KeyName.Tailor)))
             {
                 Hero hero = Game.Instance.HeroInstance!;
-                if (hero.cd.fastCheck.exists(1145140))
-                {
-                    LogManager log = dc.pr.Game.Class.ME.log;
-                    dc.String str = $"时守还有{hero.cd.fastCheck.get(1145140).frames / hero.cd.baseFps}秒冷却".ToHaxeString();
-                    log.textBmp(str, null, Icon.Class.createMobIcon("TimeKeeper".ToHaxeString(), null), null);
-                    AudioHelper.LoadAudioFormString("sfx/inter/pick_book.wav");
-                    return;
-                }
-
-                var tailor = new SummonTailor(hero, hero.cx, hero.cy);
+                if (CheckTailorCd(hero))
+                    _ = new SummonTailor(hero, hero.cx, hero.cy);
             }
         }
 
@@ -97,6 +89,19 @@ namespace MoreSettings.Modules
             var act = controller.GetAction("Tailor") ?? controller.AddKey("Tailor", KeyHelper.T, KeyHelper.T, KeyHelper.T);
             config.TheCurrentKey[KeyName.Tailor] = act;
             controller.ApplyBindings();
+        }
+
+        public bool CheckTailorCd(Hero hero)
+        {
+            if (hero.cd.fastCheck.exists(1145140))
+            {
+                LogManager log = dc.pr.Game.Class.ME.log;
+                dc.String str = $"时守还有{(int)((double)hero.cd.fastCheck.get(1145140).frames / hero.cd.baseFps)}秒冷却".ToHaxeString();
+                log.textBmp(str, null, Icon.Class.createMobIcon("TimeKeeper".ToHaxeString(), null), null);
+                AudioHelper.LoadAudioFormString("sfx/inter/pick_book.wav");
+                return false;
+            }
+            return true;
         }
     }
 

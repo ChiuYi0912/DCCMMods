@@ -15,6 +15,7 @@ using dc.tool._Cooldown;
 using dc.tool._DecisionHelper;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
+using ModCore.Storage;
 using ModCore.Utilities;
 using Serilog;
 
@@ -22,6 +23,7 @@ namespace MoreSettings.GameMechanics.cine
 {
     public class SummonTailor : GameCinematic
     {
+
         private const int PORTAL_COLOR_LOW = 8450041;
         private const int PORTAL_COLOR_HIGH = 16301458;
 
@@ -42,14 +44,10 @@ namespace MoreSettings.GameMechanics.cine
             var cd = owen.cd;
             double duration = 30;
             double frames = duration * cd.baseFps;
-            var cdInst = new dc.libs._Cooldown.CdInst(cdtimeid, frames);
+            var cdInst = new CdInst(cdtimeid, frames);
             cd.fastCheck.set(cdtimeid, cdInst);
             cd.cdList.push(cdInst);
-            cdInst.cb = new HlAction(() =>
-            {
-                cd.fastCheck.remove(cdtimeid);
-                cd.cdList.removeDyn(cdInst);
-            });
+
 
             cm.__beginNewQueue();
 
@@ -58,7 +56,7 @@ namespace MoreSettings.GameMechanics.cine
                 () => Game.Class.ME.curLevel.fx.attackAnnounce(owen),
                 () => AudioHelper.LoadAudioFormString("sfx/inter/clock_bell2.wav"));
 
-            AddActions(1500,
+            AddActions(0,
                 OpenBossPortal,
                 () => CreateTimeKeeper(owen._level));
 
@@ -86,6 +84,7 @@ namespace MoreSettings.GameMechanics.cine
             Fx fx = Game.Class.ME.curLevel.fx;
             int portalCx = spawnCx + 8;
             bossPortal = CreatePortal(owen._level, owen, portalCx, spawnCy);
+            owen._level.viewport.track(bossPortal, false);
             StartPortalFx(bossPortal);
             AudioHelper.LoadAudioFormString("sfx/cine/rtc_assassin_portal_open.wav");
         }
@@ -156,7 +155,6 @@ namespace MoreSettings.GameMechanics.cine
 
             cm.__addParallel(() =>
             {
-                level.viewport.track(bossPortal, false);
                 boss.spr.get_anim().play("cast".ToHaxeString(), null, null).reverse();
             }, 0, null);
         }
@@ -179,13 +177,14 @@ namespace MoreSettings.GameMechanics.cine
             var tailor = new Tailor(level, room);
             tailor.visible = false;
             tailor.daughter.visible = false;
-            tailor.init();
             tailor.cx = tailor.cy = zero;
             tailor.daughter.cx = tailor.daughter.cy = zero;
+            tailor.init();
 
 
             var skinner = new Skinner(level, zero, zero);
             skinner.visible = false;
+            skinner.cx = skinner.cy = zero;
             skinner.init();
 
 
