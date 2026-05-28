@@ -77,7 +77,8 @@ namespace MoreSettings.Modules
         {
             if (controller.IsPressed(GetAct(KeyName.Tailor)) && config.Enabled)
             {
-                Hero hero = Game.Instance.HeroInstance!;
+                Hero hero = dc.pr.Game.Class.ME.hero;
+                if (hero == null) return;
                 if (CheckTailorCd(hero))
                     _ = new SummonTailor(hero, hero.cx, hero.cy);
             }

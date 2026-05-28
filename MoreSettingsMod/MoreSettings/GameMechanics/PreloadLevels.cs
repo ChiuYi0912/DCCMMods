@@ -25,36 +25,16 @@ using CoreLibrary.Core.Extensions;
 using MoreSettings.Base.Modules;
 using LevelIfor_Virtual = Hashlink.Virtuals.virtual_baseLootLevel_biome_bonusTripleScrollAfterBC_cellBonus_dlc_doubleUps_eliteRoomChance_eliteWanderChance_flagsProps_group_icon_id_index_loreDescriptions_mapDepth_minGold_mobDensity_mobs_name_nextLevels_parallax_props_quarterUpsBC3_quarterUpsBC4_specificLoots_specificSubBiome_transitionTo_tripleUps_worldDepth_;
 
-namespace MoreSettings.Modules
+
+namespace MoreSettings.GameMechanics
 {
-    public class LevelModule : BaseModule
+    public class PreloadLevels
     {
-        public override Enums.MenuCategory Type => Enums.MenuCategory.Level;
-        public override string Description => GetText.Instance.GetString("LevelModule");
-        public override string Name => "LevelModule";
-        public override LevelConfig config => (LevelConfig)base.config;
-
-        public override void Initialize(ModBase mainMod)
+        public PreloadLevels()
         {
-            config = SettingsMain.ConfigValue.level;
-            base.Initialize(mainMod);
-        }
 
-        public override void BuildMenu(dc.ui.Options options, string Separator)
-        {
-            config.Enabled = true;
-            base.BuildMenu(options, Separator);
-            if (!config.Enabled)
-                return;
         }
-
-        public override void PermanentlyRegisterHooks()
-        {
-            base.PermanentlyRegisterHooks();
-            Hook_Game.loadMainLevel += Hook_Game_loadMainLevel;
-        }
-
-        private void Hook_Game_loadMainLevel(
+        private void loadMainLevel(
             Hook_Game.orig_loadMainLevel orig,
             dc.pr.Game self,
             LevelTransition cine,
@@ -75,7 +55,7 @@ namespace MoreSettings.Modules
             string cid = id.ToString();
             bool isSubMode = self.get_isInSubMode();
             bool isRichterCastle = self.hero is Richter || cid == "RichterCastle";
-            
+
 
             #region PrisonStart 统计初始化
 
@@ -307,7 +287,6 @@ namespace MoreSettings.Modules
             #region 激励and诅咒关卡
 
             bool incentivized = false;
-            self.cursedChestsBonusChance = 0;
             if (!isSubMode)
             {
                 incentivized = cid == self.data.currentIncentivizedLevel?.ToString();
@@ -534,7 +513,7 @@ namespace MoreSettings.Modules
             //竞速模式
             if (self.isScoring())
                 self.scoring.initScore();
-            
+
 
             //疫病
             if (self.infection != null && self.user.br_hasInfection())
@@ -746,14 +725,7 @@ namespace MoreSettings.Modules
             int zero = 0;
             levelGen.genMobs(self.user, levelMaps, extraMobs, Ref<int>.In(zero));
         }
-
-        private static void AfterLevelLoad(dc.pr.Game self, dc.String id,
-            LevelIfor_Virtual customInfo,
-            bool incentivized)
-        {
-
-        }
-
         #endregion
     }
 }
+

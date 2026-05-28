@@ -38,7 +38,8 @@ namespace MoreSettings.GameMechanics.cine
 
         public SummonTailor(Hero hero, int cx, int cy)
         {
-            (spawnCx, spawnCy) = GenerateOnFlatGround(hero._level, 30);
+            if (hero._level == null) return;
+            (spawnCx, spawnCy) = GenerateOnFlatGround(hero._level, 20);
             owen = hero;
 
             var cd = owen.cd;
@@ -296,7 +297,7 @@ namespace MoreSettings.GameMechanics.cine
 
                     int cellIndex = x + platform.walkY * level.map.wid;
                     SpotFlags flags = level.map.fastSpots.getDyn(cellIndex);
-                    if ((flags.low & (1 << 25)) != 0) continue;
+                    if (flags == null && (flags?.low & (1 << 25)) != 0) continue;
 
                     candidates.Add(new CPoint(x, platform.walkY));
                 }

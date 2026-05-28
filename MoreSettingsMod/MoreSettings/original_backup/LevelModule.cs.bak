@@ -307,7 +307,6 @@ namespace MoreSettings.Modules
             #region 激励and诅咒关卡
 
             bool incentivized = false;
-            self.cursedChestsBonusChance = 0;
             if (!isSubMode)
             {
                 incentivized = cid == self.data.currentIncentivizedLevel?.ToString();

@@ -62,12 +62,11 @@ IOnAfterLoadingCDB
       moduleManager = new ModuleManager(this);
       moduleManager.RegisterModule(new GameplayModule());
       moduleManager.RegisterModule(new WeaponSettingModule());
-      //moduleManager.RegisterModule(new LevelModule());
+      moduleManager.RegisterModule(new LevelModule());
       moduleManager.RegisterModule(new HasUiSettingsModule());
       moduleManager.RegisterModule(new SkinSettingsModule());
       moduleManager.RegisterModule(new ScarfSettingModule());
       moduleManager.RegisterModule(new ViewportSettingsModule());
-
       moduleManager.RegisterModule(new KeyBindingModule());
 
       modMenu = new ModMenu(this);
@@ -75,7 +74,7 @@ IOnAfterLoadingCDB
 
       EventSystem.BroadcastEvent<IOnHookInitialize>();
 
-      //Hook_Boot.mainLoop += Hook_Boot_loop;
+      Hook_Boot.mainLoop += Hook_Boot_loop;
    }
 
 

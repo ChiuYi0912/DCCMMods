@@ -100,17 +100,51 @@ namespace CoreLibrary.Utilities
         }
 
 
-        public bool IsDown(int actionCode, bool ignorePause = false) =>
-            CheckInputFromProcess(gamecontroller, actionCode, ignorePause, gamecontroller.padIsDown, Key.Class.isDown);
+        public bool IsDown(int actionCode, bool ignorePause = false)
+        {
+            if (TryCheckManagedKey(actionCode, ignorePause, Key.Class.isDown, out var result))
+                return result;
+            return CheckInputFromProcess(gamecontroller, actionCode, ignorePause, gamecontroller.padIsDown, Key.Class.isDown);
+        }
 
-        public bool IsPressed(int actionCode, bool ignorePause = false) =>
-            CheckInputFromProcess(gamecontroller, actionCode, ignorePause, gamecontroller.padIsPressed, Key.Class.isPressed);
+        public bool IsPressed(int actionCode, bool ignorePause = false)
+        {
+            if (TryCheckManagedKey(actionCode, ignorePause, Key.Class.isPressed, out var result))
+                return result;
+            return CheckInputFromProcess(gamecontroller, actionCode, ignorePause, gamecontroller.padIsPressed, Key.Class.isPressed);
+        }
 
         public bool IsPressedFromProcess(Controller controller, int actionCode, bool ignorePause = false) =>
             CheckInputFromProcess(controller, actionCode, ignorePause, controller.padIsPressed, Key.Class.isPressed);
 
         public bool IsDownFromProcess(Controller controller, int actionCode, bool ignorePause = false) =>
             CheckInputFromProcess(controller, actionCode, ignorePause, controller.padIsDown, Key.Class.isDown);
+
+        private bool TryCheckManagedKey(int actionCode, bool ignorePause, HlFunc<bool, int> keyCheck, out bool result)
+        {
+            if (!managedActions.Contains(actionCode) || !keyConfig.TryGetValue(actionCode, out var cfg))
+            {
+                result = false;
+                return false;
+            }
+
+            if (gamecontroller.isLocked || gamecontroller.exclusiveId != null)
+            {
+                result = false;
+                return true;
+            }
+
+            if (ignorePause && Lib_std.sys_time.Invoke() < gamecontroller.suspendTimer)
+            {
+                result = false;
+                return true;
+            }
+
+            result = (cfg.Primary >= 0 && keyCheck(cfg.Primary.Value))
+                  || (cfg.Secondary >= 0 && keyCheck(cfg.Secondary.Value))
+                  || (cfg.Third >= 0 && keyCheck(cfg.Third.Value));
+            return true;
+        }
 
 
         private void RebuildTracking()
