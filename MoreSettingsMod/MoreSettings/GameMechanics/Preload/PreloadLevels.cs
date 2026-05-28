@@ -30,6 +30,18 @@ namespace MoreSettings.GameMechanics.Preload
 {
     public class PreloadLevels
     {
+        private static readonly List<string> allLevels = new List<string>
+        {
+            "PrisonCourtyard", "SewerShort", "PrisonDepths", "PrisonCorrupt", "PrisonRoof",
+            "Ossuary", "SewerDepths", "Bridge", "BeholderPit", "StiltVillage",
+            "AncientTemple", "Cemetery", "ClockTower", "Crypt", "TopClockTower",
+            "Cavern", "Giant", "Castle", "Distillery", "Throne",
+            "Astrolab", "Observatory",  "Greenhouse",
+            "Swamp", "SwampHeart", "Tumulus", "Cliff", "GardenerStage",
+            "Shipwreck", "Lighthouse", "QueenArena", "Bank", "PurpleGarden",
+            "DookuCastle", "DookuCastleHard", "DeathArena", "DookuArena"
+        };
+
         public PreloadLevels()
         {
 
@@ -725,6 +737,13 @@ namespace MoreSettings.GameMechanics.Preload
             int zero = 0;
             levelGen.genMobs(self.user, levelMaps, extraMobs, Ref<int>.In(zero));
         }
+        #endregion
+
+        #region 功能辅助
+
+
+
+
         #endregion
     }
 }

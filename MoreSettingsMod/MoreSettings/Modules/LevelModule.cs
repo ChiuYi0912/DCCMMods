@@ -918,13 +918,6 @@ namespace MoreSettings.Modules
             levelGen.genMobs(self.user, levelMaps, extraMobs, Ref<int>.In(zero));
         }
 
-        private static void AfterLevelLoad(dc.pr.Game self, dc.String id,
-            LevelIfor_Virtual customInfo,
-            bool incentivized)
-        {
-
-        }
-
         #endregion
     }
 }
