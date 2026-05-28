@@ -40,7 +40,6 @@ namespace MoreSettings.Modules
             Hook_Game.decreasingSlowMo += Hook_Game_decreasingSlowMo;
             Hook_LevelStruct.applyDifficulty += Hook__LevelStruct_applyDifficulty;
             Hook__TierItemFound.__constructor__ += Hook__TierItemFound__constructor__;
-            Hook__LevelTransition.__constructor__ += Hook__LevelTransition__constructor__;
             Hook__EntranceTeleportation.__constructor__ += Hook__EntranceTeleportation__constructor__;
         }
 
@@ -51,7 +50,6 @@ namespace MoreSettings.Modules
             Hook_Game.decreasingSlowMo -= Hook_Game_decreasingSlowMo;
             Hook_LevelStruct.applyDifficulty -= Hook__LevelStruct_applyDifficulty;
             Hook__TierItemFound.__constructor__ -= Hook__TierItemFound__constructor__;
-            Hook__LevelTransition.__constructor__ -= Hook__LevelTransition__constructor__;
             Hook__EntranceTeleportation.__constructor__ -= Hook__EntranceTeleportation__constructor__;
         }
 
@@ -99,13 +97,7 @@ namespace MoreSettings.Modules
                 scrollerFlow
             );
 
-            menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("NoFadeIn"),
-                GetText.Instance.GetString("NofadeInDesc"),
-                () => config.NofadeIn,
-                v => config.NofadeIn = v,
-                scrollerFlow
-            );
+            
         }
 
         #region Hooks
@@ -143,89 +135,6 @@ namespace MoreSettings.Modules
             orig(self, durationS, spd);
         }
 
-        private void Hook__LevelTransition__constructor__(
-            Hook__LevelTransition.orig___constructor__ orig,
-            LevelTransition arg1,
-            dc.String mainId,
-            LevelMap map,
-            int? linkId,
-            CPoint heroPosAfterBossRuneReload,
-            Ref<bool> noLoadingData)
-        {
-            bool skipLoadingData = !noLoadingData.IsNull && noLoadingData.value;
-            arg1.playAfterZDoorCine = true;
-
-            HlAction<GameCinematic> hl = (HlAction<GameCinematic>)GameCinematic.Class.__constructor__;
-            hl.Invoke(arg1);
-
-            arg1.mainId = mainId;
-            arg1.map = map;
-            arg1.linkId = linkId;
-            arg1.heroPosAfterBossRuneReload = heroPosAfterBossRuneReload;
-
-            if (DLC.Class.levelIsPressHidden(mainId))
-                throw new InvalidOperationException("Forbidden level reached. This level should not be accessible.");
-
-            DLC.Class.installMaskCacheDirty = true;
-
-            double multFade = 0.5;
-            if (mainId == null || heroPosAfterBossRuneReload != null)
-                multFade *= 0.5;
-            arg1.multFade = multFade;
-
-            dc.pr.Game.Class.ME.controller.manualLock = true;
-
-            var curLevel = dc.pr.Game.Class.ME.curLevel;
-            if (curLevel != null)
-            {
-                curLevel.pause();
-
-                virtual_bossRuneActivated_gameTimeS_level_ transitionData = null!;
-                if (!skipLoadingData)
-                {
-                    transitionData = new virtual_bossRuneActivated_gameTimeS_level_
-                    {
-                        level = mainId,
-                        gameTimeS = dc.pr.Game.Class.ME.data.gameTimeS,
-                        bossRuneActivated = dc.pr.Game.Class.ME.user.br_numActivated()
-                    };
-                }
-
-                bool giveGentleman = false;
-                if (mainId != null && mainId.ToString() != "PrisonStart" && curLevel.map.id.ToString() == "PrisonStart")
-                {
-                    var doors = (ArrayObj)curLevel.entitiesByClass.get(30924);
-                    bool allIntact = true;
-                    foreach (var obj in doors)
-                    {
-                        if (obj is Door door && door.broken)
-                        {
-                            allIntact = false;
-                            break;
-                        }
-                    }
-                    giveGentleman = allIntact;
-                }
-                arg1.giveGentlemanAchievement = giveGentleman;
-
-                if (!config.NofadeIn || linkId == null)
-                    Main.Class.ME.fadeIn(
-                        null,
-                        transitionData,
-                        Ref<double>.In(multFade),
-                        onEnd: new HlAction(() => arg1.loadNewLevel())
-                    );
-                else
-                    arg1.loadNewLevel();
-
-                arg1.disableBars();
-            }
-            else
-            {
-                arg1.loadNewLevel();
-                arg1.disableBars();
-            }
-        }
 
         private void Hook__EntranceTeleportation__constructor__(Hook__EntranceTeleportation.orig___constructor__ orig,
            EntranceTeleportation arg1, Hero hero, Entity teleporter, CPoint t, LevelMap map, int? linkId)

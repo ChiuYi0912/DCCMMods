@@ -24,6 +24,8 @@ using MoreSettings.Configuration;
 using CoreLibrary.Core.Extensions;
 using MoreSettings.Base.Modules;
 using LevelIfor_Virtual = Hashlink.Virtuals.virtual_baseLootLevel_biome_bonusTripleScrollAfterBC_cellBonus_dlc_doubleUps_eliteRoomChance_eliteWanderChance_flagsProps_group_icon_id_index_loreDescriptions_mapDepth_minGold_mobDensity_mobs_name_nextLevels_parallax_props_quarterUpsBC3_quarterUpsBC4_specificLoots_specificSubBiome_transitionTo_tripleUps_worldDepth_;
+using HashlinkNET.Native.Impl;
+using dc.en.inter;
 
 namespace MoreSettings.Modules
 {
@@ -42,8 +44,17 @@ namespace MoreSettings.Modules
 
         public override void BuildMenu(dc.ui.Options options, string Separator)
         {
-            config.Enabled = true;
             base.BuildMenu(options, Separator);
+
+            var toggle = menuHelper.AddConfigToggle(
+                GetText.Instance.GetString("NoFadeIn"),
+                GetText.Instance.GetString("NofadeInDesc"),
+                () => config.NofadeIn,
+                v => config.NofadeIn = v,
+                scrollerFlow
+            );
+            //menuHelper.CenterToggleWidget(toggle, options, scrollerFlow);
+
             if (!config.Enabled)
                 return;
         }
@@ -52,7 +63,167 @@ namespace MoreSettings.Modules
         {
             base.PermanentlyRegisterHooks();
             Hook_Game.loadMainLevel += Hook_Game_loadMainLevel;
+            Hook_LevelTransition.loadNewLevel += Hook_LevelTransition_loadNewLevel;
+            Hook__LevelTransition.__constructor__ += Hook__LevelTransition__constructor__;
         }
+
+
+
+        #region 进入关卡
+
+        private void Hook__LevelTransition__constructor__(
+            Hook__LevelTransition.orig___constructor__ orig,
+            LevelTransition arg1,
+            dc.String mainId,
+            LevelMap map,
+            int? linkId,
+            CPoint heroPosAfterBossRuneReload,
+            Ref<bool> noLoadingData)
+        {
+            bool skipLoadingData = !noLoadingData.IsNull && noLoadingData.value;
+            arg1.playAfterZDoorCine = true;
+
+            HlAction<GameCinematic> hl = (HlAction<GameCinematic>)GameCinematic.Class.__constructor__;
+            hl.Invoke(arg1);
+
+            arg1.mainId = mainId;
+            arg1.map = map;
+            arg1.linkId = linkId;
+            arg1.heroPosAfterBossRuneReload = heroPosAfterBossRuneReload;
+
+            if (DLC.Class.levelIsPressHidden(mainId))
+                throw new InvalidOperationException("Forbidden level reached. This level should not be accessible.");
+
+            DLC.Class.installMaskCacheDirty = true;
+
+            double multFade = 0.5;
+            if (mainId == null || heroPosAfterBossRuneReload != null)
+                multFade *= 0.5;
+            arg1.multFade = multFade;
+
+            dc.pr.Game.Class.ME.controller.manualLock = true;
+
+            var curLevel = dc.pr.Game.Class.ME.curLevel;
+            if (curLevel != null)
+            {
+                curLevel.pause();
+
+                virtual_bossRuneActivated_gameTimeS_level_ transitionData = null!;
+                if (!skipLoadingData)
+                {
+                    transitionData = new virtual_bossRuneActivated_gameTimeS_level_
+                    {
+                        level = mainId,
+                        gameTimeS = dc.pr.Game.Class.ME.data.gameTimeS,
+                        bossRuneActivated = dc.pr.Game.Class.ME.user.br_numActivated()
+                    };
+                }
+
+                bool giveGentleman = false;
+                if (mainId != null && mainId.ToString() != "PrisonStart" && curLevel.map.id.ToString() == "PrisonStart")
+                {
+                    var doors = (ArrayObj)curLevel.entitiesByClass.get(30924);
+                    bool allIntact = true;
+                    foreach (var obj in doors)
+                    {
+                        if (obj is Door door && door.broken)
+                        {
+                            allIntact = false;
+                            break;
+                        }
+                    }
+                    giveGentleman = allIntact;
+                }
+                arg1.giveGentlemanAchievement = giveGentleman;
+
+                if (!config.NofadeIn || linkId == null)
+                    Main.Class.ME.fadeIn(
+                        null,
+                        transitionData,
+                        Ref<double>.In(multFade),
+                        onEnd: new HlAction(() => arg1.loadNewLevel())
+                    );
+                else
+                    arg1.loadNewLevel();
+
+                arg1.disableBars();
+            }
+            else
+            {
+                arg1.loadNewLevel();
+                arg1.disableBars();
+            }
+        }
+        private void Hook_LevelTransition_loadNewLevel(Hook_LevelTransition.orig_loadNewLevel orig, LevelTransition self)
+        {
+            if (self.heroPosAfterBossRuneReload != null)
+            {
+                bool activate = true;
+                int? seed = dc.pr.Game.Class.ME.curLevel.map?.seed;
+                dc.pr.Game.Class.ME.loadMainLevel(self, self.mainId, Ref<bool>.In(activate), seed);
+            }
+            else if (self.mainId != null)
+            {
+                dc.pr.Game.Class.ME.loadMainLevel(self, self.mainId, default, null);
+            }
+            else
+            {
+                bool activate = true;
+                bool playAfterZDoorCine = self.playAfterZDoorCine;
+                dc.pr.Game.Class.ME.activateSubLevel(self.map, self.linkId, Ref<bool>.In(activate), Ref<bool>.In(playAfterZDoorCine));
+            }
+
+            Lib_std.gc_major.Invoke();
+
+            if (self.get_isADlcPLevel())
+            {
+                self.onEnteredLevel = new HlAction(self.ArrowFunction_loadNewLevel_14498);
+            }
+            Main.Class.ME.fadeOut(Ref<double>.In(self.multFade));
+
+            self.afterTransitionCine();
+            bool hasMovement = self.walk != null || self.jump != null || self.climb != null;
+            if (!hasMovement && self.onEnteredLevel != null)
+            {
+                self.onEnteredLevel.Invoke();
+            }
+
+            if (self.heroPosAfterBossRuneReload != null)
+            {
+                Room flaskRoom = FindFlaskRoom(dc.pr.Game.Class.ME.curLevel.map?.rooms!);
+                if (flaskRoom != null)
+                {
+                    dc.pr.Game.Class.ME.hero.setPosCase(
+                        flaskRoom.x + self.heroPosAfterBossRuneReload.cx,
+                        flaskRoom.y + self.heroPosAfterBossRuneReload.cy,
+                        null, null);
+                    dc.pr.Game.Class.ME.curLevel.afterBossRuneReload();
+                }
+            }
+
+            if (self.giveGentlemanAchievement)
+            {
+                Achievements.Class.setAchievement(new EAchievement.FEAT_PRISON_NOBREAK_DOOR(), default);
+            }
+            self.onLoad?.Invoke();
+        }
+
+        private static Room FindFlaskRoom(ArrayObj rooms)
+        {
+            if (rooms == null) return null!;
+
+            int length = rooms.length;
+            for (int i = 0; i < length; i++)
+            {
+                Room room = rooms.getDyn(i);
+                if (room != null && room.rType.ToString() == "FlaskRoom")
+                    return room;
+            }
+            return null!;
+        }
+
+        #endregion
+
 
         private void Hook_Game_loadMainLevel(
             Hook_Game.orig_loadMainLevel orig,
@@ -75,7 +246,7 @@ namespace MoreSettings.Modules
             string cid = id.ToString();
             bool isSubMode = self.get_isInSubMode();
             bool isRichterCastle = self.hero is Richter || cid == "RichterCastle";
-            
+
 
             #region PrisonStart 统计初始化
 
@@ -534,7 +705,7 @@ namespace MoreSettings.Modules
             //竞速模式
             if (self.isScoring())
                 self.scoring.initScore();
-            
+
 
             //疫病
             if (self.infection != null && self.user.br_hasInfection())

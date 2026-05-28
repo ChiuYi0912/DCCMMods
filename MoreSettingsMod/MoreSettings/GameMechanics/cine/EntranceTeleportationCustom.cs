@@ -90,7 +90,7 @@ namespace MoreSettings.GameMechanics.cine
                 Game.Class.ME.activateSubLevel(map, linkId,
                     Ref<bool>.In(true), Ref<bool>.In(false));
                 hero.setPosCase(t.cx, t.cy, null, null);
-                if (!SettingsMain.ConfigValue.Gameplay.NofadeIn)
+                if (!SettingsMain.ConfigValue.level.NofadeIn)
                     Main.Class.ME.fadeOut(Ref<double>.In(0.5));
                 fullFxSequence.Invoke();
             });
@@ -144,7 +144,7 @@ namespace MoreSettings.GameMechanics.cine
             {
                 cm.__add(new HlAction(() =>
                 {
-                    if (SettingsMain.ConfigValue.Gameplay.NofadeIn)
+                    if (SettingsMain.ConfigValue.level.NofadeIn)
                         delayer.addF(null, subLevelSwitch, 1);
                     else
                         Main.Class.ME.fadeIn(null, null, Ref<double>.In(0), new HlAction(() =>
