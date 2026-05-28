@@ -63,7 +63,7 @@ namespace MoreSettings.Modules
             options.addKeyboardWidget(
                  scrollerFlow,
                  options.cbmpScroller,
-                 GetText.Instance.GetString("Summon the Tailor").ToHaxeString(),
+                 GetText.Instance.GetString("Tailor").ToHaxeString(),
                  config.TheCurrentKey[KeyName.Tailor]
              );
         }
@@ -75,7 +75,7 @@ namespace MoreSettings.Modules
 
         void IOnHeroUpdate.OnHeroUpdate(double dt)
         {
-            if (controller.IsPressed(GetAct(KeyName.Tailor)))
+            if (controller.IsPressed(GetAct(KeyName.Tailor)) && config.Enabled)
             {
                 Hero hero = Game.Instance.HeroInstance!;
                 if (CheckTailorCd(hero))

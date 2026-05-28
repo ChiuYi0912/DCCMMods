@@ -193,3 +193,10 @@ msgstr "请在游戏内打开!"
 # WeaponSettingsModule
 msgid "WeaponSettingModule"
 msgstr "武器易用性设置模块"
+
+msgid "KeyBinding"
+msgstr "键位绑定"
+
+msgid "Tailor"
+msgstr "裁缝"
+
