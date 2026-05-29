@@ -11,3 +11,4 @@ mempalace.yaml
 .mempalace/
 *.mempalace.*
 .mempalace_*/
+./original_backup

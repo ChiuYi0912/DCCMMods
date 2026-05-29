@@ -26,10 +26,20 @@ using MoreSettings.Base.Modules;
 using LevelIfor_Virtual = Hashlink.Virtuals.virtual_baseLootLevel_biome_bonusTripleScrollAfterBC_cellBonus_dlc_doubleUps_eliteRoomChance_eliteWanderChance_flagsProps_group_icon_id_index_loreDescriptions_mapDepth_minGold_mobDensity_mobs_name_nextLevels_parallax_props_quarterUpsBC3_quarterUpsBC4_specificLoots_specificSubBiome_transitionTo_tripleUps_worldDepth_;
 using HashlinkNET.Native.Impl;
 using dc.en.inter;
+using MoreSettings.GameMechanics.Preload;
+using dc.chroma.effects;
+using ModCore.Events.Interfaces.Game;
+using MoreSettings.Utilities;
+using ModCore.Serialization;
+using ModCore.Storage;
+using ModCore.Events;
 
 namespace MoreSettings.Modules
 {
-    public class LevelModule : BaseModule
+    public class LevelModule : BaseModule,
+    IOnGameExit,
+    IHxbitSerializable,
+    IEventReceiver
     {
         public override Enums.MenuCategory Type => Enums.MenuCategory.Level;
         public override string Description => GetText.Instance.GetString("LevelModule");
@@ -45,44 +55,281 @@ namespace MoreSettings.Modules
         public override void BuildMenu(dc.ui.Options options, string Separator)
         {
             base.BuildMenu(options, Separator);
-
-            var toggle = menuHelper.AddConfigToggle(
+            menuHelper.AddConfigToggle(
                 GetText.Instance.GetString("NoFadeIn"),
                 GetText.Instance.GetString("NofadeInDesc"),
                 () => config.NofadeIn,
                 v => config.NofadeIn = v,
-                scrollerFlow
-            );
-            //menuHelper.CenterToggleWidget(toggle, options, scrollerFlow);
-
-            if (!config.Enabled)
-                return;
+                scrollerFlow);
+            if (!config.Enabled) return;
         }
 
+        #region Hooks
         public override void PermanentlyRegisterHooks()
         {
             base.PermanentlyRegisterHooks();
             Hook_Game.loadMainLevel += Hook_Game_loadMainLevel;
             Hook_LevelTransition.loadNewLevel += Hook_LevelTransition_loadNewLevel;
             Hook__LevelTransition.__constructor__ += Hook__LevelTransition__constructor__;
+            Hook_Game.activateSubLevel += Hook_Game_activateSubLevel;
+            Hook_Level.resume += Hook_Level_resume;
+            Hook_LevelDisp.render += Hook_LevelDisp_render;
+        }
+        #endregion
+
+        #region Disprender
+        private void Hook_LevelDisp_render(Hook_LevelDisp.orig_render orig, LevelDisp self)
+        {
+            if (self.rendered)
+                throw new InvalidOperationException("Render called twice without a clear()");
+            self.rendered = true;
+
+            Boot.Class.tryRender();
+            self.renderParallaxes();
+            Boot.Class.tryRender();
+            if (PreloadLevels.GetCachedDecoZones(self.lmap.id.ToString()) == null)
+                self.lmap.initDecoFlags();
+
+            bool flag = (self.lmap.infos.flagsProps.genFlags & 1) != 0;
+            if (flag)
+            {
+                Boot.Class.tryRender();
+                self.renderRoofs();
+                Boot.Class.tryRender();
+                self.renderWallTransitions();
+                Boot.Class.tryRender();
+                self.renderFloorStamps();
+            }
+            else
+            {
+                Boot.Class.tryRender();
+                self.renderFloorStamps();
+            }
+
+            ArrayObj rooms = self.lmap.rooms;
+            if (rooms != null)
+            {
+                for (int i = 0; i < rooms.length; i++)
+                {
+                    Room r = rooms.getDyn(i);
+                    if (r != null) { self.decorateRoom(r); Boot.Class.tryRender(); }
+                }
+            }
+            Boot.Class.tryRender();
+            self.decorateLevel();
+            Boot.Class.tryRender();
+
+            Boot.Class.tryRender();
+            self.renderFrontWalls();
+            Boot.Class.tryRender();
+            self.renderSlopes();
+            Boot.Class.tryRender();
+            self.renderFrontCorners();
+
+            // 优先使用预加载缓存
+            ArrayObj decoZones = PreloadLevels.GetCachedDecoZones(self.lmap.id.ToString())
+                                 ?? self.parseDecoZones();
+            self.decoZones = decoZones;
+
+            if (decoZones != null)
+            {
+                for (int i = 0; i < decoZones.length; i++)
+                {
+                    DecoZone zone = decoZones.getDyn(i);
+                    if (zone == null) continue;
+                    self.decorateZone(zone);
+                    zone.updateFlags(self.lmap);
+                    if ((zone.gFlags & 64) == 0 && (zone.gFlags & 256) == 0)
+                        self.addJunk(zone);
+                    if ((i + 1) % 20 == 0) Boot.Class.tryRender();
+                }
+            }
+
+            Boot.Class.tryRender();
+            self.renderBackWalls();
+            Boot.Class.tryRender();
+            self.renderFrontVegetation();
+            Boot.Class.tryRender();
+            self.renderGroundSmoke();
+            Boot.Class.tryRender();
+            self.renderWaterPools();
+            Boot.Class.tryRender();
+            self.addCliffLights();
+            Boot.Class.tryRender();
+            self.renderFakeBlackWalls();
+            Boot.Class.tryRender();
+            self.renderStructures();
+            Boot.Class.tryRender();
+            self.createLightWalls();
+            Boot.Class.tryRender();
+            self.initDecoEntities();
+            Boot.Class.tryRender();
+            self.addFrontProps();
+            Boot.Class.tryRender();
         }
 
+        #endregion
 
+        #region Levelresume
+        private void Hook_Level_resume(Hook_Level.orig_resume orig, Level self)
+        {
+            self.paused = false;
 
-        #region 进入关卡
+            if (!self.activated)
+            {
+                self.activated = true;
+                self.onActivation();
+            }
 
+            self.updateBgDarkenerVisibility();
+            self.slm?.onResume();
+            self.atManager?.onResume();
+            self.lAudio.resume();
+            self.loadMinimap();
+            self.loadReverb();
+
+            int? color = 0;
+            if (self.map.infos.props.HashlinkObj.GetDynamicMemberNames().Contains("chromaColor"))
+                color = self.map.infos.props.chromaColor;
+            ChromaEffectList.Class.setAllLevelEffects((int)color!);
+            Boot.Class.tryRender();
+
+            self.root.set_visible(true);
+            Boot.Class.ME.frameProfiler.reset();
+            dc.hxd.Timer.Class.reset();
+
+            // Discord Rich Presence
+            var hero = self.game.hero;
+            string state = $"B: {hero.brutalityTier} T: {hero.tacticTier} S: {hero.survivalTier}";
+            Lib_discord.update_state.Invoke(state.ToHaxeString().toUtf8(), false);
+
+            string largeImage = self.map.infos.id.ToString().ToLower();
+            Lib_discord.update_largeImageKey.Invoke(largeImage.ToHaxeString().toUtf8(), false);
+
+            if (!string.IsNullOrEmpty(self.map.infos.name?.ToString()))
+            {
+                string name = Lang.Class.t.get(self.map.infos.name, null).ToString();
+                Lib_discord.update_largeImageText.Invoke(name.ToHaxeString().toUtf8(), false);
+            }
+
+            int difficulty = self.game.user.br_getDifficulty();
+            if (difficulty > 0)
+            {
+                string smallKey = "difficulty" + difficulty;
+                Lib_discord.update_smallImageKey.Invoke(smallKey.ToHaxeString().toUtf8(), false);
+                string smallText = Lang.Class.getDifficultyName(difficulty).ToString();
+                Lib_discord.update_smallImageText.Invoke(smallText.ToHaxeString().toUtf8(), true);
+            }
+            else
+            {
+                Lib_discord.update_smallImageKey.Invoke("".ToHaxeString().toUtf8(), false);
+                Lib_discord.update_smallImageText.Invoke("".ToHaxeString().toUtf8(), true);
+            }
+        }
+        #endregion
+
+        #region activateSubLevel
+        private void Hook_Game_activateSubLevel(Hook_Game.orig_activateSubLevel orig, dc.pr.Game self,
+            LevelMap map, int? linkId, Ref<bool> shouldSave, Ref<bool> outAnim)
+        {
+            bool doSave = shouldSave.IsNull || shouldSave.value;
+            bool doOutAnim = outAnim.IsNull || outAnim.value;
+
+            Level targetLevel = FindSubLevelByMap(self.subLevels, map);
+            if (targetLevel == null) throw new Exception("SubLevel not found");
+
+            self.log.clearAll();
+            DestroyAllPointers();
+
+            Level previousLevel = self.hero._level;
+            var savedPetStates = self.saveHeroPetStates();
+            self.hero.clean();
+            self.controller.manualLock = false;
+
+            if (self.curLevel != null) { self.curLevel.hide(); self.curLevel = null; }
+            self.curLevel = targetLevel;
+            self.curLevel.resume();
+            Main.Class.ME.fadeOut(Ref<double>.In(0));
+
+            if (!self.hero.destroyed
+                && (self.hero.awake || self.curLevel.map.id.ToString() != "PrisonStart" || self.get_isInSubMode()))
+            {
+                int cx = self.curLevel.lastHeroCX;
+                int cy = self.curLevel.lastHeroCY;
+                if (linkId.HasValue)
+                {
+                    ZDoor door = FindZDoorByLinkId(self.curLevel, linkId.Value);
+                    if (door != null) { cx = door.cx; cy = door.cy; }
+                }
+                self.initHero(self.curLevel, cx, cy, null, false, previousLevel);
+
+                if (previousLevel != null)
+                {
+                    foreach (var power in GetPowers(previousLevel))
+                        if (power?.owner == self.hero) power.onHeroLevelChanged(previousLevel);
+                }
+            }
+
+            if (self.hero._level == self.curLevel) HUD.Class.ME.show(true);
+
+            if (self.curLevel.map.infos.group == 1) self.hero.revealBlueprints();
+            else self.hero.removeRevealedBlueprints();
+
+            self.resetPetSavedState(savedPetStates);
+            self.hero.updatePokemonableIcons();
+            dc.libs.Process.Class.resizeAll();
+
+            if (doSave && Main.Class.ME.options.debug == null && !self.get_isInSubMode())
+                Main.Class.ME.writeSave();
+
+            if (linkId.HasValue && doOutAnim) new AfterZDoor(self.hero);
+        }
+
+        private static Level FindSubLevelByMap(ArrayObj subLevels, LevelMap map)
+        {
+            if (subLevels == null) return null!;
+            for (int i = 0; i < subLevels.length; i++)
+                if (subLevels.getDyn(i) is Level lvl && lvl.map == map) return lvl;
+            return null!;
+        }
+
+        private static void DestroyAllPointers()
+        {
+            var all = Pointer.Class.ALL;
+            if (all == null) return;
+            for (int i = 0; i < all.length; i++)
+            {
+                var ptr = all.getDyn(i) as Pointer;
+                if (ptr != null) ptr.destroyed = true;
+            }
+        }
+
+        private static ZDoor FindZDoorByLinkId(Level level, int linkId)
+        {
+            if (level == null) return null!;
+            var doors = level.entitiesByClass?.get(3929) as ArrayObj;
+            if (doors == null) return null!;
+            for (int i = 0; i < doors.length; i++)
+                if (doors.getDyn(i) is ZDoor door && door.linkId == linkId) return door;
+            return null!;
+        }
+
+        private static IEnumerable<Power?> GetPowers(Level level)
+        {
+            if (level?.powers == null) yield break;
+            for (int i = 0; i < level.powers.length; i++)
+                yield return level.powers.getDyn(i) as Power;
+        }
+        #endregion
+
+        #region TransitionInit
         private void Hook__LevelTransition__constructor__(
-            Hook__LevelTransition.orig___constructor__ orig,
-            LevelTransition arg1,
-            dc.String mainId,
-            LevelMap map,
-            int? linkId,
-            CPoint heroPosAfterBossRuneReload,
-            Ref<bool> noLoadingData)
+            Hook__LevelTransition.orig___constructor__ orig, LevelTransition arg1,
+            dc.String mainId, LevelMap map, int? linkId,
+            CPoint heroPosAfterBossRuneReload, Ref<bool> noLoadingData)
         {
             bool skipLoadingData = !noLoadingData.IsNull && noLoadingData.value;
             arg1.playAfterZDoorCine = true;
-
             HlAction<GameCinematic> hl = (HlAction<GameCinematic>)GameCinematic.Class.__constructor__;
             hl.Invoke(arg1);
 
@@ -92,69 +339,61 @@ namespace MoreSettings.Modules
             arg1.heroPosAfterBossRuneReload = heroPosAfterBossRuneReload;
 
             if (DLC.Class.levelIsPressHidden(mainId))
-                throw new InvalidOperationException("Forbidden level reached. This level should not be accessible.");
+                throw new InvalidOperationException("Forbidden level reached.");
 
             DLC.Class.installMaskCacheDirty = true;
 
             double multFade = 0.5;
-            if (mainId == null || heroPosAfterBossRuneReload != null)
-                multFade *= 0.5;
+            if (mainId == null || heroPosAfterBossRuneReload != null) multFade *= 0.5;
             arg1.multFade = multFade;
 
             dc.pr.Game.Class.ME.controller.manualLock = true;
-
             var curLevel = dc.pr.Game.Class.ME.curLevel;
-            if (curLevel != null)
+            if (curLevel == null) { arg1.loadNewLevel(); arg1.disableBars(); return; }
+
+            curLevel.pause();
+
+            virtual_bossRuneActivated_gameTimeS_level_ transitionData = null!;
+            if (!skipLoadingData)
             {
-                curLevel.pause();
-
-                virtual_bossRuneActivated_gameTimeS_level_ transitionData = null!;
-                if (!skipLoadingData)
+                transitionData = new virtual_bossRuneActivated_gameTimeS_level_
                 {
-                    transitionData = new virtual_bossRuneActivated_gameTimeS_level_
-                    {
-                        level = mainId,
-                        gameTimeS = dc.pr.Game.Class.ME.data.gameTimeS,
-                        bossRuneActivated = dc.pr.Game.Class.ME.user.br_numActivated()
-                    };
-                }
+                    level = mainId,
+                    gameTimeS = dc.pr.Game.Class.ME.data.gameTimeS,
+                    bossRuneActivated = dc.pr.Game.Class.ME.user.br_numActivated()
+                };
+            }
 
-                bool giveGentleman = false;
-                if (mainId != null && mainId.ToString() != "PrisonStart" && curLevel.map.id.ToString() == "PrisonStart")
+            bool giveGentleman = false;
+            if (mainId != null && mainId.ToString() != "PrisonStart"
+                && curLevel.map.id.ToString() == "PrisonStart")
+            {
+                var doors = (ArrayObj)curLevel.entitiesByClass.get(30924);
+                bool allIntact = true;
+                foreach (var obj in doors)
                 {
-                    var doors = (ArrayObj)curLevel.entitiesByClass.get(30924);
-                    bool allIntact = true;
-                    foreach (var obj in doors)
-                    {
-                        if (obj is Door door && door.broken)
-                        {
-                            allIntact = false;
-                            break;
-                        }
-                    }
-                    giveGentleman = allIntact;
+                    if (obj is Door door && door.broken) { allIntact = false; break; }
                 }
-                arg1.giveGentlemanAchievement = giveGentleman;
+                giveGentleman = allIntact;
+            }
+            arg1.giveGentlemanAchievement = giveGentleman;
 
-                if (!config.NofadeIn || linkId == null)
-                    Main.Class.ME.fadeIn(
-                        null,
-                        transitionData,
-                        Ref<double>.In(multFade),
-                        onEnd: new HlAction(() => arg1.loadNewLevel())
-                    );
-                else
-                    arg1.loadNewLevel();
-
-                arg1.disableBars();
+            if (!config.NofadeIn || linkId == null)
+            {
+                multFade = 0;
+                Main.Class.ME.fadeIn(null, transitionData, Ref<double>.In(multFade),
+                    onEnd: new HlAction(() => { arg1.loadNewLevel(); }));
             }
             else
-            {
                 arg1.loadNewLevel();
-                arg1.disableBars();
-            }
+
+            arg1.disableBars();
         }
-        private void Hook_LevelTransition_loadNewLevel(Hook_LevelTransition.orig_loadNewLevel orig, LevelTransition self)
+        #endregion
+
+        #region loadNewLevel
+        private void Hook_LevelTransition_loadNewLevel(
+            Hook_LevelTransition.orig_loadNewLevel orig, LevelTransition self)
         {
             if (self.heroPosAfterBossRuneReload != null)
             {
@@ -169,24 +408,18 @@ namespace MoreSettings.Modules
             else
             {
                 bool activate = true;
-                bool playAfterZDoorCine = self.playAfterZDoorCine;
-                dc.pr.Game.Class.ME.activateSubLevel(self.map, self.linkId, Ref<bool>.In(activate), Ref<bool>.In(playAfterZDoorCine));
+                dc.pr.Game.Class.ME.activateSubLevel(self.map, self.linkId,
+                    Ref<bool>.In(activate), Ref<bool>.In(self.playAfterZDoorCine));
             }
-
-            Lib_std.gc_major.Invoke();
 
             if (self.get_isADlcPLevel())
-            {
-                self.onEnteredLevel = new HlAction(self.ArrowFunction_loadNewLevel_14498);
-            }
-            Main.Class.ME.fadeOut(Ref<double>.In(self.multFade));
+                self.onEnteredLevel = new HlAction(() =>
+                    new PurpleLevelIntro(self.mainId, dc.pr.Game.Class.ME.hero));
 
+            //Main.Class.ME.fadeOut(Ref<double>.In(0));
             self.afterTransitionCine();
-            bool hasMovement = self.walk != null || self.jump != null || self.climb != null;
-            if (!hasMovement && self.onEnteredLevel != null)
-            {
+            if (self.walk == null && self.jump == null && self.climb == null && self.onEnteredLevel != null)
                 self.onEnteredLevel.Invoke();
-            }
 
             if (self.heroPosAfterBossRuneReload != null)
             {
@@ -195,729 +428,43 @@ namespace MoreSettings.Modules
                 {
                     dc.pr.Game.Class.ME.hero.setPosCase(
                         flaskRoom.x + self.heroPosAfterBossRuneReload.cx,
-                        flaskRoom.y + self.heroPosAfterBossRuneReload.cy,
-                        null, null);
+                        flaskRoom.y + self.heroPosAfterBossRuneReload.cy, null!, null!);
                     dc.pr.Game.Class.ME.curLevel.afterBossRuneReload();
                 }
             }
 
             if (self.giveGentlemanAchievement)
-            {
                 Achievements.Class.setAchievement(new EAchievement.FEAT_PRISON_NOBREAK_DOOR(), default);
-            }
+
             self.onLoad?.Invoke();
         }
 
         private static Room FindFlaskRoom(ArrayObj rooms)
         {
             if (rooms == null) return null!;
-
-            int length = rooms.length;
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < rooms.length; i++)
             {
                 Room room = rooms.getDyn(i);
-                if (room != null && room.rType.ToString() == "FlaskRoom")
-                    return room;
+                if (room != null && room.rType.ToString() == "FlaskRoom") return room;
             }
             return null!;
         }
-
         #endregion
 
 
         private void Hook_Game_loadMainLevel(
-            Hook_Game.orig_loadMainLevel orig,
-            dc.pr.Game self,
-            LevelTransition cine,
-            dc.String id,
-            Ref<bool> activate,
-            int? forcedSeed)
+            Hook_Game.orig_loadMainLevel orig, dc.pr.Game self,
+            LevelTransition cine, dc.String id,
+            Ref<bool> activate, int? forcedSeed)
         {
-            LogUtils.Class.logInformation($"(Chiu Yi)Loading level {id}".ToHaxeString(), new()
-            {
-                className = "pr.Game".ToHaxeString(),
-                methodName = "loadMainLevel".ToHaxeString(),
-                lineNumber = 805
-            });
-
-            var levelData = Data.Class.level.byId.get(id);
-            var levelInfo = ((HaxeProxyBase)levelData).ToVirtual<LevelIfor_Virtual>();
-
-            string cid = id.ToString();
-            bool isSubMode = self.get_isInSubMode();
-            bool isRichterCastle = self.hero is Richter || cid == "RichterCastle";
-
-
-            #region PrisonStart 统计初始化
-
-            if (!isSubMode && cid == "PrisonStart")
-            {
-                bool hasMods = self.user.activeMods != null && self.user.activeMods.length > 0;
-                self.serverStats = CreateServerStats(self, hasMods);
-            }
-
-            #endregion 
-
-
-            #region 随机皮肤 / 头部
-
-            if (self.data.cgData != null && !isSubMode)
-            {
-                if (self.data.cgData.randomSkin)
-                {
-                    if (cid == "PrisonStart" || (self.data.cgData.randomSkinEveryLevel && levelInfo.group == 0))
-                        RandomizeSkin(self);
-                }
-                if (self.data.cgData.randomHead)
-                {
-                    if (cid == "PrisonStart" || (self.data.cgData.randomHeadEveryLevel && levelInfo.group == 0))
-                        RandomizeHead(self);
-                }
-            }
-            if (levelInfo.group == 0 && self.user.getHeroSkinInfos().consoleCmdId.ToString() == "hotlineMiami")
-                ApplyHotlineMiamiSkin(self);
-
-            #endregion
-
-
-            #region 更新服务器统计
-
-            if (self.serverStats != null)
-            {
-                self.updateServerStatsHistory();
-                self.serverStats.history.push(new virtual_brut_cellsEarned_level_surv_tact_time_
-                {
-                    level = id,
-                    brut = -1,
-                    surv = -1,
-                    tact = -1,
-                    cellsEarned = 0,
-                    time = -1
-                });
-            }
-
-            #endregion
-
-            #region 清理当前关卡和英雄和其他
-
-            if (self.hero != null)
-                self.hero.clean();
-
-            Assets.Class.lib.resetUsed();
-
-            if (!isRichterCastle)
-            {
-                self.data.sync(self, id);
-                if (!isSubMode)
-                    Save.Class.syncGameData(self.user, self.data, self);
-            }
-
-            Boot.Class.tryRender();
-
-
-            if (cid == "RichterCastle" && self.hero is not Richter)
-                self.hero = Hero.Class.create(self, "Richter".ToHaxeString());
-            else if (cid != "RichterCastle" && self.hero is Richter)
-                self.hero = Hero.Class.create(self, "Beheaded".ToHaxeString());
-
-
-            if (self.curLevel != null)
-            {
-                var powers = self.curLevel.powers;
-                for (int i = 0; i < powers.length; i++)
-                {
-                    var power = powers.getDyn(i);
-                    if (power != null && !power?.destroyed)
-                        power!.onDispose();
-                }
-            }
-
-            // 清理音乐缓存
-            var cache = Loader.Class.currentInstance.cache;
-            {
-                var iter = cache.keys();
-                while (iter.hasNext.Invoke())
-                {
-                    var key = iter.next.Invoke();
-                    var res = cache.get(key) as Resource;
-                    if (res != null && res.entry.get_path().substr(0, 5).ToString() == "music"
-                        && Assets.Class.PRELOAD_SUB_MUSICS.indexOf(res.entry.get_path(), null) < 0)
-                    {
-                        cache.remove(key);
-                    }
-                }
-            }
-
-            #endregion
-
-            #region 初始化
-
-            self.user.story.onLoadMainLevel(self, id);
-            AttackData.Class.initPool(200);
-
-            if (self.hero != null)
-            {
-                self.hero.activeSkillsManager.clearSavedItemCooldowns();
-                self.hero.cleanDOT();
-
-                bool resetKillCount = levelInfo.group != 1
-                    && levelInfo.id.ToString() != "BossRushHUB"
-                    && !self.isBossRush();
-                if (resetKillCount)
-                {
-                    self.data.killCount = 0;
-                    self.data.maxKillCount = 0;
-                    if (cid == "PrisonStart" || isSubMode)
-                    {
-                        self.data.gameFlags.remove("FlawlessBiome".ToHaxeString());
-                    }
-                    else
-                    {
-                        self.data.gameFlags.set("FlawlessBiome".ToHaxeString(), 1);
-                    }
-                    HUD.Class.ME.killCount.setIcon(Assets.Class.fx.getTile("iconPerfect".ToHaxeString(), Ref<int>.Null, Ref<double>.Null, Ref<double>.Null, null));
-                    HUD.Class.ME.killCount.setValue(0, Ref<bool>.Null);
-                    HUD.Class.ME.killCount.onResize();
-                }
-                else
-                {
-                    self.user.deathCells = 0;
-                    self.hero.restoreDepletedItems();
-
-                    if (self.curLevel?.map.id.ToString() == "Distillery"
-                        && self.hero.cd.fastCheck.exists(775946240))
-                    {
-                        Achievements.Class.setAchievement(
-                            new EAchievement.FEAT_FINISHLEVEL_NOLAUNCHER(), Ref<bool>.Null);
-                    }
-                }
-
-                // 无伤奖励
-                if (!isSubMode && self.curLevel != null
-                    && self.curLevel.map.id.ToString() != "PrisonStart")
-                {
-                    int? flawless = self.data.gameFlags.get("FlawlessBiome".ToHaxeString());
-                    if (flawless > 0)
-                        self.unlockVortexBadSeedHead();
-                }
-
-                // Greenhouse 蘑菇仔
-                if (self.curLevel?.map.id.ToString() == "Greenhouse"
-                    && (self.hero.inventory.hasItem("SpawnFriendlyHardy".ToHaxeString())
-                        || self.hero.inventory.hasItem("ExplodeFriendlyHardy".ToHaxeString()))
-                    && !self.hero.cd.fastCheck.exists(778043392))
-                {
-                    if (HeadCheckHelper.Class.unlockHead("MushroomBoi".ToHaxeString()))
-                        self.delayer.addS(null, new HlAction(() => { }), 2.0);
-                }
-            }
-
-            // 保存游戏时间
-            ArrayObj savedPowers = null!;
-            if (self.curLevel != null)
-            {
-                self.data.saveLevelGameTime(self.curLevel.map.id);
-                savedPowers = self.curLevel.powers;
-            }
-
-            // Twitch 初始化
-            for (int i = 0; i < self.twitchVotes.length; i++)
-            {
-                var vote = self.twitchVotes.getDyn(i);
-                if (vote != null)
-                    vote.initGfx();
-            }
-
-            // 清理旧子关卡
-            for (int i = self.subLevels.length - 1; i >= 0; i--)
-            {
-                var sub = self.subLevels.getDyn(i);
-                if (sub != null)
-                {
-                    if (sub.root?.parent != null)
-                        sub.root.parent.removeChild(sub.root);
-                    sub.disposeImmediately();
-                }
-            }
-            self.subLevels = (ArrayObj)ArrayUtils.CreateDyn().array;
-            self.curLevel = null;
-
-            #endregion
-
-            #region 加载关卡脚本和资源
-
-            ScriptManager.Class.get_instance().loadLevel(id);
-            Boot.Class.tryRender();
-
-            var customLevelInfo = ScriptManager.Class.get_instance().getCustomLevelInfo(levelInfo);
-
-            #endregion
-
-            #region  游戏修改
-            self.gameplayMods = (self.data.cgData == null || isRichterCastle)
-                ? (ArrayObj)ArrayUtils.CreateDyn().array
-                : self.data.cgData.getGameplayMods();
-
-            if (self.data._twitchMode && self.nextTwitchGameplayMod != null!)
-            {
-                var arr = (ArrayObj)ArrayUtils.CreateDyn().array;
-                arr.push(self.nextTwitchGameplayMod);
-                self.gameplayMods = self.gameplayMods.concat(arr);
-            }
-
-            #endregion
-
-            #region 额外卷轴关卡
-
-            if (cid == "PrisonStart" && !self.isScoring() && self.user.br_getDifficulty() >= 3)
-            {
-                RollBonusQuarterScrollLevels(self);
-            }
-            #endregion
-
-            #region 激励and诅咒关卡
-
-            bool incentivized = false;
-            self.cursedChestsBonusChance = 0;
-            if (!isSubMode)
-            {
-                incentivized = cid == self.data.currentIncentivizedLevel?.ToString();
-                self.chooseNextIncentiveLevel(customLevelInfo);
-
-                if (self.nextCursedLevels.indexOf(id, null) != -1
-                    || dc.ui.Console.Class.ME.flags.exists("allCursedLevels".ToHaxeString()))
-                {
-                    self.data.currentCursedLevel = id;
-                    self.cursedLevelsCount++;
-                    self.cursedChestsBonusChance = 0.1;
-                }
-                if (self.data.currentCursedLevel != id)
-                    self.chooseNextCursedLevels(customLevelInfo);
-            }
-
-            if (cid == "PrisonStart" && !self.isScoring())
-                self.shopTypeChance = 0;
-
-            #endregion
-
-            //拟态魔 
-            HandleShopMimic(self, customLevelInfo);
-
-            #region 生成关卡数据
-
-            int seed = forcedSeed ?? (self.data.gameSeed + self.getUniqId());
-            var levelGen = new LevelGen(Boot.Class.tryRender);
-            var levelMaps = levelGen.generate(self.user, seed, customLevelInfo, Ref<bool>.Null);
-
-            #endregion
-
-            #region 游戏模式决定的怪物生成
-
-            var extraMobs = (ArrayObj)ArrayUtils.CreateDyn().array;
-            if (self.hasGameplayMod(new GameplayMod.ExtraFlyingBois()))
-            {
-                extraMobs.push(new MobGenInfos("BatKamikaze".ToHaxeString(), Ref<double>.In(3)));
-                var flyInfo = new MobGenInfos("Fly".ToHaxeString(), Ref<double>.In(5));
-                flyInfo.setPack(2, 3);
-                extraMobs.push(flyInfo);
-            }
-            if (self.hasGameplayMod(new GameplayMod.InvisibleMobs()))
-                extraMobs.push(new MobGenInfos("Fogger".ToHaxeString(), Ref<double>.In(6)));
-            if (self.hasGameplayMod(new GameplayMod.SpikedMushrooms()))
-                extraMobs.push(new MobGenInfos("Spiker".ToHaxeString(), Ref<double>.In(3)));
-            if (self.hasGameplayMod(new GameplayMod.BulletHell()))
-            {
-                var mageInfo = new MobGenInfos("Mage360".ToHaxeString(), Ref<double>.In(6));
-                mageInfo.setPack(2, null);
-                extraMobs.push(mageInfo);
-            }
-
-            #endregion
-
-            #region  Mob生成
-
-            if (!isSubMode)
-            {
-                int zero = 0;
-                levelGen.genMobs(self.user, levelMaps, extraMobs, Ref<int>.In(zero));
-            }
-            else
-            {
-                GenerateCursedMobs(self, levelGen, levelMaps, customLevelInfo, extraMobs);
-            }
-
-            #endregion
-
-            Boot.Class.tryRender();
-            Boot.Class.tryRender();
-
-            #region 创建 Level
-
-            bool isFirstLevel = true;
-            for (int i = 0; i < levelMaps.length; i++)
-            {
-                var map = (LevelMap)levelMaps.getDyn(i);
-                if (map == null)
-                    isFirstLevel = false;
-
-                var level = new Level(self, map, null, false,
-                    Ref<bool>.In(!isFirstLevel),
-                    cine);
-
-                Boot.Class.tryRender();
-                isFirstLevel = false;
-            }
-
-            #endregion
-
-            #region 子关卡战利品升级 (诅咒模式)
-
-            if (isSubMode)
-            {
-                for (int i = 0; i < self.subLevels.length; i++)
-                {
-                    var sub = self.subLevels.getDyn(i);
-                    if (sub != null)
-                    {
-                        sub.map.lootLevel++;
-                        sub.isCursed = true;
-                    }
-                }
-            }
-
-            #endregion
-
-            #region 战利品生成
-
-            var nonSecretLevels = new List<Level>();
-            for (int i = 0; i < self.subLevels.length; i++)
-            {
-                var level = self.subLevels.getDyn(i);
-                if (level != null && !level?.isSecret)
-                    nonSecretLevels.Add(level);
-            }
-
-            var mapsForLoot = nonSecretLevels.Select(l => l.map).ToArrayObj();
-            var lootGen = new LootGen(self.user, mapsForLoot, seed,
-                self.data.tierDistribution, self.hero,
-                Ref<bool>.In(incentivized), Ref<bool>.Null);
-            Boot.Class.tryRender();
-
-            #endregion
-
-            #region 放置关卡物品
-
-            for (int i = 0; i < self.subLevels.length; i++)
-            {
-                Level level = self.subLevels.getDyn(i);
-                if (level != null)
-                {
-                    level.finalizeCreation();
-                    Boot.Class.tryRender();
-                }
-            }
-
-            #endregion 
-
-            #region 设置玩家唤醒状态
-
-
-            //唤醒状态
-            if (cid == "PrisonStart" && self.isScoring())
-            {
-                if (self.hero != null)
-                    self.hero.awake = false;
-            }
-
-            #endregion
-            #region 激活主关卡
-
-            var mainMap = levelMaps.length > 0 ? (LevelMap)levelMaps.getDyn(0) : null;
-            self.activateSubLevel(mainMap, null, Ref<bool>.In(incentivized), Ref<bool>.Null);
-
-            Boot.Class.tryRender();
-
-            #endregion
-            #region BossRush
-
-            if (self.isBossRush())
-                self.bossRush.onLevelActivated();
-
-            #endregion
-            #region Twitch 延迟效果
-
-            for (int i = 0; i < self.gameplayMods.length; i++)
-            {
-                var mod = self.gameplayMods.getDyn(i);
-                if (mod == self.nextTwitchGameplayMod || cid == "PrisonStart")
-                {
-                    double delay = 1.5 + 2 * i;
-                    self.delayer.addS(null, new HlAction(() => { }), delay);
-                }
-            }
-            #endregion
-
-            #region 判断恶魔城dlc
-
-            if (((HaxeProxyBase)customLevelInfo).GetDynamicMemberNames().Contains("dlc"))
-            {
-                double initialDelay = (customLevelInfo.dlc.ToString() == "Purple" && customLevelInfo.group != 1)
-               ? 3.5 : 1.0;
-                if (!self.isBossRush())
-                {
-#pragma warning disable CS0618
-                    dc.pr.Game.loadMainLevelContext_20414 loadMainLevelContext_2 = new dc.pr.Game.loadMainLevelContext_20414(id, self, customLevelInfo, incentivized, false);
-#pragma warning restore CS0618
-
-                    self.delayer.addS(null,
-                        new HlAction(() => loadMainLevelContext_2.ArrowFunctionEntry_34173()),
-                        initialDelay);
-                }
-            }
-
-            #endregion
-            #region 新游戏弹窗
-
-            if (cid == "PrisonStart" && !self.isScoring())
-            {
-                var story = self.user.story;
-                if (story.counters.get("BankUnlockPopUp".ToHaxeString()) != 1
-                    && (self.getBiomeVisitCount("Throne".ToHaxeString()) > 0
-                        || self.getBiomeVisitCount("QueenArena".ToHaxeString()) > 0))
-                {
-                    self.endGamePopUps.push(new HlAction(() => { }));
-                }
-                if (story.counters.get("BRUnlockPopUp".ToHaxeString()) != 1
-                    && (self.getBiomeVisitCount("Throne".ToHaxeString()) > 0
-                        || self.getBiomeVisitCount("QueenArena".ToHaxeString()) > 0))
-                {
-                    self.endGamePopUps.push(new HlAction(() => { }));
-                }
-                if (story.counters.get("1BCPopUp".ToHaxeString()) == 1)
-                    self.endGamePopUps.push(new HlAction(() => { }));
-
-                for (int i = 0; i < self.endGamePopUps.length; i++)
-                    self.endGamePopUps.getDyn(i)?.Invoke();
-            }
-
-            #endregion
-
-            //竞速模式
-            if (self.isScoring())
-                self.scoring.initScore();
-
-
-            //疫病
-            if (self.infection != null && self.user.br_hasInfection())
-                self.infection.loadMobAtlas();
-
-            //清理
-            Assets.Class.lib.flushCache();
-            Boot.Class.tryRender();
-
-            //恢复powers
-            if (savedPowers != null && self.curLevel != null)
-            {
-                for (int i = 0; i < savedPowers.length; i++)
-                {
-                    var power = savedPowers.getDyn(i);
-                    if (power != null && !power?.destroyed)
-                        self.curLevel.powers.push(power);
-                }
-            }
-
-            #region 自定义持续流血
-            if (self.hasGameplayMod(new GameplayMod.BloodThirst()) && self.curLevel != null)
-            {
-                var heroes = self.curLevel.entitiesByClass.get(60929) as ArrayObj;
-                if (heroes != null)
-                {
-                    for (int i = 0; i < heroes.length; i++)
-                    {
-                        var hero = heroes.getDyn(i) as Hero;
-                        if (hero != null)
-                            hero.cd.fastCheck.set(673185792, 10.0 * hero.cd.baseFps);
-                    }
-                }
-            }
-            #endregion
-
-            //保存
-            if (Main.Class.ME.options.assistMode.continueEnabled)
-                Main.Class.ME.writeSave();
+            PreloadLevels.loadMainLevel(orig, self, cine, id, activate, forcedSeed);
         }
 
-
-        #region 辅助方法
-        private static virtual_bossRune_endKind_forge_hasMods_history_isCustom_meta_runNum_
-            CreateServerStats(dc.pr.Game self, bool hasMods)
+        void IOnGameExit.OnGameExit()
         {
-            var stats = new virtual_bossRune_endKind_forge_hasMods_history_isCustom_meta_runNum_
-            {
-                runNum = self.user.userStats.runs,
-                isCustom = self.data.cgData != null,
-                hasMods = hasMods,
-                bossRune = self.user.br_numActivated(),
-                meta = self.user.itemMeta.getAllMetaUnlocked()
-            };
-
-            var forgeArr = ArrayUtils.CreateFloat();
-            int maxUpgrade = self.user.itemMeta.f_getMaxUpgradeLevel();
-            for (int i = 0; i <= maxUpgrade; i++)
-                forgeArr.push(self.user.itemMeta.f_getRawInvestedRatio(i));
-            stats.forge = forgeArr;
-            stats.history = (ArrayObj)ArrayUtils.CreateDyn().array;
-            return stats;
+            PreloadLevels.ClearCache();
+            Logger.Information("缓存已清除");
         }
 
-        private static void RandomizeSkin(dc.pr.Game self)
-        {
-            var available = self.user.itemMeta.listSkinAvailable();
-            var unlocked = new List<dc.String>();
-            for (int i = 0; i < available.length; i++)
-            {
-                var skin = available.getDyn(i);
-                if (skin != null && self.data.cgData.skinsLocked.indexOf(skin, null) == -1)
-                    unlocked.Add(skin);
-            }
-            if (unlocked.Count > 0)
-            {
-                var chosen = unlocked[Std.Class.random(unlocked.Count)];
-                if (self.hero.initDone)
-                    self.hero.applySkin(chosen);
-                else
-                    self.user.heroSkin = chosen;
-            }
-        }
-
-        private static void RandomizeHead(dc.pr.Game self)
-        {
-            var available = self.user.itemMeta.listHeadsAvailable();
-            var unlocked = new List<dc.String>();
-            for (int i = 0; i < available.length; i++)
-            {
-                var head = available.getDyn(i);
-                if (head != null
-                    && self.data.cgData.headsLocked.indexOf(head, null) == -1
-                    && self.isCompatibleHead(head))
-                    unlocked.Add(head);
-            }
-            if (unlocked.Count > 0)
-                self.user.heroHeadSkin = unlocked[Std.Class.random(unlocked.Count)];
-        }
-
-        private static void ApplyHotlineMiamiSkin(dc.pr.Game self)
-        {
-            var candidates = new List<virtual_colorMap_consoleCmdId_glowData_group_head_incompatibleHeads_item_model_onlyDefaultHead_scarfBlendMode_scarfs_>();
-            for (int i = 0; i < Data.Class.skin.all.get_length(); i++)
-            {
-                var raw = Data.Class.skin.all.getDyn(i);
-                var hSkin = ((HaxeProxyBase)raw).ToVirtual<virtual_colorMap_consoleCmdId_glowData_group_head_incompatibleHeads_item_model_onlyDefaultHead_scarfBlendMode_scarfs_>();
-                if (hSkin.consoleCmdId.ToString() == "hotlineMiami"
-                    && hSkin.item != self.user.getHeroSkinInfos().item)
-                    candidates.Add(hSkin);
-            }
-            if (candidates.Count > 0)
-            {
-                var chosen = candidates[Std.Class.random(candidates.Count)];
-                var skinId = (chosen.item?.ToString()) ?? "PrisonerDefault";
-                self.user.heroSkin = skinId.ToHaxeString();
-            }
-        }
-
-        private static void RollBonusQuarterScrollLevels(dc.pr.Game self)
-        {
-            var candidates = new List<LevelIfor_Virtual>();
-            var allLevels = Data.Class.level.all;
-            for (int i = 0; i < allLevels.get_length(); i++)
-            {
-                dynamic raw = allLevels.getDyn(i);
-                var info = ((HaxeProxyBase)raw).ToVirtual<LevelIfor_Virtual>();
-                if (info.group == 0 && (info.flagsProps.genFlags & (1 << 16)) == 0)
-                    candidates.Add(info);
-            }
-
-            self.bonusQuarterScrollLevels = new StringMap().ToVirtual<virtual_exists_get_iterator_keys_remove_set_toString_>();
-            int bonusCount = 4;
-            for (int i = 0; i < bonusCount && candidates.Count > 0; i++)
-            {
-                int idx = Std.Class.random(candidates.Count);
-                var chosen = candidates[idx];
-                candidates.RemoveAt(idx);
-                self.bonusQuarterScrollLevels.set.Invoke(chosen.id, 1);
-            }
-        }
-
-        private static void HandleShopMimic(dc.pr.Game self,
-            LevelIfor_Virtual customInfo)
-        {
-            bool alreadySpawned = GameUtils.Class.haveVisitedBiome("Bank".ToHaxeString())
-                || Main.Class.ME.options.assistMode.lockMimicSpawn;
-            if (alreadySpawned)
-            {
-                self.shopMimicBiomeDepth = null;
-                self.spawnMimicInNextLevel = false;
-                self.data.gameFlags.set("shopMimicSpawned".ToHaxeString(), 1);
-            }
-            else if (self.shopMimicBiomeDepth != null
-                && customInfo.worldDepth >= self.shopMimicBiomeDepth
-                && !self.get_isInSubMode()
-                && self.user.userStats.hasSeenMob("ShopMimic".ToHaxeString())
-                && self.user.br_getDifficulty() > 0)
-            {
-                self.shopMimicBiomeDepth = null;
-                self.spawnMimicInNextLevel = true;
-                self.data.gameFlags.set("shopMimicSpawned".ToHaxeString(), 1);
-            }
-        }
-
-        private static void GenerateCursedMobs(dc.pr.Game self, LevelGen levelGen, ArrayObj levelMaps,
-            LevelIfor_Virtual customInfo,
-            ArrayObj extraMobs)
-        {
-            var allMobs = Data.Class.mob.all;
-            var cursedMobs = ArrayUtils.CreateDyn();
-            for (int i = 0; i < allMobs.get_length(); i++)
-            {
-                var raw = allMobs.getDyn(i);
-                var mob = ((HaxeProxyBase)raw).ToVirtual<virtual_active_blueprints_canBeElite_colorSwaps_dlc_flesh1_flesh2_genTags_glowInnerColor_glowOuterColor_group_icon_id_index_life_maxPerPlatform_maxPerRoom_metaItems_minPfHeight_minPfSize_mobTags_name_newSkill_particles_pfCost_props_score_skill_volteDelay_weight_>();
-                if (MobTools.Class.hasTag(mob, "Cursed".ToHaxeString()))
-                    cursedMobs.push(raw);
-            }
-
-            int seed = self.data.gameSeed + customInfo.worldDepth;
-            var rand = new Rand(seed);
-            rand.seed = (rand.seed * 16807.0) % 2147483647.0;
-            int add = ((int)rand.seed & 1073741823) % 2;
-            int additionalCount = 9 + add;
-
-            for (int k = 0; k < additionalCount; k++)
-            {
-                var chosen = (HaxeProxyBase)rand.arrayPick(cursedMobs);
-                var safe = chosen.ToVirtual<virtual_active_blueprints_canBeElite_colorSwaps_dlc_flesh1_flesh2_genTags_glowInnerColor_glowOuterColor_group_icon_id_index_life_maxPerPlatform_maxPerRoom_metaItems_minPfHeight_minPfSize_mobTags_name_newSkill_particles_pfCost_props_score_skill_volteDelay_weight_>();
-                bool found = false;
-                for (int m = 0; m < extraMobs.length; m++)
-                {
-                    var mobInfo = (MobGenInfos)extraMobs.getDyn(m);
-                    if (mobInfo.mobId.ToString() == safe.id.ToString())
-                    {
-                        mobInfo.setMaxSpawn((mobInfo.maxSpawn ?? 0) + 1);
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found)
-                {
-                    var newMob = new MobGenInfos(safe.id, Ref<double>.Null);
-                    newMob.setMaxSpawn(1);
-                    extraMobs.push(newMob);
-                }
-            }
-
-            int zero = 0;
-            levelGen.genMobs(self.user, levelMaps, extraMobs, Ref<int>.In(zero));
-        }
-
-        #endregion
     }
 }
