@@ -60,6 +60,12 @@ namespace MoreSettings.GameMechanics.Preload
         {
             return forcedSeed ?? (self.data.gameSeed + self.getUniqId());
         }
+        public static ArrayObj? GetCachedDecoZones(string levelId)
+        {
+            levelCache.TryGetValue(levelId, out var data);
+            return data?.DecoZones;
+        }
+
         private static bool CacheValid() => preloadDone;
 
         public static void ClearCache()
@@ -75,11 +81,11 @@ namespace MoreSettings.GameMechanics.Preload
             return data;
         }
 
-        public static ArrayObj? GetCachedDecoZones(string levelId)
-        {
-            levelCache.TryGetValue(levelId, out var data);
-            return data?.DecoZones;
-        }
+        // public static ArrayObj? GetCachedDecoZones(string levelId)
+        // {
+        //     levelCache.TryGetValue(levelId, out var data);
+        //     return data?.DecoZones;
+        // }
 
         #region 主方法
         public static void loadMainLevel(
@@ -90,6 +96,7 @@ namespace MoreSettings.GameMechanics.Preload
             Ref<bool> activate,
             int? forcedSeed)
         {
+            var swTotal = System.Diagnostics.Stopwatch.StartNew();
             LogUtils.Class.logInformation($"(Chiu Yi)Loading level {id}".ToHaxeString(), new()
             {
                 className = "pr.Game".ToHaxeString(),
@@ -104,10 +111,8 @@ namespace MoreSettings.GameMechanics.Preload
             bool isSubMode = self.get_isInSubMode();
             bool isRichterCastle = self.hero is Richter || cid == "RichterCastle";
 
-            // 1. 初始化（每次必走，不可缓存）
             RunInitPhase(self, id, cid, levelInfo, isSubMode, isRichterCastle);
 
-            // 2. 获取关卡数据（优先缓存）
             int seed = GetNextLevelSeed(self, forcedSeed);
             var cached = CacheValid() ? GetCached(cid) : null;
 
@@ -135,10 +140,10 @@ namespace MoreSettings.GameMechanics.Preload
 
                 if (!isSubMode)
                     levelGen.genMobs(self.user, levelMaps, extraMobs, Ref<int>.In(0));
-                
+
                 else
                     GenerateCursedMobs(self, levelGen, levelMaps, customLevelInfo, extraMobs);
-                
+
 
                 Boot.Class.tryRender();
                 Boot.Class.tryRender();
@@ -171,8 +176,11 @@ namespace MoreSettings.GameMechanics.Preload
             RunPostGenPhase(self, id, cid, levelMaps, seed, customLevelInfo,
                 isSubMode, cine, incentivized: false,
                 skipLootGen: cached?.LootGenDone ?? false);
+
+            swTotal.Stop();
+            Logger.Information($"loadMainLevel 总耗时: {swTotal.ElapsedMilliseconds}ms");
         }
-        
+
         #endregion
     }
 }

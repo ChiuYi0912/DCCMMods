@@ -161,7 +161,7 @@ namespace MoreSettings.GameMechanics.Preload
         private static void GenerateCursedMobs(dc.pr.Game self, LevelGen levelGen, ArrayObj levelMaps,
             LevelIfor_Virtual customInfo, ArrayObj extraMobs)
         {
-            var allMobs    = Data.Class.mob.all;
+            var allMobs = Data.Class.mob.all;
             var cursedMobs = ArrayUtils.CreateDyn();
             for (int i = 0; i < allMobs.get_length(); i++)
             {
@@ -201,6 +201,18 @@ namespace MoreSettings.GameMechanics.Preload
 
             int zero = 0;
             levelGen.genMobs(self.user, levelMaps, extraMobs, Ref<int>.In(zero));
+        }
+
+        public static void FillLevels()
+        {
+            allLevels.Clear();
+            var levelData = Data.Class.level.all;
+            for (int i = 0; i < 85; i++)
+            {
+                var data = levelData.getDyn(i);
+                allLevels.Add(data.id.ToString());
+            }
+            //var levelInfo = ((HaxeProxyBase)levelData).ToVirtual<LevelIfor_Virtual>();
         }
     }
 }

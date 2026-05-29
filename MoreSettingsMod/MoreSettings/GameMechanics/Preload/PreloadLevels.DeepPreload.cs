@@ -1,5 +1,4 @@
 using dc;
-using dc.cine;
 using dc.level;
 using dc.tool;
 using dc.hl.types;
@@ -8,14 +7,13 @@ using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Utilities;
 using LevelIfor_Virtual = Hashlink.Virtuals.virtual_baseLootLevel_biome_bonusTripleScrollAfterBC_cellBonus_dlc_doubleUps_eliteRoomChance_eliteWanderChance_flagsProps_group_icon_id_index_loreDescriptions_mapDepth_minGold_mobDensity_mobs_name_nextLevels_parallax_props_quarterUpsBC3_quarterUpsBC4_specificLoots_specificSubBiome_transitionTo_tripleUps_worldDepth_;
-using CoreLibrary.Core.Extensions;
 using dc.pr;
+using CoreLibrary.Core.Extensions;
 
 namespace MoreSettings.GameMechanics.Preload
 {
     public static partial class PreloadLevels
     {
-        /// <summary>首次进入 PrisonStart 后，预加载allLevels中的关卡</summary>
         public static void PreloadAll(dc.pr.Game self, int seed, string exceptLevelId)
         {
             levelCache.Clear();
@@ -29,7 +27,6 @@ namespace MoreSettings.GameMechanics.Preload
             }
         }
 
-        #region 深度预加载
         private static void PreloadSingleDeep(dc.pr.Game self, string levelId, int seed)
         {
             var id = levelId.ToHaxeString();
@@ -37,24 +34,25 @@ namespace MoreSettings.GameMechanics.Preload
             if (levelData == null) return;
 
             var levelInfo = ((HaxeProxyBase)levelData).ToVirtual<LevelIfor_Virtual>();
-            var levelGen = new LevelGen(Boot.Class.tryRender);
+            var levelGen  = new LevelGen(Boot.Class.tryRender);
             var extraMobs = BuildExtraMobs(self);
 
             ScriptManager.Class.get_instance().loadLevel(id);
             Boot.Class.tryRender();
 
             var customLevelInfo = ScriptManager.Class.get_instance().getCustomLevelInfo(levelInfo);
-            var levelMaps = levelGen.generate(self.user, seed, customLevelInfo, Ref<bool>.Null);
+            var levelMaps       = levelGen.generate(self.user, seed, customLevelInfo, Ref<bool>.Null);
 
             int zero = 0;
             levelGen.genMobs(self.user, levelMaps, extraMobs, Ref<int>.In(zero));
             Boot.Class.tryRender();
 
             var savedSubLevels = self.subLevels;
-            var savedCurLevel = self.curLevel;
+            var savedCurLevel  = self.curLevel;
             self.subLevels = (ArrayObj)ArrayUtils.CreateDyn().array;
-            self.curLevel = null;
+            self.curLevel  = null;
 
+            var platformSnap = SavePlatformOccupations(levelMaps);
             ArrayObj? cachedDecoZones = null;
 
             try
@@ -71,20 +69,20 @@ namespace MoreSettings.GameMechanics.Preload
             }
             finally
             {
+                RestorePlatformOccupations(levelMaps, platformSnap);
                 self.subLevels = savedSubLevels;
-                self.curLevel = savedCurLevel;
+                self.curLevel  = savedCurLevel;
             }
 
             levelCache[levelId] = new CachedLevelData
             {
-                LevelMaps = levelMaps,
-                ExtraMobs = extraMobs,
+                LevelMaps       = levelMaps,
+                ExtraMobs       = extraMobs,
                 CustomLevelInfo = customLevelInfo,
-                LootGenDone = true,
-                DecoZones = cachedDecoZones,
+                LootGenDone     = true,
+                DecoZones       = cachedDecoZones,
             };
         }
-        #endregion
 
         private static void CreateTempLevels(dc.pr.Game self, ArrayObj levelMaps)
         {
@@ -107,6 +105,20 @@ namespace MoreSettings.GameMechanics.Preload
             if (mainDisp == null) return null;
 
             mainDisp.lmap.initDecoFlags();
+            var rooms = mainDisp.lmap.rooms;
+            if (rooms != null)
+            {
+                for (int i = 0; i < rooms.length; i++)
+                {
+                    Room r = rooms.getDyn(i);
+                    if (r != null)
+                    {
+                        try { mainDisp.decorateRoom(r); } catch { }
+                        if ((i + 1) % 20 == 0) Boot.Class.tryRender();
+                    }
+                }
+                Boot.Class.tryRender();
+            }
             return mainDisp.parseDecoZones();
         }
 
@@ -126,6 +138,46 @@ namespace MoreSettings.GameMechanics.Preload
                 self.data.tierDistribution, self.hero,
                 Ref<bool>.In(false), Ref<bool>.Null);
             Boot.Class.tryRender();
+        }
+
+        private static Dictionary<int, (int count, Dictionary<int, dynamic> occ)> SavePlatformOccupations(ArrayObj levelMaps)
+        {
+            var snap = new Dictionary<int, (int, Dictionary<int, dynamic>)>();
+            for (int mi = 0; mi < levelMaps.length; mi++)
+            {
+                var map = (LevelMap)levelMaps.getDyn(mi);
+                if (map?.platforms == null) continue;
+                for (int pi = 0; pi < map.platforms.length; pi++)
+                {
+                    var pf = map.platforms.getDyn(pi) as Platform;
+                    if (pf == null || pf.occupations == null) continue;
+                    snap[pi] = (pf.occupiedCount, pf.occupations.ToDictionary(v => System.Convert.ToInt32(v)));
+                }
+            }
+            return snap;
+        }
+
+        private static void RestorePlatformOccupations(ArrayObj levelMaps, Dictionary<int, (int count, Dictionary<int, dynamic> occ)> snap)
+        {
+            if (snap == null || snap.Count == 0) return;
+            var map = (LevelMap)levelMaps.getDyn(0);
+            if (map?.platforms == null) return;
+
+            foreach (var kv in snap)
+            {
+                if (kv.Key >= map.platforms.length) continue;
+                var pf = map.platforms.getDyn(kv.Key) as Platform;
+                if (pf == null || pf.occupations == null) continue;
+
+                var keys = pf.occupations.keys();
+                while (keys.hasNext())
+                    pf.occupations.set(keys.next(), 0);
+
+                foreach (var okv in kv.Value.occ)
+                    pf.occupations.set(okv.Key, okv.Value);
+
+                pf.occupiedCount = kv.Value.count;
+            }
         }
     }
 }

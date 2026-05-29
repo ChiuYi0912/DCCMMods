@@ -33,13 +33,16 @@ using MoreSettings.Utilities;
 using ModCore.Serialization;
 using ModCore.Storage;
 using ModCore.Events;
+using dc.en.inter.exit;
+using CoreLibrary.Core.Utilities;
 
 namespace MoreSettings.Modules
 {
     public class LevelModule : BaseModule,
     IOnGameExit,
     IHxbitSerializable,
-    IEventReceiver
+    IEventReceiver,
+    IOnAfterLoadingCDB
     {
         public override Enums.MenuCategory Type => Enums.MenuCategory.Level;
         public override string Description => GetText.Instance.GetString("LevelModule");
@@ -380,9 +383,8 @@ namespace MoreSettings.Modules
 
             if (!config.NofadeIn || linkId == null)
             {
-                multFade = 0;
                 Main.Class.ME.fadeIn(null, transitionData, Ref<double>.In(multFade),
-                    onEnd: new HlAction(() => { arg1.loadNewLevel(); }));
+                onEnd: new HlAction(() => { arg1.loadNewLevel(); }));
             }
             else
                 arg1.loadNewLevel();
@@ -397,9 +399,8 @@ namespace MoreSettings.Modules
         {
             if (self.heroPosAfterBossRuneReload != null)
             {
-                bool activate = true;
                 int? seed = dc.pr.Game.Class.ME.curLevel.map?.seed;
-                dc.pr.Game.Class.ME.loadMainLevel(self, self.mainId, Ref<bool>.In(activate), seed);
+                dc.pr.Game.Class.ME.loadMainLevel(self, self.mainId, Ref<bool>.In(true), seed);
             }
             else if (self.mainId != null)
             {
@@ -407,16 +408,15 @@ namespace MoreSettings.Modules
             }
             else
             {
-                bool activate = true;
                 dc.pr.Game.Class.ME.activateSubLevel(self.map, self.linkId,
-                    Ref<bool>.In(activate), Ref<bool>.In(self.playAfterZDoorCine));
+                    Ref<bool>.In(true), Ref<bool>.In(self.playAfterZDoorCine));
             }
 
             if (self.get_isADlcPLevel())
                 self.onEnteredLevel = new HlAction(() =>
                     new PurpleLevelIntro(self.mainId, dc.pr.Game.Class.ME.hero));
 
-            //Main.Class.ME.fadeOut(Ref<double>.In(0));
+            //Main.Class.ME.fadeOut(Ref<double>.In(self.multFade));
             self.afterTransitionCine();
             if (self.walk == null && self.jump == null && self.climb == null && self.onEnteredLevel != null)
                 self.onEnteredLevel.Invoke();
@@ -466,5 +466,9 @@ namespace MoreSettings.Modules
             Logger.Information("缓存已清除");
         }
 
+        void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb)
+        {
+            PreloadLevels.FillLevels();
+        }
     }
 }
