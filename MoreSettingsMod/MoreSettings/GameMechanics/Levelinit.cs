@@ -20,33 +20,26 @@ using ModCore.Utilities;
 using dc.tool.quadTree;
 using Hashlink.Virtuals;
 using ModCore.Events;
-using LightOpt.OptLayers;
 using CoreLibrary.Core.Interfaces;
 using Serilog.Core;
 using CoreLibrary.Core.Utilities;
 
 
-namespace LightOpt;
+namespace MoreSettings.GameMechanics;
 
 public class LevelManager :
         IOnHookInitialize,
         IEventReceiver
 
 {
-    public readonly Serilog.ILogger GetSerilog;
-    public LevelManager(LightOptEntry entry)
+    public LevelManager()
     {
-        GetSerilog = entry.Logger;
-        GetSerilog.LogInformation("Level Manager initialisation commences");
         EventSystem.AddReceiver(this);
     }
 
     void IOnHookInitialize.HookInitialize()
     {
-        using (GetSerilog.LogMethodScope(nameof(IOnHookInitialize.HookInitialize)))
-        {
-            Hook_Level.init += Hook_Level_init;
-        }
+        Hook_Level.init += Hook_Level_init;
     }
 
 
@@ -200,7 +193,7 @@ public class LevelManager :
             hasFlag = CheckFlag(flagsProps.visualFlags, visualFlagIndex.Value);
         }
 
-        self.scroller = new LightOptLayers(self, Ref<bool>.From(ref hasFlag));
+        self.scroller = new LightedLayers(self, Ref<bool>.From(ref hasFlag));
 
         int backgroundColorAlpha = (int)255.0 << 24;
         int backgroundColor = backgroundColorAlpha | 11265535;

@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "RandomLevelMod": {
-      "commandName": "Project",
-      "nativeDebugging": true
-    }
-  }
-}

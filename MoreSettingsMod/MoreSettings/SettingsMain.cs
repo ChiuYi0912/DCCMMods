@@ -62,7 +62,7 @@ IOnAfterLoadingCDB
       moduleManager = new ModuleManager(this);
       moduleManager.RegisterModule(new GameplayModule());
       moduleManager.RegisterModule(new WeaponSettingModule());
-      moduleManager.RegisterModule(new LevelModule());
+      //moduleManager.RegisterModule(new LevelModule());
       moduleManager.RegisterModule(new HasUiSettingsModule());
       moduleManager.RegisterModule(new SkinSettingsModule());
       moduleManager.RegisterModule(new ScarfSettingModule());
