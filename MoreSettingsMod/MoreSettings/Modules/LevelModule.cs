@@ -59,13 +59,24 @@ namespace MoreSettings.Modules
         public override void BuildMenu(dc.ui.Options options, string Separator)
         {
             base.BuildMenu(options, Separator);
+
+            if (!config.Enabled) return;
+
             menuHelper.AddConfigToggle(
                 GetText.Instance.GetString("NoFadeIn"),
                 GetText.Instance.GetString("NofadeInDesc"),
                 () => config.NofadeIn,
                 v => config.NofadeIn = v,
                 scrollerFlow);
-            if (!config.Enabled) return;
+
+            menuHelper.AddConfigToggle(
+                GetString("故障关卡特效"),
+                GetString(""),
+                () => config.Faulteffects,
+                v => config.Faulteffects = v,
+                scrollerFlow
+            );
+
         }
 
         #region Hooks
@@ -1041,7 +1052,7 @@ namespace MoreSettings.Modules
             {
                 int? kicked = self.user.story.counters.exists("kickedBackByBerserk".ToHaxeString())
                     ? self.user.story.counters.get("kickedBackByBerserk".ToHaxeString()) : 0;
-                if (kicked == 1)
+                if (kicked == 1 || config.Faulteffects)
                 {
                     var getter = new HlFunc<double>(() => self.curLevel!.scroller.glitchAmount);
                     var setter = new HlAction<double>(v => self.curLevel!.scroller.glitchAmount = v);

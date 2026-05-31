@@ -80,7 +80,8 @@ namespace MoreSettings.Base.Modules
         public virtual void UnregisterHooks() { }
 
 
-        public dc.String GetString(string str) => GetText.Instance.GetString(str).ToHaxeString();
+        public string GetString(string str) => GetText.Instance.GetString(str);
+        public dc.String GetDcString(string str) => GetString(str).ToHaxeString();
         public virtual void SaveConfig()
         {
             SettingsMain.ModConfig.Save();

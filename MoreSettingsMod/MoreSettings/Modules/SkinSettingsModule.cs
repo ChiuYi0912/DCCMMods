@@ -1,5 +1,4 @@
 using CoreLibrary.Core.Extensions;
-using CoreLibrary.Utilities.CustomPopDamage;
 using dc;
 using dc.en;
 using dc.en.inter;
@@ -7,6 +6,8 @@ using ModCore.Mods;
 using ModCore.Modules;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
+using MoreSettings.GameMechanics.cine;
+using MoreSettings.GameMechanics.CustomPopDamage;
 
 namespace MoreSettings.Modules
 {
@@ -15,18 +16,21 @@ namespace MoreSettings.Modules
         public override string Description => GetText.Instance.GetString("ModuleDesc_Skin");
 
         public override SkinConfig config => (SkinConfig)base.config;
-
         public override Enums.MenuCategory Type => Enums.MenuCategory.Skin;
+        public EntityPopDamage entityPop = default!;
+        public PopConfig popConfig = default!;
 
         public override void Initialize(ModBase mainMod)
         {
-            base.Initialize(mainMod);
+            entityPop = new EntityPopDamage();
+            popConfig = entityPop.Config.Value;
             config = SettingsMain.ConfigValue.Skin;
+            base.Initialize(mainMod);
         }
 
         public override void BuildMenu(dc.ui.Options options, string Separator)
         {
-            var PopmenuHelper = new CoreLibrary.Core.Utilities.OptionsMenuHelper<PopConfig>(options, SettingsMain.entityPop.Config);
+            var PopmenuHelper = new CoreLibrary.Core.Utilities.OptionsMenuHelper<PopConfig>(options, entityPop.Config);
             base.BuildMenu(options, Separator);
             if (!config.Enabled)
                 return;
@@ -34,32 +38,45 @@ namespace MoreSettings.Modules
             var widget = PopmenuHelper.AddConfigToggle(
                  GetText.Instance.GetString("GenuinePopDamage"),
                  "",
-                 () => SettingsMain.entityPop.Config.Value.GenuinePopDamage,
-                 v => SettingsMain.entityPop.Config.Value.GenuinePopDamage = v,
+                 () => popConfig.GenuinePopDamage,
+                 v => popConfig.GenuinePopDamage = v,
                  scrollerFlow
              );
             PopmenuHelper.CenterToggleWidget(widget, options, scrollerFlow);
+
+            var nopopwidget =menuHelper.AddConfigToggle(
+                GetText.Instance.GetString("NoPopTextDesc"),
+                "",
+                () => config.HasNoPopText,
+                v =>
+                {
+                    HasUiSettingsModule.SetConsoleFlag(v, "NoPopText");
+                    config.HasNoPopText = v;
+                },
+                scrollerFlow
+            );
+            PopmenuHelper.CenterToggleWidget(nopopwidget, options,scrollerFlow);
 
 
             PopmenuHelper.AddConfigToggle(
                 GetText.Instance.GetString("StsCritEffect"),
                 GetText.Instance.GetString("StsCritEffectDesc"),
-                () => SettingsMain.entityPop.Config.Value.StsPopDamage,
+                () => popConfig.StsPopDamage,
                 v =>
                 {
-                    SettingsMain.entityPop.Config.Value.StsPopDamage = v;
+                    popConfig.StsPopDamage = v;
                     config.StsSkin = v;
                     options.setSection(options.curSection);
                 },
                 scrollerFlow
             );
 
-            if (SettingsMain.entityPop.Config.Value.StsPopDamage)
+            if (popConfig.StsPopDamage)
             {
                 PopmenuHelper.AddConfigSlider(
                 GetText.Instance.GetString("CritEffectDuration"),
-                () => SettingsMain.entityPop.Config.Value.StsSpeedMultiplier,
-                v => SettingsMain.entityPop.Config.Value.StsSpeedMultiplier = v,
+                () => popConfig.StsSpeedMultiplier,
+                v => popConfig.StsSpeedMultiplier = v,
                 step: 0.1,
                 minValue: 0,
                 maxValue: 10,
@@ -67,34 +84,60 @@ namespace MoreSettings.Modules
                 );
             }
 
-
-
-
             PopmenuHelper.AddConfigToggle(
-                GetText.Instance.GetString("HotlineCritEffect"),
-                GetText.Instance.GetString("HotlineCritEffectDesc"),
-                () => SettingsMain.entityPop.Config.Value.HotlinePopDamage,
+                GetText.Instance.GetString("GradientCritEffect"),
+                GetText.Instance.GetString("GradientCritEffectDesc"),
+                () => popConfig.RevealPop,
                 v =>
                 {
-                    SettingsMain.entityPop.Config.Value.HotlinePopDamage = v;
-                    config.HotlineSkin = v;
+                    popConfig.RevealPop = v;
                     options.setSection(options.curSection);
                 },
                 scrollerFlow
             );
 
-            if (SettingsMain.entityPop.Config.Value.HotlinePopDamage)
+            if (popConfig.RevealPop)
             {
                 PopmenuHelper.AddConfigSlider(
                   GetText.Instance.GetString("CritEffectDuration"),
-                  () => SettingsMain.entityPop.Config.Value.HotlineSpeedMultiplier,
-                  v => SettingsMain.entityPop.Config.Value.HotlineSpeedMultiplier = v,
+                  () => popConfig.RevealSpeedMultiplier,
+                  v => popConfig.RevealSpeedMultiplier = v,
                   step: 0.1,
                   minValue: 0,
                   maxValue: 10,
                   scrollerFlow: scrollerFlow
               );
             }
+
+
+            PopmenuHelper.AddConfigToggle(
+                GetText.Instance.GetString("HotlineCritEffect"),
+                GetText.Instance.GetString("HotlineCritEffectDesc"),
+                () => popConfig.HotlinePopDamage,
+                v =>
+                {
+                    popConfig.HotlinePopDamage = v;
+                    config.HotlineSkin = v;
+                    options.setSection(options.curSection);
+                },
+                scrollerFlow
+            );
+
+            if (popConfig.HotlinePopDamage)
+            {
+                PopmenuHelper.AddConfigSlider(
+                  GetText.Instance.GetString("CritEffectDuration"),
+                  () => popConfig.HotlineSpeedMultiplier,
+                  v => popConfig.HotlineSpeedMultiplier = v,
+                  step: 0.1,
+                  minValue: 0,
+                  maxValue: 10,
+                  scrollerFlow: scrollerFlow
+              );
+            }
+
+
+            
 
             menuHelper.AddConfigToggle(
                 GetText.Instance.GetString("RiskOfRainTeleport"),
@@ -111,6 +154,8 @@ namespace MoreSettings.Modules
                 v => config.KatanaSkin = v,
                 scrollerFlow: scrollerFlow
                 );
+
+            
         }
 
 
@@ -144,8 +189,8 @@ namespace MoreSettings.Modules
         {
             if (to == null) return;
             if (hero.hasSkin(null, "RiskOfRain".ToHaxeString()) || config.RiskOfRainSkin)
-            { _ = new CoreLibrary.Basedc.Cine.FlashTeleport(hero, self, to, !SettingsMain.ConfigValue.Viewport.TeleportImmediate); return; }
-            _ = new CoreLibrary.Basedc.Cine.Teleportation(hero, self, to, !SettingsMain.ConfigValue.Viewport.TeleportImmediate);
+            { _ = new TeleportationRiskOfRain(hero, self, to, !SettingsMain.ConfigValue.Viewport.TeleportImmediate); return; }
+            _ = new Teleportation(hero, self, to, !SettingsMain.ConfigValue.Viewport.TeleportImmediate);
         }
 
     }

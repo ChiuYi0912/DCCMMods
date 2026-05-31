@@ -54,7 +54,6 @@ namespace MoreSettings.Configuration
         public bool HasBottomBar { get; set; } = false;
         public bool NoVignette { get; set; } = false;
         public bool HaslightTip { get; set; } = false;
-        public bool HasNoPopText { get; set; } = false;
         public bool HasNoStatusIcon { get; set; } = false;
         public bool NowTimeVisible { get; set; } = false;
         public double PlayerCameraSpeed { get; set; }
@@ -203,6 +202,7 @@ namespace MoreSettings.Configuration
     public class SkinConfig : SettingConfigBase
     {
         public bool SkinEnabled { get; set; } = false;
+        public bool HasNoPopText { get; set; } = false;
         public bool Skinkatana { get; set; } = false;
         public bool HotlineSkin { get; set; } = false;
         public bool StsSkin { get; set; } = false;
@@ -261,5 +261,7 @@ namespace MoreSettings.Configuration
     public class LevelConfig : SettingConfigBase
     {
         public bool NofadeIn { get; set; } = false;
+
+        public bool Faulteffects { get; set; } = false;
     }
 }

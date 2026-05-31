@@ -11,10 +11,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\JqFormatter\JqFormatter\JqFormatter.csproj" />
-  </ItemGroup>
-
   
   <ItemGroup>
   <Reference Include="ModCore.Native">
@@ -30,7 +26,6 @@
     </Target>
 
   <ItemGroup>
-    <ModDependency Include="JqFormatter" />
     <Reference Include="DebugConsole" />
     <ModDependency Include="DebugConsole" />
   </ItemGroup>

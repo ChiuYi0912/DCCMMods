@@ -9,9 +9,6 @@ namespace CoreLibrary.Core.Utilities
     {
         public static void LogInformation(this ILogger logger, string message, string? module = null)
         {
-            ValidationHelper.NotNull(logger, nameof(logger));
-            ValidationHelper.NotNullOrWhiteSpace(message, nameof(message));
-
             var formattedMessage = FormatLogMessage(message, module, LogLevel.Information);
             logger.Information(formattedMessage);
         }
@@ -21,18 +18,12 @@ namespace CoreLibrary.Core.Utilities
             if (!CoreCfig.DebugMode)
                 return;
 
-            ValidationHelper.NotNull(logger, nameof(logger));
-            ValidationHelper.NotNullOrWhiteSpace(message, nameof(message));
-
             var formattedMessage = FormatLogMessage(message, module, LogLevel.Success);
             logger.Information(formattedMessage);
         }
 
         public static void LogWarning(this ILogger logger, string message, string? module = null)
         {
-            ValidationHelper.NotNull(logger, nameof(logger));
-            ValidationHelper.NotNullOrWhiteSpace(message, nameof(message));
-
             var formattedMessage = FormatLogMessage(message, module, LogLevel.Warning);
             logger.Warning(formattedMessage);
         }
@@ -41,9 +32,6 @@ namespace CoreLibrary.Core.Utilities
         {
             if (!CoreCfig.DebugMode)
                 return;
-
-            ValidationHelper.NotNull(logger, nameof(logger));
-            ValidationHelper.NotNullOrWhiteSpace(message, nameof(message));
 
             var formattedMessage = FormatLogMessage(message, module, LogLevel.Error);
 
@@ -62,9 +50,6 @@ namespace CoreLibrary.Core.Utilities
             if (!CoreCfig.DebugMode)
                 return;
 
-            ValidationHelper.NotNull(logger, nameof(logger));
-            ValidationHelper.NotNullOrWhiteSpace(message, nameof(message));
-
             var formattedMessage = FormatLogMessage(message, module, LogLevel.Debug);
             logger.Debug(formattedMessage);
         }
@@ -74,25 +59,17 @@ namespace CoreLibrary.Core.Utilities
             if (!CoreCfig.DebugMode)
                 return;
 
-            ValidationHelper.NotNull(logger, nameof(logger));
-            ValidationHelper.NotNullOrWhiteSpace(message, nameof(message));
-
             var formattedMessage = FormatLogMessage(message, module, LogLevel.Verbose);
             logger.Verbose(formattedMessage);
         }
 
         public static IDisposable LogPerformance(this ILogger logger, string operationName, string? module = null)
         {
-            ValidationHelper.NotNull(logger, nameof(logger));
-            ValidationHelper.NotNullOrWhiteSpace(operationName, nameof(operationName));
-
             return new PerformanceLogger(logger, operationName, module);
         }
 
         public static IDisposable LogMethodScope(this ILogger logger, string methodName, string? module = null)
         {
-            ValidationHelper.NotNull(logger, nameof(logger));
-            ValidationHelper.NotNullOrWhiteSpace(methodName, nameof(methodName));
 
             if (!CoreCfig.DebugMode)
                 return new DisposableAction(() => { });

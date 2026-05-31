@@ -22,17 +22,14 @@ namespace MoreSettings.Modules
     {
         public override string Description => GetText.Instance.GetString("ModuleDesc_UI");
 
-        public ShaderUtilities shaderUtilities = null!;
         private dc.ui.Text TimeText = null!;
         public override UIConfig config => (UIConfig)base.config;
-
         public override Enums.MenuCategory Type => Enums.MenuCategory.UI;
 
         public override void Initialize(ModBase mainMod)
         {
             base.Initialize(mainMod);
             config = SettingsMain.ConfigValue.UI;
-            shaderUtilities = new ShaderUtilities();
         }
 
         public override void RegisterHooks()
@@ -40,7 +37,6 @@ namespace MoreSettings.Modules
             base.RegisterHooks();
             dc.pr.Hook_Game.init += Hook_Game_init;
             Hook__GameCinematic.__constructor__ += Hook__GameCinematic___constructor__;
-            Hook_Entity.popDamage += Hook_Entity_popDamage;
 
 
             Hook__HUD.__constructor__ += Hook_HUD___constructor__;
@@ -64,8 +60,6 @@ namespace MoreSettings.Modules
         {
             dc.pr.Hook_Game.init -= Hook_Game_init;
             Hook__GameCinematic.__constructor__ -= Hook__GameCinematic___constructor__;
-            Hook_Entity.popDamage -= Hook_Entity_popDamage;
-
 
             Hook__HUD.__constructor__ -= Hook_HUD___constructor__;
             Hook_HUD.onResize -= Hook_HUD_onResize;
@@ -142,19 +136,6 @@ namespace MoreSettings.Modules
                 {
                     SetConsoleFlag(v, "lightTip");
                     config.HaslightTip = v;
-                },
-                scrollerFlow
-            );
-
-
-            menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("NoPopText"),
-                GetText.Instance.GetString("NoPopTextDesc"),
-                () => config.HasNoPopText,
-                v =>
-                {
-                    SetConsoleFlag(v, "NoPopText");
-                    config.HasNoPopText = v;
                 },
                 scrollerFlow
             );
@@ -265,7 +246,7 @@ namespace MoreSettings.Modules
             orig(self);
             SetConsoleFlag(config.HasBottomBar, "noVignette");
             SetConsoleFlag(config.HaslightTip, "lightTip");
-            SetConsoleFlag(config.HasNoPopText, "NoPopText");
+            SetConsoleFlag(SettingsMain.ConfigValue.Skin.HasNoPopText, "NoPopText");
         }
 
         private void Hook__GameCinematic___constructor__(Hook__GameCinematic.orig___constructor__ orig, GameCinematic arg1)
@@ -465,7 +446,7 @@ namespace MoreSettings.Modules
         };
 
 
-        public void SetConsoleFlag(bool isSet, string flagName)
+        public static void SetConsoleFlag(bool isSet, string flagName)
         {
             if (isSet)
                 dc.ui.Console.Class.ME.flags.set(flagName.ToHaxeString(), null);

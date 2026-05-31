@@ -19,7 +19,6 @@ namespace CoreLibrary.Core.Extensions
 
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer = null)
         {
-            ValidationHelper.NotNull(source, nameof(source));
             return comparer == null ? new HashSet<T>(source) : new HashSet<T>(source, comparer);
         }
 
@@ -28,16 +27,11 @@ namespace CoreLibrary.Core.Extensions
 
         public static ConcurrentDictionary<string, dynamic> GetCachedDictionaryParallel(this ArrayObj arrayObj)
         {
-            ValidationHelper.NotNull(arrayObj, nameof(arrayObj));
-
             return ParallelCacheTable.GetValue(arrayObj, BuildIdDictionaryParallel);
         }
 
         public static dynamic GetByIdParallel(this ArrayObj arrayObj, string id)
         {
-            ValidationHelper.NotNull(arrayObj, nameof(arrayObj));
-            ValidationHelper.NotNull(id, nameof(id));
-
             var dict = arrayObj.GetCachedDictionaryParallel();
             dict.TryGetValue(id, out var result);
             return result!;
@@ -62,8 +56,6 @@ namespace CoreLibrary.Core.Extensions
 
         public static IEnumerable<dynamic> AsEnumerable(this ArrayObj arrayObj)
         {
-            ValidationHelper.NotNull(arrayObj, nameof(arrayObj));
-
             for (int i = 0; i < arrayObj.length; i++)
             {
                 if (arrayObj.getDyn(i) != null)
@@ -72,7 +64,6 @@ namespace CoreLibrary.Core.Extensions
         }
         public static async IAsyncEnumerable<dynamic> AsEnumerableAsync(this ArrayObj arrayObj, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            ValidationHelper.NotNull(arrayObj, nameof(arrayObj));
             await Task.Yield();
             for (int i = 0; i < arrayObj.length; i++)
             {
@@ -83,12 +74,8 @@ namespace CoreLibrary.Core.Extensions
         }
 
 
-
         public static List<T> ToList<T>(this ArrayObj arrayObj, Func<dynamic, T> converter)
         {
-            ValidationHelper.NotNull(arrayObj, nameof(arrayObj));
-            ValidationHelper.NotNull(converter, nameof(converter));
-
             var list = new List<T>(arrayObj.length);
             for (int i = 0; i < arrayObj.length; i++)
             {
@@ -104,8 +91,6 @@ namespace CoreLibrary.Core.Extensions
 
         public static ArrayObj ToArrayObj<T>(this IEnumerable<T> source)
         {
-            ValidationHelper.NotNull(source, nameof(source));
-
             var arrayObj = (ArrayObj)ArrayUtils.CreateDyn().array;
 
             if (source is ICollection<T> collection)
@@ -134,35 +119,8 @@ namespace CoreLibrary.Core.Extensions
         }
 
 
-
-        public static dynamic? GetSafe(this ArrayObj arrayObj, int index)
-        {
-            if (arrayObj == null || index < 0 || index >= arrayObj.length)
-            {
-                ValidationHelper.NotNull(arrayObj!, $"{nameof(arrayObj)}");
-                return null;
-            }
-            return arrayObj.getDyn(index);
-        }
-
-
-        public static bool IsNullOrEmpty(this ArrayObj arrayObj)
-        {
-            return arrayObj == null || arrayObj.length == 0;
-        }
-
-
-        public static bool HasItems(this ArrayObj arrayObj)
-        {
-            return arrayObj != null && arrayObj.length > 0;
-        }
-
-
         public static Dictionary<int, T> ToDictionary<T>(this IntMap intMap, Func<dynamic, T> valueConverter)
         {
-            ValidationHelper.NotNull(intMap, nameof(intMap));
-            ValidationHelper.NotNull(valueConverter, nameof(valueConverter));
-
             var dictionary = new Dictionary<int, T>();
             var keys = intMap.keys();
             while (keys.hasNext())
@@ -183,9 +141,6 @@ namespace CoreLibrary.Core.Extensions
 
         public static IntMap ToIntMap<T>(this Dictionary<int, T> dictionary, Func<T, dynamic> valueConverter)
         {
-            ValidationHelper.NotNull(dictionary, nameof(dictionary));
-            ValidationHelper.NotNull(valueConverter, nameof(valueConverter));
-
             var intMap = new IntMap();
             foreach (var kvp in dictionary)
             {

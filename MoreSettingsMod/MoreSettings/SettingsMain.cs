@@ -4,8 +4,6 @@ using System.Security.Cryptography.X509Certificates;
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Core.Interfaces;
 using CoreLibrary.Core.Utilities;
-using CoreLibrary.Utilities.CustomNPC;
-using CoreLibrary.Utilities.CustomPopDamage;
 using dc;
 using dc.en;
 using dc.h3d;
@@ -42,7 +40,6 @@ IOnAfterLoadingCDB
 
    public static SettingsMain Instance => instance;
    public static ModuleManager ModuleManager => moduleManager;
-   public static EntityPopDamage entityPop = default!;
    public static Config<MainConfig> ModConfig => modConfig;
    public static MainConfig ConfigValue => modConfig.Value;
 
@@ -62,7 +59,7 @@ IOnAfterLoadingCDB
       moduleManager = new ModuleManager(this);
       moduleManager.RegisterModule(new GameplayModule());
       moduleManager.RegisterModule(new WeaponSettingModule());
-      //moduleManager.RegisterModule(new LevelModule());
+      moduleManager.RegisterModule(new LevelModule());
       moduleManager.RegisterModule(new HasUiSettingsModule());
       moduleManager.RegisterModule(new SkinSettingsModule());
       moduleManager.RegisterModule(new ScarfSettingModule());
@@ -70,15 +67,11 @@ IOnAfterLoadingCDB
       moduleManager.RegisterModule(new KeyBindingModule());
 
       modMenu = new ModMenu(this);
-      entityPop = new EntityPopDamage(this);
 
       EventSystem.BroadcastEvent<IOnHookInitialize>();
 
       Hook_Boot.mainLoop += Hook_Boot_loop;
    }
-
-
-
 
 
    private void Hook_Boot_loop(Hook_Boot.orig_mainLoop orig, Boot self)
