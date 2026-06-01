@@ -45,15 +45,6 @@ namespace MoreSettings.Modules
         {
             base.BuildMenu(options, Separator);
 
-            var widget = menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("SmoothTeleport"),
-                 GetText.Instance.GetString(""),
-                () => config.TeleportImmediate,
-                v => config.TeleportImmediate = v,
-                scrollerFlow: options.scrollerFlow
-                );
-            menuHelper.CenterToggleWidget(widget, options, options.scrollerFlow);
-
             if (!config.Enabled)
                 return;
 

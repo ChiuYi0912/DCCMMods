@@ -29,7 +29,6 @@ namespace DebugMod.Commands.activateDebug
                 writer.WriteLine("无法找到英雄实例");
                 return;
             }
-            ValidationHelper.NotNull(hero, nameof(hero));
             Entities = Game.Instance.HeroInstance!._level.RemoveAllMobsSafe();
 
         }
@@ -42,7 +41,6 @@ namespace DebugMod.Commands.activateDebug
                 writer.WriteLine("没有可显示的实体");
                 return;
             }
-            Entities = (List<Entity>)ValidationHelper.NoNullElements(Entities, nameof(Entities));
             ArrayObj obj = Entities.ToArrayObj();
             await foreach (var entity in obj.AsEnumerableAsync())
             {
@@ -59,7 +57,6 @@ namespace DebugMod.Commands.activateDebug
                 writer.WriteLine("无法找到英雄实例");
                 return;
             }
-            ValidationHelper.NotNull(hero, nameof(hero));
             await hero._level.ShowTheTransmission();
         }
 
@@ -67,7 +64,6 @@ namespace DebugMod.Commands.activateDebug
         public static void AddListMobs(TextWriter writer)
         {
             var level = Game.Instance.HeroInstance!._level;
-            ValidationHelper.NotNull(level, nameof(level));
             if (Entities == null)
             {
                 writer.WriteLine("列表不存在实体");

@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreLibrary.Core.Extensions;
+using dc;
 using dc.h2d;
 using dc.hl.types;
 using dc.libs.heaps.slib;
 using dc.ui;
+using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
+using ModCore.Modules;
 using ModCore.Storage;
 
 namespace CoreLibrary.Core.Utilities
 {
     public class OptionsMenuHelper<T> where T : new()
     {
-        private readonly Options opt;
+        private readonly dc.ui.Options opt;
         private readonly Config<T> config;
-
-        public OptionsMenuHelper(Options options, Config<T> config)
+        public dc.String GetHaxeString(string str) => GetText.Instance.GetString(str).ToHaxeString();
+        public OptionsMenuHelper(dc.ui.Options options, Config<T> config)
         {
             this.opt = options;
             this.config = config;
@@ -199,20 +202,20 @@ namespace CoreLibrary.Core.Utilities
                 });
 
                 var widget = opt.addRadioWidget(
-                    items[i].title.ToHaxeString(),
-                    items[i].sub.ToHaxeString(),
+                    GetHaxeString(items[i].title),
+                    GetHaxeString(items[i].sub),
                     onVal,
                     Ref<bool>.In(isSelected),
                     parentFlow
                 );
                 if (isSelected)
                     items[i].AfterAddButton();
-                    
+
                 widgets.Add(widget);
             }
         }
 
-        public void CenterToggleWidget(Flow widget, Options options, Flow scrollerFlow)
+        public void CenterToggleWidget(Flow widget, dc.ui.Options options, Flow scrollerFlow)
         {
             var props = scrollerFlow.getProperties(widget);
             props.horizontalAlign = new FlowAlign.Middle();
@@ -241,6 +244,55 @@ namespace CoreLibrary.Core.Utilities
                     textFlow.scaleX = textFlow.scaleY = textFlow.scaleY / 2;
                 }
             }
+        }
+
+        public void AddSubSeparator(string mainStr, Flow parentFlow)
+        {
+            if (parentFlow == null)
+                return;
+
+            double pixelScale = opt.get_pixelScale.Invoke();
+
+            if (mainStr != null)
+            {
+                dc.ui.Text text = Assets.Class.makeText(mainStr.ToHaxeString(), null, true, parentFlow);
+                text.set_textAlign(new Align.Center());
+                float stageWidth = dc.libs.Process.Class.CUSTOM_STAGE_WIDTH;
+                float availableWidth = stageWidth > 0 ? stageWidth : dc.hxd.Window.Class.getInstance().get_width();
+                text.maxWidthWanted = availableWidth;
+                text.onResize();
+                parentFlow.getProperties(text).paddingTop = (int)(pixelScale * 10.0);
+            }
+
+            HSprite hsprite = new HSprite(Assets.Class.ui, "walterWhite".ToHaxeString(), Ref<int>.In(0), null);
+            parentFlow.addChild(hsprite);
+            hsprite.pivot.centerFactorX = 0.0;
+            hsprite.pivot.centerFactorY = 0.0;
+            hsprite.pivot.usingFactor = true;
+            hsprite.pivot.isUndefined = false;
+            parentFlow.getProperties(hsprite).horizontalAlign = new FlowAlign.Middle();
+
+
+            string alphaKey = "co_alphaLine";
+            var data = Data.Class.gui.byId.get(alphaKey.ToHaxeString());
+            double? alphaValue = ((HaxeProxyBase)data).ToVirtual<virtual_biome_color_comment_id_v0_>().v0;
+            if (alphaValue == null)
+                throw new Exception("Castle - GUI : there is no float value for " + alphaKey);
+            hsprite.alpha = alphaValue.Value;
+
+            int paddingLeft = (int)(pixelScale * 60.0);
+            parentFlow.getProperties(hsprite).paddingLeft = paddingLeft;
+
+            int paddingTop = (int)(pixelScale * (mainStr != null ? -5.0 : 5.0));
+            parentFlow.getProperties(hsprite).paddingTop = paddingTop;
+
+            double stageWidth2 = dc.libs.Process.Class.CUSTOM_STAGE_WIDTH;
+            double totalWidth = stageWidth2 > 0 ? stageWidth2 : dc.hxd.Window.Class.getInstance().get_width();
+            double scaleX = totalWidth / 3;
+
+            hsprite.posChanged = true;
+            hsprite.scaleX = scaleX;
+            hsprite.scaleY = pixelScale;
         }
     }
 }

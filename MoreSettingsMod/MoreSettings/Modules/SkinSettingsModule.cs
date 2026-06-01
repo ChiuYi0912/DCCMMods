@@ -9,17 +9,43 @@ using MoreSettings.Configuration;
 using MoreSettings.GameMechanics.cine;
 using MoreSettings.GameMechanics.CustomPopDamage;
 using PopDamage.OtherPop;
+using static MoreSettings.Configuration.Enums;
 
 namespace MoreSettings.Modules
 {
     public class SkinSettingsModule : BaseModule
     {
         public override string Description => GetText.Instance.GetString("ModuleDesc_Skin");
-
         public override SkinConfig config => (SkinConfig)base.config;
         public override Enums.MenuCategory Type => Enums.MenuCategory.Skin;
         public EntityPopDamage entityPop = default!;
         public PopConfig popConfig = default!;
+
+        public List<(string title, string sub, Action onSelect, Action after)> Teleportdata = [
+        (
+            "orig",
+            "",
+            ()=>SettingsMain.ConfigValue.Skin.TeleportStyle = TeleportStyle.orig,
+            ()=>{ }
+        ),
+        (
+            "经典",
+            "",
+            () => SettingsMain.ConfigValue.Skin.TeleportStyle = TeleportStyle.Default,
+            () => {}
+        ),
+        (
+            "RiskOfRainTeleport",
+            "",
+            () => SettingsMain.ConfigValue.Skin.TeleportStyle = TeleportStyle.RiskOfRain,
+            () => {}
+        ),
+        (
+            "Instant",
+            "",
+            () => SettingsMain.ConfigValue.Skin.TeleportStyle = TeleportStyle.Instant,
+            () => {}
+        )];
 
         public override void Initialize(ModBase mainMod)
         {
@@ -35,6 +61,7 @@ namespace MoreSettings.Modules
             base.BuildMenu(options, Separator);
             if (!config.Enabled)
                 return;
+            menuHelper.AddSubSeparator("自定义伤害数字", scrollerFlow);
 
             var widget = PopmenuHelper.AddConfigToggle(
                  GetText.Instance.GetString("GenuinePopDamage"),
@@ -58,6 +85,7 @@ namespace MoreSettings.Modules
             );
             PopmenuHelper.CenterToggleWidget(nopopwidget, options, scrollerFlow);
 
+
             var optionsdata = new List<(string title, string sub, Action onSelect, Action after)>
             {
                 ("默认", "系统自动判断", () => EntityPopDamage.ForcedHandler = null! ,()=>{ })
@@ -72,36 +100,45 @@ namespace MoreSettings.Modules
                     () =>
                     {
                         if (EntityPopDamage.ForcedHandler is DefaultPopDamageHandler) return;
-                            PopmenuHelper.AddConfigSlider(
-                                GetText.Instance.GetString("CritEffectDuration"),
-                                () => h.SpeedMultiplier,
-                                v => h.SpeedMultiplier = v,
-                                step: 0.1,
-                                minValue: 0,
-                                maxValue: 3,
-                                scrollerFlow: scrollerFlow
-                            );
+                        PopmenuHelper.AddConfigSlider(
+                            GetText.Instance.GetString("CritEffectDuration"),
+                            () => h.SpeedMultiplier,
+                            v => h.SpeedMultiplier = v,
+                            step: 0.1,
+                            minValue: 0,
+                            maxValue: 3,
+                            scrollerFlow: scrollerFlow
+                        );
                     }
                 ));
             }
-
             PopmenuHelper.AddConfigRadioGroup(
                 optionsdata,
                 popConfig.index,
                 (v) => popConfig.index = v,
                 scrollerFlow
             );
-            options.addSeparator(null, scrollerFlow);
+            
+
+            menuHelper.AddSubSeparator("Teleport",scrollerFlow);
+            var Teleportwidget = menuHelper.AddConfigToggle(
+                GetText.Instance.GetString("SmoothTeleport"),
+                 GetText.Instance.GetString(""),
+                () => config.TeleportImmediate,
+                v => config.TeleportImmediate = v,
+                scrollerFlow: options.scrollerFlow
+                );
+            menuHelper.CenterToggleWidget(Teleportwidget, options, options.scrollerFlow);
+
+            menuHelper.AddConfigRadioGroup(
+                Teleportdata,
+                (int)config.TeleportStyle,
+                (v) => config.TeleportStyle = (TeleportStyle)v,
+                scrollerFlow
+            );
 
 
-            menuHelper.AddConfigToggle(
-                    GetText.Instance.GetString("RiskOfRainTeleport"),
-                    GetText.Instance.GetString("RiskOfRainTeleportDesc"),
-                    () => config.RiskOfRainSkin,
-                    v => config.RiskOfRainSkin = v,
-                    scrollerFlow: scrollerFlow
-                    );
-
+            menuHelper.AddSubSeparator("其他", scrollerFlow);
             menuHelper.AddConfigToggle(
                 GetText.Instance.GetString("KatanaZeroOutfit"),
                 GetText.Instance.GetString("KatanaZeroOutfitDesc"),
@@ -109,8 +146,6 @@ namespace MoreSettings.Modules
                 v => config.KatanaSkin = v,
                 scrollerFlow: scrollerFlow
                 );
-
-
         }
 
 
@@ -142,10 +177,44 @@ namespace MoreSettings.Modules
 
         private void Hook_Teleport_startTeleport(Hook_Teleport.orig_startTeleport orig, Teleport self, Hero hero, Entity to)
         {
-            if (to == null) return;
-            if (hero.hasSkin(null, "RiskOfRain".ToHaxeString()) || config.RiskOfRainSkin)
-            { _ = new TeleportationRiskOfRain(hero, self, to, !SettingsMain.ConfigValue.Viewport.TeleportImmediate); return; }
-            _ = new Teleportation(hero, self, to, !SettingsMain.ConfigValue.Viewport.TeleportImmediate);
+            if (to == null)
+                return;
+
+            switch (config.TeleportStyle)
+            {
+                case TeleportStyle.orig:
+                    if (hero.hasSkin(null, "RiskOfRain".ToHaxeString()))
+                    {
+                        _ = new TeleportationRiskOfRain(hero, self, to, !config.TeleportImmediate); return;
+                    }
+                    _ = new Teleportation(hero, self, to, !config.TeleportImmediate);
+                    break;
+
+                case TeleportStyle.Default:
+                    _ = new Teleportation(
+                        hero,
+                        self,
+                        to,
+                        !config.TeleportImmediate);
+                    break;
+
+                case TeleportStyle.RiskOfRain:
+                    _ = new TeleportationRiskOfRain(
+                        hero,
+                        self,
+                        to,
+                        !config.TeleportImmediate);
+                    break;
+
+                    case TeleportStyle.Instant:
+                        _ = new TeleportationFancy(
+                            hero,
+                            self,
+                            to,
+                            !config.TeleportImmediate);
+                        break;
+
+            }
         }
 
     }

@@ -23,7 +23,6 @@ namespace MoreSettings.Modules
         IOnGameEndInit
     {
         public override string Description => GetText.Instance.GetString("KeyBinding");
-        public override string Name => "KeyBinding";
         public override KeyConfig config => (KeyConfig)base.config;
         public override MenuCategory Type => MenuCategory.KeyBinding;
         public ControllerHelperSuper<MainConfig> controller = null!;

@@ -19,5 +19,13 @@ namespace MoreSettings.Configuration
         {
             Tailor
         }
+
+        public enum TeleportStyle
+        {
+            orig,
+            Default,
+            RiskOfRain,
+            Instant
+        }
     }
 }

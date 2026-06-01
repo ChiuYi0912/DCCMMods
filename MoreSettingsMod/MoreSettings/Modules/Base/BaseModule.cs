@@ -17,8 +17,6 @@ namespace MoreSettings.Base.Modules
 
     public abstract class BaseModule : IEventReceiver
     {
-
-        public virtual string Name => GetType().Name;
         public virtual string Description => string.Empty;
         public virtual bool Enabled { get; set; }
         public abstract MenuCategory Type { get; }
@@ -67,7 +65,6 @@ namespace MoreSettings.Base.Modules
                     else
                         UnregisterHooks();
                     SaveConfig();
-                    //options.setSection(options.curSection);
                     options.onResize();
                 },
                 scrollerFlow
@@ -75,7 +72,7 @@ namespace MoreSettings.Base.Modules
             menuHelper.CenterToggleWidget(TopWidget, options, scrollerFlow);
         }
 
-        public void BaseRegisterHooks() { if (!config.Enabled) return; RegisterHooks(); Logger.Information("registerHook"); }
+        public void BaseRegisterHooks() { if (!config.Enabled) return; RegisterHooks(); }
         public virtual void RegisterHooks() { }
         public virtual void PermanentlyRegisterHooks() { }
         public virtual void UnregisterHooks() { }
@@ -86,7 +83,6 @@ namespace MoreSettings.Base.Modules
         public virtual void SaveConfig()
         {
             SettingsMain.ModConfig.Save();
-            Logger.Information("配置已保存");
         }
 
 

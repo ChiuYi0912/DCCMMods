@@ -13,7 +13,6 @@ using dc.ui;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using IngameDebugConsole;
-using JqFormatter.Config;
 using ModCore.Storage;
 using ModCore.Utilities;
 using Serilog;

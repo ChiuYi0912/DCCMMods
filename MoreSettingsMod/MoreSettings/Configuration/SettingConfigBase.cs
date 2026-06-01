@@ -9,6 +9,7 @@ using dc.h2d;
 using dc.hxsl._Dce;
 using Hashlink.Virtuals;
 using MoreSettings.Modules;
+using static MoreSettings.Configuration.Enums;
 using ScarfData = Hashlink.Virtuals.virtual_attachOffX_attachOffY_color_cosOffset_count_extraSprLength_friction_gravity_maxLength_minLength_onFront_props_sprId_thickness_;
 
 namespace MoreSettings.Configuration
@@ -200,14 +201,11 @@ namespace MoreSettings.Configuration
     [Serializable]
     public class SkinConfig : SettingConfigBase
     {
-        public bool SkinEnabled { get; set; } = false;
         public bool HasNoPopText { get; set; } = false;
-        public bool Skinkatana { get; set; } = false;
-        public bool HotlineSkin { get; set; } = false;
-        public bool StsSkin { get; set; } = false;
         public bool RiskOfRainSkin { get; set; } = false;
         public bool KatanaSkin { get; set; } = false;
-
+        public TeleportStyle TeleportStyle { get; set; }
+        public bool TeleportImmediate { get; set; } = false;
     }
 
 
@@ -238,8 +236,6 @@ namespace MoreSettings.Configuration
         public double ViewportshakeReversedSY { get; set; } = 0;
         public double ViewportshakeReversedSD { get; set; } = 0;
         public double Camerazoom { get; set; } = 1;
-
-        public bool TeleportImmediate { get; set; } = false;
     }
 
     public class WeaponConfig : SettingConfigBase

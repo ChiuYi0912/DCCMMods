@@ -47,7 +47,6 @@ namespace MoreSettings.Modules
     {
         public override Enums.MenuCategory Type => Enums.MenuCategory.Level;
         public override string Description => GetText.Instance.GetString("LevelModule");
-        public override string Name => "LevelModule";
         public override LevelConfig config => (LevelConfig)base.config;
 
         public override void Initialize(ModBase mainMod)

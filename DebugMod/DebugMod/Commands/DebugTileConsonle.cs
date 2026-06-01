@@ -57,8 +57,7 @@ namespace DebugMod.Commands
                 return;
             }
 
-            ValidationHelper.NotNull(hero, nameof(hero));
-            tilegt = hero._level.fx.DebugTileGroups(hero._level.GetLevelDisplaySafe(), validTypes.ToArray());
+            tilegt = hero._level.fx.DebugTileGroups(hero._level.lDisp, validTypes.ToArray());
         }
 
         private static TileGroupType ParseTileGroupType(string type)
