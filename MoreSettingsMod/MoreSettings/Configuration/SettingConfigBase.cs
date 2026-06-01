@@ -41,7 +41,6 @@ namespace MoreSettings.Configuration
     public class GameplayConfig : SettingConfigBase
     {
         public bool Hitpause { get; set; } = false;
-        public bool LoreBankMimicRoom { get; set; } = false;
         public bool SpeedTier { get; set; } = false;
         public bool DisableKatanaByHoldingDown { get; set; } = false;
     }
@@ -261,7 +260,7 @@ namespace MoreSettings.Configuration
     public class LevelConfig : SettingConfigBase
     {
         public bool NofadeIn { get; set; } = false;
-
         public bool Faulteffects { get; set; } = false;
+        public bool LoreBankMimicRoom { get; set; } = false;
     }
 }

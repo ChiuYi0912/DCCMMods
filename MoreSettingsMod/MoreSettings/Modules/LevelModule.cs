@@ -70,6 +70,14 @@ namespace MoreSettings.Modules
                 scrollerFlow);
 
             menuHelper.AddConfigToggle(
+                GetText.Instance.GetString("MimicLoreRoom"),
+                GetText.Instance.GetString(""),
+                () => config.LoreBankMimicRoom,
+                v => config.LoreBankMimicRoom = v,
+                scrollerFlow
+            );
+
+            menuHelper.AddConfigToggle(
                 GetString("故障关卡特效"),
                 GetString(""),
                 () => config.Faulteffects,
@@ -77,12 +85,54 @@ namespace MoreSettings.Modules
                 scrollerFlow
             );
 
+            List<string> strings = ["help", "hepps"];
+
+            menuHelper.AddConfigListWidget(
+                "test",
+                "",
+                (v) =>
+                {
+
+                },
+                2,
+                strings,
+                scrollerFlow
+            );
+
+            var foodOptions = new List<(string, string, Action)>
+            {
+                ("Omnivore", "Randomize food appearance", () => { }),
+                ("Carnivore", "null", () => { }),
+                ("Vegetarian", "null", () => { })
+            };
+
+            menuHelper.AddConfigRadioGroup(foodOptions, initiallySelectedIndex: 0,scrollerFlow);
         }
+
+
 
         #region Hooks
         public override void PermanentlyRegisterHooks()
         {
             base.PermanentlyRegisterHooks();
+            Hook_LevelStruct.applyDifficulty -= Hook__LevelStruct_applyDifficulty;
+            Hook_Game.loadMainLevel -= Hook_Game_loadMainLevel;
+            Hook_LevelTransition.loadNewLevel -= Hook_LevelTransition_loadNewLevel;
+            Hook__LevelTransition.__constructor__ -= Hook__LevelTransition__constructor__;
+            Hook_Game.activateSubLevel -= Hook_Game_activateSubLevel;
+            Hook_Level.resume -= Hook_Level_resume;
+            Hook_LevelDisp.render -= Hook_LevelDisp_render;
+        }
+
+        public override void UnregisterHooks()
+        {
+            base.UnregisterHooks();
+        }
+
+        public override void RegisterHooks()
+        {
+            base.RegisterHooks();
+            Hook_LevelStruct.applyDifficulty += Hook__LevelStruct_applyDifficulty;
             Hook_Game.loadMainLevel += Hook_Game_loadMainLevel;
             Hook_LevelTransition.loadNewLevel += Hook_LevelTransition_loadNewLevel;
             Hook__LevelTransition.__constructor__ += Hook__LevelTransition__constructor__;
@@ -91,6 +141,18 @@ namespace MoreSettings.Modules
             Hook_LevelDisp.render += Hook_LevelDisp_render;
         }
         #endregion
+
+        private void Hook__LevelStruct_applyDifficulty(
+            Hook_LevelStruct.orig_applyDifficulty orig, LevelStruct self)
+        {
+            if (dc.pr.Game.Class.ME.user.game.spawnMimicInNextLevel &&
+                config.LoreBankMimicRoom &&
+                Main.Class.ME.options.disableLoreRooms)
+            {
+                AddMimicRoom(self);
+            }
+            orig(self);
+        }
 
         #region Disprender
         private void Hook_LevelDisp_render(Hook_LevelDisp.orig_render orig, LevelDisp self)
@@ -1294,6 +1356,19 @@ namespace MoreSettings.Modules
             levelGen.genMobs(self.user, levelMaps, extraMobs, Ref<int>.In(zero));
         }
 
+        public void AddMimicRoom(LevelStruct Struct)
+        {
+            for (int i = 0; i < Data.Class.loreRoom.all.get_length(); i++)
+            {
+                dynamic lore = Data.Class.loreRoom.all.array.getDyn(i);
+                if (lore == null) return;
+                if (dc._Data.LoreRoom_Impl_.Class.get_room(
+                    ((HaxeProxyBase)lore).ToVirtual<virtual_arc_examinables_fxEmitters_Intention_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>()).id.ToString().EqualsIgnoreCase("MimicEscapedRoom"))
+                {
+                    Struct.tryAddLoreRoom(((HaxeProxyBase)lore).ToVirtual<virtual_arc_examinables_fxEmitters_Intention_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>());
+                }
+            }
+        }
         #endregion
 
 

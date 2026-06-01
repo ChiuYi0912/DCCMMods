@@ -67,7 +67,8 @@ namespace MoreSettings.Base.Modules
                     else
                         UnregisterHooks();
                     SaveConfig();
-                    options.setSection(options.curSection);
+                    //options.setSection(options.curSection);
+                    options.onResize();
                 },
                 scrollerFlow
             );

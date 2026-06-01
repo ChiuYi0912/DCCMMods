@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CoreLibrary.Core.Extensions;
 using dc.h2d;
+using dc.hl.types;
 using dc.libs.heaps.slib;
 using dc.ui;
 using HaxeProxy.Runtime;
@@ -130,7 +131,81 @@ namespace CoreLibrary.Core.Utilities
             return widget;
         }
 
+        public OptionWidget AddConfigListWidget(
+            string title,
+            string substr,
+            Action<int> action,
+            int curEntry,
+            List<string> texts,
+            dc.h2d.Flow parentFlow = null!,
+            int offsetX = 5
+            )
+        {
+            var haxeTexts = texts.Select(t => t.ToHaxeString()).ToList();
+            var widget = opt.addListWidget(
+                title.ToHaxeString(),
+                substr.ToHaxeString(),
+                new HlAction<int>(v => { action(v); config.Save(); }),
+                curEntry,
+                haxeTexts.Count,
+                haxeTexts.ToArrayObj(),
+                Ref<int>.In(offsetX),
+                parentFlow
+            );
 
+            return widget;
+        }
+
+        public void AddConfigRadioWidget(
+            string title,
+            string substr,
+            Action action,
+            bool InitialBool,
+            dc.h2d.Flow parentFlow = null!
+            )
+        {
+            opt.addRadioWidget(
+                title.ToHaxeString(),
+                substr.ToHaxeString(),
+                new(() => { action();config.Save(); }),
+                Ref<bool>.In(InitialBool),
+                parentFlow);
+        }
+
+        public void AddConfigRadioGroup(
+            List<(string title, string sub, Action onSelect)> items,
+            int initiallySelectedIndex,
+            dc.h2d.Flow parentFlow = null!
+        )
+        {
+            var stateRefs = new List<bool>();
+            var widgets = new List<OptionWidget>();
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                int currentIndex = i;
+                bool isSelected = i == initiallySelectedIndex;
+                stateRefs.Add(isSelected);
+
+                HlAction onVal = new HlAction(() =>
+                {
+                    for (int j = 0; j < stateRefs.Count; j++)
+                        stateRefs[j] = false;
+                    stateRefs[currentIndex] = true;
+                    items[currentIndex].onSelect();
+                    config.Save();
+                });
+
+                var widget = opt.addRadioWidget(
+                    items[i].title.ToHaxeString(),
+                    items[i].sub.ToHaxeString(),
+                    onVal,
+                    Ref<bool>.In(isSelected),
+                    parentFlow
+                );
+                widgets.Add(widget);
+            }
+        }
 
         public void CenterToggleWidget(Flow widget, Options options, Flow scrollerFlow)
         {
