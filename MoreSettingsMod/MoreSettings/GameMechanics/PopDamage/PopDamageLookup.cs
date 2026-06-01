@@ -20,8 +20,13 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
     {
         private readonly ConcurrentDictionary<Entity, IPopDamage> _handlerCache = new();
 
+        public IPopDamage ForcedHandler = null!;
+
         public IPopDamage GetHandler(Entity entity)
         {
+            if (ForcedHandler != null)
+                return ForcedHandler;
+
             if (_handlerCache.TryGetValue(entity, out var handler))
             {
                 return handler;

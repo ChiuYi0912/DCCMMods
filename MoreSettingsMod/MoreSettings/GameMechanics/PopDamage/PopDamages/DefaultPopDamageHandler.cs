@@ -11,10 +11,12 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
 {
     internal class DefaultPopDamageHandler : IPopDamage
     {
+        public DefaultPopDamageHandler() : base("default") { }
 
         public override int Priority => int.MaxValue;
-
-        public override double SpeedMultiplier => 450.0;
+        public override double SpeedMultiplier { get; set; } = 1.0;
+        public override string OptionsTitle => "经典";
+        public override string SubStr => "";
 
         public override bool CanHandle(AttackData a, Entity entity) => true;
 

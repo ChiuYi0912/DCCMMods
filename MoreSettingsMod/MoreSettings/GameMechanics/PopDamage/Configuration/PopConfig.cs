@@ -7,15 +7,11 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
 {
     public class PopConfig
     {
-        public bool HotlinePopDamage { get; set; } = false;
         public double HotlineSpeedMultiplier { get; set; } = 0.8;
-
-        public bool StsPopDamage { get; set; } = false;
         public double StsSpeedMultiplier { get; set; } = 0.8;
-
+        public double RevealSpeedMultiplier { get; set; } = 2.0;
         public bool RevealPop { get; set; } = false;
-        public double RevealSpeedMultiplier = 2.0;
-
         public bool GenuinePopDamage { get; set; } = false;
+        public int index = 0;
     }
 }

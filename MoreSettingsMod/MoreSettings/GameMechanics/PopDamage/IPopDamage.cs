@@ -10,6 +10,23 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
 {
     public abstract class IPopDamage
     {
+        public string Id { get; }
+
+        protected IPopDamage(string id)
+        {
+            Id = id;
+        }
+
+        /// <summary>
+        /// 设置中的描述
+        /// </summary>
+        public abstract string OptionsTitle { get; }
+
+        /// <summary>
+        /// 设置中的子描述
+        /// </summary>
+        public abstract string SubStr { get; }
+
         /// <summary>
         /// 配置项，决定是否启用此伤害显示处理器
         /// </summary>
@@ -23,7 +40,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         /// <summary>
         /// 速度倍率，数值越大伤害数字消失越慢。
         /// </summary>
-        public abstract double SpeedMultiplier { get; }
+        public abstract double SpeedMultiplier { get; set; }
 
         /// <summary>
         /// 判断当前攻击是否由此负责显示

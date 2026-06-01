@@ -26,9 +26,10 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
     public class EntityPopDamage
     {
 
-        public Config<PopConfig> Config = new("CustomPopDamage");
+        public static Config<PopConfig> Config = new("CustomPopDamage");
         public static PopConfig popconfig = null!;
         public static IPopDamage handler = null!;
+        public static IPopDamage ForcedHandler = null!;
 
         private readonly ThreadSafePopDamageLookup _handlerLookup;
 
@@ -52,7 +53,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         {
             if (dc.ui.Console.Class.ME.flags.exists("NoPopText".ToHaxeString())) return;
 
-            handler = PopDamageHandlerRegistry.GetHandler(a, self);
+            handler = ForcedHandler ?? PopDamageHandlerRegistry.GetHandler(a, self);
             _handlerLookup.CacheHandler(self, handler);
             handler.CreatePopDamage(a, self);
 

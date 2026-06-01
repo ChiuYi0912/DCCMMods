@@ -34,5 +34,13 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         {
             return Handlers.FirstOrDefault(h => h.CanHandle(a, entity))!;
         }
+
+        public static IPopDamage GetById(string id)
+        {
+            return Handlers.FirstOrDefault(h => h.Id == id)!;
+        }
+
+        public static IEnumerable<IPopDamage> GetAll() => Handlers;
+
     }
 }

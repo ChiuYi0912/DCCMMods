@@ -13,6 +13,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
 {
     internal class StsPopDamageHandler : IPopDamage
     {
+        public StsPopDamageHandler() : base("sts") { }
         private static readonly HashSet<string> StsItems = new()
         {
             "DiverseDeckJuggernaut",
@@ -24,7 +25,19 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
 
         public override int Priority => 20;
 
-        public override double SpeedMultiplier => popconfig.StsSpeedMultiplier;
+        public override double SpeedMultiplier
+        {
+            get => popconfig.StsSpeedMultiplier;
+            set
+            {
+                popconfig.StsSpeedMultiplier = value;
+                EntityPopDamage.Config.Save();
+            }
+        }
+
+        public override string OptionsTitle => "StsCritEffect";
+
+        public override string SubStr => "";
 
         public override bool CanHandle(AttackData a, Entity entity)
         {
@@ -36,8 +49,6 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
             }
 
             if (!a.hasTag(2)) return false;
-
-            if (popconfig.StsPopDamage) return true;
 
             return entity._level.game.hero.hasSkin(null, StsSkin.ToHaxeString());
         }

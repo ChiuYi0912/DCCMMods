@@ -15,6 +15,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
 {
     internal class HotlinePopDamageHandler : IPopDamage
     {
+        public HotlinePopDamageHandler() : base("hotline") { }
         private static readonly HashSet<string> HotlineSkins = new()
         {
             "HotlineMiamiChicken",
@@ -24,13 +25,23 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
 
         public override int Priority => 10;
 
-        public override double SpeedMultiplier => popconfig.HotlineSpeedMultiplier;
+        public override double SpeedMultiplier
+        {
+            get => popconfig.HotlineSpeedMultiplier;
+            set
+            {
+                popconfig.HotlineSpeedMultiplier = value;
+                EntityPopDamage.Config.Save();
+            }
+        }
+
+        public override string OptionsTitle => "HotlineCritEffect";
+
+        public override string SubStr => "";
 
         public override bool CanHandle(AttackData a, Entity entity)
         {
             if (!a.hasTag(2)) return false;
-
-            if (popconfig.HotlinePopDamage) return true;
 
             if (a.sourceWeapon != null && Std.Class.@is(a.sourceWeapon, BaseballBat.Class)) return true;
 

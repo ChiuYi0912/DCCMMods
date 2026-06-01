@@ -85,28 +85,6 @@ namespace MoreSettings.Modules
                 scrollerFlow
             );
 
-            List<string> strings = ["help", "hepps"];
-
-            menuHelper.AddConfigListWidget(
-                "test",
-                "",
-                (v) =>
-                {
-
-                },
-                2,
-                strings,
-                scrollerFlow
-            );
-
-            var foodOptions = new List<(string, string, Action)>
-            {
-                ("Omnivore", "Randomize food appearance", () => { }),
-                ("Carnivore", "null", () => { }),
-                ("Vegetarian", "null", () => { })
-            };
-
-            menuHelper.AddConfigRadioGroup(foodOptions, initiallySelectedIndex: 0,scrollerFlow);
         }
 
 

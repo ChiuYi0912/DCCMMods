@@ -167,14 +167,15 @@ namespace CoreLibrary.Core.Utilities
             opt.addRadioWidget(
                 title.ToHaxeString(),
                 substr.ToHaxeString(),
-                new(() => { action();config.Save(); }),
+                new(() => { action(); config.Save(); }),
                 Ref<bool>.In(InitialBool),
                 parentFlow);
         }
 
         public void AddConfigRadioGroup(
-            List<(string title, string sub, Action onSelect)> items,
+            List<(string title, string sub, Action onSelect, Action AfterAddButton)> items,
             int initiallySelectedIndex,
+            Action<int> onIndexChanged,
             dc.h2d.Flow parentFlow = null!
         )
         {
@@ -193,6 +194,7 @@ namespace CoreLibrary.Core.Utilities
                         stateRefs[j] = false;
                     stateRefs[currentIndex] = true;
                     items[currentIndex].onSelect();
+                    onIndexChanged(currentIndex);
                     config.Save();
                 });
 
@@ -203,6 +205,9 @@ namespace CoreLibrary.Core.Utilities
                     Ref<bool>.In(isSelected),
                     parentFlow
                 );
+                if (isSelected)
+                    items[i].AfterAddButton();
+                    
                 widgets.Add(widget);
             }
         }
