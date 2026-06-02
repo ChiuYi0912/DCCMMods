@@ -21,7 +21,7 @@ using Hook_Game = dc.pr.Hook_Game;
 
 namespace MoreSettings.Modules
 {
-    public class GameplayModule : BaseModule
+    internal class GameplayModule : BaseModule
     {
         public override string Description => GetText.Instance.GetString("ModuleDesc_Gameplay");
         public override GameplayConfig config => (GameplayConfig)base.config;

@@ -14,7 +14,7 @@ using MoreSettings.Utilities;
 
 namespace MoreSettings.GameMechanics
 {
-    public class CustomHeroLifeBar : LifeBar
+    internal class CustomHeroLifeBar : LifeBar
     {
         public HSpriteBatch fullBatch = null!;
         private int currentColor;

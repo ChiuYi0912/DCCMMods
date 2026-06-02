@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MoreSettings.GameMechanics.CustomPopDamage
 {
-    public class PopConfig
+    internal class PopConfig
     {
         public double HotlineSpeedMultiplier { get; set; } = 0.8;
         public double StsSpeedMultiplier { get; set; } = 0.8;

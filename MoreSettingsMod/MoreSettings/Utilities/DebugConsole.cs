@@ -8,7 +8,7 @@ using MoreSettings.GameMechanics.Scarf;
 
 namespace MoreSettings.Utilities
 {
-    public static class DebugConsole
+    internal static class DebugConsole
     {
         [ConsoleMethod("ui", "")]
         public static void debugprocess(TextWriter writer)

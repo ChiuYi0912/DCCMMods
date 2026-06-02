@@ -19,7 +19,7 @@ using MoreSettings.shaders;
 
 namespace MoreSettings.GameMechanics.Customs
 {
-    public class PopDamageGradient : dc.ui.PopDamage
+    internal class PopDamageGradient : dc.ui.PopDamage
     {
         public double jiggle = 0;
         public ArrayObj texts = null!;

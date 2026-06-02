@@ -10,7 +10,7 @@ using HaxeProxy.Runtime;
 
 namespace MoreSettings.shaders
 {
-    public class GradientColor : dc.hxsl.Shader
+    internal class GradientColor : dc.hxsl.Shader
     {
 
         public dc.h3d.mat.Texture texture__ = null!;

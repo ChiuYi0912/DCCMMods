@@ -14,7 +14,7 @@ using HaxeProxy.Runtime;
 
 namespace MoreSettings.GameMechanics.Scarf
 {
-    public class TailorWife : Npc
+    internal class TailorWife : Npc
     {
         public bool headFlip { get; set; }
         public bool isInMobsRoom { get; set; }

@@ -4,39 +4,27 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-
     <ModName>CoreLibraryMod</ModName>
     <ModType>library</ModType>
     <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  
   <ItemGroup>
-  <Reference Include="ModCore.Native">
-    <HintPath>C:\Users\Michael\core\sources\ModCore.Native\bin\Debug\net10.0\ModCore.Native.dll</HintPath>
-  </Reference>
-  <ProjectReference Include="C:\Users\Michael\core\sources\ModCore.Common\ModCore.Common.csproj" />
-  </ItemGroup>
-
-    <Target Name="RemoveDuplicateModCoreCommon" BeforeTargets="ResolveAssemblyReferences">
-    <ItemGroup>
-        <Reference Remove="ModCore.Common" />
-    </ItemGroup>
-    </Target>
-
-  <ItemGroup>
+    <ProjectReference Include="C:\Users\Michael\core\sources\ModCore.Common\ModCore.Common.csproj" />
     <Reference Include="DebugConsole" />
     <ModDependency Include="DebugConsole" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="NativeLib\MathWaveGenerator.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
+    
+    <Reference Include="ModCore.Native">
+      <HintPath>C:\Users\Michael\core\sources\ModCore.Native\bin\Debug\net10.0\ModCore.Native.dll</HintPath>
+    </Reference>
   </ItemGroup>
+
+  <Target Name="RemoveDuplicateModCoreCommon" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <Reference Remove="ModCore.Common" />
+    </ItemGroup>
+  </Target>
+
 </Project>

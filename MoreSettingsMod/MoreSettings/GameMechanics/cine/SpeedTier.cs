@@ -7,7 +7,7 @@ using HaxeProxy.Runtime;
 
 namespace MoreSettings.GameMechanics.cine
 {
-    public class SpeedTier : GameCinematic
+    internal class SpeedTier : GameCinematic
     {
         private bool Isdestory;
 

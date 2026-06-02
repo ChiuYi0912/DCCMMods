@@ -11,7 +11,7 @@ using HaxeProxy.Runtime;
 
 namespace MoreSettings.GameMechanics.cine
 {
-    public class TeleportationFancy : GameCinematic
+    internal class TeleportationFancy : GameCinematic
     {
         private readonly Hero owen;
         private readonly Entity target;

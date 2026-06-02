@@ -39,7 +39,7 @@ using dc.libs.misc;
 
 namespace MoreSettings.Modules
 {
-    public class LevelModule : BaseModule,
+    internal class LevelModule : BaseModule,
     IOnGameExit,
     IHxbitSerializable,
     IEventReceiver,

@@ -105,7 +105,7 @@ namespace CoreLibrary.Utilities
     public class ContorlLbleKeyConfig
     {
         public string Name { get; set; } = string.Empty;
-        public int act { get; set; }
+        internal int act { get; set; }
         public int? Primary { get; set; }
         public int? Secondary { get; set; }
         public int? Third { get; set; }

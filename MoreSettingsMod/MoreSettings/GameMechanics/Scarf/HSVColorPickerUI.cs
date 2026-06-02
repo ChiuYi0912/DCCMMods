@@ -15,7 +15,7 @@ using HaxeProxy.Runtime;
 
 namespace MoreSettings.GameMechanics.Scarf
 {
-    public class ColorGridSelector : GridSelector
+    internal class ColorGridSelector : GridSelector
     {
         private List<uint> colorList = default!;
         private Action<int> onColorSelected;

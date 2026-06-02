@@ -12,7 +12,7 @@ using MoreSettings.Utilities;
 namespace MoreSettings.Core
 {
 
-    public class ModuleManager
+    internal class ModuleManager
     {
         private readonly Dictionary<Enums.MenuCategory, BaseModule> modules = new();
         private ModBase mainMod = null!;

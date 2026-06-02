@@ -13,7 +13,7 @@ using static MoreSettings.Configuration.Enums;
 
 namespace MoreSettings.Modules
 {
-    public class VisualCustomizationModule : BaseModule
+    internal class VisualCustomizationModule : BaseModule
     {
         public override string Description => GetText.Instance.GetString("ModuleDesc_Visual");
         public override VisualConfig config => (VisualConfig)base.config;

@@ -14,7 +14,7 @@ using HaxeProxy.Runtime;
 
 namespace MoreSettings.GameMechanics.cine
 {
-    public class TeleportationRiskOfRain : GameCinematic
+    internal class TeleportationRiskOfRain : GameCinematic
     {
         private readonly Hero _hero;
         private readonly Entity _target;

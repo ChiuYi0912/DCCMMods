@@ -15,7 +15,7 @@ using RoomFlagsProps = Hashlink.Virtuals.virtual_gameplayFlags_genFlags_lootFlag
 
 namespace MoreSettings.GameMechanics
 {
-    public class NPCManager
+    internal class NPCManager
     {
         private static readonly Dictionary<NpcId.Indexes, Func<Level, Room, Npc>> customAttachFactories = new();
         private static readonly Dictionary<NpcId.Indexes, Action<Npc>> customAttachCallbacks = new();

@@ -15,7 +15,7 @@ using MoreSettings.Configuration;
 
 namespace MoreSettings.Modules
 {
-    public class WeaponSettingModule : BaseModule
+    internal class WeaponSettingModule : BaseModule
     {
         public override string Description => GetText.Instance.GetString("WeaponSettingModule");
 

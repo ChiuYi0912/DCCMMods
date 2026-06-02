@@ -16,7 +16,7 @@ using CoreLibrary.Utilities;
 
 namespace MoreSettings
 {
-    public class ModMenu :
+    internal class ModMenu :
     IEventReceiver,
     IModMenu,
     IOnHookInitialize,

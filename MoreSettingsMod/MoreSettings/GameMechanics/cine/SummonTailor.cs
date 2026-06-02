@@ -21,7 +21,7 @@ using Serilog;
 
 namespace MoreSettings.GameMechanics.cine
 {
-    public class SummonTailor : GameCinematic
+    internal class SummonTailor : GameCinematic
     {
 
         private const int PORTAL_COLOR_LOW = 8450041;

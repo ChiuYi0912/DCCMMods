@@ -10,7 +10,7 @@ using ScarfData = Hashlink.Virtuals.virtual_attachOffX_attachOffY_color_cosOffse
 
 namespace MoreSettings.GameMechanics.Scarf
 {
-    public class AttributeEntry
+    internal class AttributeEntry
     {
         public string Name = default!;
         public Func<ScarfData, object> Getter = default!;
@@ -23,7 +23,7 @@ namespace MoreSettings.GameMechanics.Scarf
     }
 
 
-    public class ScarfList
+    internal class ScarfList
     {
         public List<AttributeEntry> all = new();
         public List<AttributeEntry> left = new();
@@ -31,7 +31,7 @@ namespace MoreSettings.GameMechanics.Scarf
 
     }
 
-    public class ScarfListInitialisation
+    internal class ScarfListInitialisation
     {
         public ScarfList baseAttributes = new();
         public ScarfList propsAttributes = new();

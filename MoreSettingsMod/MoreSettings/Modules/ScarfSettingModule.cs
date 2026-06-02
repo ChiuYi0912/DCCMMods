@@ -15,7 +15,7 @@ using MoreSettings.GameMechanics.Scarf;
 
 namespace MoreSettings.Modules
 {
-    public class ScarfSettingModule : BaseModule,
+    internal class ScarfSettingModule : BaseModule,
     IEventReceiver,
     IOnAfterPauseMenuBuild
     {

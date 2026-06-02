@@ -27,7 +27,7 @@ using Serilog;
 
 namespace MoreSettings;
 
-public class SettingsMain(ModInfo info) : ModBase(info),
+internal class SettingsMain(ModInfo info) : ModBase(info),
 IModMenuProvider,
 IOnGameEndInit,
 IOnAfterLoadingCDB

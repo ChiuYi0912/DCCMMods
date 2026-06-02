@@ -6,10 +6,13 @@ using dc.en;
 using dc.ui;
 using dc.ui.icon;
 using HaxeProxy.Runtime;
+using ModCore.Events;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Events.Interfaces.Game.Hero;
 using ModCore.Mods;
 using ModCore.Modules;
+using MoreSettings.API;
+using MoreSettings.API.KeyBinding;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics.cine;
@@ -18,7 +21,7 @@ using static MoreSettings.Configuration.Enums;
 
 namespace MoreSettings.Modules
 {
-    public class KeyBindingModule : BaseModule,
+    internal class KeyBindingModule : BaseModule,
         IOnHeroUpdate,
         IOnGameEndInit
     {
@@ -26,7 +29,7 @@ namespace MoreSettings.Modules
         public override KeyConfig config => (KeyConfig)base.config;
         public override MenuCategory Type => MenuCategory.KeyBinding;
         public ControllerHelperSuper<MainConfig> controller = null!;
-
+        internal IInputApiService input { get; private set; } = null!;
 
         public override void Initialize(ModBase mainMod)
         {
@@ -88,6 +91,8 @@ namespace MoreSettings.Modules
             controller = new ControllerHelperSuper<MainConfig>(SettingsMain.ModConfig, config.ControlKeys, Boot.Class.ME.controller);
             var act = controller.GetAction("Tailor") ?? controller.AddKey("Tailor", KeyHelper.T, KeyHelper.T, KeyHelper.T);
             config.TheCurrentKey[KeyName.Tailor] = act;
+            input = new IInputApiService(controller);
+            EventSystem.BroadcastEvent<IInputApi, IInputApiService>(input);
             controller.ApplyBindings();
         }
 

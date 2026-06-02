@@ -10,7 +10,7 @@ using ModCore.Utilities;
 
 namespace MoreSettings.shaders
 {
-    public class SimpleRevealShader : dc.h3d.shader.ScreenShader
+    internal class SimpleRevealShader : dc.h3d.shader.ScreenShader
     {
         public class SimpleRevealShaderStaticClass : Class
         {

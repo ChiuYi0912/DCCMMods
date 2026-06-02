@@ -5,18 +5,18 @@ using dc;
 
 namespace MoreSettings.GameMechanics.CustomPopDamage
 {
-    public interface IPopDamageLookup
+    internal interface IPopDamageLookup
     {
         IPopDamage GetHandler(Entity entity);
     }
 
-    public class StaticPopDamageLookup : IPopDamageLookup
+    internal class StaticPopDamageLookup : IPopDamageLookup
     {
         public IPopDamage GetHandler(Entity entity) => EntityPopDamage.handler;
     }
 
 
-    public class ThreadSafePopDamageLookup : IPopDamageLookup
+    internal class ThreadSafePopDamageLookup : IPopDamageLookup
     {
         private readonly ConcurrentDictionary<Entity, IPopDamage> _handlerCache = new();
 

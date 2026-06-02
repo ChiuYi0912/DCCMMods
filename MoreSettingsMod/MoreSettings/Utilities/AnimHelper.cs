@@ -7,7 +7,7 @@ using HaxeProxy.Runtime;
 
 namespace MoreSettings.Utilities
 {
-    public static class AnimHelper
+    internal static class AnimHelper
     {
         public static Tween CreateTween(Tweenie tween, Func<double> getter, Action<double> setterAction, double targetValue, double duration)
         {

@@ -27,7 +27,7 @@ using CoreLibrary.Core.Utilities;
 
 namespace MoreSettings.GameMechanics;
 
-public class LevelManager :
+internal class LevelManager :
         IOnHookInitialize,
         IEventReceiver
 

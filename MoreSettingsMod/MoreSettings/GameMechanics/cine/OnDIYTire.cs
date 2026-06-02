@@ -18,7 +18,7 @@ using ModCore.Utilities;
 
 namespace MoreSettings.GameMechanics.cine
 {
-    public class OnDIYTire : GameCinematic
+    internal class OnDIYTire : GameCinematic
     {
         private Icon icon = null!;
         private bool destory;

@@ -35,7 +35,7 @@ namespace MoreSettings.GameMechanics.Scarf
         public Hero hero = null!;
 
         public Dictionary<FlowEnum, Flow> flows = new();
-        public static CustomScarfBase customScarf = default!;
+        internal static CustomScarfBase customScarf = default!;
 
 
         private List<FlowBox> leftItems = new();
@@ -79,7 +79,7 @@ namespace MoreSettings.GameMechanics.Scarf
 
 
 
-        public CustomScarfUI(dc.libs.Process parent, CustomScarfBase scarfBase) : base(parent)
+        internal CustomScarfUI(dc.libs.Process parent, CustomScarfBase scarfBase) : base(parent)
         {
             hero = ModCore.Modules.Game.Instance.HeroInstance!;
             controller = Boot.Class.ME.controller.createAccess("CustomScarfUI".ToHaxeString(), true);
@@ -405,7 +405,7 @@ namespace MoreSettings.GameMechanics.Scarf
         #endregion
 
         #region 飘带配置
-        public static ScarfListInitialisation CeateScarfToKey(int key)
+        internal static ScarfListInitialisation CeateScarfToKey(int key)
         {
             if (Attributes.TryGetValue(key, out var existing))
             {

@@ -16,7 +16,7 @@ using dc;
 
 namespace MoreSettings.GameMechanics.cine
 {
-    public class Teleportation : GameCinematic
+    internal class Teleportation : GameCinematic
     {
         private readonly Hero _hero;
         private readonly Entity _target;

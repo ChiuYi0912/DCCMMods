@@ -2,7 +2,7 @@ using Serilog;
 
 namespace MoreSettings.Utilities
 {
-    public static class Logger
+    internal static class Logger
     {
         private static ILogger? _logger;
         public static void Initialize(ILogger logger)

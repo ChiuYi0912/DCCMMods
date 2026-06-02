@@ -15,7 +15,7 @@ using HaxeProxy.Runtime;
 
 namespace MoreSettings.GameMechanics.cine
 {
-    public class EntranceTeleportationCustom : GameCinematic
+    internal class EntranceTeleportationCustom : GameCinematic
     {
         private const int TeleportColor = 16101164;
 

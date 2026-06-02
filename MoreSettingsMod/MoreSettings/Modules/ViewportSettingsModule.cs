@@ -7,7 +7,7 @@ using MoreSettings.Configuration;
 
 namespace MoreSettings.Modules
 {
-    public class ViewportSettingsModule : BaseModule
+    internal class ViewportSettingsModule : BaseModule
     {
         public override string Description => GetText.Instance.GetString("ModuleDesc_Viewport");
         public override ViewportConfig config => (ViewportConfig)base.config;

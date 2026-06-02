@@ -16,7 +16,7 @@ using ScarfData = Hashlink.Virtuals.virtual_attachOffX_attachOffY_color_cosOffse
 
 namespace MoreSettings.GameMechanics.Scarf
 {
-    public class CustomScarfBase
+    internal class CustomScarfBase
     {
         public static Config<MainConfig> modConfig = SettingsMain.ModConfig;
         public Dictionary<int, ScarfData> Datakey = new();

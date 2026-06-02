@@ -23,7 +23,7 @@ using PopDamage.OtherPop;
 
 namespace MoreSettings.GameMechanics.CustomPopDamage
 {
-    public class EntityPopDamage
+    internal class EntityPopDamage
     {
 
         public static Config<PopConfig> Config = new("CustomPopDamage");

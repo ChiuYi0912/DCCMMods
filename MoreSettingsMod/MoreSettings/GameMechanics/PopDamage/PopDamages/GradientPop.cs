@@ -10,7 +10,7 @@ using MoreSettings.GameMechanics.Customs;
 
 namespace PopDamage.OtherPop
 {
-    public class GradientPop : IPopDamage
+    internal class GradientPop : IPopDamage
     {
         public GradientPop() : base("gradient") { }
         public override int Priority => 5;

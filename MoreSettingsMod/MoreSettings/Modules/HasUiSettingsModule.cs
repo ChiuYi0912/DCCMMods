@@ -18,7 +18,7 @@ using MoreSettings.Utilities;
 
 namespace MoreSettings.Modules
 {
-    public class HasUiSettingsModule : BaseModule
+    internal class HasUiSettingsModule : BaseModule
     {
         public override string Description => GetText.Instance.GetString("ModuleDesc_UI");
 

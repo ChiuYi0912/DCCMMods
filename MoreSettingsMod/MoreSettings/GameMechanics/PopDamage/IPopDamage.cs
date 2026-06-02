@@ -30,7 +30,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         /// <summary>
         /// 配置项，决定是否启用此伤害显示处理器
         /// </summary>
-        public virtual PopConfig popconfig { get; } = EntityPopDamage.popconfig;
+        internal virtual PopConfig popconfig { get; } = EntityPopDamage.popconfig;
 
         /// <summary>
         /// 优先级，数值越小越先匹配。
