@@ -169,7 +169,7 @@ msgid "HotlineCritEffectDesc"
 msgstr "Enable/Disable Hotline Miami critical hit effect"
 
 msgid "RiskOfRainTeleport"
-msgstr "Risk of Rain Teleport Feature"
+msgstr "Risk of Rain Teleport"
 
 msgid "RiskOfRainTeleportDesc"
 msgstr "Enable/Disable teleport feature"
@@ -199,3 +199,39 @@ msgstr "Key Binding"
 
 msgid "Tailor"
 msgstr "Tailor"
+
+msgid "Defaults"
+msgstr "Defaults"
+
+msgid "Classic"
+msgstr "Classic"
+
+msgid "Instant"
+msgstr "Instant"
+
+msgid "GradientCritEffect"
+msgstr "Gradient Critical Hit Effect"
+
+msgid "GradientCritEffectDesc"
+msgstr "Author:ChiuYi"
+
+msgid "Auto"
+msgstr "Automatic Judgment"
+
+msgid "FaultLevelEffects"
+msgstr "Fault Level Effects"
+
+msgid "FaultLevelEffectsDesc"
+msgstr "Effect when entering a level (special effect during time rewind)"
+
+msgid "Teleport"
+msgstr "Teleport settings"
+
+msgid "PopDamage"
+msgstr "Custom Damage Numbers"
+
+msgid "Others"
+msgstr "Other Settings"
+
+msgid "LevelModule"
+msgstr "Level Settings Module"

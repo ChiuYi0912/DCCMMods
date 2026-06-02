@@ -15,7 +15,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
 
         public override int Priority => int.MaxValue;
         public override double SpeedMultiplier { get; set; } = 1.0;
-        public override string OptionsTitle => "经典";
+        public override string OptionsTitle => "Classic";
         public override string SubStr => "";
 
         public override bool CanHandle(AttackData a, Entity entity) => true;

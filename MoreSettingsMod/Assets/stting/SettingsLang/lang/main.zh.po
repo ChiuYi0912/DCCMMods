@@ -169,7 +169,7 @@ msgid "HotlineCritEffectDesc"
 msgstr "启用/禁用迈阿密热线暴击特效"
 
 msgid "RiskOfRainTeleport"
-msgstr "雨中冒险传送功能"
+msgstr "雨中冒险传送"
 
 msgid "RiskOfRainTeleportDesc"
 msgstr "启用/禁用传送功能"
@@ -200,3 +200,39 @@ msgstr "键位绑定"
 msgid "Tailor"
 msgstr "裁缝"
 
+
+msgid "Defaults"
+msgstr "默认设置"
+
+msgid "Classic"
+msgstr "经典"
+
+msgid "Instant"
+msgstr "瞬间"
+
+msgid "GradientCritEffect"
+msgstr "渐变暴击效果"
+
+msgid "GradientCritEffectDesc"
+msgstr "作者：ChiuYi"
+
+msgid "Auto"
+msgstr "自动判断"
+
+msgid "FaultLevelEffects"
+msgstr "故障关卡效果"
+
+msgid "FaultLevelEffectsDesc"
+msgstr "进入关卡时的效果 (时间回溯期间的特殊效果)"
+
+msgid "Teleport"
+msgstr "传送设置"
+
+msgid "PopDamage"
+msgstr "自定义伤害数字"
+
+msgid "Others"
+msgstr "其他设置"
+
+msgid "LevelModule"
+msgstr "关卡设置模块"

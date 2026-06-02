@@ -23,13 +23,13 @@ namespace MoreSettings.Modules
 
         public List<(string title, string sub, Action onSelect, Action after)> Teleportdata = [
         (
-            "orig",
-            "",
+            "Defaults",
+            "Auto",
             ()=>SettingsMain.ConfigValue.Skin.TeleportStyle = TeleportStyle.orig,
             ()=>{ }
         ),
         (
-            "经典",
+            "Classic",
             "",
             () => SettingsMain.ConfigValue.Skin.TeleportStyle = TeleportStyle.Default,
             () => {}
@@ -61,10 +61,10 @@ namespace MoreSettings.Modules
             base.BuildMenu(options, Separator);
             if (!config.Enabled)
                 return;
-            menuHelper.AddSubSeparator("自定义伤害数字", scrollerFlow);
+            menuHelper.AddSubSeparator(GetString("PopDamage"), scrollerFlow);
 
             var widget = PopmenuHelper.AddConfigToggle(
-                 GetText.Instance.GetString("GenuinePopDamage"),
+                 GetString("GenuinePopDamage"),
                  "",
                  () => popConfig.GenuinePopDamage,
                  v => popConfig.GenuinePopDamage = v,
@@ -73,7 +73,7 @@ namespace MoreSettings.Modules
             PopmenuHelper.CenterToggleWidget(widget, options, scrollerFlow);
 
             var nopopwidget = menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("NoPopTextDesc"),
+                GetString("NoPopTextDesc"),
                 "",
                 () => config.HasNoPopText,
                 v =>
@@ -88,7 +88,7 @@ namespace MoreSettings.Modules
 
             var optionsdata = new List<(string title, string sub, Action onSelect, Action after)>
             {
-                ("默认", "系统自动判断", () => EntityPopDamage.ForcedHandler = null! ,()=>{ })
+                ("Defaults", "Auto", () => EntityPopDamage.ForcedHandler = null! ,()=>{ })
             };
             foreach (var handler in PopDamageHandlerRegistry.GetAll().Reverse())
             {
@@ -118,12 +118,13 @@ namespace MoreSettings.Modules
                 (v) => popConfig.index = v,
                 scrollerFlow
             );
-            
 
-            menuHelper.AddSubSeparator("Teleport",scrollerFlow);
+
+            menuHelper.AddSubSeparator(GetString("Teleport"), scrollerFlow);
+            
             var Teleportwidget = menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("SmoothTeleport"),
-                 GetText.Instance.GetString(""),
+                GetString("SmoothTeleport"),
+                GetString(""),
                 () => config.TeleportImmediate,
                 v => config.TeleportImmediate = v,
                 scrollerFlow: options.scrollerFlow
@@ -138,7 +139,7 @@ namespace MoreSettings.Modules
             );
 
 
-            menuHelper.AddSubSeparator("其他", scrollerFlow);
+            menuHelper.AddSubSeparator(GetString("Others"), scrollerFlow);
             menuHelper.AddConfigToggle(
                 GetText.Instance.GetString("KatanaZeroOutfit"),
                 GetText.Instance.GetString("KatanaZeroOutfitDesc"),

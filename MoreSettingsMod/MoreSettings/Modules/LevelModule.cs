@@ -77,8 +77,8 @@ namespace MoreSettings.Modules
             );
 
             menuHelper.AddConfigToggle(
-                GetString("故障关卡特效"),
-                GetString(""),
+                GetString("FaultLevelEffects"),
+                GetString("FaultLevelEffectsDesc"),
                 () => config.Faulteffects,
                 v => config.Faulteffects = v,
                 scrollerFlow
