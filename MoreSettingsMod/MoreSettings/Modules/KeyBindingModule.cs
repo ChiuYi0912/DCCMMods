@@ -1,22 +1,18 @@
-
 using CoreLibrary.Core.Extensions;
 using CoreLibrary.Utilities;
 using dc;
 using dc.en;
 using dc.ui;
 using dc.ui.icon;
-using HaxeProxy.Runtime;
 using ModCore.Events;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Events.Interfaces.Game.Hero;
 using ModCore.Mods;
 using ModCore.Modules;
-using MoreSettings.API;
-using MoreSettings.API.KeyBinding;
+using MoreSettings.API.Interfaces;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics.cine;
-using Serilog;
 using static MoreSettings.Configuration.Enums;
 
 namespace MoreSettings.Modules
@@ -61,12 +57,15 @@ namespace MoreSettings.Modules
             if (!config.Enabled)
                 return;
 
-            options.addKeyboardWidget(
+             foreach (var opt in config.ControlKeys)
+             {
+                options.addKeyboardWidget(
                  scrollerFlow,
                  options.cbmpScroller,
-                 GetText.Instance.GetString("Tailor").ToHaxeString(),
-                 config.TheCurrentKey[KeyName.Tailor]
+                 GetDcString(opt.Value.Name),
+                 opt.Value.act
              );
+            }
         }
 
         public int GetAct(KeyName name)
