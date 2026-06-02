@@ -331,7 +331,7 @@ namespace MoreSettings.GameMechanics.cine
         }
     }
 
-    public class FamilyTailors
+    internal class FamilyTailors
     {
         public Tailor Tailor = null!;
         public Skinner Skinner = null!;

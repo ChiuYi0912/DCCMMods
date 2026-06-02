@@ -15,7 +15,7 @@ using static MoreSettings.Configuration.Enums;
 namespace MoreSettings.Base.Modules
 {
 
-    public abstract class BaseModule : IEventReceiver
+    internal abstract class BaseModule : IEventReceiver
     {
         public virtual string Description => string.Empty;
         public virtual bool Enabled { get; set; }

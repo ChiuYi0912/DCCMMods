@@ -10,11 +10,10 @@ namespace CoreLibrary.Utilities
 {
     public class ControllerHelperSuper<T> where T : new()
     {
-        public readonly Config<T> config = null!;
-        public readonly Dictionary<int, ContorlLbleKeyConfig> keyConfig = null!;
-        public Controller gamecontroller = null!;
-
+        private readonly Config<T> config = null!;
+        private readonly Dictionary<int, ContorlLbleKeyConfig> keyConfig = null!;
         private static readonly HashSet<int> managedActions = new();
+        public Controller gamecontroller = null!;
 
         public int ActionCount
         {
@@ -27,7 +26,7 @@ namespace CoreLibrary.Utilities
             }
         }
 
-        public bool Lock
+        private bool Lock
         {
             get => gamecontroller.isLocked;
             set => gamecontroller.isLocked = value;
@@ -65,8 +64,30 @@ namespace CoreLibrary.Utilities
             };
 
             managedActions.Add(action);
+            SetBinding(keyConfig[action]);
             config.Save();
             return action;
+        }
+
+        public bool UpdateKey(string name, int? primary = null, int? secondary = null, int? third = null)
+        {
+            foreach (var kv in keyConfig)
+            {
+                if (kv.Value.Name == name && managedActions.Contains(kv.Key))
+                {
+                    var cfg = kv.Value;
+                    if (primary.HasValue)
+                        cfg.Primary = primary;
+                    if (secondary.HasValue)
+                        cfg.Secondary = secondary;
+                    if (third.HasValue)
+                        cfg.Third = third;
+                    SetBinding(cfg);
+                    config.Save();
+                    return true;
+                }
+            }
+            return false;
         }
 
         public bool RemoveKey(string name)

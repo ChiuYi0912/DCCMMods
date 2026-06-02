@@ -27,7 +27,7 @@ using ScarfData = Hashlink.Virtuals.virtual_attachOffX_attachOffY_color_cosOffse
 
 namespace MoreSettings.GameMechanics.Scarf
 {
-    public class CustomScarfUI : dc.ui.Process
+    internal class CustomScarfUI : dc.ui.Process
     {
         public ControllerAccess controller = default!;
         public GetText getText = GetText.Instance;

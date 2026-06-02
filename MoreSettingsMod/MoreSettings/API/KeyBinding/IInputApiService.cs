@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using CoreLibrary.Utilities;
 using MoreSettings.Configuration;
 
-namespace MoreSettings.API
+namespace MoreSettings.API.KeyBinding
 {
     public class IInputApiService(ControllerHelperSuper<MainConfig> contro)
     {
