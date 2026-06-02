@@ -17,7 +17,7 @@ using ModCore.Utilities;
 using MoreSettings.shaders;
 
 
-namespace MoreSettings.GameMechanics.Customs
+namespace MoreSettings.GameMechanics.CustomPopDamage
 {
     internal class PopDamageGradient : dc.ui.PopDamage
     {

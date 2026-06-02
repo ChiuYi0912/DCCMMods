@@ -4,6 +4,7 @@ using dc.en;
 using dc.en.inter;
 using ModCore.Mods;
 using ModCore.Modules;
+using MoreSettings.API;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics.cine;

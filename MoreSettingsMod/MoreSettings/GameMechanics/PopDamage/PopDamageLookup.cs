@@ -1,18 +1,12 @@
-using System;
 using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
 using dc;
+using MoreSettings.API;
 
 namespace MoreSettings.GameMechanics.CustomPopDamage
 {
     internal interface IPopDamageLookup
     {
         IPopDamage GetHandler(Entity entity);
-    }
-
-    internal class StaticPopDamageLookup : IPopDamageLookup
-    {
-        public IPopDamage GetHandler(Entity entity) => EntityPopDamage.handler;
     }
 
 

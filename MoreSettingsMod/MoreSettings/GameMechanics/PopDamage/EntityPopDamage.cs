@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Concurrent;
 using CoreLibrary.Core.Extensions;
 using dc;
 using dc.en;
 using dc.h2d;
-using dc.hl;
-using dc.libs;
-using dc.libs.misc;
-using dc.pr;
 using dc.shader;
 using dc.tool._Cooldown;
 using dc.tool.atk;
@@ -15,10 +9,9 @@ using dc.ui;
 using dc.ui.popd;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
-using HaxeProxy.Runtime.Internals;
-using ModCore.Mods;
 using ModCore.Storage;
 using ModCore.Utilities;
+using MoreSettings.API;
 using PopDamage.OtherPop;
 
 namespace MoreSettings.GameMechanics.CustomPopDamage

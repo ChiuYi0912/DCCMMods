@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CoreLibrary.Core.Extensions;
 using dc;
 using dc.tool.atk;
 using dc.ui.popd;
 using HaxeProxy.Runtime;
-using ModCore.Storage;
+using MoreSettings.API;
 
 namespace MoreSettings.GameMechanics.CustomPopDamage
 {

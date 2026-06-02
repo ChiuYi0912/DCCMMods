@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using dc;
 using dc.tool.atk;
 using ModCore.Storage;
+using MoreSettings.GameMechanics.CustomPopDamage;
 
-namespace MoreSettings.GameMechanics.CustomPopDamage
+namespace MoreSettings.API
 {
     public abstract class IPopDamage
     {

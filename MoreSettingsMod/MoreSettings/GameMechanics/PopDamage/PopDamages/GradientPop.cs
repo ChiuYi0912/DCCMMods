@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using dc;
 using dc.tool.atk;
 using HaxeProxy.Runtime;
+using MoreSettings.API;
 using MoreSettings.GameMechanics.CustomPopDamage;
-using MoreSettings.GameMechanics.Customs;
 
 namespace PopDamage.OtherPop
 {

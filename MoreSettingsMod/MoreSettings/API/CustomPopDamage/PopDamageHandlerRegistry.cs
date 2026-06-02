@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using dc;
 using dc.tool.atk;
 
-namespace MoreSettings.GameMechanics.CustomPopDamage
+namespace MoreSettings.API
 {
     public class PopDamageHandlerRegistry
     {
@@ -30,17 +30,17 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         }
 
 
-        public static IPopDamage GetHandler(AttackData a, Entity entity)
+        internal static IPopDamage GetHandler(AttackData a, Entity entity)
         {
             return Handlers.FirstOrDefault(h => h.CanHandle(a, entity))!;
         }
 
-        public static IPopDamage GetById(string id)
-        {
-            return Handlers.FirstOrDefault(h => h.Id == id)!;
-        }
+        // public static IPopDamage GetById(string id)
+        // {
+        //     return Handlers.FirstOrDefault(h => h.Id == id)!;
+        // }
 
-        public static IEnumerable<IPopDamage> GetAll() => Handlers;
+        internal static IEnumerable<IPopDamage> GetAll() => Handlers;
 
     }
 }
