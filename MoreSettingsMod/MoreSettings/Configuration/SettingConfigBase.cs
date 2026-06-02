@@ -28,7 +28,7 @@ namespace MoreSettings.Configuration
         public GameplayConfig Gameplay { get; set; } = new();
         public UIConfig UI { get; set; } = new();
         public ScarfConfig Scarf { get; set; } = new();
-        public SkinConfig Skin { get; set; } = new();
+        public VisualConfig Skin { get; set; } = new();
         public TeleportConfig Teleport { get; set; } = new();
         public AudioConfig Audio { get; set; } = new();
         public ViewportConfig Viewport { get; set; } = new();
@@ -199,7 +199,7 @@ namespace MoreSettings.Configuration
 
 
     [Serializable]
-    public class SkinConfig : SettingConfigBase
+    public class VisualConfig : SettingConfigBase
     {
         public bool HasNoPopText { get; set; } = false;
         public bool RiskOfRainSkin { get; set; } = false;

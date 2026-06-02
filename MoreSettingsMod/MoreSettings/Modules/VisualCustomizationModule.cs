@@ -13,11 +13,11 @@ using static MoreSettings.Configuration.Enums;
 
 namespace MoreSettings.Modules
 {
-    public class SkinSettingsModule : BaseModule
+    public class VisualCustomizationModule : BaseModule
     {
-        public override string Description => GetText.Instance.GetString("ModuleDesc_Skin");
-        public override SkinConfig config => (SkinConfig)base.config;
-        public override Enums.MenuCategory Type => Enums.MenuCategory.Skin;
+        public override string Description => GetText.Instance.GetString("ModuleDesc_Visual");
+        public override VisualConfig config => (VisualConfig)base.config;
+        public override Enums.MenuCategory Type => Enums.MenuCategory.Visual;
         public EntityPopDamage entityPop = default!;
         public PopConfig popConfig = default!;
 

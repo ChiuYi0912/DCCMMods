@@ -255,13 +255,14 @@ namespace CoreLibrary.Core.Utilities
 
             if (mainStr != null)
             {
-                dc.ui.Text text = Assets.Class.makeText(mainStr.ToHaxeString(), null, true, parentFlow);
+                dc.ui.Text text = Assets.Class.makeText(mainStr.ToHaxeString(), null, false, parentFlow);
+                text.scaleX = text.scaleY / 2;
                 text.set_textAlign(new Align.Center());
                 float stageWidth = dc.libs.Process.Class.CUSTOM_STAGE_WIDTH;
                 float availableWidth = stageWidth > 0 ? stageWidth : dc.hxd.Window.Class.getInstance().get_width();
                 text.maxWidthWanted = availableWidth;
                 text.onResize();
-                parentFlow.getProperties(text).paddingTop = (int)(pixelScale * 10.0);
+                parentFlow.getProperties(text).paddingTop = (int)(pixelScale * 5.0);
             }
 
             HSprite hsprite = new HSprite(Assets.Class.ui, "walterWhite".ToHaxeString(), Ref<int>.In(0), null);

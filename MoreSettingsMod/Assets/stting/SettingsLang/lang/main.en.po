@@ -34,8 +34,8 @@ msgstr "Special Settings"
 msgid "ModuleDesc_Viewport"
 msgstr "Camera Settings"
 
-msgid "ModuleDesc_Skin"
-msgstr "Crossover Settings"
+msgid "ModuleDesc_Visual"
+msgstr "Visual Customization Module"
 
 # GameplayModule
 msgid "HitPause"

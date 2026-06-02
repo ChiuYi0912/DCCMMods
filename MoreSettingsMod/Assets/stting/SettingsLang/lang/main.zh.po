@@ -34,8 +34,8 @@ msgstr "特殊设置"
 msgid "ModuleDesc_Viewport"
 msgstr "视角设置"
 
-msgid "ModuleDesc_Skin"
-msgstr "联动设置"
+msgid "ModuleDesc_Visual"
+msgstr "视觉自定义模块"
 
 # GameplayModule
 msgid "HitPause"

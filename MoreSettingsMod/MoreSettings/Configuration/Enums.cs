@@ -9,7 +9,7 @@ namespace MoreSettings.Configuration
             Gameplay,
             UI,
             Weapon,
-            Skin,
+            Visual,
             Scarf,
             Viewport,
             Level
