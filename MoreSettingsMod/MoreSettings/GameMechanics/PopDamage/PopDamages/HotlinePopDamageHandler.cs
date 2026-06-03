@@ -10,30 +10,16 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
 {
     internal class HotlinePopDamageHandler : IPopDamage
     {
-        public HotlinePopDamageHandler() : base("hotline") { }
+        public HotlinePopDamageHandler() : base("hotline", 0.5) { }
         private static readonly HashSet<string> HotlineSkins = new()
         {
             "HotlineMiamiChicken",
             "HotlineMiamiHorse",
             "HotlineMiamiOwl"
         };
-
         public override int Priority => 10;
-
-        public override double SpeedMultiplier
-        {
-            get => popconfig.HotlineSpeedMultiplier;
-            set
-            {
-                popconfig.HotlineSpeedMultiplier = value;
-                EntityPopDamage.Config.Save();
-            }
-        }
-
         public override string OptionsTitle => "HotlineCritEffect";
-
         public override string SubStr => "";
-
         public override bool CanHandle(AttackData a, Entity entity)
         {
             if (!a.hasTag(2)) return false;
@@ -42,7 +28,6 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
 
             return HotlineSkins.Any(skin => entity._level.game.hero.hasSkin(null, skin.ToHaxeString()));
         }
-
         public override void CreatePopDamage(AttackData a, Entity entity)
         {
             var fontData = EntityPopDamage.CreateFontData("hotline");

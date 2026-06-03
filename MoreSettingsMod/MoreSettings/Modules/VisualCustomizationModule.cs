@@ -94,6 +94,7 @@ namespace MoreSettings.Modules
             foreach (var handler in PopDamageHandlerRegistry.GetAll().Reverse())
             {
                 var h = handler;
+                if (h.damageData.unique) continue;
                 optionsdata.Add((
                     GetString(h.OptionsTitle),
                     GetString(h.SubStr),
@@ -113,6 +114,9 @@ namespace MoreSettings.Modules
                     }
                 ));
             }
+            while (popConfig.index > optionsdata.Count)
+                popConfig.index--;
+
             PopmenuHelper.AddConfigRadioGroup(
                 optionsdata,
                 popConfig.index,
@@ -122,7 +126,7 @@ namespace MoreSettings.Modules
 
 
             menuHelper.AddSubSeparator(GetString("Teleport"), scrollerFlow);
-            
+
             var Teleportwidget = menuHelper.AddConfigToggle(
                 GetString("SmoothTeleport"),
                 GetString(""),
@@ -208,13 +212,13 @@ namespace MoreSettings.Modules
                         !config.TeleportImmediate);
                     break;
 
-                    case TeleportStyle.Instant:
-                        _ = new TeleportationFancy(
-                            hero,
-                            self,
-                            to,
-                            !config.TeleportImmediate);
-                        break;
+                case TeleportStyle.Instant:
+                    _ = new TeleportationFancy(
+                        hero,
+                        self,
+                        to,
+                        !config.TeleportImmediate);
+                    break;
 
             }
         }
