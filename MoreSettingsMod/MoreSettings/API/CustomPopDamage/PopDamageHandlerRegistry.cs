@@ -35,10 +35,10 @@ namespace MoreSettings.API
             return Handlers.FirstOrDefault(h => h.CanHandle(a, entity))!;
         }
 
-        // public static IPopDamage GetById(string id)
-        // {
-        //     return Handlers.FirstOrDefault(h => h.Id == id)!;
-        // }
+        public static IPopDamage GetById(string id)
+        {
+            return Handlers.FirstOrDefault(h => h.Id == id)!;
+        }
 
         internal static IEnumerable<IPopDamage> GetAll() => Handlers;
 

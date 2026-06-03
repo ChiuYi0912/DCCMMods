@@ -45,10 +45,16 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         private void Hook_Entity_PopDamage(Hook_Entity.orig_popDamage orig, Entity self, AttackData a)
         {
             if (dc.ui.Console.Class.ME.flags.exists("NoPopText".ToHaxeString())) return;
-
             handler = ForcedHandler ?? PopDamageHandlerRegistry.GetHandler(a, self);
+
+            if (ForcedHandler != null && a.hasTag(2))
+                handler = ForcedHandler;
+            else
+                handler = PopDamageHandlerRegistry.GetHandler(a, self);
+
             _handlerLookup.CacheHandler(self, handler);
             handler.CreatePopDamage(a, self);
+
 
             UpdateCooldown(356515840,
                 CalculateCooldownFrames(self.cd.baseFps, 0.3), self);
