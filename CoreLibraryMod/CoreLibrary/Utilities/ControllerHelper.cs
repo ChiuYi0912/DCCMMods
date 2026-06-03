@@ -9,6 +9,7 @@ using dc.hl.types;
 using dc.hxd;
 using dc.tool;
 using dc.ui;
+using ModCore.Mods;
 using ModCore.Utilities;
 using Serilog;
 
@@ -105,6 +106,7 @@ namespace CoreLibrary.Utilities
     public class ContorlLbleKeyConfig
     {
         public string Name { get; set; } = string.Empty;
+        public string FullPath { get; set; } = null!;
         public int act { get; set; }
         public int? Primary { get; set; }
         public int? Secondary { get; set; }

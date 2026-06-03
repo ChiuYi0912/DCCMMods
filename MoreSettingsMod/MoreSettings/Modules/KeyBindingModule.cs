@@ -57,14 +57,14 @@ namespace MoreSettings.Modules
             if (!config.Enabled)
                 return;
 
-             foreach (var opt in config.ControlKeys)
-             {
+            foreach (var opt in config.ControlKeys)
+            {
                 options.addKeyboardWidget(
                  scrollerFlow,
                  options.cbmpScroller,
                  GetDcString(opt.Value.Name),
                  opt.Value.act
-             );
+                );
             }
         }
 
@@ -87,10 +87,14 @@ namespace MoreSettings.Modules
         void IOnGameEndInit.OnGameEndInit()
         {
             controller = new ControllerHelperSuper<MainConfig>(SettingsMain.ModConfig, config.ControlKeys, Boot.Class.ME.controller);
-            var act = controller.GetAction("Tailor") ?? controller.AddKey("Tailor", KeyHelper.T, KeyHelper.T, KeyHelper.T);
-            config.TheCurrentKey[KeyName.Tailor] = act;
+            if (config.ConfigVersion <= 1)
+            {
+                controller.RemoveKey("Tailor");
+                config.ConfigVersion = 1.1;
+                SaveConfig();
+            }
+            var act = controller.GetAction("Tailor") ?? controller.AddKey(SettingsMain.Instance.Info, "Tailor", KeyHelper.T, KeyHelper.T, KeyHelper.T);
             EventSystem.BroadcastEvent<IInputApi, ControllerHelperSuper<MainConfig>>(controller);
-            controller.ApplyBindings();
         }
 
         public bool CheckTailorCd(Hero hero)

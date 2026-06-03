@@ -19,7 +19,7 @@ namespace MoreSettings.Configuration
     public abstract class SettingConfigBase
     {
         public bool Enabled { get; set; } = false;
-        public int ConfigVersion { get; set; } = 1;
+        public virtual double ConfigVersion { get; set; } = 1;
     }
 
     [Serializable]
@@ -246,11 +246,8 @@ namespace MoreSettings.Configuration
     public class KeyConfig : SettingConfigBase
     {
         public Dictionary<int, ContorlLbleKeyConfig> ControlKeys { get; set; } = new();
-        public Dictionary<KeyName, int> TheCurrentKey { get; set; } = new();
-        public void defaultValues()
-        {
-            ControlKeys = new Dictionary<int, ContorlLbleKeyConfig>();
-        }
+
+        public override double ConfigVersion { get; set; } = 1.1;
     }
 
     public class LevelConfig : SettingConfigBase

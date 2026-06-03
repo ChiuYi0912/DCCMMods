@@ -4,6 +4,7 @@ using dc.hxd;
 using dc.tool;
 using HashlinkNET.Native.Impl;
 using HaxeProxy.Runtime;
+using ModCore.Mods;
 using ModCore.Storage;
 
 namespace CoreLibrary.Utilities
@@ -39,14 +40,14 @@ namespace CoreLibrary.Utilities
             gamecontroller = controller;
 
             RebuildTracking();
-
+            ApplyBindings();
             dc.Hook_Options.setKeyMapping += Hook_Options_setKeyMapping;
             dc.Hook__Options.dumpControllerConfig += Hook__Options_dumpControllerConfig;
         }
 
 
 
-        public int AddKey(string name, int? primary = null, int? secondary = null, int? third = null)
+        public int AddKey(ModInfo modInfo, string name, int? primary = null, int? secondary = null, int? third = null)
         {
             RemoveKeyInternal(name);
 
@@ -57,6 +58,7 @@ namespace CoreLibrary.Utilities
             keyConfig[action] = new ContorlLbleKeyConfig
             {
                 Name = name,
+                FullPath = modInfo.ModRoot.FullPath,
                 act = action,
                 Primary = primary,
                 Secondary = secondary,
@@ -69,26 +71,6 @@ namespace CoreLibrary.Utilities
             return action;
         }
 
-        public bool UpdateKey(string name, int? primary = null, int? secondary = null, int? third = null)
-        {
-            foreach (var kv in keyConfig)
-            {
-                if (kv.Value.Name == name && managedActions.Contains(kv.Key))
-                {
-                    var cfg = kv.Value;
-                    if (primary.HasValue)
-                        cfg.Primary = primary;
-                    if (secondary.HasValue)
-                        cfg.Secondary = secondary;
-                    if (third.HasValue)
-                        cfg.Third = third;
-                    SetBinding(cfg);
-                    config.Save();
-                    return true;
-                }
-            }
-            return false;
-        }
 
         public bool RemoveKey(string name)
         {
@@ -173,6 +155,15 @@ namespace CoreLibrary.Utilities
             var conflicted = new List<int>();
             foreach (var kv in keyConfig)
             {
+                if (kv.Value is null)
+                {
+                    keyConfig.Remove(kv.Key);
+                    continue;
+                }
+                if (kv.Value.FullPath is not null
+                && !CheckModExistence(kv.Value.FullPath, kv.Value.Name))
+                    continue;
+
                 if (!managedActions.Add(kv.Key))
                     conflicted.Add(kv.Key);
             }
@@ -199,10 +190,12 @@ namespace CoreLibrary.Utilities
         {
             foreach (var kv in keyConfig)
             {
-                if (kv.Value.Name == name && managedActions.Contains(kv.Key))
+                if (kv.Value.Name == name)
                 {
-                    managedActions.Remove(kv.Key);
+                    if (managedActions.Contains(kv.Key))
+                        managedActions.Remove(kv.Key);
                     keyConfig.Remove(kv.Key);
+                    RemoveKeyBinding(kv.Value);
                     return true;
                 }
             }
@@ -253,6 +246,24 @@ namespace CoreLibrary.Utilities
             bp.third.setDyn(cfg.act, cfg.Third);
         }
 
+        private void RemoveKeyBinding(ContorlLbleKeyConfig cfg)
+        {
+            BindingProfiles bp = gamecontroller.normalBindings;
+            bp.primary.remove(cfg.act);
+            bp.secondary.remove(cfg.act);
+            bp.third.remove(cfg.act);
+        }
+
+        private bool CheckModExistence(string FullPath, string key)
+        {
+            if (!Directory.Exists(FullPath))
+            {
+                RemoveKey(key);
+                return false;
+            }
+            return true;
+        }
+
         #region Hooks
 
         private void Hook__Options_dumpControllerConfig(dc.Hook__Options.orig_dumpControllerConfig orig, object _gamepad, object _keyboard, bool isNormalBindings)
@@ -261,9 +272,12 @@ namespace CoreLibrary.Utilities
             ApplyBindings();
         }
 
-        private void Hook_Options_setKeyMapping(dc.Hook_Options.orig_setKeyMapping orig, dc.Options options, int action, int idx, int? key)
+        private void Hook_Options_setKeyMapping(
+            dc.Hook_Options.orig_setKeyMapping orig,
+            dc.Options options, int action, int idx, int? key)
         {
-            if (managedActions.Contains(action) && keyConfig.TryGetValue(action, out var cfg))
+            if (managedActions.Contains(action)
+            && keyConfig.TryGetValue(action, out var cfg))
             {
                 cfg.act = action;
                 if (idx == 0)
