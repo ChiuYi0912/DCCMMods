@@ -28,13 +28,8 @@ using HashlinkNET.Native.Impl;
 using dc.en.inter;
 using dc.chroma.effects;
 using ModCore.Events.Interfaces.Game;
-using MoreSettings.Utilities;
-using ModCore.Serialization;
 using ModCore.Storage;
 using ModCore.Events;
-using dc.en.inter.exit;
-using CoreLibrary.Core.Utilities;
-using static dc.pr.Game;
 using dc.libs.misc;
 
 namespace MoreSettings.Modules
@@ -92,18 +87,17 @@ namespace MoreSettings.Modules
         public override void PermanentlyRegisterHooks()
         {
             base.PermanentlyRegisterHooks();
-            Hook_LevelStruct.applyDifficulty -= Hook__LevelStruct_applyDifficulty;
-            Hook_Game.loadMainLevel -= Hook_Game_loadMainLevel;
-            Hook_LevelTransition.loadNewLevel -= Hook_LevelTransition_loadNewLevel;
-            Hook__LevelTransition.__constructor__ -= Hook__LevelTransition__constructor__;
-            Hook_Game.activateSubLevel -= Hook_Game_activateSubLevel;
-            Hook_Level.resume -= Hook_Level_resume;
-            Hook_LevelDisp.render -= Hook_LevelDisp_render;
         }
-
         public override void UnregisterHooks()
         {
             base.UnregisterHooks();
+            Hook_LevelStruct.applyDifficulty -= Hook__LevelStruct_applyDifficulty;
+            Hook_Game.loadMainLevel -= Hook_Game_loadMainLevel;
+            Hook__LevelTransition.__constructor__ -= Hook__LevelTransition__constructor__;
+            //Hook_Game.activateSubLevel -= Hook_Game_activateSubLevel;
+            // Hook_Level.resume -= Hook_Level_resume;
+            // Hook_LevelDisp.render -= Hook_LevelDisp_render;
+            //Hook_LevelTransition.loadNewLevel -= Hook_LevelTransition_loadNewLevel;
         }
 
         public override void RegisterHooks()
@@ -111,11 +105,11 @@ namespace MoreSettings.Modules
             base.RegisterHooks();
             Hook_LevelStruct.applyDifficulty += Hook__LevelStruct_applyDifficulty;
             Hook_Game.loadMainLevel += Hook_Game_loadMainLevel;
-            Hook_LevelTransition.loadNewLevel += Hook_LevelTransition_loadNewLevel;
             Hook__LevelTransition.__constructor__ += Hook__LevelTransition__constructor__;
-            Hook_Game.activateSubLevel += Hook_Game_activateSubLevel;
-            Hook_Level.resume += Hook_Level_resume;
-            Hook_LevelDisp.render += Hook_LevelDisp_render;
+            //Hook_Game.activateSubLevel += Hook_Game_activateSubLevel;
+            // Hook_Level.resume += Hook_Level_resume;
+            // Hook_LevelDisp.render += Hook_LevelDisp_render;
+            //Hook_LevelTransition.loadNewLevel += Hook_LevelTransition_loadNewLevel;
         }
         #endregion
 
@@ -842,6 +836,7 @@ namespace MoreSettings.Modules
                 var map = (LevelMap)levelMaps.getDyn(i);
                 if (map == null)
                     isFirstLevel = false;
+                
 
                 var level = new Level(self, map, null, false,
                     Ref<bool>.In(!isFirstLevel),
@@ -1254,7 +1249,7 @@ namespace MoreSettings.Modules
             var allLevels = Data.Class.level.all;
             for (int i = 0; i < allLevels.get_length(); i++)
             {
-                dynamic raw = allLevels.getDyn(i);
+                var raw = allLevels.getDyn(i);
                 var info = ((HaxeProxyBase)raw).ToVirtual<LevelIfor_Virtual>();
                 if (info.group == 0 && (info.flagsProps.genFlags & (1 << 16)) == 0)
                     candidates.Add(info);
@@ -1345,7 +1340,7 @@ namespace MoreSettings.Modules
         {
             for (int i = 0; i < Data.Class.loreRoom.all.get_length(); i++)
             {
-                dynamic lore = Data.Class.loreRoom.all.array.getDyn(i);
+                var lore = Data.Class.loreRoom.all.array.getDyn(i);
                 if (lore == null) return;
                 if (dc._Data.LoreRoom_Impl_.Class.get_room(
                     ((HaxeProxyBase)lore).ToVirtual<virtual_arc_examinables_fxEmitters_Intention_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>()).id.ToString().EqualsIgnoreCase("MimicEscapedRoom"))
