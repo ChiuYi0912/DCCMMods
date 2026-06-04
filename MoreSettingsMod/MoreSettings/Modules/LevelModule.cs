@@ -867,14 +867,15 @@ namespace MoreSettings.Modules
 
             #region 战利品生成
 
-            ArrayObj nonSecretLevels = (ArrayObj)ArrayUtils.CreateDyn().array;
+            var mapsForLoot = (ArrayObj)ArrayUtils.CreateDyn().array;
             for (int i = 0; i < self.subLevels.length; i++)
             {
                 var level = self.subLevels.getDyn(i);
                 if (level != null && !level?.isSecret)
-                    nonSecretLevels.push(level);
+                    mapsForLoot.push(level?.map);
             }
-            var lootGen = new LootGen(self.user, nonSecretLevels, seed,
+            int lootSeed = levelMaps.length > 0 ? ((LevelMap)levelMaps.getDyn(0))?.seed ?? seed : seed;
+            var lootGen = new LootGen(self.user, mapsForLoot, lootSeed,
                 self.data.tierDistribution, self.hero,
                 Ref<bool>.In(incentivized), Ref<bool>.Null);
             Boot.Class.tryRender();

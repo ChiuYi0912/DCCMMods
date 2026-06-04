@@ -68,7 +68,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
             PopDamageHotline popDamage, Entity e, AttackData attackData,
             int dmgIdx, Ref<bool> big, virtual_chars_font_ customFont)
         {
-            bool? originalBig = big.value;
+            bool? originalBig = !big.IsNull && big.value;
 
             popDamage.jiggle = 1.0;
             popDamage.textLayer = (dc.hl.types.ArrayObj)ArrayUtils.CreateDyn().array;
