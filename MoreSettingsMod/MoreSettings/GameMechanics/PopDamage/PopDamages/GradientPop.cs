@@ -12,7 +12,7 @@ namespace PopDamage.OtherPop
         public override int Priority => 5;
         public override string OptionsTitle => "GradientCritEffect";
         public override string SubStr => "GradientCritEffectDesc";
-        public override bool CanHandle(AttackData a, Entity entity) => a.hasTag(2) && EntityPopDamage.ForcedHandler == this;
+        public override bool CanHandle(AttackData a, Entity entity) => EntityPopDamage.ForcedHandler == this;
         public override void CreatePopDamage(AttackData a, Entity entity)
         {
             _ = new PopDamageGradient(entity, a, entity.dmgIdx, Ref<bool>.Null, EntityPopDamage.CreateFontData("hotline"));

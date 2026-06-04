@@ -11,6 +11,8 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         public bool GenuinePopDamage { get; set; } = false;
         public int index = 0;
         public string PreviouslyType { get; set; } = string.Empty;
+        public bool ProhibitedHasTagTwo { get; set; } = true;
+        public bool Characteristics { get; set; } = true;
         public Dictionary<string, PopDamageData> DATA = new();
     }
 }

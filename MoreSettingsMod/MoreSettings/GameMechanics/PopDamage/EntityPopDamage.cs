@@ -5,6 +5,7 @@ using dc.h2d;
 using dc.shader;
 using dc.tool._Cooldown;
 using dc.tool.atk;
+using dc.tool.weap;
 using dc.ui;
 using dc.ui.popd;
 using Hashlink.Virtuals;
@@ -24,6 +25,20 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         public static IPopDamage handler = null!;
         public static IPopDamage ForcedHandler = null!;
 
+        private static readonly HashSet<string> StsItems = new()
+        {
+            "DiverseDeckJuggernaut",
+            "DiverseDeckCatalyst",
+            "DiverseDeckElectro",
+            "DiverseDeckWatcher"
+        };
+        private static readonly HashSet<string> HotlineSkins = new()
+        {
+            "HotlineMiamiChicken",
+            "HotlineMiamiHorse",
+            "HotlineMiamiOwl"
+        };
+
         public EntityPopDamage()
         {
             popconfig = Config.Value;
@@ -42,13 +57,46 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         private void Hook_Entity_PopDamage(Hook_Entity.orig_popDamage orig, Entity self, AttackData a)
         {
             if (dc.ui.Console.Class.ME.flags.exists("NoPopText".ToHaxeString())) return;
-            handler = ForcedHandler ?? PopDamageHandlerRegistry.GetHandler(a, self);
 
-            if (ForcedHandler != null && a.hasTag(2))
+            bool hastagtwo = a.hasTag(2);
+            bool allowCritHandler = a.hasTag(2) || popconfig.ProhibitedHasTagTwo;
+
+            if (self is Hero) allowCritHandler = false;
+
+            if (popconfig.Characteristics && ForcedHandler != null)
+            {
+                if (a.sourceItem != null
+                && StsItems.Contains(a.sourceItem.getItemKind().ToString())
+                || self._level.game.hero.hasSkin(null, "SlayTheSpire".ToHaxeString())
+                && hastagtwo)
+                {
+                    handler = new StsPopDamageHandler();
+                    goto Skip;
+                }
+                if (hastagtwo)
+                {
+                    if (a.sourceWeapon != null
+                    && a.sourceWeapon is BaseballBat
+                    || HotlineSkins.Any(skin => self._level.game.hero.hasSkin(null, skin.ToHaxeString())))
+                    {
+                        handler = new HotlinePopDamageHandler();
+                        goto Skip;
+                    }
+                }
+            }
+
+            if (ForcedHandler != null && (popconfig.ProhibitedHasTagTwo || hastagtwo))
                 handler = ForcedHandler;
             else
                 handler = PopDamageHandlerRegistry.GetHandler(a, self);
 
+            if (handler.RequiresCrit && !allowCritHandler && handler is not DefaultPopDamageHandler)
+                handler = new DefaultPopDamageHandler();
+
+            if (a.sourceItem != null && StsItems.Contains(a.sourceItem.getItemKind().ToString()) && handler is not StsPopDamageHandler)
+                handler = new StsPopDamageHandler();
+
+        Skip:
             handler.CreatePopDamage(a, self);
 
 
@@ -184,7 +232,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
             popDamage.flow.y = GetYOffsetForDamageIndex(dmgIdx, pixelScale * 9.0);
 
             popDamage.doMovement(e, ad);
-            CreateFadeAnimation(popDamage, e, ad);
+            CreateFadeAnimation(popDamage, e, ad, handler);
 
             if (e._level.isBlur)
                 popDamage.blur(Ref<double>.Null, Ref<double>.Null);
@@ -194,7 +242,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
 
         #region Helper
 
-        private void CreateFadeAnimation(dc.ui.Process popDamage, Entity e, AttackData ad)
+        private static void CreateFadeAnimation(dc.ui.Process popDamage, Entity e, AttackData ad, IPopDamage currentHandler)
         {
             double speedMult = GetSpeedMultiplier(e);
 
@@ -206,7 +254,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
                 return;
             }
 
-            bool isDefaultHandler = handler?.Priority == int.MaxValue;
+            bool isDefaultHandler = currentHandler?.Priority == int.MaxValue;
 
             if (isDefaultHandler)
             {
@@ -216,14 +264,14 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
             }
             else
             {
-                double ms = (handler?.SpeedMultiplier ?? 0.5) * 1000.0;
+                double ms = (currentHandler?.SpeedMultiplier ?? 0.5) * 1000.0;
                 CreateFadeTween((dc.ui.PopDamage)popDamage, ms, ms + 100);
             }
         }
 
 
 
-        private void CreateFadeTween(dc.ui.PopDamage popDamage, double duration, double delay)
+        private static void CreateFadeTween(dc.ui.PopDamage popDamage, double duration, double delay)
         {
             var getter = new HlFunc<double>(() => popDamage.flow.alpha);
             var setter = new HlAction<double>(value =>

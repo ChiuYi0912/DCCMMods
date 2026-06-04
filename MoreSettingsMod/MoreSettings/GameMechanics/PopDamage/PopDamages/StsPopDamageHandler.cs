@@ -23,14 +23,6 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         public override string SubStr => "";
         public override bool CanHandle(AttackData a, Entity entity)
         {
-            if (a.sourceItem != null)
-            {
-                string itemKind = a.sourceItem.getItemKind().ToString();
-                if (StsItems.Contains(itemKind))
-                    return true;
-            }
-
-            if (!a.hasTag(2)) return false;
 
             return entity._level.game.hero.hasSkin(null, StsSkin.ToHaxeString());
         }

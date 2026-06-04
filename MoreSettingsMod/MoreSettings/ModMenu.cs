@@ -38,7 +38,7 @@ namespace MoreSettings
                     SettingsMain.ModuleManager.BuildAllMenus(options);
                     return;
                 default:
-                    SettingsMain.ModuleManager.BuildKeyMenus(options, menu);
+                    SettingsMain.ModuleManager.BuildCustomMenus(options, menu);
                     return;
             }
         }

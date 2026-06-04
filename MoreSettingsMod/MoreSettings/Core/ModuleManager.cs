@@ -43,7 +43,7 @@ namespace MoreSettings.Core
             }
         }
 
-        public void BuildKeyMenus(dc.ui.Options options, Enums.MenuCategory Type)
+        public void BuildCustomMenus(dc.ui.Options options, Enums.MenuCategory Type)
         {
             if (!modules.TryGetValue(Type, out var module)) return;
             module.BaseBuildMenu(options);

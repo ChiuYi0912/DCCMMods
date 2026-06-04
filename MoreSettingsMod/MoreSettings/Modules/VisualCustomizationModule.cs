@@ -107,7 +107,26 @@ namespace MoreSettings.Modules
                     () =>
                     {
                         if (EntityPopDamage.ForcedHandler is DefaultPopDamageHandler || h is DefaultPopDamageHandler) return;
-                        PopmenuHelper.AddConfigSlider(
+
+                        var Special = PopmenuHelper.AddConfigToggle(
+                            GetString("保留联动皮肤/武器的特殊暴击"),
+                            "",
+                            () => popConfig.Characteristics,
+                            v => popConfig.Characteristics = v,
+                            scrollerFlow
+                        );
+                        PopmenuHelper.CenterToggleWidget(Special,options,scrollerFlow,false);
+
+                        var NoTag = PopmenuHelper.AddConfigToggle(
+                            GetString("无暴击时可触发"),
+                            "",
+                            () => popConfig.ProhibitedHasTagTwo,
+                            v => popConfig.ProhibitedHasTagTwo = v,
+                            scrollerFlow
+                        );
+                        PopmenuHelper.CenterToggleWidget(NoTag, options, scrollerFlow, false);
+
+                        var crit = PopmenuHelper.AddConfigSlider(
                             GetText.Instance.GetString("CritEffectDuration"),
                             () => h.SpeedMultiplier,
                             v => h.SpeedMultiplier = v,
@@ -116,6 +135,8 @@ namespace MoreSettings.Modules
                             maxValue: 3,
                             scrollerFlow: scrollerFlow
                         );
+                        menuHelper.CenterToggleWidget(crit, options, scrollerFlow, false);
+
                     }
                 ));
             }
@@ -128,6 +149,7 @@ namespace MoreSettings.Modules
                 (v) => popConfig.index = v,
                 scrollerFlow
             );
+
 
 
             menuHelper.AddSubSeparator(GetString("Teleport"), scrollerFlow);

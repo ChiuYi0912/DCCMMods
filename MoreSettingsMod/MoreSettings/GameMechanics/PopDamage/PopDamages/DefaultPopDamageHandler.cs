@@ -8,6 +8,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
     internal class DefaultPopDamageHandler : IPopDamage
     {
         public DefaultPopDamageHandler() : base("default", 0) { }
+        public override bool RequiresCrit => false;
         public override int Priority => int.MaxValue;
         public override string OptionsTitle => "Classic";
         public override string SubStr => "";

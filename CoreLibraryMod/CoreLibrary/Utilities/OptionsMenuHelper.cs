@@ -215,14 +215,16 @@ namespace CoreLibrary.Core.Utilities
             }
         }
 
-        public void CenterToggleWidget(Flow widget, dc.ui.Options options, Flow scrollerFlow)
+        public void CenterToggleWidget(Flow widget, dc.ui.Options options, Flow scrollerFlow, bool Middle = true)
         {
-            var props = scrollerFlow.getProperties(widget);
-            props.horizontalAlign = new FlowAlign.Middle();
+            FlowAlign align = Middle ? new FlowAlign.Middle() : new FlowAlign.Left();
 
+            var props = scrollerFlow.getProperties(widget);
+            props.horizontalAlign = align;
+            if (!Middle) props.paddingLeft = scrollerFlow.get_innerWidth() / 20;
 
             widget.maxWidth = scrollerFlow.get_innerWidth();
-            widget.horizontalAlign = new FlowAlign.Middle();
+            widget.horizontalAlign = align;
 
 
             widget.paddingTop = widget.get_innerHeight() / 5;
@@ -238,15 +240,15 @@ namespace CoreLibrary.Core.Utilities
                 else if (child is Flow textFlow)
                 {
                     textFlow.maxWidth = widget.maxWidth;
-                    textFlow.horizontalAlign = new FlowAlign.Middle();
-                    textFlow.verticalAlign = new FlowAlign.Middle();
+                    textFlow.horizontalAlign = align;
+                    textFlow.verticalAlign = align;
 
                     textFlow.scaleX = textFlow.scaleY = textFlow.scaleY / 2;
                 }
             }
         }
 
-        public void AddSubSeparator(string mainStr, Flow parentFlow)
+        public void AddSubSeparator(string mainStr, Flow parentFlow, bool visible = true)
         {
             if (parentFlow == null)
                 return;
@@ -267,6 +269,7 @@ namespace CoreLibrary.Core.Utilities
 
             HSprite hsprite = new HSprite(Assets.Class.ui, "walterWhite".ToHaxeString(), Ref<int>.In(0), null);
             parentFlow.addChild(hsprite);
+            hsprite.visible = visible;
             hsprite.pivot.centerFactorX = 0.0;
             hsprite.pivot.centerFactorY = 0.0;
             hsprite.pivot.usingFactor = true;
