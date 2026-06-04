@@ -24,12 +24,9 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         public static IPopDamage handler = null!;
         public static IPopDamage ForcedHandler = null!;
 
-        private readonly ThreadSafePopDamageLookup _handlerLookup;
-
         public EntityPopDamage()
         {
             popconfig = Config.Value;
-            _handlerLookup = new ThreadSafePopDamageLookup();
 
             PopDamageHandlerRegistry.Register(new HotlinePopDamageHandler());
             PopDamageHandlerRegistry.Register(new StsPopDamageHandler());
@@ -52,7 +49,6 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
             else
                 handler = PopDamageHandlerRegistry.GetHandler(a, self);
 
-            _handlerLookup.CacheHandler(self, handler);
             handler.CreatePopDamage(a, self);
 
 
@@ -206,28 +202,28 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
             {
                 double duration = speedMult * 600.0;
                 double delay = speedMult * (ad.dmgBonusMul > 1.33 || ad.dmgScaledAdd > 0.0 ? 1000.0 : 600.0);
-                CreateFadeTween((dc.ui.PopDamage)popDamage, duration, delay, e);
+                CreateFadeTween((dc.ui.PopDamage)popDamage, duration, delay);
                 return;
             }
 
-            bool isDefaultHandler = _handlerLookup.GetHandler(e).Priority == int.MaxValue;
+            bool isDefaultHandler = handler?.Priority == int.MaxValue;
 
             if (isDefaultHandler)
             {
                 double duration = speedMult * 450;
                 double delay = speedMult * (ad.dmgBonusMul > 1.33 || ad.dmgScaledAdd > 0.0 ? 700.0 : 350.0);
-                CreateFadeTween((dc.ui.PopDamage)popDamage, duration, delay, e);
+                CreateFadeTween((dc.ui.PopDamage)popDamage, duration, delay);
             }
             else
             {
-                double ms = _handlerLookup.GetHandler(e).SpeedMultiplier * 1000.0;
-                CreateFadeTween((dc.ui.PopDamage)popDamage, ms, ms + 100, e);
+                double ms = (handler?.SpeedMultiplier ?? 0.5) * 1000.0;
+                CreateFadeTween((dc.ui.PopDamage)popDamage, ms, ms + 100);
             }
         }
 
 
 
-        private void CreateFadeTween(dc.ui.PopDamage popDamage, double duration, double delay, Entity e)
+        private void CreateFadeTween(dc.ui.PopDamage popDamage, double duration, double delay)
         {
             var getter = new HlFunc<double>(() => popDamage.flow.alpha);
             var setter = new HlAction<double>(value =>
@@ -238,11 +234,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
 
             var tween = popDamage.tw.create_(getter, setter, 1.0, 0.0, null, duration, Ref<bool>.Null);
             tween.delayMs(delay);
-            tween.end(new HlAction(() =>
-            {
-                _handlerLookup.ClearCache(e);
-                popDamage.destroy();
-            }));
+            tween.end(new HlAction(popDamage.destroy));
         }
 
 

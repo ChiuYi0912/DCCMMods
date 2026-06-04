@@ -53,6 +53,11 @@ namespace MoreSettings.Modules
             entityPop = new EntityPopDamage();
             popConfig = EntityPopDamage.popconfig;
             config = SettingsMain.ConfigValue.Skin;
+
+            if (!string.IsNullOrEmpty(popConfig.PreviouslyType))
+                EntityPopDamage.ForcedHandler = PopDamageHandlerRegistry.GetById(popConfig.PreviouslyType);
+
+
             base.Initialize(mainMod);
         }
 
@@ -89,7 +94,7 @@ namespace MoreSettings.Modules
 
             var optionsdata = new List<(string title, string sub, Action onSelect, Action after)>
             {
-                ("Defaults", "Auto", () => EntityPopDamage.ForcedHandler = null! ,()=>{ })
+                ("Defaults", "Auto", () => { EntityPopDamage.ForcedHandler = null!; popConfig.PreviouslyType = string.Empty; }, () => { })
             };
             foreach (var handler in PopDamageHandlerRegistry.GetAll().Reverse())
             {
@@ -98,10 +103,10 @@ namespace MoreSettings.Modules
                 optionsdata.Add((
                     GetString(h.OptionsTitle),
                     GetString(h.SubStr),
-                    () => EntityPopDamage.ForcedHandler = h,
+                    () => { EntityPopDamage.ForcedHandler = h; popConfig.PreviouslyType = h.Id; },
                     () =>
                     {
-                        if (EntityPopDamage.ForcedHandler is DefaultPopDamageHandler) return;
+                        if (EntityPopDamage.ForcedHandler is DefaultPopDamageHandler || h is DefaultPopDamageHandler) return;
                         PopmenuHelper.AddConfigSlider(
                             GetText.Instance.GetString("CritEffectDuration"),
                             () => h.SpeedMultiplier,

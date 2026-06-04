@@ -31,7 +31,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         public override void CreatePopDamage(AttackData a, Entity entity)
         {
             var fontData = EntityPopDamage.CreateFontData("hotline");
-            PopDamageHotline.Class.create(entity, a, entity.dmgIdx, Ref<bool>.Null, fontData);
+            _ =new PopDamageHotline(entity, a, entity.dmgIdx, Ref<bool>.Null, fontData);
         }
     }
 }

@@ -459,6 +459,8 @@ namespace MoreSettings.Modules
                     Ref<bool>.In(true), Ref<bool>.In(self.playAfterZDoorCine));
             }
 
+            Lib_std.gc_major.Invoke();
+
             if (self.get_isADlcPLevel())
                 self.onEnteredLevel = new HlAction(() =>
                     new PurpleLevelIntro(self.mainId, dc.pr.Game.Class.ME.hero));
@@ -752,6 +754,7 @@ namespace MoreSettings.Modules
             #region 激励and诅咒关卡
 
             bool incentivized = false;
+            bool isCursedLevel = false;
             if (!isSubMode)
             {
                 incentivized = cid == self.data.currentIncentivizedLevel?.ToString();
@@ -765,7 +768,14 @@ namespace MoreSettings.Modules
                     self.cursedChestsBonusChance = 0.1;
                 }
                 if (self.data.currentCursedLevel != id)
+                {
                     self.chooseNextCursedLevels(customLevelInfo);
+                }
+                else
+                {
+                    isCursedLevel = true;
+                    self.chooseNextCursedLevels(customLevelInfo);
+                }
             }
 
             if (cid == "PrisonStart" && !self.isScoring())
@@ -809,7 +819,7 @@ namespace MoreSettings.Modules
 
             #region  Mob生成
 
-            if (!isSubMode)
+            if (!isCursedLevel)
             {
                 int zero = 0;
                 levelGen.genMobs(self.user, levelMaps, extraMobs, Ref<int>.In(zero));
@@ -845,7 +855,7 @@ namespace MoreSettings.Modules
 
             #region 子关卡战利品升级 (诅咒模式)
 
-            if (isSubMode)
+            if (isCursedLevel)
             {
                 for (int i = 0; i < self.subLevels.length; i++)
                 {
@@ -862,16 +872,14 @@ namespace MoreSettings.Modules
 
             #region 战利品生成
 
-            var nonSecretLevels = new List<Level>();
+            ArrayObj nonSecretLevels = (ArrayObj)ArrayUtils.CreateDyn().array;
             for (int i = 0; i < self.subLevels.length; i++)
             {
                 var level = self.subLevels.getDyn(i);
                 if (level != null && !level?.isSecret)
-                    nonSecretLevels.Add(level);
+                    nonSecretLevels.push(level);
             }
-
-            var mapsForLoot = nonSecretLevels.Select(l => l.map).ToArrayObj();
-            var lootGen = new LootGen(self.user, mapsForLoot, seed,
+            var lootGen = new LootGen(self.user, nonSecretLevels, seed,
                 self.data.tierDistribution, self.hero,
                 Ref<bool>.In(incentivized), Ref<bool>.Null);
             Boot.Class.tryRender();

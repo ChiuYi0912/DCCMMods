@@ -12,8 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="C:\Users\Michael\core\sources\ModCore.Common\ModCore.Common.csproj" />
-    <Reference Include="DebugConsole" />
-    <ModDependency Include="DebugConsole" />
     <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
     
     <Reference Include="ModCore.Native">

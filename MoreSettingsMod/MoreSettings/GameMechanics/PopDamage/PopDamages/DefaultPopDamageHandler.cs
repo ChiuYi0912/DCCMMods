@@ -15,7 +15,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
 
         public override void CreatePopDamage(AttackData a, Entity entity)
         {
-            dc.ui.PopDamage.Class.create(entity, a, entity.dmgIdx, Ref<bool>.Null, null);
+            _ = new dc.ui.PopDamage(entity, a, entity.dmgIdx, Ref<bool>.Null, null);
         }
     }
 }

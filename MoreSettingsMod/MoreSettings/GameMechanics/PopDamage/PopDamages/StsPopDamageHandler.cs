@@ -38,7 +38,7 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         {
             var fontData = EntityPopDamage.CreateFontData("sts");
             bool isBig = a.hasTag(2);
-            PopDamageSts.Class.create(entity, a, entity.dmgIdx, Ref<bool>.From(ref isBig), fontData);
+            _ = new PopDamageSts(entity, a, entity.dmgIdx, Ref<bool>.From(ref isBig), fontData);
         }
     }
 }
