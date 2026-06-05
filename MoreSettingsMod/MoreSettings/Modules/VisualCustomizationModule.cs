@@ -109,13 +109,22 @@ namespace MoreSettings.Modules
                         if (EntityPopDamage.ForcedHandler is DefaultPopDamageHandler || h is DefaultPopDamageHandler) return;
 
                         var Special = PopmenuHelper.AddConfigToggle(
-                            GetString("保留联动武器的特殊暴击"),
+                            GetString("保留联动武器的特殊条件暴击"),
                             "",
-                            () => popConfig.Characteristics,
-                            v => popConfig.Characteristics = v,
+                            () => popConfig.sourceWeaponCharacteristics,
+                            v => popConfig.sourceWeaponCharacteristics = v,
                             scrollerFlow
                         );
-                        PopmenuHelper.CenterToggleWidget(Special,options,scrollerFlow,false);
+                        PopmenuHelper.CenterToggleWidget(Special, options, scrollerFlow, false);
+
+                        var skin = PopmenuHelper.AddConfigToggle(
+                            GetString("保留联动皮肤的特殊条件暴击"),
+                            "",
+                            () => popConfig.SkinCharacteristics,
+                            v => popConfig.SkinCharacteristics = v,
+                            scrollerFlow
+                        );
+                        PopmenuHelper.CenterToggleWidget(skin, options, scrollerFlow, false);
 
                         var NoTag = PopmenuHelper.AddConfigToggle(
                             GetString("无暴击时可触发"),

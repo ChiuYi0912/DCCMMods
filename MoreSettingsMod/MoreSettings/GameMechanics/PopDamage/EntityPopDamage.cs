@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using CoreLibrary.Core.Extensions;
 using dc;
 using dc.en;
@@ -60,34 +61,55 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
 
             bool hastagtwo = a.hasTag(2);
             bool allowCritHandler = (hastagtwo || popconfig.ProhibitedHasTagTwo) && self is not Hero;
-            bool isDiverseDeck = a.sourceItem != null && StsItems.Contains(a.sourceItem.getItemKind().ToString());
 
-            if (popconfig.Characteristics && ForcedHandler != null)
+            handler = ForcedHandler ?? PopDamageHandlerRegistry.GetHandler(a, self);
+
+            if (ForcedHandler != null && allowCritHandler)
             {
-                if (isDiverseDeck || (hastagtwo && self._level.game.hero.hasSkin(null, "SlayTheSpire".ToHaxeString())))
+                handler = ForcedHandler;
+                if (popconfig.sourceWeaponCharacteristics || popconfig.SkinCharacteristics)
                 {
-                    handler = new StsPopDamageHandler();
-                    goto Skip;
-                }
-                if (hastagtwo && (a.sourceWeapon is BaseballBat
-                    || HotlineSkins.Any(s => self._level.game.hero.hasSkin(null, s.ToHaxeString()))))
-                {
-                    handler = new HotlinePopDamageHandler();
-                    goto Skip;
+                    bool stsskin = hastagtwo
+                    && self._level.game.hero.hasSkin(null, "SlayTheSpire".ToHaxeString())
+                    && popconfig.SkinCharacteristics;
+
+                    if (stsskin)
+                    {
+                        handler = new StsPopDamageHandler();
+                        goto Skip;
+                    }
+
+                    bool hotlineweapon = a.sourceWeapon is BaseballBat
+                    && popconfig.sourceWeaponCharacteristics
+                    && hastagtwo;
+                    bool hotlineskin = HotlineSkins.Any(s => self._level.game.hero.hasSkin(null, s.ToHaxeString()))
+                    && hastagtwo
+                    && popconfig.SkinCharacteristics;
+                    if (hotlineweapon || hotlineskin)
+                    {
+                        handler = new HotlinePopDamageHandler();
+                        goto Skip;
+                    }
+
                 }
             }
-
-            handler = ForcedHandler != null && (popconfig.ProhibitedHasTagTwo || hastagtwo)
-                ? ForcedHandler
-                : PopDamageHandlerRegistry.GetHandler(a, self);
-
-            if (handler.RequiresCrit && !allowCritHandler && handler is not DefaultPopDamageHandler)
-                handler = new DefaultPopDamageHandler();
-
-            if (isDiverseDeck && handler is not StsPopDamageHandler)
-                handler = new StsPopDamageHandler();
+            else
+                handler = PopDamageHandlerRegistry.GetHandler(a, self);
 
         Skip:
+            if (ForcedHandler != null
+            && handler is not DefaultPopDamageHandler
+            && handler.RequiresCrit
+            && !allowCritHandler)
+                handler = new DefaultPopDamageHandler();
+
+            if (ForcedHandler != null
+            && popconfig.sourceWeaponCharacteristics
+            && a.sourceItem != null
+            && StsItems.Contains(a.sourceItem.getItemKind().ToString())
+            )
+                handler = new StsPopDamageHandler();
+
             handler.CreatePopDamage(a, self);
 
 
