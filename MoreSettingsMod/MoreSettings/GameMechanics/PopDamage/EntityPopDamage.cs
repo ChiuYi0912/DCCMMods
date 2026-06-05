@@ -59,41 +59,32 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
             if (dc.ui.Console.Class.ME.flags.exists("NoPopText".ToHaxeString())) return;
 
             bool hastagtwo = a.hasTag(2);
-            bool allowCritHandler = a.hasTag(2) || popconfig.ProhibitedHasTagTwo;
-
-            if (self is Hero) allowCritHandler = false;
+            bool allowCritHandler = (hastagtwo || popconfig.ProhibitedHasTagTwo) && self is not Hero;
+            bool isDiverseDeck = a.sourceItem != null && StsItems.Contains(a.sourceItem.getItemKind().ToString());
 
             if (popconfig.Characteristics && ForcedHandler != null)
             {
-                if (a.sourceItem != null
-                && StsItems.Contains(a.sourceItem.getItemKind().ToString())
-                || self._level.game.hero.hasSkin(null, "SlayTheSpire".ToHaxeString())
-                && hastagtwo)
+                if (isDiverseDeck || (hastagtwo && self._level.game.hero.hasSkin(null, "SlayTheSpire".ToHaxeString())))
                 {
                     handler = new StsPopDamageHandler();
                     goto Skip;
                 }
-                if (hastagtwo)
+                if (hastagtwo && (a.sourceWeapon is BaseballBat
+                    || HotlineSkins.Any(s => self._level.game.hero.hasSkin(null, s.ToHaxeString()))))
                 {
-                    if (a.sourceWeapon != null
-                    && a.sourceWeapon is BaseballBat
-                    || HotlineSkins.Any(skin => self._level.game.hero.hasSkin(null, skin.ToHaxeString())))
-                    {
-                        handler = new HotlinePopDamageHandler();
-                        goto Skip;
-                    }
+                    handler = new HotlinePopDamageHandler();
+                    goto Skip;
                 }
             }
 
-            if (ForcedHandler != null && (popconfig.ProhibitedHasTagTwo || hastagtwo))
-                handler = ForcedHandler;
-            else
-                handler = PopDamageHandlerRegistry.GetHandler(a, self);
+            handler = ForcedHandler != null && (popconfig.ProhibitedHasTagTwo || hastagtwo)
+                ? ForcedHandler
+                : PopDamageHandlerRegistry.GetHandler(a, self);
 
             if (handler.RequiresCrit && !allowCritHandler && handler is not DefaultPopDamageHandler)
                 handler = new DefaultPopDamageHandler();
 
-            if (a.sourceItem != null && StsItems.Contains(a.sourceItem.getItemKind().ToString()) && handler is not StsPopDamageHandler)
+            if (isDiverseDeck && handler is not StsPopDamageHandler)
                 handler = new StsPopDamageHandler();
 
         Skip:

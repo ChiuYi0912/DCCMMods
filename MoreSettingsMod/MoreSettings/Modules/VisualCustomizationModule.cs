@@ -109,7 +109,7 @@ namespace MoreSettings.Modules
                         if (EntityPopDamage.ForcedHandler is DefaultPopDamageHandler || h is DefaultPopDamageHandler) return;
 
                         var Special = PopmenuHelper.AddConfigToggle(
-                            GetString("保留联动皮肤/武器的特殊暴击"),
+                            GetString("保留联动武器的特殊暴击"),
                             "",
                             () => popConfig.Characteristics,
                             v => popConfig.Characteristics = v,
