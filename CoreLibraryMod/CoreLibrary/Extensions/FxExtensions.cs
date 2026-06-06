@@ -12,6 +12,7 @@ using dc.level;
 using dc.libs.heaps;
 using dc.pr;
 using dc.tool;
+using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using Serilog;
 using Math = System.Math;
@@ -452,6 +453,117 @@ namespace CoreLibrary.Core.Extensions
                         }
                     }
                 }
+            }
+        }
+
+
+
+
+        /// <summary>
+        /// 盾牌前方弧形格挡特效。
+        /// </summary>
+        /// <param name="fx">Fx 实例</param>
+        /// <param name="e">角色实体</param>
+        /// <param name="color">线条颜色</param>
+        /// <param name="innerCount">内圈线条数量</param>
+        /// <param name="outerCount">外圈线条数量</param>
+        /// <param name="alpha">透明度</param>
+        /// <param name="lifeS">线条生命周期</param>
+        public static void FrontShieldHitPro(this Fx fx, Entity e, int color,
+                                             int innerCount = 16, int outerCount = 16,
+                                             double? alpha = null, double? lifeS = null)
+        {
+            double baseAngle = (e.dir == 1) ? 0.0 : Math.PI;
+            double angleRange = 1.8;
+            double startAngle = baseAngle - angleRange * 0.5;
+
+            ArrayObj tilePool = Assets.Class.fxTile._fxParryLine;
+            if (tilePool == null || tilePool.length == 0) return;
+
+            double Rand(double min, double max) => min + dc.Math.Class.random() * (max - min);
+
+            double r = ((color >> 16) & 0xFF) / 255.0;
+            double g = ((color >> 8) & 0xFF) / 255.0;
+            double b = (color & 0xFF) / 255.0;
+            double a = alpha ?? 1.0;
+
+            double centerX = (e.cx + e.xr) * 24.0;
+            double centerY = (e.cy + e.yr) * 24.0 - e.hei * 0.5;
+
+            for (int i = 0; i < innerCount; i++)
+            {
+                double t = (double)i / (innerCount - 1);
+                double angle = startAngle + t * angleRange;
+
+                int tileIdx = Std.Class.random(tilePool.length);
+                FxTile tile = (tileIdx < tilePool.length) ? tilePool.getDyn(tileIdx) : null!;
+                if (tile == null) continue;
+
+                double offsetX = Math.Cos(angle) * 30.0;
+                double offsetY = Math.Sin(angle) * e.hei * 0.8;
+                double spawnX = centerX + offsetX;
+                double spawnY = centerY + offsetY;
+
+                HParticle p = fx.allocTop(tile, spawnX, spawnY, default, null!, default);
+                if (p == null) continue;
+
+                p.r = r; p.g = g; p.b = b; p.a = a;
+
+                double life = lifeS ?? 0.2;
+                p.set_lifeS(life);
+                double fadeOut = Rand(0.1, 0.3);
+                p.setFadeS(0.7, 0.0, fadeOut);
+
+                double dx = centerX - spawnX;
+                double dy = centerY - spawnY;
+                double len = Math.Sqrt(dx * dx + dy * dy);
+                if (len > 0.01)
+                {
+                    double speed = 3.0;
+                    p.dx = -dx / len * speed;
+                    p.dy = -dy / len * speed;
+                }
+                p.frictX = p.frictY = 0.93;
+                p.rotation = angle + Math.PI / 2;
+                p.scaleY = 2.0;
+            }
+
+            for (int i = 0; i < outerCount; i++)
+            {
+                double t = (double)i / (outerCount - 1);
+                double angle = startAngle + t * angleRange;
+
+                int tileIdx = Std.Class.random(tilePool.length);
+                FxTile tile = (tileIdx < tilePool.length) ? tilePool.getDyn(tileIdx) : null!;
+                if (tile == null) continue;
+
+                double offsetX = Math.Cos(angle) * 27.0;
+                double offsetY = Math.Sin(angle) * e.hei * 0.75;
+                double spawnX = centerX + offsetX;
+                double spawnY = centerY + offsetY;
+
+                HParticle p = fx.allocTop(tile, spawnX, spawnY, default, null!, default);
+                if (p == null) continue;
+
+                p.r = r; p.g = g; p.b = b; p.a = a;
+
+                double life = lifeS ?? 0.3;
+                p.set_lifeS(life);
+                double fadeOut = Rand(0.3, 0.5);
+                p.setFadeS(0.7, 0.0, fadeOut);
+
+                double dx = centerX - spawnX;
+                double dy = centerY - spawnY;
+                double len = Math.Sqrt(dx * dx + dy * dy);
+                if (len > 0.01)
+                {
+                    double speed = 2.0;
+                    p.dx = -dx / len * speed;
+                    p.dy = -dy / len * speed;
+                }
+                p.frictX = p.frictY = 0.88;
+                p.rotation = angle + Math.PI / 2;
+                p.scaleY = 1.0;
             }
         }
     }

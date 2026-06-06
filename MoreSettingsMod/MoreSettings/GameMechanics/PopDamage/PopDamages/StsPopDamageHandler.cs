@@ -10,19 +10,14 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
     internal class StsPopDamageHandler : IPopDamage
     {
         public StsPopDamageHandler() : base("sts", 0.8) { }
-        private static readonly HashSet<string> StsItems = new()
-        {
-            "DiverseDeckJuggernaut",
-            "DiverseDeckCatalyst",
-            "DiverseDeckElectro",
-            "DiverseDeckWatcher"
-        };
+
         private const string StsSkin = "SlayTheSpire";
         public override int Priority => 20;
         public override string OptionsTitle => "StsCritEffect";
         public override string SubStr => "";
         public override bool CanHandle(AttackData a, Entity entity)
         {
+            if (EntityPopDamage.HotlineSkins.Any(s => entity._level.game.hero.hasSkin(null, s.ToHaxeString()))) return true;
 
             return entity._level.game.hero.hasSkin(null, StsSkin.ToHaxeString());
         }

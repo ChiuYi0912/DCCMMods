@@ -24,10 +24,12 @@ namespace MoreSettings.GameMechanics
             var lib = Assets.Class.ui;
             var uitile = lib.pages.getDyn(0);
 
-            fullBatch = new HSpriteBatch(uitile, this);
+            fullBatch = new HSpriteBatch(uitile, null);
             fullBatch.hasRotationScale = true;
             fullBatch.tile.dx = this.sb.tile.dx;
             fullBatch.tile.dy = this.sb.tile.dy;
+
+            addChildAt(fullBatch, 2);
 
 
             var oldBeLeft = this.beLeft;

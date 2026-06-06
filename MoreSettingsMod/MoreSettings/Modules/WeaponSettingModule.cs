@@ -1,4 +1,5 @@
 using CoreLibrary.Core.Extensions;
+using CoreLibrary.Core.Utilities;
 using dc;
 using dc.en;
 using dc.hl.types;
@@ -41,22 +42,82 @@ namespace MoreSettings.Modules
                  () => config.DisableKatanaByHoldingDown,
                  v => config.DisableKatanaByHoldingDown = v,
                  scrollerFlow: options.scrollerFlow
-             );
+            );
+
+            menuHelper.AddSubSeparator("盾牌", scrollerFlow);
+
+            menuHelper.AddHSVColorWidget(
+                GetString("自定义成功格挡后的线条颜色"),
+                "",
+                () =>
+                {
+                    config.HasCustomShieldHitColor = !config.HasCustomShieldHitColor;
+                    SettingsMain.SaveConfig();
+                    return config.HasCustomShieldHitColor;
+                },
+                config.HasCustomShieldHitColor,
+                newColor => config.BaseShieldFrontShieldHitColor = newColor,
+                config.BaseShieldFrontShieldHitColor,
+                scrollerFlow
+            );
+
+            if (config.HasCustomShieldHitColor)
+            {
+                int paddingleft = (int)(options.get_pixelScale.Invoke() * 40);
+
+                var showobviously = menuHelper.AddConfigToggle(
+                 GetString("显示更明显"),
+                 GetString(""),
+                 () => config.ShowObviously,
+                 v => config.ShowObviously = v,
+                 scrollerFlow: options.scrollerFlow
+            );
+                scrollerFlow.getProperties(showobviously).paddingLeft = paddingleft;
+            }
         }
 
-        public override void RegisterHooks()
-        {
-            base.RegisterHooks();
-            Hook_HeroWeaponsManager.canUseWeapon += Hook_HeroWeaponsManager_canUseWeapon;
-        }
 
+        #region Hooks
         public override void UnregisterHooks()
         {
             base.UnregisterHooks();
             Hook_HeroWeaponsManager.canUseWeapon -= Hook_HeroWeaponsManager_canUseWeapon;
+            Hook_BaseShield.triggerParryFeedbacks -= Hook_BaseShield_triggerParryFeedbacks;
+        }
+        public override void RegisterHooks()
+        {
+            base.RegisterHooks();
+            Hook_HeroWeaponsManager.canUseWeapon += Hook_HeroWeaponsManager_canUseWeapon;
+            Hook_BaseShield.triggerParryFeedbacks += Hook_BaseShield_triggerParryFeedbacks;
         }
 
-        #region Hooks
+        private void Hook_BaseShield_triggerParryFeedbacks(Hook_BaseShield.orig_triggerParryFeedbacks orig, BaseShield self)
+        {
+            self.owner.popText(Lang.Class.t.get("Parade !".ToHaxeString(), null), 65535);
+
+            Fx fx = self.owner._level.fx;
+
+            fx.customMask(9353156, 0.2, 0.04, 0.1, 0.15, null);
+
+            //fx.frontShieldHit(self.owner, 6921449);
+
+            int color = config.HasCustomShieldHitColor ? config.BaseShieldFrontShieldHitColor : 6921449;
+            double lifeS = config.HasCustomShieldHitColor && config.ShowObviously ? 0.3 : 0.1;
+
+            fx.FrontShieldHitPro(self.owner, color: color,
+                    innerCount: 16, outerCount: 16,
+                    alpha: 1.0, lifeS: lifeS);
+
+            Hero owner = self.owner;
+            double x = (owner.cx + owner.xr) * 24.0;
+            double y = (owner.cy + owner.yr) * 24.0 - owner.hei * 0.5;
+
+            int sparkLineCount = 20;
+            int deflectLineCount = 25;
+            fx.hitLines(x, y, owner.dir, 16777215, null, Ref<int>.In(sparkLineCount), Ref<int>.In(deflectLineCount));
+
+            self.playHitSfx(null, null, default, null, null);
+        }
         private bool Hook_HeroWeaponsManager_canUseWeapon(Hook_HeroWeaponsManager.orig_canUseWeapon orig, HeroWeaponsManager self, Weapon w, Hero hero, int posId, Ref<bool> ctrlOk, int? key)
         {
             bool isCtrlAllowed = ctrlOk.IsNull || ctrlOk.value;

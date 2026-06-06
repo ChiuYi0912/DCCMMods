@@ -241,6 +241,11 @@ namespace MoreSettings.Configuration
     public class WeaponConfig : SettingConfigBase
     {
         public bool DisableKatanaByHoldingDown { get; set; } = false;
+        public int BaseShieldFrontShieldHitColor { get; set; } = 6921449;
+        public bool HasCustomShieldHitColor { get; set; } = false;
+        public bool ShowObviously { get; set; } = false;
+        public double CustomShieldHitAlpha { get; set; } = 1.0;
+        public double CustomShieldHitlifeS { get; set; } = 0.1;
     }
 
     public class KeyConfig : SettingConfigBase

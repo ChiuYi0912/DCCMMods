@@ -26,14 +26,14 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         public static IPopDamage handler = null!;
         public static IPopDamage ForcedHandler = null!;
 
-        private static readonly HashSet<string> StsItems = new()
+        public static readonly HashSet<string> StsItems = new()
         {
             "DiverseDeckJuggernaut",
             "DiverseDeckCatalyst",
             "DiverseDeckElectro",
             "DiverseDeckWatcher"
         };
-        private static readonly HashSet<string> HotlineSkins = new()
+        public static readonly HashSet<string> HotlineSkins = new()
         {
             "HotlineMiamiChicken",
             "HotlineMiamiHorse",

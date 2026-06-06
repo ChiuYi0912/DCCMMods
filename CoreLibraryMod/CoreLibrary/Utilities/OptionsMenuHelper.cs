@@ -221,7 +221,7 @@ namespace CoreLibrary.Core.Utilities
 
             var props = scrollerFlow.getProperties(widget);
             props.horizontalAlign = align;
-            if (!Middle) props.paddingLeft = scrollerFlow.get_innerWidth() / 20;
+            if (!Middle) props.paddingLeft = (int)(options.get_pixelScale.Invoke() * 40);
 
             widget.maxWidth = scrollerFlow.get_innerWidth();
             widget.horizontalAlign = align;

@@ -2,6 +2,12 @@ using CoreLibrary.Core.Extensions;
 using dc;
 using dc.en;
 using dc.en.inter;
+using dc.h2d;
+using dc.libs.heaps;
+using dc.pr;
+using dc.tool;
+using Hashlink.Virtuals;
+using HaxeProxy.Runtime;
 using ModCore.Mods;
 using ModCore.Modules;
 using MoreSettings.API;
@@ -9,6 +15,7 @@ using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics.cine;
 using MoreSettings.GameMechanics.CustomPopDamage;
+using MoreSettings.Utilities;
 using PopDamage.OtherPop;
 using static MoreSettings.Configuration.Enums;
 
@@ -191,23 +198,21 @@ namespace MoreSettings.Modules
         }
 
 
-
-        public override void RegisterHooks()
-        {
-            base.RegisterHooks();
-            Hook_Hero.hasSkin += Hook_Hero_hasSkin;
-        }
-
         public override void PermanentlyRegisterHooks()
         {
             Hook_Teleport.startTeleport += Hook_Teleport_startTeleport;
         }
 
-
         public override void UnregisterHooks()
         {
             base.UnregisterHooks();
             Hook_Hero.hasSkin -= Hook_Hero_hasSkin;
+        }
+
+        public override void RegisterHooks()
+        {
+            base.RegisterHooks();
+            Hook_Hero.hasSkin += Hook_Hero_hasSkin;
         }
 
         private bool Hook_Hero_hasSkin(Hook_Hero.orig_hasSkin orig, Hero self, dc.String model, dc.String itemId)

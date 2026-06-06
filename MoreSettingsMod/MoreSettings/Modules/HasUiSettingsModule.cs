@@ -163,10 +163,9 @@ namespace MoreSettings.Modules
                 "",
                 () =>
                 {
-                    bool v = !config.isLifeBarcolor;
-                    config.isLifeBarcolor = v;
+                    config.isLifeBarcolor = !config.isLifeBarcolor;
                     SettingsMain.SaveConfig();
-                    return v;
+                    return config.isLifeBarcolor;
                 },
                 config.isLifeBarcolor,
                 newColor =>
@@ -183,7 +182,6 @@ namespace MoreSettings.Modules
                         if (gradient == null) return;
                         gradient.tint__ = new dc.h3d.Vector(Ref<double>.In(r), Ref<double>.In(g), Ref<double>.In(b), Ref<double>.In(1));
                         SettingsMain.SaveConfig();
-                        return;
                     }
                 },
                 config.LifeBarcolor,
@@ -191,6 +189,7 @@ namespace MoreSettings.Modules
             );
             if (config.isLifeBarcolor)
             {
+                int paddingleft = (int)(options.get_pixelScale.Invoke() * 40);
                 var alpha = menuHelper.AddConfigSlider(
                  GetText.Instance.GetString("Alpha"),
                  () => config.LifeBarAlpha,
@@ -211,7 +210,7 @@ namespace MoreSettings.Modules
                  scrollerFlow: scrollerFlow,
                  maxValue: 1,
                  step: 0.01,
-                 paddingLeft: 155
+                 paddingLeft: paddingleft
                 );
 
             }
