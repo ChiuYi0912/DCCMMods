@@ -6,13 +6,16 @@ using CoreLibrary.Core.Interfaces;
 using CoreLibrary.Core.Utilities;
 using dc;
 using dc.en;
+using dc.h2d;
 using dc.h3d;
 using dc.h3d.mat;
 using dc.libs.heaps.slib;
 using dc.tool;
 using dc.tool.mod;
+using HaxeProxy.Runtime;
 using ModCore.Events;
 using ModCore.Events.Interfaces.Game;
+using ModCore.Events.Interfaces.Game.Hero;
 using ModCore.Menu;
 using ModCore.Mods;
 using ModCore.Modules;
@@ -53,7 +56,7 @@ IOnAfterLoadingCDB
       instance = this;
       Utilities.Logger.Initialize(Logger);
       GetText.Instance.RegisterMod("SettingsLang");
-      Info.Version = "1.3.0";
+      Info.Version = "1.3.1";
       Info.RepositoryUrl = "https://github.com/ChiuYi0912/DCCMMods/tree/main";
 
       moduleManager = new ModuleManager(this);
@@ -109,4 +112,5 @@ IOnAfterLoadingCDB
    {
 
    }
+
 }
