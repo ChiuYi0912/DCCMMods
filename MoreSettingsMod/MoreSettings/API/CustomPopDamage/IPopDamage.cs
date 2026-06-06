@@ -77,11 +77,6 @@ namespace MoreSettings.API
 
 
         /// <summary>
-        /// 是否需要暴击(tag 2)或ProhibitedHasTagTwo才能激活。默认true。
-        /// </summary>
-        public virtual bool RequiresCrit => true;
-
-        /// <summary>
         /// 判断当前攻击是否由此负责显示
         /// <param name="a">攻击数据</param>
         /// <param name="entity">被击中的实体</param>

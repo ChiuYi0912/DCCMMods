@@ -59,57 +59,18 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         {
             if (dc.ui.Console.Class.ME.flags.exists("NoPopText".ToHaxeString())) return;
 
-            bool hastagtwo = a.hasTag(2);
-            bool allowCritHandler = (hastagtwo || popconfig.ProhibitedHasTagTwo) && self is not Hero;
-
-            handler = ForcedHandler ?? PopDamageHandlerRegistry.GetHandler(a, self);
-
-            if (ForcedHandler != null && allowCritHandler)
+            if (self is Hero)
             {
-                handler = ForcedHandler;
-                if (popconfig.sourceWeaponCharacteristics || popconfig.SkinCharacteristics)
-                {
-                    bool stsskin = hastagtwo
-                    && self._level.game.hero.hasSkin(null, "SlayTheSpire".ToHaxeString())
-                    && popconfig.SkinCharacteristics;
-
-                    if (stsskin)
-                    {
-                        handler = new StsPopDamageHandler();
-                        goto Skip;
-                    }
-
-                    bool hotlineweapon = a.sourceWeapon is BaseballBat
-                    && popconfig.sourceWeaponCharacteristics
-                    && hastagtwo;
-                    bool hotlineskin = HotlineSkins.Any(s => self._level.game.hero.hasSkin(null, s.ToHaxeString()))
-                    && hastagtwo
-                    && popconfig.SkinCharacteristics;
-                    if (hotlineweapon || hotlineskin)
-                    {
-                        handler = new HotlinePopDamageHandler();
-                        goto Skip;
-                    }
-
-                }
+                handler = new DefaultPopDamageHandler();
+                goto ishero;
             }
+
+            if (ForcedHandler != null && (a.hasTag(2) || popconfig.ProhibitedHasTagTwo))
+                handler = ForcedHandler;
             else
                 handler = PopDamageHandlerRegistry.GetHandler(a, self);
 
-        Skip:
-            if (ForcedHandler != null
-            && handler is not DefaultPopDamageHandler
-            && handler.RequiresCrit
-            && !allowCritHandler)
-                handler = new DefaultPopDamageHandler();
-
-            if (ForcedHandler != null
-            && popconfig.sourceWeaponCharacteristics
-            && a.sourceItem != null
-            && StsItems.Contains(a.sourceItem.getItemKind().ToString())
-            )
-                handler = new StsPopDamageHandler();
-
+        ishero:
             handler.CreatePopDamage(a, self);
 
 

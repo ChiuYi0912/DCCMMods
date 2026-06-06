@@ -17,15 +17,16 @@ namespace MoreSettings.GameMechanics.CustomPopDamage
         public override string SubStr => "";
         public override bool CanHandle(AttackData a, Entity entity)
         {
-            if (EntityPopDamage.HotlineSkins.Any(s => entity._level.game.hero.hasSkin(null, s.ToHaxeString()))) return true;
+            if (a.sourceItem != null && EntityPopDamage.StsItems.Contains(a.sourceItem.getItemKind().ToString())) return true;
+
+            if (!a.hasTag(2)) return false;
 
             return entity._level.game.hero.hasSkin(null, StsSkin.ToHaxeString());
         }
         public override void CreatePopDamage(AttackData a, Entity entity)
         {
             var fontData = EntityPopDamage.CreateFontData("sts");
-            bool isBig = a.hasTag(2);
-            _ = new PopDamageSts(entity, a, entity.dmgIdx, Ref<bool>.From(ref isBig), fontData);
+            _ = new PopDamageSts(entity, a, entity.dmgIdx, Ref<bool>.In(a.hasTag(2)), fontData);
         }
     }
 }
