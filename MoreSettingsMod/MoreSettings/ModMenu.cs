@@ -1,10 +1,3 @@
-using CoreLibrary.Core.Extensions;
-using dc;
-using dc.h2d;
-using dc.hxd;
-using dc.ui.pause;
-using Hashlink.Virtuals;
-using HaxeProxy.Runtime;
 using ModCore.Events;
 using ModCore.Menu;
 using CoreLibrary.Core.Interfaces;

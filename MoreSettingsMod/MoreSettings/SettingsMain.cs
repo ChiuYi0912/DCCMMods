@@ -24,6 +24,7 @@ using ModCore.Storage;
 using ModCore.Utilities;
 using MoreSettings.Configuration;
 using MoreSettings.Core;
+using MoreSettings.GameMechanics;
 using MoreSettings.GameMechanics.Scarf;
 using MoreSettings.Modules;
 using MoreSettings.Utilities;
@@ -38,7 +39,7 @@ IOnAfterLoadingCDB
 {
    private static SettingsMain instance = default!;
    private static ModuleManager moduleManager = default!;
-   private static Config<MainConfig> modConfig = new Config<MainConfig>("MoreSettingsConfig");
+   private static Config<MainConfig> modConfig = new("MoreSettingsConfig");
 
    private ModMenu modMenu = default!;
 
@@ -57,7 +58,7 @@ IOnAfterLoadingCDB
       instance = this;
       Utilities.Logger.Initialize(Logger);
       GetText.Instance.RegisterMod("SettingsLang");
-      Info.Version = "1.3.2";
+      Info.Version = "1.3.3";
       Info.RepositoryUrl = "https://github.com/ChiuYi0912/DCCMMods/tree/main";
 
       moduleManager = new ModuleManager(this);
@@ -74,11 +75,12 @@ IOnAfterLoadingCDB
 
       EventSystem.BroadcastEvent<IOnHookInitialize>();
 
+      //Common.Initialize();
       //Hook_Boot.mainLoop += Hook_Boot_loop;
    }
 
 
-    private void Hook_Boot_loop(Hook_Boot.orig_mainLoop orig, Boot self)
+   private void Hook_Boot_loop(Hook_Boot.orig_mainLoop orig, Boot self)
    {
       #if DEBUG
       try

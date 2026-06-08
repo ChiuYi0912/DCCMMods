@@ -1,7 +1,13 @@
 using CoreLibrary.Core.Extensions;
 using dc;
 using dc.en;
+using dc.en.hero;
 using dc.en.inter;
+using dc.hl.types;
+using dc.tool;
+using dc.tool._Cooldown;
+using Hashlink.Reflection.Types;
+using HaxeProxy.Runtime;
 using ModCore.Mods;
 using ModCore.Modules;
 using MoreSettings.API;
@@ -189,7 +195,7 @@ namespace MoreSettings.Modules
         {
             base.RegisterHooks();
             Hook_Hero.hasSkin += Hook_Hero_hasSkin;
-           
+            Hook_Beheaded.postUpdate += Hook_Beheaded_postUpdate;
         }
 
         private bool Hook_Hero_hasSkin(Hook_Hero.orig_hasSkin orig, Hero h, dc.String model, dc.String itemId)
@@ -239,6 +245,140 @@ namespace MoreSettings.Modules
                     break;
 
             }
+        }
+
+
+        
+        private void Hook_Beheaded_postUpdate(Hook_Beheaded.orig_postUpdate orig, Beheaded self)
+        {
+            ((HashlinkObjectType)self.HashlinkObj.Type).Super!.FindProto("postUpdate")!.Function.DynamicInvoke(self);
+
+            double interval = 0.06 * self.cd.baseFps;
+            bool skipSpeedFx = !self.hasAnySpeedBuff() || self.isChargingSkill()
+                || (System.Math.Abs(self.dx + self.bdx) < 0.1 && System.Math.Abs(self.dy + self.bdy) < 0.1);
+            
+            if (!skipSpeedFx)
+            {
+                double comboFactor = CalcComboFactor(self);
+                const double comboLimitBase = 1.0;
+                var aff = self.affects;
+
+                double fullSpeed = 1.0
+                    + self.speedComboRun * comboFactor
+                    + GetAffVal(116, self.getHighestAffectValue(116), aff)
+                    + GetAffVal(72, self.runSpeedOnTrap, aff)
+                    + GetAffVal(69, 0.4, aff)
+                    + GetAffVal(71, 0.2, aff)
+                    + GetAffVal(70, 0.2, aff)
+                    + self.activeSkillsManager.getRunSpeedMul();
+
+                double comboLimit = comboLimitBase + self.speedComboRun;
+
+                if (!TryCdTick(self.cd, HeroCooldown.SpeedOnion, interval))
+                {
+                    if (fullSpeed > comboLimit)
+                    {
+                        OnionSkin.Class.fromEntity(self, null,
+                            LerpColor(16380422, 16405765, dc.pr.Game.Class.ME.ftime % 30.0 / 30.0),
+                            Ref<double>.In(0.25), Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
+                        CheckGroundSparks(self);
+                    }
+                    else
+                    {
+                        OnionSkin.Class.fromEntity(self, null, 2665431, Ref<double>.In(0.15),
+                            Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
+                        OnionSkin.Class.fromEntity(self, null,
+                            LerpColor(13643567, 7165407, fullSpeed / comboLimit),
+                            Ref<double>.In(0.05 + 0.15 * fullSpeed / comboLimit),
+                            Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
+                    }
+                }
+
+                if (!TryCdTick(self.cd, HeroCooldown.SpeedOnion, interval) && self.hasAnySpeedBuff()
+                    && fullSpeed < comboLimit)
+                {
+                    OnionSkin.Class.fromEntity(self, null, 6984927, Ref<double>.In(0.25),
+                        Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
+                }
+            }
+
+            if (self.cd.fastCheck.exists(HeroCooldown.WallRunOnionSkin) && !TryCdTick(self.cd, HeroCooldown.WallOnion, interval))
+            {
+                OnionSkin.Class.fromEntity(self, null, 13138521, Ref<double>.Null,
+                    Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
+            }
+        }
+        #endregion
+
+        #region HeroHelper
+        private static double CalcComboFactor(Hero self)
+        {
+            double kills = self.spdComboKills;
+            double max = self.get_infos().props.speedComboMaxMobs;
+            return kills > max ? 1.0 : kills > max * 0.5 ? 0.5 : 0.0;
+        }
+
+        private static double GetAffVal(int id, double val, ArrayObj array)
+        {
+            var aff = array.getDyn(id);
+            return aff != null && aff!.length > 0 ? val : 0.0;
+        }
+
+        private static void CheckGroundSparks(Hero self)
+        {
+            var lmap = self._level?.map;
+            if (lmap == null) return;
+            int cx = self.cx, cy = self.cy;
+
+            bool onGround = false;
+            if ((uint)cx < (uint)lmap.wid && (uint)(cy + 1) < (uint)lmap.hei)
+            {
+                int idx = (cy + 1) * lmap.wid + cx;
+                if (idx < lmap.collisions.length && (lmap.collisions.getDyn(idx) & 1) != 0)
+                {
+                    double groundYr = lmap.getGroundYr(cx, cy, Ref<double>.In(self.xr), Ref<double>.In(self.yr));
+                    if (self.yr > groundYr && self.dy == 0.0) onGround = true;
+                }
+            }
+            if (!onGround && !self.ignoreSlopes && System.Math.Abs(self.dy) < 0.1
+                && (uint)cx < (uint)lmap.wid && (uint)cy < (uint)lmap.hei)
+            {
+                int idx = cy * lmap.wid + cx;
+                if (idx < lmap.collisions.length && (lmap.collisions.getDyn(idx) & 512) != 0) onGround = true;
+            }
+            if (onGround && System.Math.Abs(self.dx + self.bdx) >= 0.1)
+                self._level!.fx.groundSparks(self, 16477444, 3);
+        }
+
+
+        private static int LerpColor(int from, int to, double t)
+        {
+            double r = ((from >> 16) & 255) + (((to >> 16) & 255) - ((from >> 16) & 255)) * t;
+            double g = ((from >> 8) & 255) + (((to >> 8) & 255) - ((from >> 8) & 255)) * t;
+            double b = (from & 255) + ((to & 255) - (from & 255)) * t;
+            return (RoundHL(r) << 16) | (RoundHL(g) << 8) | RoundHL(b);
+
+            int RoundHL(double v)
+            {
+                if (v > 0) return (int)(v + 0.5);
+                if (v < 0) return (int)(v - 0.5);
+                return 0;
+            }
+        }
+
+        private static bool TryCdTick(dc.tool.Cooldown cd, int key, double frames)
+        {
+            if (cd.fastCheck.exists(key)) return true;
+            double cmp = System.Math.Floor(frames * 1000.0) / 1000.0;
+            var inst = cd.fastCheck.get(key);
+            if (inst == null)
+            {
+                inst = new CdInst(key, cmp);
+                cd.fastCheck.set(key, inst);
+                cd.cdList.push(inst);
+            }
+            else inst.frames = cmp;
+            return false;
         }
         #endregion
     }

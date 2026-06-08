@@ -1,3 +1,4 @@
+using System.Reflection;
 using CoreLibrary.Core.Extensions;
 using dc;
 using dc.en;
@@ -10,12 +11,15 @@ using dc.libs.heaps.slib._AnimManager;
 using dc.tool;
 using dc.tool._Cooldown;
 using dc.ui;
+using Hashlink.Proxy;
+using Hashlink.Reflection.Types;
 using HaxeProxy.Runtime;
 using ModCore.Utilities;
+using MonoMod.Utils;
 
 namespace MoreSettings.GameMechanics
 {
-    public class Common
+    public static class Common
     {
         const int inDeepWater = 129 << 21;
         const int blink = 722 << 21;
@@ -32,79 +36,17 @@ namespace MoreSettings.GameMechanics
         static BlendMode _blendAdd = null!;
         static BlendMode _blendNone = null!;
         static GameplayMod _forcedDarkness = null!;
-        private readonly List<double> _darknessDrs = new(4);
-        public Common()
+        private static readonly List<double> _darknessDrs = new(4);
+        public static void Initialize()
         {
-            Hook_Hero.postUpdate += Hook_Hero_postUpdate;
-            Hook_Entity.postUpdate += Hook_Entity_postUpdate;
-            Hook_Beheaded.postUpdate += Hook_Beheaded_postUpdate;
-            _rng = new();
-            _blendAdd = new BlendMode.Add();
-            _blendNone = new BlendMode.None();
-            _forcedDarkness = new GameplayMod.ForcedDarkness();
+            //Hook_Hero.postUpdate += Hook_Hero_postUpdate;
+            // Hook_Entity.postUpdate += Hook_Entity_postUpdate;
+            // _rng = new();
+            // _blendAdd = new BlendMode.Add();
+            // _blendNone = new BlendMode.None();
+            // _forcedDarkness = new GameplayMod.ForcedDarkness();
         }
 
-        private void Hook_Beheaded_postUpdate(Hook_Beheaded.orig_postUpdate orig, Beheaded self)
-        {
-            Hook_Hero_postUpdate(default!, self);
-
-            double interval = 0.06 * self.cd.baseFps;
-
-            if (!self.hasAnySpeedBuff() || self.isChargingSkill())
-                goto CheckRed;
-
-            if (System.Math.Abs(self.dx + self.bdx) < 0.1 && System.Math.Abs(self.dy + self.bdy) < 0.1)
-                goto CheckRed;
-
-            double comboFactor = CalcComboFactor(self);
-            var aff = self.affects;
-            double fullSpeed = 1.0
-                + self.speedComboRun * comboFactor
-                + GetAffVal(116, self.getHighestAffectValue(116), aff)
-                + GetAffVal(72, self.runSpeedOnTrap, aff)
-                + GetAffVal(69, 0.4, aff)
-                + GetAffVal(71, 0.2, aff)
-                + GetAffVal(70, 0.2, aff)
-                + self.activeSkillsManager.getRunSpeedMul();
-            double comboLimit = 1.0 + self.speedComboRun;
-
-            if (!TryCdTick(self.cd, 1577058304, interval))
-            {
-                if (fullSpeed > comboLimit)
-                {
-                    OnionSkin.Class.fromEntity(self, null,
-                        LerpColor(16380422, 16405765, dc.pr.Game.Class.ME.ftime % 30.0 / 30.0),
-                        Ref<double>.In(0.25), Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
-                    CheckGroundSparks(self);
-                }
-                else
-                {
-                    OnionSkin.Class.fromEntity(self, null, 2665431, Ref<double>.In(0.15),
-                        Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
-                    OnionSkin.Class.fromEntity(self, null,
-                        LerpColor(13643567, 7165407, fullSpeed / comboLimit),
-                        Ref<double>.In(0.05 + 0.15 * fullSpeed / comboLimit),
-                        Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
-                }
-            }
-
-            if (!TryCdTick(self.cd, 1577058304, interval) && self.hasAnySpeedBuff()
-                && fullSpeed < comboLimit)
-                OnionSkin.Class.fromEntity(self, null, 6984927, Ref<double>.In(0.25),
-                    Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
-
-        CheckRed:
-            if (self.cd.fastCheck.exists(1260388352) && !TryCdTick(self.cd, 1579155456, interval))
-                OnionSkin.Class.fromEntity(self, null, 13138521, Ref<double>.Null,
-                    Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
-        }
-
-        private static double CalcComboFactor(Hero self)
-        {
-            double kills = self.spdComboKills;
-            double max = self.get_infos().props.speedComboMaxMobs;
-            return kills > max ? 1.0 : kills > max * 0.5 ? 0.5 : 0.0;
-        }
 
         private static double GetAffVal(int id, double val, ArrayObj array)
         {
@@ -112,59 +54,13 @@ namespace MoreSettings.GameMechanics
             return aff != null && aff!.length > 0 ? val : 0.0;
         }
 
-        private static double GetAffVal(int id, Func<double> getter, ArrayObj array)
-        {
-            var aff = array.getDyn(id);
-            return aff != null && aff!.length > 0 ? getter() : 0.0;
-        }
 
-        private static void CheckGroundSparks(Hero self)
-        {
-            var lmap = self._level?.map;
-            if (lmap == null) return;
-            int cx = self.cx, cy = self.cy;
-
-            bool onGround = false;
-            if ((uint)cx < (uint)lmap.wid && (uint)(cy + 1) < (uint)lmap.hei)
-            {
-                int idx = (cy + 1) * lmap.wid + cx;
-                if (idx < lmap.collisions.length && (lmap.collisions.getDyn(idx) & 1) != 0)
-                {
-                    double groundYr = lmap.getGroundYr(cx, cy, Ref<double>.In(self.xr), Ref<double>.In(self.yr));
-                    if (self.yr > groundYr && self.dy == 0.0) onGround = true;
-                }
-            }
-            if (!onGround && !self.ignoreSlopes && System.Math.Abs(self.dy) < 0.1
-                && (uint)cx < (uint)lmap.wid && (uint)cy < (uint)lmap.hei)
-            {
-                int idx = cy * lmap.wid + cx;
-                if (idx < lmap.collisions.length && (lmap.collisions.getDyn(idx) & 512) != 0) onGround = true;
-            }
-            if (onGround && System.Math.Abs(self.dx + self.bdx) >= 0.1)
-                self._level!.fx.groundSparks(self, 16477444, 3);
-        }
-
-        private static int RoundHL(double v)
-        {
-            if (v > 0) return (int)(v + 0.5);
-            if (v < 0) return (int)(v - 0.5);
-            return 0;
-        }
-
-        private static int LerpColor(int from, int to, double t)
-        {
-            double r = ((from >> 16) & 255) + (((to >> 16) & 255) - ((from >> 16) & 255)) * t;
-            double g = ((from >> 8) & 255) + (((to >> 8) & 255) - ((from >> 8) & 255)) * t;
-            double b = (from & 255) + ((to & 255) - (from & 255)) * t;
-            return (RoundHL(r) << 16) | (RoundHL(g) << 8) | RoundHL(b);
-        }
-
-        private void Hook_Entity_postUpdate(Hook_Entity.orig_postUpdate orig, Entity self)
+        private static void Hook_Entity_postUpdate(Hook_Entity.orig_postUpdate orig, Entity self)
         {
             EntityPostupdate(self);
         }
 
-        public void EntityPostupdate(Entity h)
+        public static void EntityPostupdate(Entity h)
         {
             bool hasSpr = h.spr != null;
             if (hasSpr) h.spriteUpdate();
@@ -324,7 +220,7 @@ namespace MoreSettings.GameMechanics
 
 
 
-        private void Hook_Hero_postUpdate(Hook_Hero.orig_postUpdate orig, Hero self)
+        private static void Hook_Hero_postUpdate(Hook_Hero.orig_postUpdate orig, Hero self)
         {
             if (!self._level.game.hasCinematic())
                 self.heroHead.cineHeadMode = null;
@@ -343,8 +239,8 @@ namespace MoreSettings.GameMechanics
                 double comboFactor = self.spdComboKills > self.get_infos().props.speedComboMaxMobs ? 1.0
                     : self.spdComboKills > self.get_infos().props.speedComboMaxMobs * 0.5 ? 0.5 : 0.0;
                 speed += self.speedComboRun * comboFactor;
-                speed += GetAffVal(116, () => self.getHighestAffectValue(116), affects);
-                speed += GetAffVal(72, () => self.runSpeedOnTrap, affects);
+                speed += GetAffVal(116, self.getHighestAffectValue(116), affects);
+                speed += GetAffVal(72, self.runSpeedOnTrap, affects);
                 speed += GetAffVal(69, 0.4, affects);
                 speed += GetAffVal(71, 0.2, affects);
                 speed += GetAffVal(70, 0.2, affects);
@@ -352,7 +248,8 @@ namespace MoreSettings.GameMechanics
                 anim.setStateAnimSpeed(runAnims.getDyn(i), speed);
             }
 
-            EntityPostupdate(self);
+            var ct = (HashlinkObjectType)self.HashlinkObj.Type;
+            ct.Super!.Super!.FindProto("postUpdate")!.Function.DynamicInvoke(self);
 
             // Deep water walk speed
             bool isRunAnim = self.isPlayingRunAnim();
