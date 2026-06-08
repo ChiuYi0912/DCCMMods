@@ -26,6 +26,7 @@ namespace MoreSettings.Base.Modules
         public virtual OptionWidget TopWidget { get; private set; } = null!;
         public virtual Graphics Graphics { get; private set; } = default!;
         public virtual dynamic config { get; set; } = null!;
+        private GetText Text = GetText.Instance;
 
         public virtual void Initialize(ModBase mainMod)
         {
@@ -36,7 +37,7 @@ namespace MoreSettings.Base.Modules
         public void BaseBuildMenu(dc.ui.Options options)
         {
             Graphics = options.createScroller(1);
-            options.title.set_text(GetText.Instance.GetString("ModTitle").ToHaxeString());
+            options.title.set_text(GetString("ModTitle").ToHaxeString());
         }
 
         public virtual void BuildMenu(dc.ui.Options options, string Separator)
@@ -50,11 +51,11 @@ namespace MoreSettings.Base.Modules
             // scrollerFlow.getProperties(scrollerFlow.debugGraphics).isAbsolute = true;
             // #endif
 
-            options.addSeparator(GetText.Instance.GetString(Description).ToHaxeString(), scrollerFlow);
+            options.addSeparator(GetString(Description).ToHaxeString(), scrollerFlow);
             Enabled = config.Enabled;
 
             TopWidget = menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("EnableModule"),
+                GetString("EnableModule"),
                 "",
                 () => Enabled,
                 v =>
@@ -78,7 +79,7 @@ namespace MoreSettings.Base.Modules
         public virtual void UnregisterHooks() { }
 
 
-        public string GetString(string str) => GetText.Instance.GetString(str);
+        public string GetString(string str) => Text.GetString(str);
         public dc.String GetDcString(string str) => GetString(str).ToHaxeString();
         public virtual void SaveConfig()
         {

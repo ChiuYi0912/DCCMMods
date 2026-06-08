@@ -31,6 +31,7 @@ using ModCore.Events.Interfaces.Game;
 using ModCore.Storage;
 using ModCore.Events;
 using dc.libs.misc;
+using CoreLibrary.Utilities;
 
 namespace MoreSettings.Modules
 {
@@ -43,6 +44,7 @@ namespace MoreSettings.Modules
         public override Enums.MenuCategory Type => Enums.MenuCategory.Level;
         public override string Description => GetText.Instance.GetString("LevelModule");
         public override LevelConfig config => (LevelConfig)base.config;
+        public CDBLevelCache cdblevel = new();
 
         public override void Initialize(ModBase mainMod)
         {
@@ -78,7 +80,6 @@ namespace MoreSettings.Modules
                 v => config.Faulteffects = v,
                 scrollerFlow
             );
-
         }
 
 
@@ -510,10 +511,9 @@ namespace MoreSettings.Modules
                 lineNumber = 805
             });
 
-            var levelData = Data.Class.level.byId.get(id);
-            var levelInfo = ((HaxeProxyBase)levelData).ToVirtual<LevelIfor_Virtual>();
 
             string cid = id.ToString();
+            var levelInfo = cdblevel.Get(cid);
             bool isSubMode = self.get_isInSubMode();
             bool isRichterCastle = self.hero is Richter || cid == "RichterCastle";
 
@@ -1360,6 +1360,7 @@ namespace MoreSettings.Modules
 
         void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb)
         {
+            cdblevel.Refresh();
         }
     }
 }

@@ -17,6 +17,7 @@ using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Storage;
 using ModCore.Utilities;
+using MoreSettings.Modules;
 using Serilog;
 
 namespace MoreSettings.GameMechanics.cine
@@ -31,9 +32,12 @@ namespace MoreSettings.GameMechanics.cine
         public Portal bossPortal = default!;
         public TimeKeeper boss = default!;
         public List<Portal> portals = null!;
-        public int spawnCx = 0;
-        public int spawnCy = 0;
-        public int cdtimeid = 1145140;
+
+
+        int spawnCx = 0; int spawnCy = 0;
+        int cdtimeid = KeyBindingModule.Tailor_KEY;
+
+        
         public static List<FamilyTailors> familys = new();
 
         public SummonTailor(Hero hero, int cx, int cy)
@@ -43,7 +47,7 @@ namespace MoreSettings.GameMechanics.cine
             owen = hero;
 
             var cd = owen.cd;
-            double duration = 30;
+            const double duration = 30;
             double frames = duration * cd.baseFps;
             var cdInst = new CdInst(cdtimeid, frames);
             cd.fastCheck.set(cdtimeid, cdInst);

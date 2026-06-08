@@ -2,12 +2,6 @@ using CoreLibrary.Core.Extensions;
 using dc;
 using dc.en;
 using dc.en.inter;
-using dc.h2d;
-using dc.libs.heaps;
-using dc.pr;
-using dc.tool;
-using Hashlink.Virtuals;
-using HaxeProxy.Runtime;
 using ModCore.Mods;
 using ModCore.Modules;
 using MoreSettings.API;
@@ -15,8 +9,6 @@ using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics.cine;
 using MoreSettings.GameMechanics.CustomPopDamage;
-using MoreSettings.Utilities;
-using PopDamage.OtherPop;
 using static MoreSettings.Configuration.Enums;
 
 namespace MoreSettings.Modules
@@ -28,6 +20,7 @@ namespace MoreSettings.Modules
         public override Enums.MenuCategory Type => Enums.MenuCategory.Visual;
         public EntityPopDamage entityPop = default!;
         public PopConfig popConfig = default!;
+
 
         public List<(string title, string sub, Action onSelect, Action after)> Teleportdata = [
         (
@@ -180,7 +173,7 @@ namespace MoreSettings.Modules
                 );
         }
 
-
+        #region Hooks
         public override void PermanentlyRegisterHooks()
         {
             Hook_Teleport.startTeleport += Hook_Teleport_startTeleport;
@@ -196,16 +189,17 @@ namespace MoreSettings.Modules
         {
             base.RegisterHooks();
             Hook_Hero.hasSkin += Hook_Hero_hasSkin;
+           
         }
 
-        private bool Hook_Hero_hasSkin(Hook_Hero.orig_hasSkin orig, Hero self, dc.String model, dc.String itemId)
+        private bool Hook_Hero_hasSkin(Hook_Hero.orig_hasSkin orig, Hero h, dc.String model, dc.String itemId)
         {
             if (itemId != null)
                 if (config.KatanaSkin && itemId.ToString() == "KatanaZero") return true;
-            return orig(self, model, itemId);
+            return orig(h, model, itemId);
         }
 
-        private void Hook_Teleport_startTeleport(Hook_Teleport.orig_startTeleport orig, Teleport self, Hero hero, Entity to)
+        private void Hook_Teleport_startTeleport(Hook_Teleport.orig_startTeleport orig, Teleport h, Hero hero, Entity to)
         {
             if (to == null)
                 return;
@@ -215,15 +209,15 @@ namespace MoreSettings.Modules
                 case TeleportStyle.orig:
                     if (hero.hasSkin(null, "RiskOfRain".ToHaxeString()))
                     {
-                        _ = new TeleportationRiskOfRain(hero, self, to, !config.TeleportImmediate); return;
+                        _ = new TeleportationRiskOfRain(hero, h, to, !config.TeleportImmediate); return;
                     }
-                    _ = new Teleportation(hero, self, to, !config.TeleportImmediate);
+                    _ = new Teleportation(hero, h, to, !config.TeleportImmediate);
                     break;
 
                 case TeleportStyle.Default:
                     _ = new Teleportation(
                         hero,
-                        self,
+                        h,
                         to,
                         !config.TeleportImmediate);
                     break;
@@ -231,7 +225,7 @@ namespace MoreSettings.Modules
                 case TeleportStyle.RiskOfRain:
                     _ = new TeleportationRiskOfRain(
                         hero,
-                        self,
+                        h,
                         to,
                         !config.TeleportImmediate);
                     break;
@@ -239,13 +233,13 @@ namespace MoreSettings.Modules
                 case TeleportStyle.Instant:
                     _ = new TeleportationFancy(
                         hero,
-                        self,
+                        h,
                         to,
                         !config.TeleportImmediate);
                     break;
 
             }
         }
-
+        #endregion
     }
 }

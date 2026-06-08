@@ -83,8 +83,27 @@ namespace DebugMod.Commands.activateDebug
             writer.WriteLine($"已将targetable从 {currentValue} 切换为: {newValue}");
         }
 
+        [ConsoleMethod("cd", "heroCd")]
+        public static void HeroCD(TextWriter writer, int cdkey)
+        {
+            Hero hero = Game.Class.ME.hero;
+            var cd = hero.cd;
+            var indexes = dc.tool.Cooldown.Class.INDEXES;
 
+            int key = cdkey;
+            int typeIndex = key >> 21;
+            int subId = key & 0x1FFFFF;
 
+            if (typeIndex >= 0 && typeIndex < indexes.length)
+            {
+                var typeName = indexes.getDyn(typeIndex);
+                writer.Write($"type: {typeName}, typeIndex: {typeIndex}, subId: {subId}");
+            }
+            else
+            {
+                writer.Write($"类型索引超出范围: {typeIndex}");
+            }
+        }
 
 
     }

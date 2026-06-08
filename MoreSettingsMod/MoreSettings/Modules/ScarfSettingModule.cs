@@ -70,10 +70,10 @@ namespace MoreSettings.Modules
                 orig(self);
                 return;
             }
-
-            if (self.scarf != null)
-                self.scarf.dispose();
-            self.scarf = scarfBase.CreateCustomScarfManager(self);
+            var h = self;
+            if (h != null)
+                h.scarf.dispose();
+            h!.scarf = scarfBase.CreateCustomScarfManager(h);
         }
 
         public void CloseAllUI()

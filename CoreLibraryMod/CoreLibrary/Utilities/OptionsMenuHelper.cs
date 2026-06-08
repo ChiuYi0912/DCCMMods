@@ -217,11 +217,12 @@ namespace CoreLibrary.Core.Utilities
 
         public void CenterToggleWidget(Flow widget, dc.ui.Options options, Flow scrollerFlow, bool Middle = true)
         {
+            var pixel = options.get_pixelScale.Invoke();
             FlowAlign align = Middle ? new FlowAlign.Middle() : new FlowAlign.Left();
 
             var props = scrollerFlow.getProperties(widget);
             props.horizontalAlign = align;
-            if (!Middle) props.paddingLeft = (int)(options.get_pixelScale.Invoke() * 40);
+            if (!Middle) props.paddingLeft = (int)(pixel * 40);
 
             widget.maxWidth = scrollerFlow.get_innerWidth();
             widget.horizontalAlign = align;
@@ -229,7 +230,7 @@ namespace CoreLibrary.Core.Utilities
 
             widget.paddingTop = widget.get_innerHeight() / 5;
 
-            var pixel = options.get_pixelScale.Invoke();
+            
 
             foreach (var child in widget.children.AsEnumerable())
             {

@@ -24,15 +24,17 @@ namespace CoreLibrary.Core.Utilities
         };
 
 
-        private readonly Dictionary<string, List<string>> allMobs = new();
-
+        private readonly Dictionary<string, HashSet<string>> allMobs = new();
 
         private readonly Dictionary<string, string> mob2GroupLookup = new();
+
+        private readonly HashSet<string> allMobIds = new();
 
         public void Refresh()
         {
             allMobs.Clear();
             mob2GroupLookup.Clear();
+            allMobIds.Clear();
 
             var mobData = Data.Class.mob;
             int count = mobData.all.get_length();
@@ -44,22 +46,24 @@ namespace CoreLibrary.Core.Utilities
                 var groupName = groups[groupIndex];
                 var mobId = item.id.ToString();
 
-
                 if (mob2GroupLookup.ContainsKey(mobId))
                     continue;
 
-
-                if (!allMobs.TryGetValue(groupName, out var list))
+                if (!allMobs.TryGetValue(groupName, out var set))
                 {
-                    list = new List<string>();
-                    allMobs[groupName] = list;
+                    set = new HashSet<string>();
+                    allMobs[groupName] = set;
                 }
-                list.Add(mobId);
-
+                set.Add(mobId);
 
                 mob2GroupLookup[mobId] = groupName;
+
+                allMobIds.Add(mobId);
             }
         }
+
+
+        public bool IsValidMob(string mobId) => allMobIds.Contains(mobId);
 
 
         public bool IsBoss(string mobId)

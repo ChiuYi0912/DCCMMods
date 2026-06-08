@@ -12,6 +12,7 @@ using dc.h3d.mat;
 using dc.libs.heaps.slib;
 using dc.tool;
 using dc.tool.mod;
+using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Events;
 using ModCore.Events.Interfaces.Game;
@@ -56,7 +57,7 @@ IOnAfterLoadingCDB
       instance = this;
       Utilities.Logger.Initialize(Logger);
       GetText.Instance.RegisterMod("SettingsLang");
-      Info.Version = "1.3.1";
+      Info.Version = "1.3.2";
       Info.RepositoryUrl = "https://github.com/ChiuYi0912/DCCMMods/tree/main";
 
       moduleManager = new ModuleManager(this);
@@ -73,11 +74,11 @@ IOnAfterLoadingCDB
 
       EventSystem.BroadcastEvent<IOnHookInitialize>();
 
-      Hook_Boot.mainLoop += Hook_Boot_loop;
+      //Hook_Boot.mainLoop += Hook_Boot_loop;
    }
 
 
-   private void Hook_Boot_loop(Hook_Boot.orig_mainLoop orig, Boot self)
+    private void Hook_Boot_loop(Hook_Boot.orig_mainLoop orig, Boot self)
    {
       #if DEBUG
       try

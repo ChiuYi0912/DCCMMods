@@ -1,30 +1,49 @@
 using CoreLibrary.Core.Extensions;
-using CoreLibrary.Utilities;
 using dc;
 using dc.h2d;
 using dc.pr;
-using dc.tool.atk;
 using dc.ui;
 using dc.ui.hud;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Mods;
-using ModCore.Modules;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics;
 using MoreSettings.shaders;
-using MoreSettings.Utilities;
 
 namespace MoreSettings.Modules
 {
     internal class HasUiSettingsModule : BaseModule
     {
-        public override string Description => GetText.Instance.GetString("ModuleDesc_UI");
+        public override string Description => GetString("ModuleDesc_UI");
 
         private dc.ui.Text TimeText = null!;
         public override UIConfig config => (UIConfig)base.config;
         public override Enums.MenuCategory Type => Enums.MenuCategory.UI;
+
+
+        private DateTime _lastUpdateTime = DateTime.MinValue;
+        private readonly TimeSpan _updateInterval = TimeSpan.FromSeconds(1);
+
+        public CustomHeroLifeBar customHeroLife = null!;
+        private dc.ui.hud.LifeBar cachedSbooslifebar = default!;
+
+        private double pixelScale;
+
+        public double getpixelScale
+        {
+            get
+            {
+                if (pixelScale != 0) return pixelScale;
+                var hud = dc.ui.HUD.Class.ME;
+                if (hud != null)
+                    pixelScale = hud.get_pixelScale.Invoke();
+
+                return pixelScale;
+            }
+            set => pixelScale = value;
+        }
 
         public override void Initialize(ModBase mainMod)
         {
@@ -93,23 +112,23 @@ namespace MoreSettings.Modules
                 return;
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("RemoveNewsPanel"),
-                GetText.Instance.GetString("TakeEffectNextLaunch"),
+                GetString("RemoveNewsPanel"),
+                GetString("TakeEffectNextLaunch"),
                 () => config.NewsPanel,
                 v => config.NewsPanel = v,
                 scrollerFlow);
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("RemoveUpdateNotes"),
-                GetText.Instance.GetString(""),
+                GetString("RemoveUpdateNotes"),
+                GetString(""),
                 () => config.RemovalUpdateNotes,
                 v => config.RemovalUpdateNotes = v,
                 scrollerFlow
             );
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("RemoveCinematicBars"),
-                GetText.Instance.GetString("RemoveCinematicBarsDesc"),
+                GetString("RemoveCinematicBars"),
+                GetString("RemoveCinematicBarsDesc"),
                 () => config.HasBottomBar,
                 v => config.HasBottomBar = v,
                 scrollerFlow
@@ -117,8 +136,8 @@ namespace MoreSettings.Modules
 
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("DisableVignette"),
-                GetText.Instance.GetString("DisableVignetteDesc"),
+                GetString("DisableVignette"),
+                GetString("DisableVignetteDesc"),
                 () => config.NoVignette,
                 v =>
                 {
@@ -129,8 +148,8 @@ namespace MoreSettings.Modules
             );
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("LightweightDisplay"),
-                GetText.Instance.GetString("LightweightDisplayDesc"),
+                GetString("LightweightDisplay"),
+                GetString("LightweightDisplayDesc"),
                 () => config.HaslightTip,
                 v =>
                 {
@@ -142,16 +161,16 @@ namespace MoreSettings.Modules
 
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("ClockDisplay"),
-                GetText.Instance.GetString(""),
+                GetString("ClockDisplay"),
+                GetString(""),
                 () => config.NowTimeVisible,
                 v => config.NowTimeVisible = v,
                 scrollerFlow
             );
 
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("BossHealthBarText"),
-                GetText.Instance.GetString(""),
+                GetString("BossHealthBarText"),
+                GetString(""),
                 () => config.ShowBossHealthBar,
                 v => config.ShowBossHealthBar = v,
                 scrollerFlow
@@ -159,7 +178,7 @@ namespace MoreSettings.Modules
 
 
             menuHelper.AddHSVColorWidget(
-                GetText.Instance.GetString("HealthBarColor"),
+                GetString("HealthBarColor"),
                 "",
                 () =>
                 {
@@ -191,7 +210,7 @@ namespace MoreSettings.Modules
             {
                 int paddingleft = (int)(options.get_pixelScale.Invoke() * 40);
                 var alpha = menuHelper.AddConfigSlider(
-                 GetText.Instance.GetString("Alpha"),
+                 GetString("Alpha"),
                  () => config.LifeBarAlpha,
                  (v) =>
                  {
@@ -255,25 +274,24 @@ namespace MoreSettings.Modules
             arg1.topBar.set_visible(!config.HasBottomBar);
         }
 
-        private DateTime _lastUpdateTime = DateTime.MinValue;
-        private readonly TimeSpan _updateInterval = TimeSpan.FromSeconds(1);
+
         private void Hook_HUD_PostUpdate(Hook_HUD.orig_postUpdate orig, HUD self)
         {
             orig(self);
             UpdateNowTime();
-            if (self.bossLifebar == null) return;
-            AdjustBossLifebarLabel(self.bossLifebar);
+            if (cachedSbooslifebar == null) return;
+            AdjustBossLifebarLabel(cachedSbooslifebar);
         }
 
         private void UpdateNowTime()
         {
-            if (!TimeText.visible != config.NowTimeVisible)
+            if (TimeText.visible != config.NowTimeVisible)
                 TimeText.set_visible(config.NowTimeVisible);
 
             var now = DateTime.Now;
             if (now - _lastUpdateTime >= _updateInterval)
             {
-                TimeText.set_text($"{now}".ToHaxeString());
+                TimeText!.set_text($"{now}".ToHaxeString());
 
                 _lastUpdateTime = now;
             }
@@ -284,12 +302,11 @@ namespace MoreSettings.Modules
             if (lifeBar.label == null) return;
 
             var label = lifeBar.label;
-            double basePixelScale = lifeBar.get_pixelScale.Invoke();
 
             label.scaleX = label.scaleY /= 1.5;
             double finalScale = label.scaleX;
 
-            double padding = 3.0 * basePixelScale;
+            double padding = 3.0 * getpixelScale;
             double sbX = lifeBar.sb.x;
             double sbY = lifeBar.sb.y;
 
@@ -316,6 +333,7 @@ namespace MoreSettings.Modules
         private void Hook_HUD___constructor__(Hook__HUD.orig___constructor__ orig, HUD arg1, dc.pr.Game game)
         {
             orig(arg1, game);
+            getpixelScale = arg1.get_pixelScale.Invoke();
 
             TimeText = new dc.ui.Text(null, null, null, Ref<double>.Null, null, null);
             TimeText.scaleY = TimeText.scaleX = 1;
@@ -323,47 +341,19 @@ namespace MoreSettings.Modules
             TimeText.set_text($"{DateTime.Now}".ToHaxeString());
             arg1.rightFlowR.addChildAt(TimeText, 3);
 
-            if (config.ShowBossHealthBar)
-                arg1.bossLifebar.enableText();
-
-            AdjustBossLifebarLabel(arg1.bossLifebar);
+            if (config.ShowBossHealthBar && arg1.bossLifebar != null)
+            {
+                cachedSbooslifebar = arg1.bossLifebar;
+                cachedSbooslifebar.enableText();
+                AdjustBossLifebarLabel(cachedSbooslifebar);
+            }
 
             arg1.onResize();
+
+
         }
 
-        private dc.String Hook_LifeBar_getStartEndName(dc.ui.hud.Hook_LifeBar.orig_getStartEndName orig, dc.ui.hud.LifeBar self)
-        {
-            switch (self.colorMode.RawIndex)
-            {
-                case 0:
-                    dc.String iscolor = LifeBarStartEndColors[(int)config.LifeBarcolor].ToHaxeString();
-                    return iscolor;
-                case 1:
-                    return "lifeBossStartEnd".ToHaxeString();
-                case 2:
-                    return "lifeBossModifiedStartEnd".ToHaxeString();
-                default:
-                    return null!;
-            }
-        }
 
-        private dc.String Hook_LifeBar_GetFullName(dc.ui.hud.Hook_LifeBar.orig_getFullName orig, dc.ui.hud.LifeBar self)
-        {
-
-            switch (self.colorMode.RawIndex)
-            {
-                case 0:
-
-                    dc.String iscolor = LifeBarFullColors[(int)config.LifeBarcolor].ToHaxeString();
-                    return iscolor;
-                case 1:
-                    return "lifeFullBoss".ToHaxeString();
-                case 2:
-                    return "lifeFullBossModified".ToHaxeString();
-                default:
-                    return null!;
-            }
-        }
 
         private void Hook_NewsPanel_update(Hook_NewsPanel.orig_update orig, NewsPanel self)
         {
@@ -383,12 +373,8 @@ namespace MoreSettings.Modules
             orig(self);
         }
 
-        private void Hook_Entity_popDamage(Hook_Entity.orig_popDamage orig, Entity self, AttackData a)
-        {
-            if (dc.ui.Console.Class.ME.flags.exists("NoPopText".ToHaxeString())) return;
-        }
 
-        public CustomHeroLifeBar customHeroLife = null!;
+
         private void Hook_HUD_initLeftFlowT(Hook_HUD.orig_initLeftFlowT orig, HUD self)
         {
             orig(self);
@@ -397,7 +383,6 @@ namespace MoreSettings.Modules
             self.heroLifeBar.get_pixelScale = self.get_pixelScale;
             self.heroLifeBar.enableText();
         }
-
 
 
         private void Hook_LifeBar_updateSize(dc.ui.hud.Hook_LifeBar.orig_updateSize orig, dc.ui.hud.LifeBar self)
@@ -422,27 +407,6 @@ namespace MoreSettings.Modules
         #endregion
         #region Helper
 
-        public List<string> LifeBarFullColors = new()
-        {
-            "lifeFull",
-            "gold_gradient_darker",
-            "blue_gradient_darker",
-            "pink_gradient_darker",
-            "purple_gradient_darker",
-            "red_gradient_darker",
-            "white_gradient_darker"
-        };
-
-        public List<string> LifeBarStartEndColors = new()
-        {
-            "lifeStartEnd",
-            "gold_gradient_transparent",
-            "blue_gradient_transparent",
-            "pink_gradient_transparent",
-            "purple_gradient_transparent",
-            "red_gradient_transparent",
-            "white_gradient_transparent"
-        };
 
 
         public static void SetConsoleFlag(bool isSet, string flagName)

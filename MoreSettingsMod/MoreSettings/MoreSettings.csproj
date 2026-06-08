@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" /> -->
     <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
     <ModDependency Include="CoreLibraryMod" />
   </ItemGroup>
