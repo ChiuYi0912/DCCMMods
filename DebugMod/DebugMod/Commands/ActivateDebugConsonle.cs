@@ -105,6 +105,15 @@ namespace DebugMod.Commands.activateDebug
             }
         }
 
+        [ConsoleMethod("shader", "")]
+        public static void ShaderString(TextWriter writer)
+        {
+            Hero hero = Game.Class.ME.hero;
+            var shader = hero.spr.getShader(dc.shader.GlowKey.Class);
+            var printer = new dc.hxsl.Printer(Ref<bool>.In(false));
+            var source = printer.shaderString(shader.shader.data);
+            writer.Write($"{source}");
+        }
 
     }
 }

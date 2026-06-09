@@ -204,8 +204,16 @@ namespace MoreSettings.Configuration
         public bool HasNoPopText { get; set; } = false;
         public bool RiskOfRainSkin { get; set; } = false;
         public bool KatanaSkin { get; set; } = false;
+
         public TeleportStyle TeleportStyle { get; set; }
         public bool TeleportImmediate { get; set; } = false;
+
+        public int OnionSkinColor = 0;
+        public bool CustomOnion { get; set; } = false;
+        public bool OnionPermanent { get; set; } = false;
+        public bool OnionClosefeed { get; set; } = false;
+        public OnionSkinColorMode OnionColorMode { get; set; } = OnionSkinColorMode.Custom;
+        public OnionSkinBlendMode OnionSkinBlendMode { get; set; } = OnionSkinBlendMode.Add;
     }
 
 

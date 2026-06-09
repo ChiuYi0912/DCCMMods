@@ -27,5 +27,17 @@ namespace MoreSettings.Configuration
             RiskOfRain,
             Instant
         }
+
+        public enum OnionSkinColorMode
+        {
+            Custom,
+            colorMap
+        }
+
+        public enum OnionSkinBlendMode
+        {
+            Add,
+            Alpha
+        }
     }
 }

@@ -3,7 +3,9 @@ using dc;
 using dc.en;
 using dc.en.hero;
 using dc.en.inter;
+using dc.h2d;
 using dc.hl.types;
+using dc.shader;
 using dc.tool;
 using dc.tool._Cooldown;
 using Hashlink.Reflection.Types;
@@ -15,6 +17,7 @@ using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics.cine;
 using MoreSettings.GameMechanics.CustomPopDamage;
+using MoreSettings.Utilities;
 using static MoreSettings.Configuration.Enums;
 
 namespace MoreSettings.Modules
@@ -169,6 +172,75 @@ namespace MoreSettings.Modules
             );
 
 
+
+
+
+
+
+            menuHelper.AddSubSeparator(GetString("加速残影"), scrollerFlow);
+
+            var OnionMode = menuHelper.AddConfigToggle(
+                GetString("开启自定义残影"),
+                GetString(""),
+                () => config.CustomOnion,
+                v => { config.CustomOnion = v; options.onResize(); },
+                scrollerFlow: options.scrollerFlow
+                );
+            menuHelper.CenterToggleWidget(OnionMode, options, options.scrollerFlow);
+
+
+            if (config.CustomOnion)
+            {
+                menuHelper.AddConfigToggle(
+                    GetString("减弱残影动效"),
+                    GetString(""),
+                    () => config.OnionClosefeed,
+                    v => config.OnionClosefeed = v,
+                    scrollerFlow: options.scrollerFlow
+                );
+
+
+                List<(string title, string sub, Action onSelect, Action after)> OnionSkinColorData = new()
+                {
+                    ("自定义颜色", "", () => {config.OnionColorMode =OnionSkinColorMode.Custom; }, () => { }),
+                    ("映射当前皮肤","", ()=> {config.OnionColorMode =OnionSkinColorMode.colorMap; }, () => { })
+                };
+                menuHelper.AddSubSeparator(GetString("残影配色"), scrollerFlow, false);
+                menuHelper.AddConfigRadioGroup(
+                    OnionSkinColorData,
+                    (int)config.OnionColorMode,
+                    (v) => { config.OnionColorMode = (OnionSkinColorMode)v; },
+                    scrollerFlow
+                );
+
+                if (config.OnionColorMode == OnionSkinColorMode.Custom)
+                    menuHelper.AddHSVColorWidget(
+                      GetString("颜色设置"),
+                      "",
+                      () => config.OnionColorMode == OnionSkinColorMode.Custom,
+                      config.OnionColorMode == OnionSkinColorMode.Custom,
+                      newColor => config.OnionSkinColor = newColor,
+                      config.OnionSkinColor,
+                      scrollerFlow
+                    );
+
+
+                List<(string title, string sub, Action onSelect, Action after)> OnionSkinBlendData = new()
+                {
+                    ("Add", "", () => {config.OnionSkinBlendMode =OnionSkinBlendMode.Add; }, () => { }),
+                    ("Alpha","", ()=> {config.OnionSkinBlendMode =OnionSkinBlendMode.Alpha; }, () => { })
+                };
+                menuHelper.AddSubSeparator(GetString("混合模式"), scrollerFlow, false);
+                menuHelper.AddConfigRadioGroup(
+                    OnionSkinBlendData,
+                    (int)config.OnionSkinBlendMode,
+                    (v) => { config.OnionSkinBlendMode = (OnionSkinBlendMode)v; },
+                    scrollerFlow
+                );
+
+            }
+
+
             menuHelper.AddSubSeparator(GetString("Others"), scrollerFlow);
             menuHelper.AddConfigToggle(
                 GetText.Instance.GetString("KatanaZeroOutfit"),
@@ -248,7 +320,7 @@ namespace MoreSettings.Modules
         }
 
 
-        
+
         private void Hook_Beheaded_postUpdate(Hook_Beheaded.orig_postUpdate orig, Beheaded self)
         {
             ((HashlinkObjectType)self.HashlinkObj.Type).Super!.FindProto("postUpdate")!.Function.DynamicInvoke(self);
@@ -256,7 +328,11 @@ namespace MoreSettings.Modules
             double interval = 0.06 * self.cd.baseFps;
             bool skipSpeedFx = !self.hasAnySpeedBuff() || self.isChargingSkill()
                 || (System.Math.Abs(self.dx + self.bdx) < 0.1 && System.Math.Abs(self.dy + self.bdy) < 0.1);
-            
+
+            // if (!TryCdTick(self.cd, HeroCooldown.SpeedOnion, interval))
+            //     CreateHeroOnionSkin(self, default!);
+
+
             if (!skipSpeedFx)
             {
                 double comboFactor = CalcComboFactor(self);
@@ -303,14 +379,52 @@ namespace MoreSettings.Modules
             }
 
             if (self.cd.fastCheck.exists(HeroCooldown.WallRunOnionSkin) && !TryCdTick(self.cd, HeroCooldown.WallOnion, interval))
-            {
                 OnionSkin.Class.fromEntity(self, null, 13138521, Ref<double>.Null,
                     Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
-            }
+
+
+
+
         }
         #endregion
 
         #region HeroHelper
+
+        public OnionSkin CreateHeroOnionSkin(Hero hero, BlendMode mode = null!)
+        {
+            int color = config.OnionColorMode == OnionSkinColorMode.Custom ? config.OnionSkinColor : default;
+            var onionSkin = OnionSkin.Class.fromEntity(hero, null, null, Ref<double>.In(0.25), Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
+
+            if (config.OnionClosefeed)
+            {
+                onionSkin.ds = 0;
+                onionSkin.dx = 0;
+                onionSkin.dy = 0;
+            }
+
+            if (config.OnionColorMode == OnionSkinColorMode.colorMap && color == default)
+            {
+                var colorMap = (ColorMap)hero.spr.getShader(ColorMap.Class);
+                var glowKey = (GlowKey)hero.spr.getShader(GlowKey.Class);
+                var colorBlend = new ColorBlend(0, 0.7);
+
+                onionSkin.addAdditionnalShader(colorMap);
+                onionSkin.addAdditionnalShader(colorBlend);
+                onionSkin.addAdditionnalShader(glowKey);
+            }
+
+            mode = config.OnionSkinBlendMode switch
+            {
+                OnionSkinBlendMode.Add => new BlendMode.Add(),
+                OnionSkinBlendMode.Alpha => new BlendMode.Alpha(),
+                _ => new BlendMode.Alpha()
+            };
+            onionSkin.blendMode = mode;
+
+            return onionSkin;
+        }
+
+
         private static double CalcComboFactor(Hero self)
         {
             double kills = self.spdComboKills;
@@ -326,44 +440,58 @@ namespace MoreSettings.Modules
 
         private static void CheckGroundSparks(Hero self)
         {
-            var lmap = self._level?.map;
-            if (lmap == null) return;
-            int cx = self.cx, cy = self.cy;
+            if (System.Math.Abs(self.dx + self.bdx) < 0.1) return;
 
-            bool onGround = false;
-            if ((uint)cx < (uint)lmap.wid && (uint)(cy + 1) < (uint)lmap.hei)
+            var level = self._level;
+            if (level == null) return;
+
+            var lmap = level.map;
+            if (lmap == null) return;
+
+            int cx = self.cx, cy = self.cy;
+            int wid = lmap.wid;
+            int hei = lmap.hei;
+            var collisions = lmap.collisions;
+
+            if ((uint)(cy + 1) < (uint)hei && (uint)cx < (uint)wid)
             {
-                int idx = (cy + 1) * lmap.wid + cx;
-                if (idx < lmap.collisions.length && (lmap.collisions.getDyn(idx) & 1) != 0)
+                int idx = (cy + 1) * wid + cx;
+                if (idx < collisions.length && (collisions.getDyn(idx) & 1) != 0)
                 {
                     double groundYr = lmap.getGroundYr(cx, cy, Ref<double>.In(self.xr), Ref<double>.In(self.yr));
-                    if (self.yr > groundYr && self.dy == 0.0) onGround = true;
+                    if (self.yr > groundYr && self.dy == 0.0)
+                    {
+                        level.fx.groundSparks(self, 16477444, 3);
+                        return;
+                    }
                 }
             }
-            if (!onGround && !self.ignoreSlopes && System.Math.Abs(self.dy) < 0.1
-                && (uint)cx < (uint)lmap.wid && (uint)cy < (uint)lmap.hei)
+
+            if (!self.ignoreSlopes && System.Math.Abs(self.dy) < 0.1 && (uint)cx < (uint)wid && (uint)cy < (uint)hei)
             {
-                int idx = cy * lmap.wid + cx;
-                if (idx < lmap.collisions.length && (lmap.collisions.getDyn(idx) & 512) != 0) onGround = true;
+                int idx = cy * wid + cx;
+                if (idx < collisions.length && (collisions.getDyn(idx) & 512) != 0)
+                {
+                    level.fx.groundSparks(self, 16477444, 3);
+                }
             }
-            if (onGround && System.Math.Abs(self.dx + self.bdx) >= 0.1)
-                self._level!.fx.groundSparks(self, 16477444, 3);
         }
 
 
         private static int LerpColor(int from, int to, double t)
         {
-            double r = ((from >> 16) & 255) + (((to >> 16) & 255) - ((from >> 16) & 255)) * t;
-            double g = ((from >> 8) & 255) + (((to >> 8) & 255) - ((from >> 8) & 255)) * t;
-            double b = (from & 255) + ((to & 255) - (from & 255)) * t;
-            return (RoundHL(r) << 16) | (RoundHL(g) << 8) | RoundHL(b);
+            int fromR = (from >> 16) & 0xFF;
+            int fromG = (from >> 8) & 0xFF;
+            int fromB = from & 0xFF;
+            int toR = (to >> 16) & 0xFF;
+            int toG = (to >> 8) & 0xFF;
+            int toB = to & 0xFF;
 
-            int RoundHL(double v)
-            {
-                if (v > 0) return (int)(v + 0.5);
-                if (v < 0) return (int)(v - 0.5);
-                return 0;
-            }
+            int r = (int)(fromR + (toR - fromR) * t + 0.5);
+            int g = (int)(fromG + (toG - fromG) * t + 0.5);
+            int b = (int)(fromB + (toB - fromB) * t + 0.5);
+
+            return (r << 16) | (g << 8) | b;
         }
 
         private static bool TryCdTick(dc.tool.Cooldown cd, int key, double frames)
