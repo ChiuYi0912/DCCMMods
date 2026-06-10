@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using CoreLibrary.Core.Extensions;
 using dc;
 using dc.en;
@@ -56,6 +57,19 @@ namespace MoreSettings.Modules
             () => SettingsMain.ConfigValue.Skin.TeleportStyle = TeleportStyle.Instant,
             () => {}
         )];
+
+        public List<(string title, string sub, Action onSelect, Action after)> OnionSkinColorData = [
+
+            ("自定义颜色", "", () => {SettingsMain.ConfigValue.Skin.OnionColorMode =OnionSkinColorMode.Custom; }, () => { }),
+            ("映射皮肤","", ()=> {SettingsMain.ConfigValue.Skin.OnionColorMode =OnionSkinColorMode.colorMap; }, () => { }),
+            ("皮肤+调色", "保留皮肤外观，可叠加色调/饱和度/亮度调整",()=> {SettingsMain.ConfigValue.Skin.OnionColorMode =OnionSkinColorMode.ColorMapAdjust; }, () => { })
+        ];
+
+        public List<(string title, string sub, Action onSelect, Action after)> OnionSkinBlendData = [
+
+            ("Add", "更清晰", () => {SettingsMain.ConfigValue.Skin.OnionSkinBlendMode =OnionSkinBlendMode.Add; }, () => { }),
+            ("Alpha","透明", ()=> {SettingsMain.ConfigValue.Skin.OnionSkinBlendMode =OnionSkinBlendMode.Alpha; }, () => { })
+        ];
 
         public override void Initialize(ModBase mainMod)
         {
@@ -173,23 +187,19 @@ namespace MoreSettings.Modules
 
 
 
-
-
-
-
             menuHelper.AddSubSeparator(GetString("加速残影"), scrollerFlow);
 
             var OnionMode = menuHelper.AddConfigToggle(
-                GetString("开启自定义残影"),
+                GetString("开启自定义加速残影"),
                 GetString(""),
-                () => config.CustomOnion,
-                v => { config.CustomOnion = v; options.onResize(); },
+                () => config.UseCustomOnion,
+                v => { config.UseCustomOnion = v; options.onResize(); },
                 scrollerFlow: options.scrollerFlow
                 );
             menuHelper.CenterToggleWidget(OnionMode, options, options.scrollerFlow);
 
 
-            if (config.CustomOnion)
+            if (config.UseCustomOnion)
             {
                 menuHelper.AddConfigToggle(
                     GetString("减弱残影动效"),
@@ -199,45 +209,115 @@ namespace MoreSettings.Modules
                     scrollerFlow: options.scrollerFlow
                 );
 
+                PopmenuHelper.AddConfigSlider(
+                    GetString("存活时长"),
+                    () => config.OnionSkinColorLife,
+                    v => config.OnionSkinColorLife = v,
+                    step: 0.01,
+                    minValue: 0,
+                    maxValue: 1.5,
+                    scrollerFlow: scrollerFlow
+                );
 
-                List<(string title, string sub, Action onSelect, Action after)> OnionSkinColorData = new()
-                {
-                    ("自定义颜色", "", () => {config.OnionColorMode =OnionSkinColorMode.Custom; }, () => { }),
-                    ("映射当前皮肤","", ()=> {config.OnionColorMode =OnionSkinColorMode.colorMap; }, () => { })
-                };
+                PopmenuHelper.AddConfigSlider(
+                    GetText.Instance.GetString("生成下一个残影的冷却(尽量不要设置为0,可能会导致卡顿)"),
+                    () => config.ONION_SKIN_INTERVAL_SEC,
+                    v => config.ONION_SKIN_INTERVAL_SEC = v,
+                    step: 0.01,
+                    minValue: 0,
+                    maxValue: 1,
+                    scrollerFlow: scrollerFlow
+                );
+
+
+
+
                 menuHelper.AddSubSeparator(GetString("残影配色"), scrollerFlow, false);
                 menuHelper.AddConfigRadioGroup(
                     OnionSkinColorData,
                     (int)config.OnionColorMode,
-                    (v) => { config.OnionColorMode = (OnionSkinColorMode)v; },
+                    (v) => { config.OnionColorMode = (OnionSkinColorMode)v; options.onResize(); },
                     scrollerFlow
                 );
 
-                if (config.OnionColorMode == OnionSkinColorMode.Custom)
+                bool isCustom = config.OnionColorMode == OnionSkinColorMode.Custom;
+                bool isColorMapAdjust = config.OnionColorMode == OnionSkinColorMode.ColorMapAdjust;
+                bool isColorMap = config.OnionColorMode == OnionSkinColorMode.colorMap;
+
+                int pixe = (int)options.get_pixelScale.Invoke() * 40;
+
+                if (isCustom || isColorMapAdjust)
+                {
+                    (var colordef, var title) = isCustom
+                                    ? (config.OnionSkinColor, "颜色配置")
+                                    : (config.OnionSkinMapAdjustColor, "遮罩配置");
                     menuHelper.AddHSVColorWidget(
-                      GetString("颜色设置"),
+                      GetString(title),
                       "",
-                      () => config.OnionColorMode == OnionSkinColorMode.Custom,
-                      config.OnionColorMode == OnionSkinColorMode.Custom,
-                      newColor => config.OnionSkinColor = newColor,
-                      config.OnionSkinColor,
+                      () => true,
+                      true,
+                      newColor =>
+                      {
+                          if (isCustom)
+                          {
+                              config.OnionSkinColor = newColor;
+                          }
+                          else if (isColorMapAdjust)
+                          {
+                              config.OnionSkinMapAdjustColor = newColor;
+                          }
+                      },
+                      colordef,
                       scrollerFlow
                     );
 
+                    if (isColorMapAdjust)
+                    {
+                        PopmenuHelper.AddConfigSlider(
+                            GetText.Instance.GetString("遮罩深度"),
+                            () => config.ColorMapAdjustfactor,
+                            v => config.ColorMapAdjustfactor = v,
+                            step: 0.1,
+                            minValue: 0,
+                            maxValue: 1,
+                            scrollerFlow: scrollerFlow,
+                            paddingLeft: pixe
+                        );
 
-                List<(string title, string sub, Action onSelect, Action after)> OnionSkinBlendData = new()
+                        PopmenuHelper.AddConfigSlider(
+                            GetText.Instance.GetString("遮罩不透明度"),
+                            () => config.OnionSkinAdjustAlpha,
+                            v => config.OnionSkinAdjustAlpha = v,
+                            step: 0.1,
+                            minValue: 0,
+                            maxValue: 1,
+                            scrollerFlow: scrollerFlow,
+                            paddingLeft: pixe
+                        );
+                    }
+                }
+                PopmenuHelper.AddConfigSlider(
+                        GetText.Instance.GetString("残影不透明度"),
+                        () => config.OnionSkinColorAlpha,
+                        v => config.OnionSkinColorAlpha = v,
+                        step: 0.1,
+                        minValue: 0,
+                        maxValue: 1,
+                        scrollerFlow: scrollerFlow,
+                        paddingLeft: pixe
+                    );
+
+                if (isCustom || isColorMap)
                 {
-                    ("Add", "", () => {config.OnionSkinBlendMode =OnionSkinBlendMode.Add; }, () => { }),
-                    ("Alpha","", ()=> {config.OnionSkinBlendMode =OnionSkinBlendMode.Alpha; }, () => { })
-                };
-                menuHelper.AddSubSeparator(GetString("混合模式"), scrollerFlow, false);
-                menuHelper.AddConfigRadioGroup(
-                    OnionSkinBlendData,
-                    (int)config.OnionSkinBlendMode,
-                    (v) => { config.OnionSkinBlendMode = (OnionSkinBlendMode)v; },
-                    scrollerFlow
-                );
-
+                   
+                    menuHelper.AddSubSeparator(GetString("残影混合模式"), scrollerFlow, false);
+                    menuHelper.AddConfigRadioGroup(
+                        OnionSkinBlendData,
+                        (int)config.OnionSkinBlendMode,
+                        (v) => { config.OnionSkinBlendMode = (OnionSkinBlendMode)v; },
+                        scrollerFlow
+                    );
+                }
             }
 
 
@@ -325,13 +405,10 @@ namespace MoreSettings.Modules
         {
             ((HashlinkObjectType)self.HashlinkObj.Type).Super!.FindProto("postUpdate")!.Function.DynamicInvoke(self);
 
-            double interval = 0.06 * self.cd.baseFps;
+            double cd = config.UseCustomOnion ? config.ONION_SKIN_INTERVAL_SEC : 0.06;
+            double interval = cd * self.cd.baseFps;
             bool skipSpeedFx = !self.hasAnySpeedBuff() || self.isChargingSkill()
                 || (System.Math.Abs(self.dx + self.bdx) < 0.1 && System.Math.Abs(self.dy + self.bdy) < 0.1);
-
-            // if (!TryCdTick(self.cd, HeroCooldown.SpeedOnion, interval))
-            //     CreateHeroOnionSkin(self, default!);
-
 
             if (!skipSpeedFx)
             {
@@ -350,76 +427,104 @@ namespace MoreSettings.Modules
 
                 double comboLimit = comboLimitBase + self.speedComboRun;
 
+
                 if (!TryCdTick(self.cd, HeroCooldown.SpeedOnion, interval))
                 {
                     if (fullSpeed > comboLimit)
                     {
-                        OnionSkin.Class.fromEntity(self, null,
-                            LerpColor(16380422, 16405765, dc.pr.Game.Class.ME.ftime % 30.0 / 30.0),
-                            Ref<double>.In(0.25), Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
-                        CheckGroundSparks(self);
+                        if (config.UseCustomOnion)
+                            CreateHeroOnionSkin(self);
+                        else
+                        {
+                            OnionSkin.Class.fromEntity(self, null,
+                                LerpColor(16380422, 16405765, dc.pr.Game.Class.ME.ftime % 30.0 / 30.0),
+                                Ref<double>.In(0.25), Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
+                            CheckGroundSparks(self);
+                        }
                     }
                     else
                     {
-                        OnionSkin.Class.fromEntity(self, null, 2665431, Ref<double>.In(0.15),
-                            Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
-                        OnionSkin.Class.fromEntity(self, null,
-                            LerpColor(13643567, 7165407, fullSpeed / comboLimit),
-                            Ref<double>.In(0.05 + 0.15 * fullSpeed / comboLimit),
-                            Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
+                        if (config.UseCustomOnion)
+                            CreateHeroOnionSkin(self);
+                        else
+                        {
+                            OnionSkin.Class.fromEntity(self, null, 2665431, Ref<double>.In(0.15),
+                                Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
+                            OnionSkin.Class.fromEntity(self, null,
+                                LerpColor(13643567, 7165407, fullSpeed / comboLimit),
+                                Ref<double>.In(0.05 + 0.15 * fullSpeed / comboLimit),
+                                Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
+                        }
                     }
                 }
+
 
                 if (!TryCdTick(self.cd, HeroCooldown.SpeedOnion, interval) && self.hasAnySpeedBuff()
                     && fullSpeed < comboLimit)
                 {
-                    OnionSkin.Class.fromEntity(self, null, 6984927, Ref<double>.In(0.25),
-                        Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
+                    if (config.UseCustomOnion)
+                        CreateHeroOnionSkin(self);
+                    else
+                        OnionSkin.Class.fromEntity(self, null, 6984927, Ref<double>.In(0.25),
+                            Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
                 }
             }
 
             if (self.cd.fastCheck.exists(HeroCooldown.WallRunOnionSkin) && !TryCdTick(self.cd, HeroCooldown.WallOnion, interval))
-                OnionSkin.Class.fromEntity(self, null, 13138521, Ref<double>.Null,
-                    Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
-
-
-
-
+            {
+                if (config.UseCustomOnion)
+                    CreateHeroOnionSkin(self);
+                else
+                    OnionSkin.Class.fromEntity(self, null, 13138521, Ref<double>.Null,
+                        Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
+            }
         }
         #endregion
 
         #region HeroHelper
 
-        public OnionSkin CreateHeroOnionSkin(Hero hero, BlendMode mode = null!)
+        public OnionSkin CreateHeroOnionSkin(Hero hero)
         {
-            int color = config.OnionColorMode == OnionSkinColorMode.Custom ? config.OnionSkinColor : default;
-            var onionSkin = OnionSkin.Class.fromEntity(hero, null, null, Ref<double>.In(0.25), Ref<double>.Null, Ref<bool>.Null, Ref<bool>.Null, Ref<double>.Null);
+            int? color = null;
+            double alpha = config.OnionSkinColorAlpha;
+            bool useColorAdjust = false;
+            double adjustAlpha = 0.0;
 
-            if (config.OnionClosefeed)
+
+            if (config.OnionColorMode == OnionSkinColorMode.Custom)
             {
-                onionSkin.ds = 0;
-                onionSkin.dx = 0;
-                onionSkin.dy = 0;
+                color = config.OnionSkinColor;
+                useColorAdjust = true;
+                adjustAlpha = config.OnionSkinAdjustAlpha;
             }
 
-            if (config.OnionColorMode == OnionSkinColorMode.colorMap && color == default)
-            {
-                var colorMap = (ColorMap)hero.spr.getShader(ColorMap.Class);
-                var glowKey = (GlowKey)hero.spr.getShader(GlowKey.Class);
-                var colorBlend = new ColorBlend(0, 0.7);
+            var onionSkin = OnionSkin.Class.fromEntity(
+                hero, null, color,
+                Ref<double>.In(alpha),
+                Ref<double>.In(config.OnionSkinColorLife),
+                Ref<bool>.In(!config.OnionClosefeed),
+                Ref<bool>.In(useColorAdjust),
+                Ref<double>.In(adjustAlpha)
+            );
 
-                onionSkin.addAdditionnalShader(colorMap);
-                onionSkin.addAdditionnalShader(colorBlend);
-                onionSkin.addAdditionnalShader(glowKey);
+            if (config.OnionColorMode == OnionSkinColorMode.ColorMapAdjust || config.OnionColorMode == OnionSkinColorMode.colorMap)
+            {
+                onionSkin.addAdditionnalShader(hero.spr.getShader(ColorMap.Class));
+                onionSkin.addAdditionnalShader(hero.spr.getShader(GlowKey.Class));
+
+                if (config.OnionColorMode == OnionSkinColorMode.ColorMapAdjust)
+                    onionSkin.addAdditionnalShader(new ColorBlend(config.OnionSkinMapAdjustColor, config.ColorMapAdjustfactor));
             }
 
-            mode = config.OnionSkinBlendMode switch
+            if (!useColorAdjust)
             {
-                OnionSkinBlendMode.Add => new BlendMode.Add(),
-                OnionSkinBlendMode.Alpha => new BlendMode.Alpha(),
-                _ => new BlendMode.Alpha()
-            };
-            onionSkin.blendMode = mode;
+                onionSkin.blendMode = config.OnionSkinBlendMode switch
+                {
+                    OnionSkinBlendMode.Add => new BlendMode.Add(),
+                    OnionSkinBlendMode.Alpha => new BlendMode.Alpha(),
+                    _ => new BlendMode.Alpha()
+                };
+            }
 
             return onionSkin;
         }

@@ -31,7 +31,8 @@ namespace MoreSettings.Configuration
         public enum OnionSkinColorMode
         {
             Custom,
-            colorMap
+            colorMap,
+            ColorMapAdjust
         }
 
         public enum OnionSkinBlendMode

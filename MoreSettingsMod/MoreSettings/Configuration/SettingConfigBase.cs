@@ -209,11 +209,17 @@ namespace MoreSettings.Configuration
         public bool TeleportImmediate { get; set; } = false;
 
         public int OnionSkinColor = 0;
-        public bool CustomOnion { get; set; } = false;
+        public double OnionSkinColorAlpha = 0.25;
+        public double OnionSkinAdjustAlpha = 1;
+        public double OnionSkinColorLife = 1.0;
+        public int OnionSkinMapAdjustColor = 0;
+        public double ColorMapAdjustfactor = 0.7;
+        public double ONION_SKIN_INTERVAL_SEC = 0.06;
+        public bool UseCustomOnion { get; set; } = false;
         public bool OnionPermanent { get; set; } = false;
         public bool OnionClosefeed { get; set; } = false;
         public OnionSkinColorMode OnionColorMode { get; set; } = OnionSkinColorMode.Custom;
-        public OnionSkinBlendMode OnionSkinBlendMode { get; set; } = OnionSkinBlendMode.Add;
+        public OnionSkinBlendMode OnionSkinBlendMode { get; set; } = OnionSkinBlendMode.Alpha;
     }
 
 
