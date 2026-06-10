@@ -32,6 +32,8 @@ using ModCore.Storage;
 using ModCore.Events;
 using dc.libs.misc;
 using CoreLibrary.Utilities;
+using MoreSettings.Utilities;
+using Serilog;
 
 namespace MoreSettings.Modules
 {
@@ -836,7 +838,7 @@ namespace MoreSettings.Modules
                 var map = (LevelMap)levelMaps.getDyn(i);
                 if (map == null)
                     isFirstLevel = false;
-                
+
 
                 var level = new Level(self, map, null, false,
                     Ref<bool>.In(!isFirstLevel),
@@ -1050,7 +1052,16 @@ namespace MoreSettings.Modules
                 && self.data.cgData != null
                 && self.data.cgData.hasCustomStartEquipment())
             {
-                HlAction<int, InventItem, InventItem> hlAction = new HlAction<int, InventItem, InventItem>(self.ArrowFunction_loadMainLevel_34234);
+                HlAction<int, InventItem, InventItem> hlAction = new HlAction<int, InventItem, InventItem>((posId, ii, newIi) =>
+                {
+                    if (newIi == null) return;
+
+                    if (ii != null)
+                        self.hero.inventory.remove(ii);
+
+                    InventItem inventItem = self.hero.inventory.add(newIi);
+                    newIi.posID = posId;
+                });
                 bool pairedUsed = false;
 
                 if (self.data.cgData.forcedLeftWeapon != null)
