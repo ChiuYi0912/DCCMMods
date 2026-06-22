@@ -44,10 +44,10 @@ namespace MoreSettings.Modules
                  scrollerFlow: options.scrollerFlow
             );
 
-            menuHelper.AddSubSeparator("盾牌", scrollerFlow);
+            menuHelper.AddSubSeparator(GetString("Shield"), scrollerFlow);
 
             menuHelper.AddHSVColorWidget(
-                GetString("自定义成功格挡后的线条颜色"),
+                GetString("CustomShieldHitColor"),
                 "",
                 () =>
                 {
@@ -66,7 +66,7 @@ namespace MoreSettings.Modules
                 int paddingleft = (int)(options.get_pixelScale.Invoke() * 40);
 
                 var showobviously = menuHelper.AddConfigToggle(
-                 GetString("显示更明显"),
+                 GetString("ShowMoreObviously"),
                  GetString(""),
                  () => config.ShowObviously,
                  v => config.ShowObviously = v,

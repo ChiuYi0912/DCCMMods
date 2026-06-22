@@ -19,7 +19,6 @@ using Hashlink.Virtuals;
 using ModCore.Modules;
 using dc.achievements;
 using HaxeProxy.Runtime;
-using dc.tool.mod.script;
 using MoreSettings.Configuration;
 using CoreLibrary.Core.Extensions;
 using MoreSettings.Base.Modules;
@@ -34,6 +33,16 @@ using dc.libs.misc;
 using CoreLibrary.Utilities;
 using MoreSettings.Utilities;
 using Serilog;
+using dc.hxd;
+using ModCore;
+using Hashlink.Proxy.Objects;
+using Hashlink.Proxy.DynamicAccess;
+using Hashlink.Reflection.Types;
+using Hashlink.Marshaling;
+using Hashlink.Proxy.Clousre;
+using Hashlink;
+using HaxeProxy.Runtime.Internals;
+using Hashlink.Proxy;
 
 namespace MoreSettings.Modules
 {
@@ -718,10 +727,23 @@ namespace MoreSettings.Modules
 
             #region 加载关卡脚本和资源
 
-            ScriptManager.Class.get_instance().loadLevel(id);
-            Boot.Class.tryRender();
 
-            var customLevelInfo = ScriptManager.Class.get_instance().getCustomLevelInfo(levelInfo);
+            LevelIfor_Virtual customLevelInfo = null!;
+            if (GameInfo.Platform == GameInfo.PlatformKind.Steam)
+            {
+                // ScriptManager removed from API, access via low-level reflection
+                var smType = (HashlinkObjectType)HashlinkMarshal.Module.GetTypeByName("tool.mod.script.ScriptManager");
+                var smClass = smType.GlobalValue;
+                var sm = (HashlinkObject)((HashlinkClosure)((IHashlinkFieldObject)smClass).GetFieldValue("get_instance")!).DynamicInvoke(null)!;
+
+                ((HashlinkClosure)((IHashlinkFieldObject)sm).GetFieldValue("loadLevel")!).DynamicInvoke([id]);
+                Boot.Class.tryRender();
+
+                var rawInfo = ((HashlinkClosure)((IHashlinkFieldObject)sm).GetFieldValue("getCustomLevelInfo")!).DynamicInvoke([levelInfo]);
+                customLevelInfo = ((HaxeProxyBase)HaxeProxyHelper.GetProxy<HaxeProxyBase>(rawInfo)!).ToVirtual<LevelIfor_Virtual>();
+            }
+            
+
 
             #endregion
 
@@ -743,7 +765,8 @@ namespace MoreSettings.Modules
 
             if (cid == "PrisonStart" && !self.isScoring() && self.user.br_getDifficulty() >= 3)
             {
-                RollBonusQuarterScrollLevels(self);
+                if (GameInfo.Platform == GameInfo.PlatformKind.Steam)
+                    RollBonusQuarterScrollLevels(self);
             }
             #endregion
 
@@ -940,17 +963,56 @@ namespace MoreSettings.Modules
 
             if (((HaxeProxyBase)customLevelInfo).GetDynamicMemberNames().Contains("dlc"))
             {
-                double initialDelay = (customLevelInfo.dlc.ToString() == "Purple" && customLevelInfo.group != 1)
-               ? 3.5 : 1.0;
+                double initialDelay = (customLevelInfo.dlc.ToString() == "Purple" && customLevelInfo.group != 1) ? 3.5 : 1.0;
                 if (!self.isBossRush())
                 {
-#pragma warning disable CS0618
-                    dc.pr.Game.loadMainLevelContext_20414 loadMainLevelContext_2 = new dc.pr.Game.loadMainLevelContext_20414(id, self, customLevelInfo, incentivized, false);
-#pragma warning restore CS0618
+                    self.delayer.addS(null, new HlAction(() =>
+                    {
+                        if (customLevelInfo.name == null || customLevelInfo.name.length == 0)
+                            return;
 
-                    self.delayer.addS(null,
-                        new HlAction(() => loadMainLevelContext_2.ArrowFunctionEntry_34173()),
-                        initialDelay);
+                        dc.String lastid = null!;
+                        if (customLevelInfo.group == 0)
+                        {
+                            if (cid == "PrisonStart")
+                            {
+                                self.user.userStats.reachBiome(id, lastid);
+                            }
+                            else
+                            {
+                                var times = self.data.gameTimePerLevel;
+                                for (int ti = times.length - 1; ti >= 0; ti--)
+                                {
+                                    var entry = (virtual_id_t_)times.getDyn(ti);
+                                    if (((LevelIfor_Virtual)((HaxeProxyBase)Data.Class.level.byId.get(entry.id)).ToVirtual<LevelIfor_Virtual>()).group == 0)
+                                    {
+                                        lastid = entry.id;
+                                        break;
+                                    }
+                                }
+                                self.user.userStats.reachBiome(id, lastid);
+                            }
+                        }
+                        else
+                        {
+                            self.user.userStats.reachBiome(id, null);
+                        }
+
+                        if (self.isScoring())
+                        {
+                            self.log.textWithTitle(Lang.Class.t.get("Défi Quotidien".ToHaxeString(), null),
+                                Lang.Class.t.get(customLevelInfo.name, null), null, null);
+                            Audio.Class.ME.playUIEvent((Sound)Res.Class.get_loader().loadCache("sfx/gpfeedback/gong.wav".ToHaxeString(), Sound.Class), null);
+                        }
+
+                        if (incentivized)
+                        {
+                            self.log.textWithTitle(
+                                Lang.Class.t.get("Incentivized biomes || Incentive popup on enter level".ToHaxeString(), null),
+                                Lang.Class.t.get("Mobs will drop more cells and gold here.".ToHaxeString(), null), null, null);
+                            Audio.Class.ME.playUIEvent((Sound)Res.Class.get_loader().loadCache("sfx/gpfeedback/gong.wav".ToHaxeString(), Sound.Class), null);
+                        }
+                    }), initialDelay);
                 }
             }
 
@@ -1014,15 +1076,33 @@ namespace MoreSettings.Modules
                 && levelInfo.group == 1
                 && self.hasGameplayMod(new GameplayMod.RandomEquipment()))
             {
-                string tier = self.hero.inventory.getMainTier(false).ToString();
-#pragma warning disable CS0618
-                var ctx = new dc.pr.Game.loadMainLevelContext_20416(self, lootGen, tier.ToHaxeString());
-#pragma warning restore CS0618
-                var hlFunc = new HlFunc<InventItem, int, InventItem>(ctx.ArrowFunctionEntry_34232);
+                HlFunc<InventItem, int, InventItem> reroll = (posId, ii) =>
+                {
+                    if (ii == null) return null!;
+                    var tier = self.hero.inventory.getMainTier(false);
+                    var newItem = lootGen.getNewRandItemInGroup(ii, tier);
+                    if (newItem == null) return null!;
+                    self.hero.dropAndUpdateItem(ii);
+                    self.hero.inventory.add(newItem);
+                    newItem.posID = posId;
+                    if (newItem._itemData == null)
+                        newItem._itemData = Data.Class.item.byId.get(newItem.kind.Index.ToString().ToHaxeString());
+                    var data = newItem._itemData;
+                    if (data != null && (data.group == 4 || data.group == 5 || data.group == 6)
+                        && (newItem.hasTag("DualWeaponBase".ToHaxeString()) || newItem.hasTag("DualWeaponOffhand".ToHaxeString())))
+                    {
+                        int otherPos = posId == 0 ? 1 : 0;
+                        var existing = self.hero.inventory.getEquippedWeaponOn(otherPos);
+                        if (existing != null) self.hero.dropAndUpdateItem(existing);
+                        var paired = self.hero.inventory.add(newItem.get_pairedItem());
+                        paired.posID = otherPos;
+                    }
+                    return newItem;
+                };
                 for (int wi = 0; wi < self.hero.inventory.nbWeapons; wi++)
-                    hlFunc.Invoke(wi, self.hero.inventory.getEquippedWeaponOn(wi));
+                    reroll.Invoke(wi, self.hero.inventory.getEquippedWeaponOn(wi));
                 for (int ai = 0; ai < self.hero.inventory.nbActives; ai++)
-                    hlFunc.Invoke(ai, self.hero.inventory.getActiveOn(ai));
+                    reroll.Invoke(ai, self.hero.inventory.getActiveOn(ai));
                 self.hero.onEquipedItemsChange(Ref<bool>.In(true), Ref<bool>.In(true), Ref<bool>.Null);
             }
             #endregion
@@ -1033,15 +1113,20 @@ namespace MoreSettings.Modules
                 && self.data.cgData != null
                 && self.data.cgData.getPreset() is CGPreset.GlassNinja)
             {
-                string tier = self.hero.inventory.getMainTier(false).ToString();
-#pragma warning disable CS0618
-                var ctx = new dc.pr.Game.loadMainLevelContext_20416(self, lootGen, tier.ToHaxeString());
-#pragma warning restore CS0618
-                var hlAction = new HlAction<int, InventItem>(ctx.ArrowFunctionEntry_34233);
+                var tier = self.hero.inventory.getMainTier(false);
+                HlAction<int, InventItem> updateGlass = (posId, ii) =>
+                {
+                    if (ii == null) return;
+                    var newItem = lootGen.updateGlassNinjaItem(ii, tier);
+                    if (newItem == null) return;
+                    self.hero.dropAndUpdateItem(ii);
+                    self.hero.inventory.add(newItem);
+                    newItem.posID = posId;
+                };
                 for (int wi = 0; wi < self.hero.inventory.nbWeapons; wi++)
-                    hlAction.Invoke(wi, self.hero.inventory.getEquippedWeaponOn(wi));
+                    updateGlass.Invoke(wi, self.hero.inventory.getEquippedWeaponOn(wi));
                 for (int ai = 0; ai < self.hero.inventory.nbActives; ai++)
-                    hlAction.Invoke(ai, self.hero.inventory.getActiveOn(ai));
+                    updateGlass.Invoke(ai, self.hero.inventory.getActiveOn(ai));
                 self.hero.onEquipedItemsChange(Ref<bool>.In(true), Ref<bool>.In(true), Ref<bool>.Null);
             }
             #endregion
@@ -1263,19 +1348,50 @@ namespace MoreSettings.Modules
             {
                 var raw = allLevels.getDyn(i);
                 var info = ((HaxeProxyBase)raw).ToVirtual<LevelIfor_Virtual>();
-                if (info.group == 0 && (info.flagsProps.genFlags & (1 << 16)) == 0)
-                    candidates.Add(info);
+                var infoFields = (IHashlinkFieldObject)info.HashlinkObj;
+                var group = (int)infoFields.GetFieldValue("group")!;
+                if (group == 0)
+                {
+                    var flagsProps = infoFields.GetFieldValue("flagsProps");
+                    if (flagsProps is IHashlinkFieldObject fpFields
+                        && ((int)fpFields.GetFieldValue("genFlags")! & (1 << 16)) == 0)
+                        candidates.Add(info);
+                }
             }
 
-            self.bonusQuarterScrollLevels = new StringMap().ToVirtual<virtual_exists_get_iterator_keys_remove_set_toString_>();
+            var map = new StringMap();
+
             int bonusCount = 4;
             for (int i = 0; i < bonusCount && candidates.Count > 0; i++)
             {
                 int idx = Std.Class.random(candidates.Count);
                 var chosen = candidates[idx];
                 candidates.RemoveAt(idx);
-                self.bonusQuarterScrollLevels.set.Invoke(chosen.id, 1);
+                map.set(chosen.id, 1);
             }
+
+
+            var imapVirtualType = HashlinkMarshal.Module.Types
+                .OfType<HashlinkVirtualType>()
+                .FirstOrDefault(t => t.Fields.Length == 7
+                    && t.HasField("exists")
+                    && t.HasField("get")
+                    && t.HasField("set")
+                    && t.HasField("keys")
+                    && t.HasField("iterator")
+                    && t.HasField("remove")
+                    && t.HasField("toString"))
+                ?? throw new InvalidOperationException();
+
+            unsafe
+            {
+                var vptr = HashlinkNative.hl_to_virtual(imapVirtualType.NativeType, (HL_vdynamic*)map.HashlinkPointer);
+                var virtualObj = (HashlinkVirtual)HashlinkMarshal.ConvertHashlinkObject(vptr)!;
+                ((IHashlinkFieldObject)HashlinkMarshal.ConvertHashlinkObject(
+                    HashlinkObjPtr.Get(((IHashlinkPointer)self).HashlinkPointer))!).SetFieldValue(
+                    "bonusQuarterScrollLevels", virtualObj);
+            }
+            
         }
 
         private static void HandleShopMimic(dc.pr.Game self,

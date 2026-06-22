@@ -11,7 +11,6 @@ using dc.h3d;
 using dc.h3d.mat;
 using dc.libs.heaps.slib;
 using dc.tool;
-using dc.tool.mod;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Events;
@@ -105,10 +104,8 @@ IOnAfterLoadingCDB
    {
       var res = Info.ModRoot.GetFilePath("SettingRes.pak");
       FsPak.Instance.FileSystem.loadPak(res.AsHaxeString());
-      var json = CDBManager.Class.instance.getAlteredCDB();
-      dc.Data.Class.loadJson(
-         json,
-         default);
+      var json = CDBManager.Instance.GetAlteredCDB();
+      CDBManager.Instance.LoadJsonData(json);
    }
 
    void IOnAfterLoadingCDB.OnAfterLoadingCDB(_Data_ cdb)

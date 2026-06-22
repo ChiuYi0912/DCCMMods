@@ -235,3 +235,75 @@ msgstr "Other Settings"
 
 msgid "LevelModule"
 msgstr "Level Settings Module"
+
+msgid "OnionColor_Custom"
+msgstr "Custom Color"
+
+msgid "OnionColor_MapSkin"
+msgstr "Map Skin"
+
+msgid "OnionColor_MapAdjust"
+msgstr "Skin + Adjust"
+
+msgid "OnionColor_MapAdjust_Desc"
+msgstr "Keep skin appearance, overlay hue/saturation/brightness adjustments"
+
+msgid "Blend_Add"
+msgstr "Add"
+
+msgid "Blend_Add_Desc"
+msgstr "More visible"
+
+msgid "Blend_Alpha"
+msgstr "Alpha"
+
+msgid "Blend_Alpha_Desc"
+msgstr "Transparent"
+
+msgid "OnionColor_ConfigTitle"
+msgstr "Color Config"
+
+msgid "OnionColor_MaskConfigTitle"
+msgstr "Mask Config"
+
+msgid "ProhibitedHasTagTwo"
+msgstr "Trigger without critical hit"
+
+msgid "SpeedOnionSkin"
+msgstr "Speed Afterimage"
+
+msgid "EnableCustomOnion"
+msgstr "Enable Custom Speed Afterimage"
+
+msgid "ReduceOnionMotion"
+msgstr "Reduce Afterimage Motion"
+
+msgid "OnionSkinLife"
+msgstr "Lifetime"
+
+msgid "OnionSkinInterval"
+msgstr "Next afterimage cooldown (avoid 0 to prevent lag)"
+
+msgid "OnionSkinColorScheme"
+msgstr "Afterimage Color Scheme"
+
+msgid "MaskDepth"
+msgstr "Mask Depth"
+
+msgid "MaskOpacity"
+msgstr "Mask Opacity"
+
+msgid "OnionSkinOpacity"
+msgstr "Afterimage Opacity"
+
+msgid "OnionSkinBlendModeSection"
+msgstr "Afterimage Blend Mode"
+
+msgid "Shield"
+msgstr "Shield"
+
+msgid "CustomShieldHitColor"
+msgstr "Custom Shield Hit Line Color"
+
+msgid "ShowMoreObviously"
+msgstr "Show More Obviously"

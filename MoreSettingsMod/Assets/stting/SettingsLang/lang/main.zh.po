@@ -236,3 +236,75 @@ msgstr "其他设置"
 
 msgid "LevelModule"
 msgstr "关卡设置模块"
+
+msgid "OnionColor_Custom"
+msgstr "自定义颜色"
+
+msgid "OnionColor_MapSkin"
+msgstr "映射皮肤"
+
+msgid "OnionColor_MapAdjust"
+msgstr "皮肤+调色"
+
+msgid "OnionColor_MapAdjust_Desc"
+msgstr "保留皮肤外观，可叠加色调/饱和度/亮度调整"
+
+msgid "Blend_Add"
+msgstr "Add"
+
+msgid "Blend_Add_Desc"
+msgstr "更清晰"
+
+msgid "Blend_Alpha"
+msgstr "Alpha"
+
+msgid "Blend_Alpha_Desc"
+msgstr "透明"
+
+msgid "OnionColor_ConfigTitle"
+msgstr "颜色配置"
+
+msgid "OnionColor_MaskConfigTitle"
+msgstr "遮罩配置"
+
+msgid "ProhibitedHasTagTwo"
+msgstr "无暴击时可触发"
+
+msgid "SpeedOnionSkin"
+msgstr "加速残影"
+
+msgid "EnableCustomOnion"
+msgstr "开启自定义加速残影"
+
+msgid "ReduceOnionMotion"
+msgstr "减弱残影动效"
+
+msgid "OnionSkinLife"
+msgstr "存活时长"
+
+msgid "OnionSkinInterval"
+msgstr "生成下一个残影的冷却(尽量不要设置为0,可能会导致卡顿)"
+
+msgid "OnionSkinColorScheme"
+msgstr "残影配色"
+
+msgid "MaskDepth"
+msgstr "遮罩深度"
+
+msgid "MaskOpacity"
+msgstr "遮罩不透明度"
+
+msgid "OnionSkinOpacity"
+msgstr "残影不透明度"
+
+msgid "OnionSkinBlendModeSection"
+msgstr "残影混合模式"
+
+msgid "Shield"
+msgstr "盾牌"
+
+msgid "CustomShieldHitColor"
+msgstr "自定义成功格挡后的线条颜色"
+
+msgid "ShowMoreObviously"
+msgstr "显示更明显"

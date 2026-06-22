@@ -23,7 +23,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- <ProjectReference Include="C:\Users\Michael\core\sources\ModCore\ModCore.csproj" /> -->
+    <ProjectReference Include="C:\Users\Michael\core\sources\ModCore.Common\ModCore.Common.csproj" />
+    <ProjectReference Include="C:\Users\Michael\core\sources\HashlinkSharp\HashlinkSharp.csproj" />
+    <ProjectReference Include="C:\Users\Michael\core\sources\HaxeProxy\HaxeProxy.csproj" />
     <ProjectReference Include="..\..\CoreLibraryMod\CoreLibrary\CoreLibrary.csproj" />
   </ItemGroup>
+
+  <Target Name="RemoveDuplicateMDKAssemblies" BeforeTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <Reference Remove="ModCore.Common" />
+      <Reference Remove="HaxeProxy" />
+      <Reference Remove="HashlinkSharp" />
+      <!-- <Reference Remove="ModCore" /> -->
+    </ItemGroup>
+  </Target>
 
 </Project>

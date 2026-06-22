@@ -25,7 +25,7 @@ namespace MoreSettings.Modules
 {
     internal class VisualCustomizationModule : BaseModule
     {
-        public override string Description => GetText.Instance.GetString("ModuleDesc_Visual");
+        public override string Description => GetString("ModuleDesc_Visual");
         public override VisualConfig config => (VisualConfig)base.config;
         public override Enums.MenuCategory Type => Enums.MenuCategory.Visual;
         public EntityPopDamage entityPop = default!;
@@ -58,17 +58,15 @@ namespace MoreSettings.Modules
             () => {}
         )];
 
-        public List<(string title, string sub, Action onSelect, Action after)> OnionSkinColorData = [
-
-            ("自定义颜色", "", () => {SettingsMain.ConfigValue.Skin.OnionColorMode =OnionSkinColorMode.Custom; }, () => { }),
-            ("映射皮肤","", ()=> {SettingsMain.ConfigValue.Skin.OnionColorMode =OnionSkinColorMode.colorMap; }, () => { }),
-            ("皮肤+调色", "保留皮肤外观，可叠加色调/饱和度/亮度调整",()=> {SettingsMain.ConfigValue.Skin.OnionColorMode =OnionSkinColorMode.ColorMapAdjust; }, () => { })
+        private List<(string title, string sub, Action onSelect, Action after)> GetOnionSkinColorData() => [
+            (GetString("OnionColor_Custom"), "", () => {SettingsMain.ConfigValue.Skin.OnionColorMode =OnionSkinColorMode.Custom; }, () => { }),
+            (GetString("OnionColor_MapSkin"),"", ()=> {SettingsMain.ConfigValue.Skin.OnionColorMode =OnionSkinColorMode.colorMap; }, () => { }),
+            (GetString("OnionColor_MapAdjust"), GetString("OnionColor_MapAdjust_Desc"),()=> {SettingsMain.ConfigValue.Skin.OnionColorMode =OnionSkinColorMode.ColorMapAdjust; }, () => { })
         ];
 
-        public List<(string title, string sub, Action onSelect, Action after)> OnionSkinBlendData = [
-
-            ("Add", "更清晰", () => {SettingsMain.ConfigValue.Skin.OnionSkinBlendMode =OnionSkinBlendMode.Add; }, () => { }),
-            ("Alpha","透明", ()=> {SettingsMain.ConfigValue.Skin.OnionSkinBlendMode =OnionSkinBlendMode.Alpha; }, () => { })
+        private List<(string title, string sub, Action onSelect, Action after)> GetOnionSkinBlendData() => [
+            (GetString("Blend_Add"), GetString("Blend_Add_Desc"), () => {SettingsMain.ConfigValue.Skin.OnionSkinBlendMode =OnionSkinBlendMode.Add; }, () => { }),
+            (GetString("Blend_Alpha"),GetString("Blend_Alpha_Desc"), ()=> {SettingsMain.ConfigValue.Skin.OnionSkinBlendMode =OnionSkinBlendMode.Alpha; }, () => { })
         ];
 
         public override void Initialize(ModBase mainMod)
@@ -133,7 +131,7 @@ namespace MoreSettings.Modules
 
 
                         var NoTag = PopmenuHelper.AddConfigToggle(
-                            GetString("无暴击时可触发"),
+                            GetString("ProhibitedHasTagTwo"),
                             "",
                             () => popConfig.ProhibitedHasTagTwo,
                             v => popConfig.ProhibitedHasTagTwo = v,
@@ -142,7 +140,7 @@ namespace MoreSettings.Modules
                         PopmenuHelper.CenterToggleWidget(NoTag, options, scrollerFlow, false);
 
                         var crit = PopmenuHelper.AddConfigSlider(
-                            GetText.Instance.GetString("CritEffectDuration"),
+                            GetString("CritEffectDuration"),
                             () => h.SpeedMultiplier,
                             v => h.SpeedMultiplier = v,
                             step: 0.1,
@@ -187,10 +185,10 @@ namespace MoreSettings.Modules
 
 
 
-            menuHelper.AddSubSeparator(GetString("加速残影"), scrollerFlow);
+            menuHelper.AddSubSeparator(GetString("SpeedOnionSkin"), scrollerFlow);
 
             var OnionMode = menuHelper.AddConfigToggle(
-                GetString("开启自定义加速残影"),
+                GetString("EnableCustomOnion"),
                 GetString(""),
                 () => config.UseCustomOnion,
                 v => { config.UseCustomOnion = v; options.onResize(); },
@@ -202,7 +200,7 @@ namespace MoreSettings.Modules
             if (config.UseCustomOnion)
             {
                 menuHelper.AddConfigToggle(
-                    GetString("减弱残影动效"),
+                    GetString("ReduceOnionMotion"),
                     GetString(""),
                     () => config.OnionClosefeed,
                     v => config.OnionClosefeed = v,
@@ -210,7 +208,7 @@ namespace MoreSettings.Modules
                 );
 
                 PopmenuHelper.AddConfigSlider(
-                    GetString("存活时长"),
+                    GetString("OnionSkinLife"),
                     () => config.OnionSkinColorLife,
                     v => config.OnionSkinColorLife = v,
                     step: 0.01,
@@ -220,7 +218,7 @@ namespace MoreSettings.Modules
                 );
 
                 PopmenuHelper.AddConfigSlider(
-                    GetText.Instance.GetString("生成下一个残影的冷却(尽量不要设置为0,可能会导致卡顿)"),
+                    GetString("OnionSkinInterval"),
                     () => config.ONION_SKIN_INTERVAL_SEC,
                     v => config.ONION_SKIN_INTERVAL_SEC = v,
                     step: 0.01,
@@ -232,9 +230,9 @@ namespace MoreSettings.Modules
 
 
 
-                menuHelper.AddSubSeparator(GetString("残影配色"), scrollerFlow, false);
+                menuHelper.AddSubSeparator(GetString("OnionSkinColorScheme"), scrollerFlow, false);
                 menuHelper.AddConfigRadioGroup(
-                    OnionSkinColorData,
+                    GetOnionSkinColorData(),
                     (int)config.OnionColorMode,
                     (v) => { config.OnionColorMode = (OnionSkinColorMode)v; options.onResize(); },
                     scrollerFlow
@@ -249,8 +247,8 @@ namespace MoreSettings.Modules
                 if (isCustom || isColorMapAdjust)
                 {
                     (var colordef, var title) = isCustom
-                                    ? (config.OnionSkinColor, "颜色配置")
-                                    : (config.OnionSkinMapAdjustColor, "遮罩配置");
+                                    ? (config.OnionSkinColor, "OnionColor_ConfigTitle")
+                                    : (config.OnionSkinMapAdjustColor, "OnionColor_MaskConfigTitle");
                     menuHelper.AddHSVColorWidget(
                       GetString(title),
                       "",
@@ -274,7 +272,7 @@ namespace MoreSettings.Modules
                     if (isColorMapAdjust)
                     {
                         PopmenuHelper.AddConfigSlider(
-                            GetText.Instance.GetString("遮罩深度"),
+                            GetString("MaskDepth"),
                             () => config.ColorMapAdjustfactor,
                             v => config.ColorMapAdjustfactor = v,
                             step: 0.1,
@@ -285,7 +283,7 @@ namespace MoreSettings.Modules
                         );
 
                         PopmenuHelper.AddConfigSlider(
-                            GetText.Instance.GetString("遮罩不透明度"),
+                            GetString("MaskOpacity"),
                             () => config.OnionSkinAdjustAlpha,
                             v => config.OnionSkinAdjustAlpha = v,
                             step: 0.1,
@@ -297,7 +295,7 @@ namespace MoreSettings.Modules
                     }
                 }
                 PopmenuHelper.AddConfigSlider(
-                        GetText.Instance.GetString("残影不透明度"),
+                        GetString("OnionSkinOpacity"),
                         () => config.OnionSkinColorAlpha,
                         v => config.OnionSkinColorAlpha = v,
                         step: 0.1,
@@ -310,9 +308,9 @@ namespace MoreSettings.Modules
                 if (isCustom || isColorMap)
                 {
                    
-                    menuHelper.AddSubSeparator(GetString("残影混合模式"), scrollerFlow, false);
+                    menuHelper.AddSubSeparator(GetString("OnionSkinBlendModeSection"), scrollerFlow, false);
                     menuHelper.AddConfigRadioGroup(
-                        OnionSkinBlendData,
+                        GetOnionSkinBlendData(),
                         (int)config.OnionSkinBlendMode,
                         (v) => { config.OnionSkinBlendMode = (OnionSkinBlendMode)v; },
                         scrollerFlow
@@ -323,8 +321,8 @@ namespace MoreSettings.Modules
 
             menuHelper.AddSubSeparator(GetString("Others"), scrollerFlow);
             menuHelper.AddConfigToggle(
-                GetText.Instance.GetString("KatanaZeroOutfit"),
-                GetText.Instance.GetString("KatanaZeroOutfitDesc"),
+                GetString("KatanaZeroOutfit"),
+                GetString("KatanaZeroOutfitDesc"),
                 () => config.KatanaSkin,
                 v => config.KatanaSkin = v,
                 scrollerFlow: scrollerFlow
