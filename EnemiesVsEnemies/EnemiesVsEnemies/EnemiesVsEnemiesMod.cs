@@ -6,7 +6,6 @@ using dc;
 using dc.en;
 using dc.level;
 using dc.pr;
-using dc.tool.mod;
 using dc.tool.weap;
 using EnemiesVsEnemies.Configuration;
 using EnemiesVsEnemies.Core;
@@ -65,10 +64,8 @@ namespace EnemiesVsEnemies
         {
             var res2 = Info.ModRoot.GetFilePath("res.pak");
             FsPak.Instance.FileSystem.loadPak(res2.ToHaxeString());
-            var json = CDBManager.Class.instance.getAlteredCDB();
-            dc.Data.Class.loadJson(
-               json,
-               default);
+            var json = CDBManager.Instance.GetAlteredCDB();
+            CDBManager.Instance.LoadJsonData(json);
         }
         void IOnHeroUpdate.OnHeroUpdate(double dt) { }
         IModMenu IModMenuProvider.GetModMenu() => showEnemiesOptsions;

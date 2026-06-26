@@ -72,8 +72,8 @@ namespace MoreSettings.Modules
             }
             var h = self;
             if (h != null)
-                h.scarf.dispose();
-            h!.scarf = scarfBase.CreateCustomScarfManager(h);
+                h?.scarf?.dispose();
+            h?.scarf = scarfBase.CreateCustomScarfManager(h);
         }
 
         public void CloseAllUI()

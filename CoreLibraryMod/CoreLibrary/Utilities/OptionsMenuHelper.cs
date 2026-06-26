@@ -217,20 +217,18 @@ namespace CoreLibrary.Core.Utilities
 
         public void CenterToggleWidget(Flow widget, dc.ui.Options options, Flow scrollerFlow, bool Middle = true)
         {
-            var pixel = options.get_pixelScale.Invoke();
+            double pixel = options.get_pixelScale.Invoke();
             FlowAlign align = Middle ? new FlowAlign.Middle() : new FlowAlign.Left();
 
             var props = scrollerFlow.getProperties(widget);
+            // props.paddingLeft = 0;
+            // props.paddingRight = 0;
+            // widget.horizontalSpacing = 0;
+            // widget.paddingLeft = 0;
+            // widget.paddingRight = 0;
+            widget.paddingTop = (int)(pixel * 4);
             props.horizontalAlign = align;
-            if (!Middle) props.paddingLeft = (int)(pixel * 40);
-
-            widget.maxWidth = scrollerFlow.get_innerWidth();
-            widget.horizontalAlign = align;
-
-
-            widget.paddingTop = widget.get_innerHeight() / 5;
-
-            
+            props.isBreak = true;
 
             foreach (var child in widget.children.AsEnumerable())
             {
@@ -240,13 +238,12 @@ namespace CoreLibrary.Core.Utilities
                 }
                 else if (child is Flow textFlow)
                 {
-                    textFlow.maxWidth = widget.maxWidth;
-                    textFlow.horizontalAlign = align;
-                    textFlow.verticalAlign = align;
-
                     textFlow.scaleX = textFlow.scaleY = textFlow.scaleY / 2;
+                    textFlow.reflow();
                 }
             }
+
+            widget.reflow();
         }
 
         public void AddSubSeparator(string mainStr, Flow parentFlow, bool visible = true)
@@ -258,14 +255,23 @@ namespace CoreLibrary.Core.Utilities
 
             if (mainStr != null)
             {
-                dc.ui.Text text = Assets.Class.makeText(mainStr.ToHaxeString(), null, false, parentFlow);
-                text.scaleX = text.scaleY / 2;
-                text.set_textAlign(new Align.Center());
+                int padding = (int)(pixelScale * 60.0);
+                var flow = new Flow(parentFlow);
+                flow.set_horizontalAlign(new FlowAlign.Middle());
+                parentFlow.getProperties(flow).horizontalAlign = new FlowAlign.Middle();
+                parentFlow.getProperties(flow).paddingLeft = padding;
+
+                dc.ui.Text text = Assets.Class.makeMedievalText(mainStr.ToHaxeString(), null, flow, null);
+                text.scaleX = text.scaleY = text.scaleY / 2;
+                //text.set_textAlign(new Align.Center()); this BUG
                 float stageWidth = dc.libs.Process.Class.CUSTOM_STAGE_WIDTH;
                 float availableWidth = stageWidth > 0 ? stageWidth : dc.hxd.Window.Class.getInstance().get_width();
                 text.maxWidthWanted = availableWidth;
+
+                flow.getProperties(text).horizontalAlign = new FlowAlign.Middle();
                 text.onResize();
-                parentFlow.getProperties(text).paddingTop = (int)(pixelScale * 5.0);
+
+                flow.reflow();
             }
 
             HSprite hsprite = new HSprite(Assets.Class.ui, "walterWhite".ToHaxeString(), Ref<int>.In(0), null);
