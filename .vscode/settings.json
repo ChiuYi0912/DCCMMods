@@ -19,8 +19,8 @@
         "**/*.so": true,
         "**/*.dylib": true,
         "**/build/": true,
-        "**/bin/": true,
-        "**/obj/": true
+        "**/bin/": false,
+        "**/obj/": false
     },
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#ab307e",

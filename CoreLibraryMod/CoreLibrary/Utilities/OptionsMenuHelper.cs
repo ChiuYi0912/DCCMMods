@@ -235,11 +235,12 @@ namespace CoreLibrary.Core.Utilities
                 if (child is HSprite icon)
                 {
                     icon.scaleX = icon.scaleY = icon.scaleY / 2;
+                    icon.posChanged = true;
                 }
                 else if (child is Flow textFlow)
                 {
                     textFlow.scaleX = textFlow.scaleY = textFlow.scaleY / 2;
-                    textFlow.reflow();
+                    textFlow.posChanged = true; ;
                 }
             }
 
@@ -263,13 +264,14 @@ namespace CoreLibrary.Core.Utilities
 
                 dc.ui.Text text = Assets.Class.makeMedievalText(mainStr.ToHaxeString(), null, flow, null);
                 text.scaleX = text.scaleY = text.scaleY / 2;
-                //text.set_textAlign(new Align.Center()); this BUG
-                float stageWidth = dc.libs.Process.Class.CUSTOM_STAGE_WIDTH;
-                float availableWidth = stageWidth > 0 ? stageWidth : dc.hxd.Window.Class.getInstance().get_width();
+                //text.set_textAlign(new Align.Center()); //this BUG
+                double stageWidth = dc.libs.Process.Class.CUSTOM_STAGE_WIDTH;
+                double availableWidth = stageWidth > 0 ? stageWidth : dc.hxd.Window.Class.getInstance().get_width();
                 text.maxWidthWanted = availableWidth;
+                text.posChanged = true;
 
                 flow.getProperties(text).horizontalAlign = new FlowAlign.Middle();
-                text.onResize();
+                
 
                 flow.reflow();
             }
@@ -301,9 +303,9 @@ namespace CoreLibrary.Core.Utilities
             double totalWidth = stageWidth2 > 0 ? stageWidth2 : dc.hxd.Window.Class.getInstance().get_width();
             double scaleX = totalWidth / 3;
 
-            hsprite.posChanged = true;
             hsprite.scaleX = scaleX;
             hsprite.scaleY = pixelScale;
+            hsprite.posChanged = true;
         }
     }
 }
