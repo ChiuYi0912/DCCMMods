@@ -1,22 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Runtime.ExceptionServices;
-using System.Security.Cryptography.X509Certificates;
-using CoreLibrary.Core.Extensions;
+﻿using System.Runtime.ExceptionServices;
 using CoreLibrary.Core.Interfaces;
-using CoreLibrary.Core.Utilities;
 using dc;
-using dc.en;
-using dc.h2d;
-using dc.h3d;
-using dc.h3d.mat;
-using dc.libs.heaps.slib;
-using dc.tool;
-using dc.tool.skill;
-using Hashlink.Virtuals;
-using HaxeProxy.Runtime;
 using ModCore.Events;
 using ModCore.Events.Interfaces.Game;
-using ModCore.Events.Interfaces.Game.Hero;
 using ModCore.Menu;
 using ModCore.Mods;
 using ModCore.Modules;
@@ -24,11 +10,7 @@ using ModCore.Storage;
 using ModCore.Utilities;
 using MoreSettings.Configuration;
 using MoreSettings.Core;
-using MoreSettings.GameMechanics;
-using MoreSettings.GameMechanics.Scarf;
 using MoreSettings.Modules;
-using MoreSettings.Utilities;
-using Serilog;
 
 namespace MoreSettings;
 
@@ -57,8 +39,6 @@ IOnAfterLoadingCDB
    {
       Silk.NET.Core.Loader.LibraryLoader.GetPlatformDefaultLoader();
       instance = this;
-      // --- Silk.NET smoke test ---
-      TestSilkStack();
 
       
       Utilities.Logger.Initialize(Logger);
@@ -119,35 +99,5 @@ IOnAfterLoadingCDB
 
    }
 
-   // --- Silk.NET advanced smoke test ---
-
-   static void TestSilkStack()
-   {
-       var log = instance.Logger;
-
-       // 1. Maths: 矩阵变换管线
-       // Matrix4X4 (无泛型) 是静态工厂类, Matrix4X4<T> 是值类型
-       var rotate = Silk.NET.Maths.Matrix4X4.CreateRotationZ(
-           Silk.NET.Maths.Scalar.DegreesToRadians(45f));
-       var scale = Silk.NET.Maths.Matrix4X4.CreateScale(2f);
-       var model = rotate * scale;
-       var point = Silk.NET.Maths.Vector4D.Transform(
-           new Silk.NET.Maths.Vector4D<float>(1, 0, 0, 1), model);
-       log.Information("[SilkTest] Maths: (1,0,0) rot45° scaled×2 = ({0:F2},{1:F2},{2:F2})",
-           point.X, point.Y, point.Z);
-
-       // 2. SDL: 注册平台，枚举设备
-       Silk.NET.Input.Sdl.SdlInput.RegisterPlatform();
-       log.Information("[SilkTest] Input: SDL platform registered");
-
-       // 3. Windowing: 平台窗口能力
-       var opts = Silk.NET.Windowing.WindowOptions.Default;
-       log.Information("[SilkTest] Window: API={0} VSync={1} size=({2},{3})",
-           opts.API, opts.VSync, opts.Size.X, opts.Size.Y);
-
-       // 4. OpenGL: 验证类型可用
-       log.Information("[SilkTest] OpenGL: {0} OK",
-           typeof(Silk.NET.OpenGL.GL).Name);
-   }
 
 }

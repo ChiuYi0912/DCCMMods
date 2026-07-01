@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to DeadCells",
+            "type": "coreclr",
+            "request": "attach",
+            "processName": "DeadCellsModding.exe",
+            "justMyCode": false,
+            "symbolOptions": {
+                "searchPaths": [
+                    "${workspaceFolder}"
+                ]
+            }
+        }
+    ]
+}

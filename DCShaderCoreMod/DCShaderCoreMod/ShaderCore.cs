@@ -3,7 +3,6 @@ using CoreLibrary.Core.Interfaces;
 using dc;
 using dc.hxd;
 using dc.hxsl;
-using dc.tool.mod;
 using dc.ui;
 using DCShaderCore.Cache;
 using DCShaderCore.Registry;
