@@ -15,7 +15,6 @@ using Hashlink.Proxy;
 using Hashlink.Reflection.Types;
 using HaxeProxy.Runtime;
 using ModCore.Utilities;
-using MonoMod.Utils;
 
 namespace MoreSettings.GameMechanics
 {

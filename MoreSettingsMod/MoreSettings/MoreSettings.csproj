@@ -4,113 +4,32 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <NuGetAudit>false</NuGetAudit>
+
     <ModType>mod</ModType>
     <ModName>Dead Cells Enhanced Settings</ModName>
     <ModMain>MoreSettings.SettingsMain</ModMain>
     <AutoInstallMod Condition="'$(Configuration)' == 'Debug'">true</AutoInstallMod>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Platform>x64</Platform>
+    <NoWarn>$(NoWarn);MSB3270</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />
     <ModDependency Include="CoreLibraryMod" />
 
+    <Reference Include="HashlinkSharp" />
+    <Reference Include="ModCore.Native" />
+
     <PackAssets Include="ChiuYiUI\**\*" RootInPak="SettingsLang" />
 
-    <ProjectReference Include="C:\Users\Michael\core\sources\ModCore.Common\ModCore.Common.csproj" />
-    <ProjectReference Include="C:\Users\Michael\core\sources\HaxeProxy\HaxeProxy.csproj" />
-    <ProjectReference Include="C:\Users\Michael\core\sources\HashlinkSharp\HashlinkSharp.csproj" />
-
-    <Reference Include="SDL2-CS">
-        <HintPath>Libs\SDL2-CS\SDL2-CS.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="OpenTK.Input">
-        <HintPath>Libs\OpenTK\OpenTK.Input.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="OpenTK.Graphics">
-        <HintPath>Libs\OpenTK\OpenTK.Graphics.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="OpenTK.Windowing.Common">
-        <HintPath>Libs\OpenTK\OpenTK.Windowing.Common.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="OpenTK.Windowing.Desktop">
-        <HintPath>Libs\OpenTK\OpenTK.Windowing.Desktop.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="CoreLibrary">
-        <HintPath>Libs\CoreLibrary\CoreLibrary.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="Silk.NET.Core">
-        <HintPath>Libs\Silk.NET\Silk.NET.Core.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="Silk.NET.Maths">
-        <HintPath>Libs\Silk.NET\Silk.NET.Maths.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="Silk.NET.OpenGL">
-        <HintPath>Libs\Silk.NET\Silk.NET.OpenGL.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="Silk.NET.Input.Common">
-        <HintPath>Libs\Silk.NET\Silk.NET.Input.Common.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="Silk.NET.Input.Sdl">
-        <HintPath>Libs\Silk.NET\Silk.NET.Input.Sdl.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="Silk.NET.Windowing.Common">
-        <HintPath>Libs\Silk.NET\Silk.NET.Windowing.Common.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="Silk.NET.Windowing.Sdl">
-        <HintPath>Libs\Silk.NET\Silk.NET.Windowing.Sdl.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="Silk.NET.SDL">
-        <HintPath>Libs\Silk.NET\Silk.NET.SDL.dll</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <Reference Include="Silk.NET.SDL.Native">
-        <HintPath>Libs\Silk.NET\Silk.NET.SDL.Native.dll</HintPath>
+    <AllLibs Include="Libs\**\*.dll" />
+    <Reference Include="@(AllLibs -> '%(Filename)')">
+        <HintPath>%(AllLibs.Identity)</HintPath>
         <Private>false</Private>
     </Reference>
 
     <OutputFiles Include="Libs\**\*.dll" />
-    <OutputFiles Include="$(OutputPath)/ModCore.Common.dll" />
-    <OutputFiles Include="$(OutputPath)/HashlinkSharp.dll" />
-    <OutputFiles Include="$(OutputPath)/HaxeProxy.dll" />
   </ItemGroup>
-
-
-
-  <Target Name="RemoveDuplicateMDKAssemblies" BeforeTargets="ResolveAssemblyReferences">
-    <ItemGroup>
-      <Reference Remove="ModCore.Common" />
-      <Reference Remove="HaxeProxy" />
-      <Reference Remove="HashlinkSharp" />
-    </ItemGroup>
-  </Target>
 
 </Project>

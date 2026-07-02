@@ -11,6 +11,7 @@ using ModCore.Mods;
 using ModCore.Modules;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
+using MoreSettings.GameMechanics;
 using MoreSettings.GameMechanics.Scarf;
 
 namespace MoreSettings.Modules
@@ -46,6 +47,21 @@ namespace MoreSettings.Modules
                 new Action(openScarfui),
                 scrollerFlow
             );
+
+            #if DEBUG
+            menuHelper.addSimpleWidget(
+                GetText.Instance.GetString("test hud"),
+                "",
+                () =>
+                {
+                    CloseAllUI();
+                    var hud = HUD.Class.ME;
+                    var hudpro = new HUDPro(hud, hud);
+                },
+                scrollerFlow
+            );
+            #endif
+
         }
 
         public override void UnregisterHooks()
@@ -132,6 +148,6 @@ namespace MoreSettings.Modules
             popup.text(GetText.Instance.GetString("OpenInGame").ToHaxeString(), CreateColor.ColorFromHex("#ffffff"), Ref<bool>.In(true));
         }
 
-        void IOnAfterPauseMenuBuild.OnAfterPauseMenuBuild(Pause pause) => MenuModule.Instance.AddCustomButtonToPause("Scarf", (e) => openScarfui(), pause, 2);
+        void IOnAfterPauseMenuBuild.OnAfterPauseMenuBuild(Pause pause) => ModMenu.AddCustomButtonToPause("Scarf", (e) => openScarfui(), pause, 2);
     }
 }

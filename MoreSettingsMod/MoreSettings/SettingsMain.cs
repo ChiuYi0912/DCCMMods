@@ -1,6 +1,8 @@
 ﻿using System.Runtime.ExceptionServices;
 using CoreLibrary.Core.Interfaces;
 using dc;
+using Hashlink.Proxy.Values;
+using HaxeProxy.Runtime;
 using ModCore.Events;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Menu;

@@ -285,6 +285,7 @@ namespace MoreSettings.Modules
 
         private void UpdateNowTime()
         {
+            if (TimeText == null) return;
             if (TimeText.visible != config.NowTimeVisible)
                 TimeText.set_visible(config.NowTimeVisible);
 
@@ -348,9 +349,60 @@ namespace MoreSettings.Modules
                 AdjustBossLifebarLabel(cachedSbooslifebar);
             }
 
+            arg1.leftFlowT.set_isVertical(true);
+            arg1.leftFlow.reflow();
+
+            for (int i = 0; i < arg1.leftFlow.children.length; i++)
+            {
+                var obj = arg1.leftFlowT.children.getDyn(i);
+                if (obj != null)
+                {
+                    FlowProperties propo = arg1.leftFlowT.getProperties(obj);
+                }
+            }
+
             arg1.onResize();
+        }
 
 
+        public void enableDrag(Flow flow, Interactive inter)
+        {
+            if (flow == null) return;
+            inter.propagateEvents = true;
+            var dragging = false;
+            var startX = 0.0; var startY = 0.0;
+            var origX = 0.0; var origY = 0.0;
+
+            inter.onPush = (e) =>
+            {
+                dragging = true;
+                startX = e.relX;
+                startY = e.relY;
+                origX = flow.x;
+                origY = flow.y;
+                // flow.parent.addChild(flow);
+            };
+
+            inter.onMove = (e) =>
+            {
+                inter.cursor = new dc.hxd.Cursor.Button();
+                if (dragging)
+                {
+                    flow.x = origX + (e.relX - startX);
+                    flow.y = origY + (e.relY - startY);
+                    flow.posChanged = true;
+                }
+            };
+
+            inter.onRelease = (e) =>
+            {
+                dragging = false;
+            };
+
+            inter.onOut = (e) =>
+            {
+                if (dragging) dragging = false;
+            };
         }
 
 
