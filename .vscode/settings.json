@@ -1,27 +1,4 @@
 {
-    "files.associations": {
-        "*.h": "cpp",
-        "*.hpp": "cpp",
-        "*.hh": "cpp",
-        "*.hxx": "cpp",
-        "*.inl": "cpp",
-        "*.inc": "cpp"
-    },
-    "C_Cpp.default.compilerPath": "C:/mingw64/bin/g++.exe",
-    "C_Cpp.default.intelliSenseMode": "windows-gcc-x64",
-    "C_Cpp.default.cppStandard": "c++17",
-    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 0 }",
-    "editor.formatOnSave": true,
-    "editor.formatOnType": true,
-    "files.exclude": {
-        "**/*.exe": true,
-        "**/*.dll": false,
-        "**/*.so": true,
-        "**/*.dylib": true,
-        "**/build/": true,
-        "**/bin/": false,
-        "**/obj/": false
-    },
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#ab307e",
         "activityBar.background": "#ab307e",
@@ -41,5 +18,9 @@
         "titleBar.inactiveBackground": "#83256199",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "peacock.color": "#832561"
+    "peacock.color": "#832561",
+    "dotnet.defaultSolution": "DCCMMods.sln",
+    "C_Cpp.autocomplete": "disabled",
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "C_Cpp.formatting": "disabled"
 }
