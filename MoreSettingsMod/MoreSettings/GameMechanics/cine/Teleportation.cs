@@ -1,10 +1,7 @@
-using System;
 using dc.en;
 using dc.en.inter;
 using dc.hxd;
 using dc.hxd.res;
-using dc.hxd.snd;
-using dc.libs;
 using dc.libs.misc;
 using dc.libs._Cooldown;
 using dc.pr;
@@ -18,16 +15,23 @@ namespace MoreSettings.GameMechanics.cine
 {
     internal class Teleportation : GameCinematic
     {
-        private readonly Hero _hero;
-        private readonly Entity _target;
-        private readonly Teleport _from;
+        private const double FancyZoomIn = 1.5;
+        private const double FancyZoomNormal = 1.0;
+        private const double FancyZoomInSeconds = 0.5;
+        private const double FancyZoomRestoreSeconds = 0.5;
+
+        private readonly Hero hero;
+        private readonly Entity target;
+        private readonly Teleport from;
         private readonly bool immediate;
+
+        private bool cameraRestored;
 
         public Teleportation(Hero hero, Teleport from, Entity to, bool immediate) : base()
         {
-            _hero = hero;
-            _target = to;
-            _from = from;
+            this.hero = hero;
+            target = to;
+            this.from = from;
             this.immediate = immediate;
 
 
@@ -56,7 +60,20 @@ namespace MoreSettings.GameMechanics.cine
 
 
             Viewport vp = Game.Class.ME.curLevel.viewport;
-            if (animDuration > 0)
+            if (!immediate)
+            {
+                vp.tw.terminate_(GetZoomGetter(vp), GetZoomSetter(vp), false);
+                vp.tw.create_(
+                        GetZoomGetter(vp),
+                        GetZoomSetter(vp),
+                        null,
+                        FancyZoomIn,
+                        new TType.TEaseOut(),
+                        FancyZoomInSeconds * 1000,
+                        Ref<bool>.Null)
+                    .update(new HlAction(vp.updateSizes));
+            }
+            else if (animDuration > 0)
             {
                 vp.tw.create_(GetZoomGetter(vp), GetZoomSetter(vp), null, 1.1, null, animDuration * 1000, Ref<bool>.Null)
                   .update(new HlAction(vp.updateSizes));
@@ -79,11 +96,13 @@ namespace MoreSettings.GameMechanics.cine
 
             Delay(base.cd, animDuration, () =>
             {
-                _hero.visible = false;
+                hero.visible = false;
 
-
-                vp.tw.create_(GetZoomGetter(vp), GetZoomSetter(vp), null, 1.7, null, 400, Ref<bool>.Null)
-                  .update(new HlAction(vp.updateSizes));
+                if (immediate)
+                {
+                    vp.tw.create_(GetZoomGetter(vp), GetZoomSetter(vp), null, 1.7, null, 400, Ref<bool>.Null)
+                      .update(new HlAction(vp.updateSizes));
+                }
 
 
                 double lightBeamX = (from.cx + from.xr) * 24.0;
@@ -100,15 +119,15 @@ namespace MoreSettings.GameMechanics.cine
 
         private void Move()
         {
-            _hero.setPosCase(_target.cx, _target.cy - 1, null, null);
-            _hero.onTeleportation();
-            Game.Class.ME.curLevel.viewport.track(_hero, immediate);
+            hero.setPosCase(target.cx, target.cy - 1, null, null);
+            hero.onTeleportation();
+            Game.Class.ME.curLevel.viewport.track(hero, immediate);
 
 
             Delay(base.cd, 0.35, End, 805306368);
 
 
-            var pets = _hero._level.entitiesByClass.get(584) as ArrayObj;
+            var pets = hero._level.entitiesByClass.get(584) as ArrayObj;
             if (pets != null)
             {
                 for (int i = 0; i < pets.length; i++)
@@ -117,9 +136,8 @@ namespace MoreSettings.GameMechanics.cine
                         pet.onHeroTeleport();
                 }
             }
-            _hero._level.game.user.userStats.teleportation++;
+            hero._level.game.user.userStats.teleportation++;
         }
-
 
         private void End()
         {
@@ -127,15 +145,22 @@ namespace MoreSettings.GameMechanics.cine
                 (Sound)Res.Class.get_loader().loadCache("sfx/inter/portal_use2.wav".ToHaxeString(), Sound.Class),
                 null);
 
-            _hero.visible = true;
+            hero.visible = true;
 
-            if (_target is Teleport teleport)
+            if (target is Teleport teleport)
                 Game.Class.ME.curLevel.fx.teleporterEnd(teleport, 53492);
 
             Delay(base.cd, 0.2, () => destroy(), 268435456);
 
-            Viewport vp = Game.Class.ME.curLevel.viewport;
-            vp.tw.create_(GetZoomGetter(vp), GetZoomSetter(vp), null, 1.0, new TType.TEaseOut(), 600, Ref<bool>.Null).update(new HlAction(vp.updateSizes));
+            if (immediate)
+            {
+                Viewport vp = Game.Class.ME.curLevel.viewport;
+                vp.tw.create_(GetZoomGetter(vp), GetZoomSetter(vp), null, 1.0, new TType.TEaseOut(), 600, Ref<bool>.Null).update(new HlAction(vp.updateSizes));
+            }
+            else
+            {
+                RestoreCamera();
+            }
 
             Game.Class.ME.curLevel.tw.create_(GetChromaGetter(), GetChromaSetter(), null, 0.0, null, 600, Ref<bool>.Null);
 
@@ -144,10 +169,34 @@ namespace MoreSettings.GameMechanics.cine
 
         public override bool onExit()
         {
-            Move();
-            _hero.visible = true;
+            RestoreCamera();
+            hero.visible = true;
             destroyed = true;
             return true;
+        }
+
+        private void RestoreCamera()
+        {
+            if (immediate || cameraRestored)
+                return;
+
+            cameraRestored = true;
+
+            Viewport vp = Game.Class.ME.curLevel.viewport;
+
+            vp.tw.terminate_(GetZoomGetter(vp), GetZoomSetter(vp), false);
+            vp.set_zoom(FancyZoomIn);
+            vp.updateSizes();
+
+            vp.tw.create_(
+                    GetZoomGetter(vp),
+                    GetZoomSetter(vp),
+                    null,
+                    FancyZoomNormal,
+                    new TType.TEaseOut(),
+                    FancyZoomRestoreSeconds * 1000,
+                    Ref<bool>.Null)
+                .update(new HlAction(vp.updateSizes));
         }
 
 
