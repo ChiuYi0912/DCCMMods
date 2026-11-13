@@ -1,12 +1,15 @@
+using System.Runtime.CompilerServices;
 using CoreLibrary.Core.Extensions;
 using dc;
 using dc.h2d;
+using dc.libs.heaps.slib;
 using dc.pr;
 using dc.ui;
 using dc.ui.hud;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
 using ModCore.Mods;
+using ModCore.Utilities;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics;
@@ -249,14 +252,59 @@ namespace MoreSettings.Modules
         }
 
 
+
+        private readonly ConditionalWeakTable<TitleScreen, StrongBox<HSprite?>> banners = new();
+
         private void Hook_TitleScreen_update(Hook_TitleScreen.orig_update orig, TitleScreen self)
         {
             if (config.NewsPanel)
                 self.newsSelected = false;
-            orig(self);
-            if (config.NewsPanel)
-                self.newsSelected = false;
 
+            orig(self);
+
+            if (!config.NewsPanel)
+                return;
+
+            self.newsSelected = false;
+
+            var box = banners.GetValue(self, _ => new StrongBox<HSprite?>(null));
+            var banner = box.Value;
+
+            if (banner == null || banner.destroyed)
+            {
+                banner = FindUpdateBanner(self);
+                box.Value = banner;
+            }
+
+            if (banner != null)
+            {
+                banner.set_visible(false);
+            }
+
+            if (self.padWarning != null
+                && self.padWarning.text != null
+                && self.padWarning.text.length > 0)
+            {
+                self.padWarning.set_text(string.Empty.AsHaxeString());
+            }
+        }
+
+        private static HSprite? FindUpdateBanner(TitleScreen self)
+        {
+            var children = self.mainFlow?.children;
+            if (children == null)
+                return null;
+
+            foreach (var item in children)
+            {
+                if (item is HSprite sprite
+                    && sprite.groupName != null
+                    && sprite.groupName.ToString() == "updateBanner")
+                {
+                    return sprite;
+                }
+            }
+            return null;
         }
 
         private void Hook_Game_init(Hook_Game.orig_init orig, dc.pr.Game self)
