@@ -44,7 +44,7 @@ IOnAfterLoadingCDB
       
       Utilities.Logger.Initialize(Logger);
       GetText.Instance.RegisterMod("SettingsLang");
-      Info.Version = "1.3.3";
+      Info.Version = "1.3.4";
       Info.RepositoryUrl = "https://github.com/ChiuYi0912/DCCMMods/tree/main";
 
       moduleManager = new ModuleManager(this);
