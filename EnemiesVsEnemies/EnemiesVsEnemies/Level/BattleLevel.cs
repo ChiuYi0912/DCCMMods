@@ -29,7 +29,7 @@ namespace EnemiesVsEnemies.Level
             entranceNode.AddFlags(new RoomFlag.Outside());
             var virtual_add = new virtual_specificBiome_();
             virtual_add.specificBiome = ForcedBiome.ToHaxeString();
-            entranceNode.addGenData(virtual_add.ToVirtual<virtual_altarItemGroup_brLegendaryMultiTreasure_broken_cells_doorCost_doorCurse_flaskRefill_forcedMerchantType_forcePauseTimer_isCliffPath_itemInWall_itemLevelBonus_killsMultiTreasure_locked_maxPerks_mins_noHealingShop_shouldBeFlipped_specificBiome_subTeleportTo_timedMultiTreasure_zDoorLock_zDoorType_>());
+            entranceNode.addGenData(virtual_add.ToVirtual<virtual_altarItemGroup_brLegendaryMultiTreasure_broken_cells_doorCost_doorCurse_flaskRefill_forcePauseTimer_forcedMerchantType_isCliffPath_itemInWall_itemLevelBonus_killsMultiTreasure_locked_maxPerks_mins_noHealingShop_shouldBeFlipped_specificBiome_subTeleportTo_timedMultiTreasure_zDoorLock_zDoorType_>());
 
 
             RoomNode roomNode = createNode(null, "QueenArenaV3".ToHaxeString(), null, null);

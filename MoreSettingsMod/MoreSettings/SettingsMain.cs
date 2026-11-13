@@ -39,7 +39,6 @@ IOnAfterLoadingCDB
 
    public override void Initialize()
    {
-      Silk.NET.Core.Loader.LibraryLoader.GetPlatformDefaultLoader();
       instance = this;
 
       

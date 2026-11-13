@@ -9,6 +9,7 @@ using ModCore.Events;
 using ModCore.Events.Interfaces.Game.Menu;
 using ModCore.Mods;
 using ModCore.Modules;
+using ModCore.Utilities;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 using MoreSettings.GameMechanics;
@@ -104,7 +105,7 @@ namespace MoreSettings.Modules
             ArrayObj roots = Process.Class.ALL;
             hud.unblur();
 
-            foreach (Process p in roots.AsEnumerable())
+            foreach (Process p in roots)
             {
                 if (p != null && !p.destroyed)
                 {

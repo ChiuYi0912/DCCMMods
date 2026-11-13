@@ -1203,11 +1203,7 @@ namespace MoreSettings.Modules
             #region KatanaZero
             if (self.hero != null)
             {
-                if (!self.hero.hasSkin(null, "KatanaZero".ToHaxeString()))
-                {
-                    self.hero.activeSkillsManager.resetPetItems();
-                }
-                else
+                if (self.hero.hasSkin(null, "KatanaZero".ToHaxeString()))
                 {
                     var kzCd = self.cd;
                     double cdms = 0.65 * kzCd.baseFps;
@@ -1231,8 +1227,9 @@ namespace MoreSettings.Modules
                             self.tw.create_(getter, setter, 0.8, 0.0, null, 350.0, Ref<bool>.Null);
                         });
                     }
-                    self.hero.activeSkillsManager.resetPetItems();
                 }
+
+                self.hero.activeSkillsManager.resetPetItems();
             }
             #endregion
 
@@ -1471,9 +1468,9 @@ namespace MoreSettings.Modules
                 var lore = Data.Class.loreRoom.all.array.getDyn(i);
                 if (lore == null) return;
                 if (dc._Data.LoreRoom_Impl_.Class.get_room(
-                    ((HaxeProxyBase)lore).ToVirtual<virtual_arc_examinables_fxEmitters_Intention_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>()).id.ToString().EqualsIgnoreCase("MimicEscapedRoom"))
+                    ((HaxeProxyBase)lore).ToVirtual<virtual_Intention_arc_examinables_fxEmitters_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>()).id.ToString().EqualsIgnoreCase("MimicEscapedRoom"))
                 {
-                    Struct.tryAddLoreRoom(((HaxeProxyBase)lore).ToVirtual<virtual_arc_examinables_fxEmitters_Intention_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>());
+                    Struct.tryAddLoreRoom(((HaxeProxyBase)lore).ToVirtual<virtual_Intention_arc_examinables_fxEmitters_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>());
                 }
             }
         }

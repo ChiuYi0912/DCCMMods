@@ -127,7 +127,7 @@ namespace MoreSettings.Modules
                 var lore = Data.Class.loreRoom.all.array.getDyn(i);
                 if (lore == null) return;
                 lore.levels.push("PrisonStart".AsHaxeString());
-                Struct.tryAddLoreRoom(((HaxeProxyBase)lore).ToVirtual<virtual_arc_examinables_fxEmitters_Intention_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>());
+                Struct.tryAddLoreRoom(((HaxeProxyBase)lore).ToVirtual<virtual_Intention_arc_examinables_fxEmitters_levels_onlyUseOnce_rarity_requiredLore_requiredMeta_room_roomLoot_sprites_status_structMode_>());
             }
         }
         #endregion

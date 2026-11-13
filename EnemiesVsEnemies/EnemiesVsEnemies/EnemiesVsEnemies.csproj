@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -14,20 +14,6 @@
     <GenerateSinglePakFile>false</GenerateSinglePakFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-
-  <Target Name="CopyModFiles" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
-    <ItemGroup>
-      <ModFiles Include="$(OutputPath)output\EnemiesVsEnemies\**\*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(ModFiles)"
-          DestinationFolder="D:\steam\steamapps\common\Dead Cells\coremod\mods\EnemiesVsEnemies\%(RecursiveDir)" />
-  </Target>
-
-  <Target Name="RemoveDuplicateModCoreCommon" BeforeTargets="ResolveAssemblyReferences">
-    <ItemGroup>
-      <Reference Remove="ModCore.Common" />
-    </ItemGroup>
-  </Target>
 
   <ItemGroup>
     <PackageReference Include="DeadCellsCoreModding.MDK" Version="1.0.1" />

@@ -39,7 +39,7 @@ namespace MoreSettings.GameMechanics.cine
 
         private void Move()
         {
-            owen.setPosCase(target.cx, target.cy, null, null);
+            owen.setPosCase(target.cx, target.cy - 1, null, null);
             owen.onTeleportation();
 
             Game.Class.ME.curLevel.viewport.track(owen, isimmediate);

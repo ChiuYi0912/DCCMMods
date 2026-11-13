@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -20,16 +20,9 @@
 
     <Reference Include="HashlinkSharp" />
     <Reference Include="ModCore.Native" />
+    <Reference Include="CoreLibrary" />
 
     <PackAssets Include="ChiuYiUI\**\*" RootInPak="SettingsLang" />
-
-    <AllLibs Include="Libs\**\*.dll" />
-    <Reference Include="@(AllLibs -> '%(Filename)')">
-        <HintPath>%(AllLibs.Identity)</HintPath>
-        <Private>false</Private>
-    </Reference>
-
-    <OutputFiles Include="Libs\**\*.dll" />
   </ItemGroup>
 
 </Project>
