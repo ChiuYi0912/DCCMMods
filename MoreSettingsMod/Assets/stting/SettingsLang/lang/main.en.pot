@@ -110,3 +110,25 @@ msgstr "Continuous Shake Decay Intensity"
 
 msgid "衰减持续时间"
 msgstr "Decay Duration"
+
+# Shield text
+msgid "CustomShieldText"
+msgstr ""
+
+msgid "CustomShieldTextColor"
+msgstr ""
+
+msgid "EditShieldText"
+msgstr ""
+
+msgid "ShieldTextInputTitle"
+msgstr ""
+
+msgid "ShieldTextInputDesc"
+msgstr ""
+
+msgid "ShieldTextConfirm"
+msgstr ""
+
+msgid "ShieldTextCancel"
+msgstr ""

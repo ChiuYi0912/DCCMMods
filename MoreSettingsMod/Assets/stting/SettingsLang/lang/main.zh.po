@@ -308,3 +308,25 @@ msgstr "自定义成功格挡后的线条颜色"
 
 msgid "ShowMoreObviously"
 msgstr "显示更明显"
+
+# Shield text
+msgid "CustomShieldText"
+msgstr "自定义招架文字"
+
+msgid "CustomShieldTextColor"
+msgstr "自定义招架文字颜色"
+
+msgid "EditShieldText"
+msgstr "修改招架文字"
+
+msgid "ShieldTextInputTitle"
+msgstr "输入文本"
+
+msgid "ShieldTextInputDesc"
+msgstr "当前为: `{0}`\n默认为: `Parade!`"
+
+msgid "ShieldTextConfirm"
+msgstr "确认"
+
+msgid "ShieldTextCancel"
+msgstr "取消"

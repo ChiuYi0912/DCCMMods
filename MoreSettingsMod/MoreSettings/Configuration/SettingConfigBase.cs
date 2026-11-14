@@ -260,6 +260,11 @@ namespace MoreSettings.Configuration
         public bool ShowObviously { get; set; } = false;
         public double CustomShieldHitAlpha { get; set; } = 1.0;
         public double CustomShieldHitlifeS { get; set; } = 0.1;
+
+        public bool CustomShieldText { get; set; } = false;
+        public bool HasShieldTextColor { get; set; } = false;
+        public int ShieldTextColor { get; set; } = 65535;
+        public string ShieldTextString { get; set; } = "Parade !";
     }
 
     public class KeyConfig : SettingConfigBase

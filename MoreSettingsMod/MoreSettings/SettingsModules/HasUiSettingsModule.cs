@@ -276,9 +276,10 @@ namespace MoreSettings.Modules
                 box.Value = banner;
             }
 
-            if (banner != null)
+            if (banner != null && banner.visible)
             {
                 banner.set_visible(false);
+                self.onResize();
             }
 
             if (self.padWarning != null
@@ -286,6 +287,7 @@ namespace MoreSettings.Modules
                 && self.padWarning.text.length > 0)
             {
                 self.padWarning.set_text(string.Empty.AsHaxeString());
+                self.onResize();
             }
         }
 

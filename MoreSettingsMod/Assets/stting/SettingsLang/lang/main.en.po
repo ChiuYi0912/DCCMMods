@@ -307,3 +307,25 @@ msgstr "Custom Shield Hit Line Color"
 
 msgid "ShowMoreObviously"
 msgstr "Show More Obviously"
+
+# Shield text
+msgid "CustomShieldText"
+msgstr "Custom Parry Text"
+
+msgid "CustomShieldTextColor"
+msgstr "Custom Parry Text Color"
+
+msgid "EditShieldText"
+msgstr "Edit Parry Text"
+
+msgid "ShieldTextInputTitle"
+msgstr "Enter Text"
+
+msgid "ShieldTextInputDesc"
+msgstr "Current: `{0}`\nDefault: `Parade!`"
+
+msgid "ShieldTextConfirm"
+msgstr "Confirm"
+
+msgid "ShieldTextCancel"
+msgstr "Cancel"

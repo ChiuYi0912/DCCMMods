@@ -4,6 +4,7 @@ using dc;
 using dc.en;
 using dc.hl.types;
 using dc.hxd;
+using dc.level.disp;
 using dc.tool;
 using dc.tool.hero;
 using dc.tool.weap;
@@ -11,6 +12,7 @@ using HashlinkNET.Native.Impl;
 using HaxeProxy.Runtime;
 using ModCore.Mods;
 using ModCore.Modules;
+using ModCore.Utilities;
 using MoreSettings.Base.Modules;
 using MoreSettings.Configuration;
 
@@ -74,6 +76,56 @@ namespace MoreSettings.Modules
             );
                 scrollerFlow.getProperties(showobviously).paddingLeft = paddingleft;
             }
+
+            var ShieldText = menuHelper.AddConfigToggle(
+                GetString("CustomShieldText"),
+                GetString(""),
+                () => config.CustomShieldText,
+                v => { config.CustomShieldText = v; options.onResize(); },
+                scrollerFlow: options.scrollerFlow
+                );
+            menuHelper.CenterToggleWidget(ShieldText, options, options.scrollerFlow);
+            if (config.CustomShieldText)
+            {
+                menuHelper.addSimpleWidget(
+                    GetString("EditShieldText"),
+                    "",
+                    new(() =>
+                    {
+                        new dc.ui.TextInput(
+                            options,
+                            GetString("ShieldTextInputTitle").AsHaxeString(),
+                            string.Format(GetString("ShieldTextInputDesc"), config.ShieldTextString).ToHaxeString(),
+                            $"{config.ShieldTextString}".ToHaxeString(),
+                            new HlAction<dc.String>(s =>
+                            {
+                                config.ShieldTextString = s.ToString();
+                                SettingsMain.SaveConfig();
+                            }),
+                            GetString("ShieldTextConfirm").ToHaxeString(),
+                            GetString("ShieldTextCancel").ToHaxeString(),
+                            null);
+                    }),
+                    options.scrollerFlow
+                );
+
+                menuHelper.AddHSVColorWidget(
+                    GetString("CustomShieldTextColor"),
+                    "",
+                    () =>
+                    {
+                        config.HasShieldTextColor = !config.HasShieldTextColor;
+                        SettingsMain.SaveConfig();
+                        options.onResize();
+                        return config.HasShieldTextColor;
+                    },
+                    config.HasShieldTextColor,
+                    newColor => config.ShieldTextColor = newColor,
+                    config.ShieldTextColor,
+                    scrollerFlow
+                );
+            }
+
         }
 
 
@@ -91,9 +143,29 @@ namespace MoreSettings.Modules
             Hook_BaseShield.triggerParryFeedbacks += Hook_BaseShield_triggerParryFeedbacks;
         }
 
+        private const int DefaultColor = 65535;
+        private const string DefaultText = "Parade !";
         private void Hook_BaseShield_triggerParryFeedbacks(Hook_BaseShield.orig_triggerParryFeedbacks orig, BaseShield self)
         {
-            self.owner.popText(Lang.Class.t.get("Parade !".ToHaxeString(), null), 65535);
+            if (config.CustomShieldText)
+            {
+                int textcolor;
+                if (config.HasShieldTextColor)
+                {
+                    textcolor = config.ShieldTextColor;
+                }
+                else
+                {
+                    textcolor = DefaultColor;
+                }
+
+                self.owner.popText(Lang.Class.t.get(config.ShieldTextString.ToHaxeString(), null), textcolor);
+            }
+            else
+            {
+                self.owner.popText(Lang.Class.t.get(DefaultText.ToHaxeString(), null), DefaultColor);
+            }
+
 
             Fx fx = self.owner._level.fx;
 
