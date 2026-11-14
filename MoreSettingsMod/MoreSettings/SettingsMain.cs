@@ -41,7 +41,7 @@ IOnAfterLoadingCDB
    {
       instance = this;
 
-      
+
       Utilities.Logger.Initialize(Logger);
       GetText.Instance.RegisterMod("SettingsLang");
       Info.Version = "1.3.4";
@@ -63,12 +63,17 @@ IOnAfterLoadingCDB
 
       //Common.Initialize();
       //Hook_Boot.mainLoop += Hook_Boot_loop;
+      Hook__Assets.preloadShaders += Hook__Assets_preloadShaders;
    }
 
+   private void Hook__Assets_preloadShaders(Hook__Assets.orig_preloadShaders orig)
+   {
+
+   }
 
    private void Hook_Boot_loop(Hook_Boot.orig_mainLoop orig, Boot self)
    {
-      #if DEBUG
+#if DEBUG
       try
       {
          orig(self);
@@ -80,9 +85,9 @@ IOnAfterLoadingCDB
          ExceptionDispatchInfo.Capture(ex).Throw();
          throw;
       }
-      #else
+#else
             orig(self);
-      #endif
+#endif
 
 
    }

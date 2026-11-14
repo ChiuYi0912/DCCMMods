@@ -8,7 +8,6 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using CoreLibrary.Core.Utilities;
 using Hashlink.Virtuals;
-using CoreLibrary.Extensions.Customs;
 using System.Collections.Concurrent;
 
 namespace CoreLibrary.Core.Extensions
@@ -16,7 +15,6 @@ namespace CoreLibrary.Core.Extensions
 
     public static class EnumerableExtensions
     {
-
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer = null)
         {
             return comparer == null ? new HashSet<T>(source) : new HashSet<T>(source, comparer);
@@ -130,12 +128,6 @@ namespace CoreLibrary.Core.Extensions
                 dictionary[key] = valueConverter(value);
             }
             return dictionary;
-        }
-        
-
-        public static IntMapLiveView<T> AsLiveView<T>(this IntMap map, Func<dynamic, T> converter)
-        {
-            return new IntMapLiveView<T>(map, converter);
         }
 
 

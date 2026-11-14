@@ -26,7 +26,6 @@ namespace CoreLibrary.Core.Extensions
                     level.attachMob(m);
                     if (writer == null)
                     {
-                        Log.Logger.LogDebug($"添加：{m}");
                         return;
                     }
                     writer.WriteLine($"添加：{m}");
