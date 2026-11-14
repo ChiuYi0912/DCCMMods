@@ -48,21 +48,6 @@ namespace MoreSettings.Modules
                 new Action(openScarfui),
                 scrollerFlow
             );
-
-            #if DEBUG
-            menuHelper.addSimpleWidget(
-                GetText.Instance.GetString("test hud"),
-                "",
-                () =>
-                {
-                    CloseAllUI();
-                    var hud = HUD.Class.ME;
-                    var hudpro = new HUDPro(hud, hud);
-                },
-                scrollerFlow
-            );
-            #endif
-
         }
 
         public override void UnregisterHooks()
