@@ -287,5 +287,6 @@ namespace MoreSettings.Configuration
     {
         public bool CheckJumpKey { get; set; } = false;
         public bool UseRollDown { get; set; } = false;
+        public bool NoHoldHeal { get; set; } = false;
     }
 }

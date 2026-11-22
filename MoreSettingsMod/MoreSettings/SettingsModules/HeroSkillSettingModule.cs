@@ -6,6 +6,7 @@ using dc.en;
 using dc.hl.types;
 using dc.hxd;
 using dc.tool;
+using dc.tool.hero;
 using dc.tool.mainSkills;
 using dc.ui;
 using ModCore.Mods;
@@ -23,7 +24,8 @@ namespace MoreSettings.SettingsModules
 
         public override string Description => GetText.Instance.GetString("SkillModule");
 
-        private static bool dodgeJumpConsumed = false;
+        private bool dodgeJumpConsumed = false;
+        private bool healFlaskMustRelease = false;
 
         public override void Initialize(ModBase mainMod)
         {
@@ -59,6 +61,14 @@ namespace MoreSettings.SettingsModules
                     scrollerFlow
                 );
             }
+
+            menuHelper.AddConfigToggle(
+                    GetString("NoHoldHeal"),
+                    GetString("NoHoldHealDesc"),
+                    () => config.NoHoldHeal,
+                    v => config.NoHoldHeal = v,
+                    scrollerFlow
+                );
         }
 
         public override void RegisterHooks()
@@ -66,7 +76,9 @@ namespace MoreSettings.SettingsModules
             base.RegisterHooks();
             Hook_Jump.isUsingInputs += Hook_Jump_isUsingInput;
             Hook_Dodge.prepare += Hook_Dodge_prepare;
-
+            Hook_Heal.isUsingInputs += Hook_Heal_isUsingInputs;
+            Hook_Heal.onEnd += Hook_HealFlask_onEnd;
+            Hook_HeroMainSkill.prepare += Hook_HeroMainSkill_prepare;
         }
 
         public override void UnregisterHooks()
@@ -74,7 +86,57 @@ namespace MoreSettings.SettingsModules
             base.UnregisterHooks();
             Hook_Jump.isUsingInputs -= Hook_Jump_isUsingInput;
             Hook_Dodge.prepare -= Hook_Dodge_prepare;
+            Hook_Heal.isUsingInputs -= Hook_Heal_isUsingInputs;
+            Hook_Heal.onEnd -= Hook_HealFlask_onEnd;
+            Hook_HeroMainSkill.prepare -= Hook_HeroMainSkill_prepare;
         }
+
+
+        private bool Hook_HeroMainSkill_prepare(Hook_HeroMainSkill.orig_prepare orig, HeroMainSkill self)
+        {
+            if (healFlaskMustRelease && self is Heal)
+                return false;
+
+            return orig(self);
+        }
+
+        private bool Hook_Heal_isUsingInputs(Hook_Heal.orig_isUsingInputs orig, Heal self)
+        {
+            if (config.NoHoldHeal && healFlaskMustRelease)
+            {
+                if (!IsHealKeyPhysicallyDown(self))
+                {
+                    healFlaskMustRelease = false;
+                }
+                return false;
+            }
+
+            return orig(self);
+        }
+
+        private void Hook_HealFlask_onEnd(Hook_Heal.orig_onEnd orig, Heal self)
+        {
+            orig(self);
+            healFlaskMustRelease = true;
+        }
+
+        private bool IsHealKeyPhysicallyDown(Heal self)
+        {
+            Hero hero = self.hero;
+            if (hero == null) return false;
+            ControllerAccess ctrl = hero.controller;
+            if (ctrl == null) return false;
+            Controller parent = ctrl.parent;
+            if (parent == null) return false;
+
+            const int idx = 7;
+
+            if (DetectRawInput(parent, idx)) return true;
+
+            return false;
+        }
+
+
 
         private bool Hook_Dodge_prepare(Hook_Dodge.orig_prepare orig, Dodge self)
         {
@@ -114,7 +176,7 @@ namespace MoreSettings.SettingsModules
             if (!dodgeJumpConsumed)
             {
                 var parent = self.hero?.controller?.parent;
-                if (parent != null && DetectRawInput(parent))
+                if (parent != null && DetectRawInput(parent, 0))
                 {
                     var hero = self.hero;
 
@@ -157,12 +219,11 @@ namespace MoreSettings.SettingsModules
             return (collision & 8) != 0;
         }
 
-        private bool DetectRawInput(Controller parent)
+        private bool DetectRawInput(Controller parent, int index = 0)
         {
             if (parent == null)
                 return false;
 
-            int index = 0;
             var bindings = parent.get_bindings();
 
             if (CheckPadDown(parent, bindings.padA, index)) return true;

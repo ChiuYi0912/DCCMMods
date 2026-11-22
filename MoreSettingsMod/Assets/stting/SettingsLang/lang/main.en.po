@@ -350,3 +350,9 @@ msgstr "Elevator No Pause"
 
 msgid "ElevatorNoPauseDesc"
 msgstr "If this option is enabled, the elevator will not pause when the character is on"
+
+msgid "NoHoldHeal"
+msgstr "No Hold Heal"
+
+msgid "NoHoldHealDesc"
+msgstr "When this option is enabled, a long press on ‘Heal’ will trigger the potion to be drunk only once, rather than continuously."

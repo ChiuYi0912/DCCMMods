@@ -351,3 +351,9 @@ msgstr "乘坐电梯时不暂停游戏"
 
 msgid "ElevatorNoPauseDesc"
 msgstr "如果启用此选项，在乘坐电梯时，游戏将不会暂停(可以在电梯上打开菜单或地图)"
+
+msgid "NoHoldHeal"
+msgstr "取消长按治疗"
+
+msgid "NoHoldHealDesc"
+msgstr "开启此选项后，长按治疗将只会触发一次喝药，而不会持续触发"
