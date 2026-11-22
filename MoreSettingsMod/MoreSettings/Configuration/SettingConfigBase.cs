@@ -35,6 +35,7 @@ namespace MoreSettings.Configuration
         public WeaponConfig Weapon { get; set; } = new();
         public KeyConfig Key { get; set; } = new();
         public LevelConfig level { get; set; } = new();
+        public SkillConfig Skill { get; set; } = new();
     }
 
 
@@ -44,6 +45,7 @@ namespace MoreSettings.Configuration
         public bool Hitpause { get; set; } = false;
         public bool SpeedTier { get; set; } = false;
         public bool DisableKatanaByHoldingDown { get; set; } = false;
+        public bool NoPauseGameOnElevator { get; set; } = false;
     }
 
 
@@ -279,5 +281,11 @@ namespace MoreSettings.Configuration
         public bool NofadeIn { get; set; } = false;
         public bool Faulteffects { get; set; } = false;
         public bool LoreBankMimicRoom { get; set; } = false;
+    }
+
+    public class SkillConfig : SettingConfigBase
+    {
+        public bool CheckJumpKey { get; set; } = false;
+        public bool UseRollDown { get; set; } = false;
     }
 }

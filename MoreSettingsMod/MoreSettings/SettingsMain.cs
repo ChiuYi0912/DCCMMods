@@ -1,8 +1,6 @@
 ﻿using System.Runtime.ExceptionServices;
 using CoreLibrary.Core.Interfaces;
 using dc;
-using Hashlink.Proxy.Values;
-using HaxeProxy.Runtime;
 using ModCore.Events;
 using ModCore.Events.Interfaces.Game;
 using ModCore.Menu;
@@ -13,6 +11,7 @@ using ModCore.Utilities;
 using MoreSettings.Configuration;
 using MoreSettings.Core;
 using MoreSettings.Modules;
+using MoreSettings.SettingsModules;
 
 namespace MoreSettings;
 
@@ -50,6 +49,7 @@ IOnAfterLoadingCDB
       moduleManager = new ModuleManager(this);
       moduleManager.RegisterModule(new GameplayModule());
       moduleManager.RegisterModule(new WeaponSettingModule());
+      moduleManager.RegisterModule(new HeroSkillSettingModule());
       moduleManager.RegisterModule(new LevelModule());
       moduleManager.RegisterModule(new HasUiSettingsModule());
       moduleManager.RegisterModule(new VisualCustomizationModule());
@@ -104,6 +104,5 @@ IOnAfterLoadingCDB
    {
 
    }
-
 
 }

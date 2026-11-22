@@ -329,3 +329,24 @@ msgstr "Confirm"
 
 msgid "ShieldTextCancel"
 msgstr "Cancel"
+
+msgid "SkillModule"
+msgstr "Skill Settings"
+
+msgid "CheckJumpKey"
+msgstr "Detect the jump key whilst rolling"
+
+msgid "CheckJumpKeyDesc"
+msgstr "If enabled, the game will check if the jump key is pressed while rolling,and trigger a jump"
+
+msgid "UseRollDown"
+msgstr "Use Roll Down"
+
+msgid "UseRollDownDesc"
+msgstr "If this option is enabled, after rolling, if the character is standing on passable terrain, the ‘fall’ skill will be used to pass through the platform."
+
+msgid "ElevatorNoPause"
+msgstr "Elevator No Pause"
+
+msgid "ElevatorNoPauseDesc"
+msgstr "If this option is enabled, the elevator will not pause when the character is on"

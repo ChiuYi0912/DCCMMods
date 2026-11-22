@@ -12,7 +12,8 @@ namespace MoreSettings.Configuration
             Visual,
             Scarf,
             Viewport,
-            Level
+            Level,
+            Skill
         }
 
         public enum KeyBindingSetting

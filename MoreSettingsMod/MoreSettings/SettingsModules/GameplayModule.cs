@@ -1,7 +1,9 @@
 using dc;
 using dc.cine;
 using dc.en;
+using dc.en.inter;
 using dc.level;
+using dc.pr;
 using dc.tool;
 using Hashlink.Virtuals;
 using HaxeProxy.Runtime;
@@ -21,8 +23,9 @@ namespace MoreSettings.Modules
     {
         public override string Description => GetText.Instance.GetString("ModuleDesc_Gameplay");
         public override GameplayConfig config => (GameplayConfig)base.config;
-
         public override MenuCategory Type => MenuCategory.Gameplay;
+        //判断玩家是否在电梯上
+        private bool HeroIsSnappedToElevator = false;
 
         public override void Initialize(ModBase mainMod)
         {
@@ -34,12 +37,12 @@ namespace MoreSettings.Modules
         {
             base.RegisterHooks();
             Hook_Game.decreasingSlowMo += Hook_Game_decreasingSlowMo;
-            
+
             Hook__TierItemFound.__constructor__ += Hook__TierItemFound__constructor__;
             Hook__EntranceTeleportation.__constructor__ += Hook__EntranceTeleportation__constructor__;
+            Hook_Elevator.fixedUpdate += Hook_Elevator_fixedUpdate;
+            Hook_Game.modalPause += Hook_Game_modalPause;
         }
-
-
 
         public override void UnregisterHooks()
         {
@@ -83,9 +86,61 @@ namespace MoreSettings.Modules
                 v => config.SpeedTier = v,
                 scrollerFlow
             );
+
+            menuHelper.AddConfigToggle(
+                GetString("ElevatorNoPause"),
+                GetString("ElevatorNoPauseDesc"),
+                () => config.NoPauseGameOnElevator,
+                v => config.NoPauseGameOnElevator = v,
+                scrollerFlow
+            );
         }
 
         #region Hooks
+
+        private void Hook_Game_modalPause(Hook_Game.orig_modalPause orig, dc.pr.Game self, Ref<bool> audioEffect)
+        {
+            if (config.NoPauseGameOnElevator && HeroIsSnappedToElevator)
+            {
+                return;
+            }
+
+            orig(self, audioEffect);
+        }
+
+        private void Hook_Elevator_fixedUpdate(Hook_Elevator.orig_fixedUpdate orig, Elevator self)
+        {
+            orig(self);
+
+            if (!config.NoPauseGameOnElevator)
+            {
+                return;
+            }
+
+            HeroIsSnappedToElevator = false;
+
+            var game = dc.pr.Game.Class.ME;
+            if (game == null || game.hero == null || self == null)
+                return;
+
+            Hero hero = game.hero;
+
+            if (self.snappeds != null)
+            {
+                for (int i = 0; i < self.snappeds.length; i++)
+                {
+                    Entity e = self.snappeds.getDyn(i);
+                    if (e == null)
+                        break;
+
+                    if (e == hero)
+                    {
+                        HeroIsSnappedToElevator = true;
+                        break;
+                    }
+                }
+            }
+        }
 
         private void Hook__TierItemFound__constructor__(
             Hook__TierItemFound.orig___constructor__ orig,
@@ -100,7 +155,7 @@ namespace MoreSettings.Modules
             orig(arg1, hero, e, item, iconX, iconY, onComplete);
         }
 
-        
+
 
         private void Hook_Game_decreasingSlowMo(
             Hook_Game.orig_decreasingSlowMo orig, dc.pr.Game self,
